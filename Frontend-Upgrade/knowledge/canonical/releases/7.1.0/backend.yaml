@@ -1,0 +1,21 @@
+version: "7.1.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.1.0-BACKEND-01
+    releaseVersion: "7.1.0"
+    title: "Add MaxEmailAttachmentFileSizeMb config"
+    description: "Add MaxEmailAttachmentFileSizeMb to the webjob and API appsettings.json (default 20) and the Azure variable Core:MaxEmailAttachmentFileSizeMb, controlling the maximum IATI export email attachment size."
+    scope: BACKEND
+    category: appsettings
+    timing: BEFORE_DEPLOYMENT
+    applicability: ALWAYS
+    semanticRoles: ["appsettings"]
+    sourceEvidence: "release-notes.md 7.1.0 IATI Feedback 5"
+    action: "Add key to api + webjob appsettings and the Azure variable."
+    automation: AUTO_AFTER_MAPPING
+    validation: "APPSET-MAXEMAILATTACH coverage satisfied"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"

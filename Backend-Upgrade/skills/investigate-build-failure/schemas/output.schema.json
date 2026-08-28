@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/investigate-build-failure/schemas/output.schema.json",
+  "title": "investigate-build-failure output",
+  "type": "object",
+  "required": ["skillId", "status", "classification", "rankedCauses", "actionTaken", "verification", "attemptCount", "failedAttemptsPreserved", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "investigate-build-failure" },
+    "status": { "type": "string", "enum": ["SUCCEEDED", "RETRYABLE_FAILURE", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_DEVELOPER", "FAILED_BUDGET"] },
+    "classification": { "type": "string" },
+    "preExisting": { "type": "boolean" },
+    "rankedCauses": { "type": "array", "items": { "type": "object" } },
+    "actionTaken": { "type": ["object", "null"] },
+    "verification": { "type": ["object", "null"] },
+    "attemptCount": { "type": "integer" },
+    "failedAttemptsPreserved": { "type": "boolean" },
+    "appliedPatternId": { "type": ["string", "null"] },
+    "usedCandidateAsAuthoritative": { "type": "boolean", "const": false },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

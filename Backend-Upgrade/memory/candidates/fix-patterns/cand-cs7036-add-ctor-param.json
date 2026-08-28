@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "patternId": "cand-cs7036-add-ctor-param",
+  "status": "candidate",
+  "title": "Add newly-required constructor parameter and forward to base (CS7036)",
+  "problemSignature": "CS7036: There is no argument given that corresponds to the required parameter '<name>' of '<CoreType>'",
+  "applicability": {
+    "sourceVersions": ["7.2.0", "8.0.0"],
+    "targetVersions": ["7.3.0", "8.1.0"],
+    "errorCodes": ["CS7036"],
+    "packages": ["NGO.Core.Model", "NGO.Core.Services"],
+    "symbols": ["PaymentMapper", "EntityService"],
+    "requiredRepoCharacteristics": ["client subclass overrides a Core base constructor"]
+  },
+  "exclusions": [
+    "Do not invent the parameter type. Read the required parameter from the decompiled installed DLL signature; the DLL is authoritative.",
+    "Do not change the client override body."
+  ],
+  "rootCauseHypothesis": "Core added a required constructor dependency; the client subclass constructor and its base() call must forward the new parameter.",
+  "proposedActions": [
+    "Decompile the Core base type to read the new constructor signature.",
+    "Add the matching parameter to the client subclass constructor.",
+    "Forward it in the base(...) call.",
+    "Register the new dependency in DI if it is not already registered.",
+    "Rebuild and confirm the CS7036 family reaches zero."
+  ],
+  "risk": "medium",
+  "requiredVerification": ["decompiled signature recorded", "dotnet build error family == 0", "DI registration present"],
+  "successfulEvidence": ["memory/episodes/imported/ep-wvuk-core8x-001.json"],
+  "failedEvidence": [],
+  "knownCounterexamples": [],
+  "confidence": 0.55,
+  "reviewHistory": [],
+  "approvalStatus": "none",
+  "approvedBy": null,
+  "rejectionReason": null,
+  "supersedes": null,
+  "supersededBy": null,
+  "expiresAt": null,
+  "createdAt": "2026-08-13T00:00:00Z"
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/inspect-local-core/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "coreUnchanged", "coreFileInventoryRef", "coreSemanticGraphRef", "requirementsRef"],
+  "properties": {
+    "skillId": { "type": "string", "const": "inspect-local-core" },
+    "status": { "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "BLOCKED_NEEDS_DEVELOPER"] },
+    "coreUnchanged": { "type": "boolean" },
+    "coreFileInventoryRef": { "type": "string" },
+    "coreSemanticGraphRef": { "type": "string" },
+    "requirementsRef": { "type": "string" }
+  },
+  "additionalProperties": true
+}

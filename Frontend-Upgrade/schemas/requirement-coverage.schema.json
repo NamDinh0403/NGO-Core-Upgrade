@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/requirement-coverage.schema.json",
+  "title": "Requirement coverage record",
+  "description": "Per-run coverage of every applicable release requirement against plan/mapping/changes/verification/handover. Backs the missing-step detector and completion gate.",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "sourceVersion", "targetVersion", "requirements"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "runId": { "type": "string" },
+    "sourceVersion": { "type": "string" },
+    "targetVersion": { "type": "string" },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "scope", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "scope": { "type": "string" },
+          "status": {
+            "enum": [
+              "NOT_APPLICABLE_WITH_EVIDENCE", "DECISION_PENDING", "RESEARCH_REQUIRED",
+              "PLANNED", "IMPLEMENTED", "VERIFIED", "MANUAL_ACTION_PENDING", "FAILED", "BLOCKED"
+            ]
+          },
+          "mappedFiles": { "type": "array", "items": { "type": "string" } },
+          "changedFiles": { "type": "array", "items": { "type": "string" } },
+          "commands": { "type": "array", "items": { "type": "string" } },
+          "verification": { "type": ["string", "null"] },
+          "evidence": { "type": ["string", "null"] },
+          "owner": { "type": ["string", "null"] },
+          "manualHandover": {
+            "type": ["object", "null"],
+            "required": ["action", "owner", "timing", "instructions", "risk", "verification"],
+            "properties": {
+              "action": { "type": "string" },
+              "owner": { "type": "string" },
+              "timing": { "type": "string" },
+              "instructions": { "type": "string" },
+              "risk": { "type": "string" },
+              "verification": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "complete": { "type": "boolean" },
+    "blockingReasons": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

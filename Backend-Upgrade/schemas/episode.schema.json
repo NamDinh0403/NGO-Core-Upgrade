@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/episode.schema.json",
+  "title": "Episode",
+  "description": "Structured record of what happened during one historical run. Sanitized.",
+  "type": "object",
+  "required": [
+    "schemaVersion", "episodeId", "runId", "clientScope", "sourceVersion", "targetVersion",
+    "phase", "triggeringProblem", "actionsAttempted", "finalOutcome",
+    "buildResult", "testResult", "documentationResult", "reusability", "confidence",
+    "redactionStatus", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "episodeId": { "type": "string" },
+    "runId": { "type": "string" },
+    "clientScope": { "type": "string", "description": "sanitized client/environment id" },
+    "sourceVersion": { "type": "string" },
+    "targetVersion": { "type": "string" },
+    "repositoryFingerprint": { "type": ["string","null"] },
+    "phase": { "type": "string" },
+    "triggeringProblem": { "type": "string" },
+    "errorCode": { "type": ["string","null"] },
+    "package": { "type": ["string","null"] },
+    "symbol": { "type": ["string","null"] },
+    "component": { "type": ["string","null"] },
+    "evidenceConsulted": { "type": "array", "items": { "type": "string" } },
+    "actionsAttempted": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["order", "action", "outcome"],
+        "properties": {
+          "order": { "type": "integer" },
+          "action": { "type": "string" },
+          "patternId": { "type": ["string","null"] },
+          "outcome": { "type": "string" }
+        }
+      }
+    },
+    "patternIdsUsed": { "type": "array", "items": { "type": "string" } },
+    "finalOutcome": { "type": "string", "enum": ["succeeded","blocked","failed"] },
+    "buildResult": { "type": "string" },
+    "testResult": { "type": "string" },
+    "documentationResult": { "type": "string" },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "reusability": { "type": "string", "enum": ["client-specific","candidate-global","not-reusable"] },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "evidenceLinks": { "type": "array", "items": { "type": "string" } },
+    "redactionStatus": { "type": "string", "enum": ["redacted","not-required","pending"] },
+    "provenance": { "type": "string", "enum": ["native","imported"] },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

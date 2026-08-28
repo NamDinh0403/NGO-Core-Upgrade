@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/audit-frontend-integration/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "auditReportRef", "buildSucceeded", "coreUnchanged"],
+  "properties": {
+    "skillId": { "type": "string", "const": "audit-frontend-integration" },
+    "status": { "enum": ["PASSED", "BLOCKED_INTEGRATION", "BLOCKED_BUILD", "BLOCKED_CORE_MODIFIED", "BLOCKED_NEEDS_DEVELOPER"] },
+    "auditReportRef": { "type": "string" },
+    "buildSucceeded": { "type": "boolean" },
+    "coreUnchanged": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

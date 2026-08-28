@@ -1,0 +1,28 @@
+id: "candidate-codemod-and-terminal-safety"
+kind: "error-pattern"
+tier: candidate
+signature: "bulk codemod silently corrupts files (CRLF/trailing-space) and long commands block/buffer the shell"
+context: >
+  MISTAKES MADE during bulk mechanical edits (e.g. NgRx @Effect->createEffect across 11 files).
+  (1) A line-based codemod matched a structural close line with exact equality
+  `line === indent + ');'`. It failed because files are CRLF (split('\n') left '\r') and some
+  close lines had trailing spaces (`    );   `). Result: only the first item per file transformed;
+  files were left syntactically broken (reported count=1 for multi-item files).
+  (2) Piping long `ng build`/`npm install` output through Select-Object blocked the shell and
+  returned nothing (output is buffered until process end).
+  (3) A type rename (ChartDataSets->ChartDataset) changed only the import, missing in-method
+  usages -> a second build error.
+resolution: >
+  Codemods: split on /\r?\n/, join with the detected EOL, and match structural lines with
+  `line.replace(/\s+$/,'') === target` (never exact equality). Verify per-file transform counts;
+  a multi-item file reporting count=1 means it broke -> `git checkout -- <file>` and re-run the
+  fixed codemod (never hand-patch a half-transformed file). Confirm with get_errors.
+  Renames must cover EVERY occurrence (imports, fields, locals, casts) -- grep the identifier tree-wide.
+  Long commands: redirect to an ASCII log file (`... *>&1 | Out-File -Encoding ascii <log>`) and read
+  the file after completion; do not pipe through output-filtering cmdlets.
+applicability: "Any bulk/scoped codemod or long build/install on a CRLF Windows checkout."
+confidence: HIGH
+evidence:
+  - "runs/ngo-client/brc-upgrade-running-log.md sections 5, 13.3, 13.4, 13.8"
+  - "skills/investigate-frontend-failure/SKILL.md v1.1.0 Operational safety"
+redacted: true

@@ -1,0 +1,4 @@
+[
+  { "id": "checkpoints/0001.json", "valid": true, "phase": "UPGRADE", "at": "2026-08-13T11:05:00Z" },
+  { "id": "checkpoints/0002.json", "valid": true, "phase": "UPGRADE", "at": "2026-08-13T11:10:00Z" }
+]

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "CS0115",
+  "title": "Override signature mismatch",
+  "classifyAs": "override-signature-change",
+  "sourceOfTruth": {
+    "rule": "Decompile the base type and match the current method signature exactly.",
+    "authoritativeInputs": [
+      "compiler override mismatch",
+      "decompiled base method signature"
+    ]
+  },
+  "symptoms": [
+    "No suitable method found to override.",
+    "Return type, parameter type, parameter count, nullability, or method name changed in Core."
+  ],
+  "investigation": [
+    "Identify the overridden method and declaring base type.",
+    "Decompile the installed package for the base type.",
+    "Check whether the method was renamed, removed, or changed signature.",
+    "Compare return type, parameter types, generic arguments, nullability, and access modifier."
+  ],
+  "patchRules": [
+    "Change only the override signature to match the decompiled base method.",
+    "Preserve the existing client method body wherever possible.",
+    "Update call sites only if the method contract changed and the build requires it."
+  ],
+  "antiPatterns": [
+    "Never blindly change override to new.",
+    "Do not copy the Core base method body into the client override.",
+    "Do not rewrite business logic while adapting the signature."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "The CS0115 family reaches zero.",
+      "Existing client override behavior is preserved except for required signature adaptation."
+    ]
+  }
+}

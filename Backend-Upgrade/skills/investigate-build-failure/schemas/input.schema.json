@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/investigate-build-failure/schemas/input.schema.json",
+  "title": "investigate-build-failure input",
+  "type": "object",
+  "required": ["skillId", "runDir", "failureSignature", "command", "exitCode", "attemptCount"],
+  "properties": {
+    "skillId": { "type": "string", "const": "investigate-build-failure" },
+    "runDir": { "type": "string" },
+    "failureSignature": { "type": "string" },
+    "command": { "type": "string" },
+    "exitCode": { "type": "integer" },
+    "logArtifact": { "type": ["string", "null"] },
+    "packageVersions": { "type": "object" },
+    "changedFiles": { "type": "array", "items": { "type": "string" } },
+    "previousAttempts": { "type": "array", "items": { "type": "object" } },
+    "attemptCount": { "type": "integer" }
+  },
+  "additionalProperties": true
+}

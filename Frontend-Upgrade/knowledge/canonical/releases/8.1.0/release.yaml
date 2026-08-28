@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "8.1.0"
+title: "NGO Core 8.1.0"
+summary: "Enable Emergency/Non-Project finance modules; Entra Mail.Read permission."
+frameworkTransition: { angularFrom: "14", angularTo: "14", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["frontend"]
+sourceEvidence: "release-notes.md 8.1.0"

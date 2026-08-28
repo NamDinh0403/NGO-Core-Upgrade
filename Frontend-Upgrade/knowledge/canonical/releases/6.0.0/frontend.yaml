@@ -1,0 +1,21 @@
+version: "6.0.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-6.0.0-FRONTEND-01
+    releaseVersion: "6.0.0"
+    title: "Add page-import + finance monitoring/summary modules, icons and env keys"
+    description: "Import faCloudUploadAlt and add pageImport env key (Entity import Admin UI); import FinanceMonitoringModule and add financeMonitoring env key; import SummaryFinanceModule. Correct the CoreOverviewBoxDefinitions Location column in custom deployment scripts."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["ngModuleMetadata", "iconRegistration", "environmentConfig", "runtimeConfigService"]
+    sourceEvidence: "release-notes.md 6.0.0 Entity import / monitoring boxes"
+    clientDiscovery: ["app.module.ts", "environment.ts", "app-environment.service.ts"]
+    action: "Register modules/icon and add env keys at the client's resolved points."
+    automation: AUTO_AFTER_MAPPING
+    validation: "modules load; endpoints resolve"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE

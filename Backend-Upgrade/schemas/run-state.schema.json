@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/run-state.schema.json",
+  "title": "Run State",
+  "description": "Authoritative snapshot of current run progress. Lives at runs/<client>/<run-id>/state.json.",
+  "type": "object",
+  "required": [
+    "schemaVersion", "runId", "clientId", "status", "sourceVersion", "targetVersion",
+    "workflowVersion", "currentPhase", "startedAt", "updatedAt",
+    "lastAction", "nextAction", "safeResumeInstruction", "documentationStatus", "completionCriteria"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string" },
+    "clientId": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["DISCOVERY","BASELINE","PLAN","UPGRADE","BUILD_AND_FIX","TEST","DOCUMENT","HANDOVER","DOCUMENTATION_PENDING","BLOCKED","COMPLETE","CANCELLED"]
+    },
+    "blockedReason": {
+      "type": ["string","null"],
+      "enum": [null,"BLOCKED_NEEDS_CONTEXT","BLOCKED_NEEDS_DEVELOPER","BLOCKED_NEEDS_APPROVAL","FAILED_POLICY","FAILED_BUDGET","CANCELLED"]
+    },
+    "sourceVersion": { "type": "string" },
+    "targetVersion": { "type": "string" },
+    "workflowVersion": { "type": "string" },
+    "modelId": { "type": ["string","null"] },
+    "toolVersions": { "type": "object" },
+    "currentPhase": { "type": "string" },
+    "currentStep": { "type": ["string","null"] },
+    "completedSteps": { "type": "array", "items": { "type": "string" } },
+    "pendingSteps": { "type": "array", "items": { "type": "string" } },
+    "blockedSteps": { "type": "array", "items": { "type": "string" } },
+    "attemptCounts": { "type": "object" },
+    "appliedPatternIds": { "type": "array", "items": { "type": "string" } },
+    "unresolvedIssues": { "type": "array", "items": { "type": "string" } },
+    "lastCheckpoint": { "type": ["string","null"] },
+    "lastAction": { "type": "string" },
+    "nextAction": { "type": "string" },
+    "safeResumeInstruction": { "type": "string" },
+    "documentationStatus": { "type": "object" },
+    "completionCriteria": { "type": "object" },
+    "idempotency": { "type": "object", "description": "map of idempotencyKey -> applied boolean for mutating actions" },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

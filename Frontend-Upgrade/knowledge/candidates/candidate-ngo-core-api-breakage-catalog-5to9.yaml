@@ -1,0 +1,29 @@
+id: "candidate-ngo-core-api-breakage-catalog-5to9"
+kind: "fix-pattern"
+tier: candidate
+signature: "recurring ngo-core 5->9 + Angular 9->15 build-time API breakages and their minimal fixes"
+context: >
+  Compile-time breakages that surface once the build gets far enough. Fix each by reading the
+  new signature/symbol in node_modules/<dep>/**/*.d.ts. Verified on BRC.
+resolution: >
+  - Changed Core base-class constructor (extended by client -Ext service) -> update super(...):
+    EmergencyRouteService (+EmergencyFinanceRouteService), SummaryRouteService (+SummaryFinanceRouteService,
+    +EntityRouteService), FormFieldFactory (+NGOTruncateHtml), InfoFieldFactory (reduced to translateService,helperService).
+  - Removed/renamed exports (rename ALL occurrences): ng2-charts ChartsModule->NgChartsModule;
+    chart.js ChartDataSets->ChartDataset, Label(ng2-charts)->string[]; chart options scales.xAxes/yAxes[]->x/y{},
+    'horizontalBar'->type:'bar'+indexAxis:'y'; template [chartType]->[type]; @ngrx @Effect()->createEffect(()=>...,cfg);
+    @ng-bootstrap NgbTabset/NgbTab removed->NgbNav (<ul ngbNav><li [ngbNavItem]><a ngbNavLink>).
+  - ngo-core UploaderDirective refactored to ng2-file-upload (READ uploader.directive.d.ts, do NOT `as any`-cast):
+    migrate UploadFile->FileItem and file.progress.status->file.progress; startUpload(obj)->uploader.updateEvent(obj);uploader.startUpload();
+    cancelUpload(file.id)/removeFile(file.id)->cancelUpload(file)/removeFile(file) (pass the FileItem, not an id).
+  - Misc: navigator.msSaveOrOpenBlob removed from TS DOM lib -> (window.navigator as any).msSaveOrOpenBlob;
+    bad import '@angular/compiler/src/core'->'@angular/router' for Route; Route[] typing so pathMatch:'full' isn't widened;
+    '~/src/app/...' alias import fails webpack -> relative path; undecorated Angular base class -> @Directive() (NG2007);
+    untyped injection param -> :any or strictInjectionParameters:false.
+applicability: "Any client extending ngo-core base services / using ng2-charts, chart.js, @ng-bootstrap tabs, ngo-core uploader."
+confidence: HIGH
+evidence:
+  - "build logs (categorized error clusters) + node_modules/ngo-core/**/*.d.ts signatures"
+  - "runs/ngo-client/brc-upgrade-running-log.md sections 7, 13.4"
+  - "skills/investigate-frontend-failure/SKILL.md v1.1.0 failure catalog"
+redacted: true

@@ -1,0 +1,59 @@
+version: "9.0.0"
+scope: PIPELINE
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.0.0-DEPLOYMENT-01
+    releaseVersion: "9.0.0"
+    title: "Upgrade to .NET 10"
+    description: "Before upgrading Core packages, target .NET 10 in all projects and set netVersion: '10.0' in build-pipeline-api.yml; update the Azure App Service runtime to .NET 10."
+    scope: PIPELINE
+    category: CI/CD
+    timing: BEFORE_UPGRADE
+    applicability: ALWAYS
+    semanticRoles: ["backendPipeline"]
+    sourceEvidence: "release-notes.md 9.0.0 Dotnet 10"
+    clientDiscovery: ["build-pipeline-api.yml", "*.csproj"]
+    action: "Set net10.0 and pipeline netVersion 10.0; update Azure runtime."
+    automation: MANUAL_EXECUTION
+    validation: "backend builds on .NET 10"
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+    owner: "pipeline-owner"
+  - schemaVersion: 1
+    id: REQ-9.0.0-DEPLOYMENT-02
+    releaseVersion: "9.0.0"
+    title: "Use Node 18 in the Angular pipeline"
+    description: "Update build-pipeline-angular.yml NodeTool to versionSpec '18.20.0' and remove the npm@1 'npm version' task."
+    scope: PIPELINE
+    category: CI/CD
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["frontendPipeline"]
+    sourceEvidence: "release-notes.md 9.0.0 Use node 18"
+    clientDiscovery: ["build-pipeline-angular.yml"]
+    action: "Set Node 18.20.0; remove npm version task."
+    automation: MANUAL_EXECUTION
+    validation: "pipeline uses Node 18"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "pipeline-owner"
+  - schemaVersion: 1
+    id: REQ-9.0.0-DEPLOYMENT-03
+    releaseVersion: "9.0.0"
+    title: "Convert workflow instance JSON config to tables"
+    description: "After deployment, run ConvertWorkflowInstanceJsonConfigToTables to migrate existing workflow instance JSON into CorePhaseInstances and CorePhaseTemplateInstances."
+    scope: DEPLOYMENT
+    category: tool
+    timing: AFTER_DEPLOYMENT
+    applicability: ALWAYS
+    semanticRoles: ["migrationTool"]
+    sourceEvidence: "release-notes.md 9.0.0 Create tables for workflow instances"
+    action: "Run the migration tool after deployment."
+    automation: MANUAL_EXECUTION
+    validation: "workflow cycle data displays correctly"
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"

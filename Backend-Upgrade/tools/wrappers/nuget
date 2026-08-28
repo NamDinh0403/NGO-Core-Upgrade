@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+'use strict';
+/* NuGet acquisition wrapper (research-only; never adds packages to a client project). */
+const { runWrapper } = require('./lib/wrapper');
+const r = runWrapper({
+  toolId: 'dotnet-sdk', capability: 'acquire-nuget-package', argsPrefix: ['nuget'],
+  userArgs: process.argv.slice(2), mutatingVerbs: ['add', 'push'],
+});
+r.nextRecommendedAction = r.status === 'SUCCEEDED' ? 'extract-package' : 'inspect-logs';
+process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+process.exit(r.status === 'SUCCEEDED' ? 0 : 1);

@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "8.6.0"
+title: "NGO Core 8.6.0"
+summary: "RelatedEntity log fields, mark-as-paid additional documents folder + tool, Logframe2 saved-query migration tool."
+frameworkTransition: { angularFrom: "15", angularTo: "15", dotnetFrom: "9", dotnetTo: "9" }
+scopes: ["frontend", "backend"]
+sourceEvidence: "release-notes.md 8.6.0"

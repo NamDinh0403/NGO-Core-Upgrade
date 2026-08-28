@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/investigate-frontend-failure/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "classification", "fixApplied"],
+  "properties": {
+    "skillId": { "type": "string", "const": "investigate-frontend-failure" },
+    "status": { "enum": ["RESOLVED", "REPLAN_REQUIRED", "RETRY_BUDGET_EXHAUSTED", "BLOCKED_NEEDS_DEVELOPER"] },
+    "classification": { "type": "string" },
+    "fixApplied": { "type": "boolean" },
+    "filesChanged": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

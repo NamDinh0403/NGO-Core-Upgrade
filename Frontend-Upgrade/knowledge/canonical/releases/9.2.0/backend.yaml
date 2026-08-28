@@ -1,0 +1,55 @@
+version: "9.2.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.2.0-BACKEND-01
+    releaseVersion: "9.2.0"
+    title: "Add Core:CspAdditionalFrameSrc appsetting"
+    description: "Add Core:CspAdditionalFrameSrc to all appsettings.json files and Azure App Settings to allow additional iframe/frame sources after CSP introduction."
+    scope: BACKEND
+    category: appsettings
+    timing: BEFORE_DEPLOYMENT
+    applicability: ALWAYS
+    semanticRoles: ["appsettings"]
+    sourceEvidence: "release-notes.md 9.2.0 CSP iframes/maps"
+    action: "Add the key with empty default; multiple sources separated by ';'."
+    automation: MANUAL_EXECUTION
+    validation: "APPSET-CSP-FRAMESRC coverage satisfied"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: REQ-9.2.0-BACKEND-02
+    releaseVersion: "9.2.0"
+    title: "Update entityViewDefinitions customizations"
+    description: "If BaseConfigurationRepository entityViewDefinitions are customized (e.g. custom entity definitions such as SvK), update them per the Analyse tables config card."
+    scope: BACKEND
+    category: configuration
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["backendConfig"]
+    sourceEvidence: "release-notes.md 9.2.0 Analyse tables config"
+    action: "Update custom entityViewDefinitions following the Core approach."
+    automation: MANUAL_DECISION
+    validation: "Analyse tables render correctly"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.2.0-BACKEND-03
+    releaseVersion: "9.2.0"
+    title: "Adapt GetLogframe2IndicatorTrackers export customization"
+    description: "If GetLogframe2IndicatorTrackers is customized, adapt the card's PR changes for Indicator tracker Export-to-Excel including popup-configured fields."
+    scope: BACKEND
+    category: customization
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["backendCustomization"]
+    sourceEvidence: "release-notes.md 9.2.0 Logframe2 indicator tracker export"
+    action: "Adapt PR changes into the client override."
+    automation: MANUAL_DECISION
+    validation: "export includes configured fields"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE

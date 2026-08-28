@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/inventory-client-frontend/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "workspaceType", "bootstrapStyle", "coverageRef", "fileInventoryRef", "semanticGraphRef"],
+  "properties": {
+    "skillId": { "type": "string", "const": "inventory-client-frontend" },
+    "status": { "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "BLOCKED_NEEDS_DEVELOPER"] },
+    "workspaceType": { "enum": ["NGMODULE", "STANDALONE", "HYBRID", "UNKNOWN"] },
+    "bootstrapStyle": { "type": "string" },
+    "coverageRef": { "type": "string" },
+    "fileInventoryRef": { "type": "string" },
+    "semanticGraphRef": { "type": "string" }
+  },
+  "additionalProperties": true
+}

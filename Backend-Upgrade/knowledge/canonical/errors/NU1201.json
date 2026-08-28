@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "NU1201",
+  "title": "Target framework mismatch",
+  "classifyAs": "restore-or-framework",
+  "sourceOfTruth": {
+    "rule": "Use the targetFramework from the matching Knowledge/versions entry and confirm package compatibility from restore output.",
+    "authoritativeInputs": [
+      "dotnet restore output",
+      "Knowledge/versions/{target}.json targetFramework",
+      "installed package lib/<tfm> folders"
+    ]
+  },
+  "symptoms": [
+    "Project is not compatible with the current target framework.",
+    "Core package supports a newer target framework than the client project."
+  ],
+  "investigation": [
+    "Load Knowledge/index.json.",
+    "Load the target version entry.",
+    "Find every .csproj TargetFramework or TargetFrameworks value.",
+    "Confirm the target Core packages expose assemblies for the required TFM."
+  ],
+  "patchRules": [
+    "Update all projects in the solution to the required target framework.",
+    "Keep framework versions consistent across API, services, repositories, tests, WebJobs, and tooling projects.",
+    "For Core 9.x, update build pipeline dotnet version to 10.0 where present."
+  ],
+  "antiPatterns": [
+    "Do not update only the project that first reported NU1201.",
+    "Do not leave mixed net8.0, net9.0, and net10.0 projects unless the solution already has a deliberate multi-targeting pattern."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet restore --force",
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "NU1201 no longer appears.",
+      "No project references an older incompatible target framework."
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+version: "9.2.0"
+scope: DATABASE
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.2.0-DATABASE-01
+    releaseVersion: "9.2.0"
+    title: "Override seed data for cleaned Role/field mappings"
+    description: "After Core cleanup of Role Member connected with Field Definition Id, Core adds Role Member with Field Definition Id NULL. If the client does not use the Member role on removed entity types, create a script to override Core seed data (CoreRoleEntityDefinitions Id 50 -> 58)."
+    scope: DATABASE
+    category: seed-data
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_DATABASE_DATA_MATCHES
+    semanticRoles: ["databaseSeed"]
+    sourceEvidence: "release-notes.md 9.2.0 Cleanup Role/field mappings"
+    action: "Create client override script for CoreRoleEntityDefinitions 50-58 if applicable."
+    automation: MANUAL_EXECUTION
+    validation: "role/field mappings correct for client entity types"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

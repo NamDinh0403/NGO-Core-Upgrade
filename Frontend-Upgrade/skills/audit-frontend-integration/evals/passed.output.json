@@ -1,0 +1,7 @@
+{
+  "skillId": "audit-frontend-integration",
+  "status": "PASSED",
+  "auditReportRef": "frontend-audit-report.yaml",
+  "buildSucceeded": true,
+  "coreUnchanged": true
+}

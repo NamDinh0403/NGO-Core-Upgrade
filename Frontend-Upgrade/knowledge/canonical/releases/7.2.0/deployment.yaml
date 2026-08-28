@@ -1,0 +1,40 @@
+version: "7.2.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.2.0-DEPLOYMENT-01
+    releaseVersion: "7.2.0"
+    title: "Partner expenditure approval PDF template + SharePoint deployment"
+    description: "Override LandscapeFunctionIds in ExportPdfService for landscape-by-tabid; update the ExpenditureTaskTemplate.docx per client requirement; run SharePoint deployment. An after-script sets up the template automatically if PdfTemplates is null/empty."
+    scope: DEPLOYMENT
+    category: sharepoint
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["sharepoint"]
+    sourceEvidence: "release-notes.md 7.2.0 Partner expenditure"
+    action: "Update template + PDF service override; run SharePoint deployment."
+    automation: MANUAL_EXECUTION
+    validation: "expenditure approval PDF renders landscape correctly"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: REQ-7.2.0-DEPLOYMENT-02
+    releaseVersion: "7.2.0"
+    title: "Ensure Outlook add-in Mail.Read (Application) permission"
+    description: "Ensure the Entra app registration has Microsoft Graph Mail.Read (type: Application) with admin consent for the Outlook add-in."
+    scope: AZURE
+    category: azure-permission
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_DEPLOYMENT_ENVIRONMENT_USES
+    semanticRoles: ["azurePermissions"]
+    sourceEvidence: "release-notes.md 7.2.0 Outlook add-in"
+    action: "Grant Mail.Read (Application) with admin consent."
+    automation: MANUAL_EXECUTION
+    validation: "permission granted"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+    notes: "Later reduced in 9.2.0 (Application -> optional Delegated)."

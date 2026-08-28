@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+'use strict';
+/* ApiCompat wrapper: compare-dotnet-public-api via the local .NET tool. */
+const { runWrapper } = require('./lib/wrapper');
+const r = runWrapper({
+  toolId: 'dotnet-apicompat', capability: 'compare-dotnet-public-api',
+  argsPrefix: ['tool', 'run', 'apicompat', '--'], userArgs: process.argv.slice(2), mutatingVerbs: [],
+});
+process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+process.exit(r.status === 'SUCCEEDED' ? 0 : 1);

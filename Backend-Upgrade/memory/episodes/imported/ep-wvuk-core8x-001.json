@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "episodeId": "ep-wvuk-core8x-001",
+  "runId": "imported-wvuk-core-8.0.0-to-8.1.0",
+  "clientScope": "wvuk",
+  "sourceVersion": "8.0.0",
+  "targetVersion": "8.1.0",
+  "repositoryFingerprint": null,
+  "phase": "BUILD_AND_FIX",
+  "triggeringProblem": "Upgrading NGO.Core packages from 8.0.0 to 8.1.0 produced NU1201 target-framework incompatibilities and multiple constructor/generic-arity compiler errors (CS7036, CS0311).",
+  "errorCode": "CS7036",
+  "package": "NGO.Core.Repositories",
+  "symbol": "NGO.Core.Services.EntityService",
+  "component": "Repositories + Services layer",
+  "evidenceConsulted": [
+    "external-archive://ngo-protected/wvuk/core-8.x-migration.md (removed from active repo in FINAL_CUTOVER)",
+    "knowledge/canonical/errors/NU1201.json",
+    "knowledge/canonical/errors/CS7036.json",
+    "knowledge/canonical/errors/CS0311.json",
+    "knowledge/canonical/symbols/NGO.Core.Services.EntityService.json"
+  ],
+  "actionsAttempted": [
+    { "order": 1, "action": "Bump all NGO.Core.* package references to 8.1.0 across 8 project files", "patternId": null, "outcome": "succeeded" },
+    { "order": 2, "action": "Raise TargetFramework net8.0 -> net9.0 on NGO.Migration.* and NGO.DataMigration projects to resolve NU1201", "patternId": "cand-nu1201-align-tfm", "outcome": "succeeded" },
+    { "order": 3, "action": "Add new constructor parameter incomeScheduleMapper to PaymentMapper and forward to base (CS7036)", "patternId": "cand-cs7036-add-ctor-param", "outcome": "succeeded" },
+    { "order": 4, "action": "Update EntityService generic type arguments and add configurationRepository parameter per decompiled signature (CS0311/CS7036)", "patternId": null, "outcome": "succeeded" }
+  ],
+  "patternIdsUsed": ["cand-nu1201-align-tfm", "cand-cs7036-add-ctor-param"],
+  "finalOutcome": "succeeded",
+  "buildResult": "green (reported in source case study)",
+  "testResult": "not recorded in source case study",
+  "documentationResult": "case study authored and promoted",
+  "limitations": [
+    "Test results were not captured in the original case study.",
+    "Imported from narrative Markdown; some attempt-level detail inferred from headings.",
+    "Signatures should be re-verified against the installed DLL for any new run."
+  ],
+  "reusability": "candidate-global",
+  "confidence": 0.6,
+  "evidenceLinks": ["external-archive://ngo-protected/wvuk/core-8.x-migration.md"],
+  "redactionStatus": "not-required",
+  "provenance": "imported",
+  "createdAt": "2026-08-13T00:00:00Z"
+}

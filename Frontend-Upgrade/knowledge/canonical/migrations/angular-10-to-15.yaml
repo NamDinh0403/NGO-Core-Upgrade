@@ -1,0 +1,263 @@
+# Canonical reusable migration: Angular 10 -> 15 (with NGO Core v7.x -> v9.x)
+# Structured source of truth. The human-readable Markdown under
+# knowledge/derived/angular-10-to-15-migration.md is derived from this file.
+# Loaded when the client's Angular major increases across the upgrade range
+# (see tools/lib/release-range.js reusable-migration trigger).
+schemaVersion: 1
+reusableMigration: angular-10-to-15
+title: "Angular 10 -> 15 modernization"
+sourceEvidence: "Knowledge/angular-10-to-15-migration.md; release-notes.md 8.0.0; version-manifest.json"
+trigger:
+  kind: angular-major-jump
+  sourceMajorMax: 14
+  targetMajorMin: 11
+  requireIncrease: true
+requirements:
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-01
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Align Angular package set to target Core"
+    description: "Replace the entire dependencies and devDependencies version set for Angular/CLI/DevKit/TypeScript/RxJS/Zone.js with the exact versions the target Core package.json declares. Never use ranges or latest."
+    scope: FRONTEND
+    category: package
+    timing: DURING_UPGRADE
+    applicability: ALWAYS
+    semanticRoles: ["packageManifest"]
+    sourceEvidence: "release-notes.md 8.0.0 'Replace the entire dependencies section with the version from Core'"
+    corePaths: ["package.json"]
+    clientDiscovery: ["package.json"]
+    action: "Set exact versions from target Core package.json for the Angular set, TypeScript, RxJS, Zone.js."
+    automation: AUTO_AFTER_MAPPING
+    validation: "installed node_modules versions equal target Core versions; ng build succeeds"
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-02
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Preserve build baseline before migration"
+    description: "Record a production build baseline and a rollback checkpoint of the client before applying any Angular migration change."
+    scope: FRONTEND
+    category: build configuration
+    timing: BEFORE_UPGRADE
+    applicability: ALWAYS
+    semanticRoles: ["buildBaseline"]
+    sourceEvidence: "Knowledge/angular-10-to-15-migration.md baseline step"
+    action: "Capture baseline build output and a rollback checkpoint."
+    automation: AUTO_SAFE
+    validation: "baseline recorded; checkpoint exists"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-03
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Update TypeScript target and lib"
+    description: "Set compilerOptions.target/lib to the target Core baseline (ES2022, lib ['ES2022','dom']) at the correct tsconfig level in the inheritance chain."
+    scope: FRONTEND
+    category: compiler option
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["tsconfigChain"]
+    sourceEvidence: "release-notes.md 9.0.0 tsconfig lib ES2022; version-manifest esTarget"
+    clientDiscovery: ["tsconfig.json", "tsconfig.app.json", "tsconfig.*.json"]
+    action: "Update target/lib at the resolved tsconfig level."
+    automation: AUTO_AFTER_MAPPING
+    validation: "tsc/ng build honors ES2022"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-04
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Set router initialNavigation"
+    description: "Ensure RouterModule.forRoot / provideRouter uses the Angular 15-compatible initialNavigation setting; remove obsolete values."
+    scope: FRONTEND
+    category: route
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["routerComposition"]
+    sourceEvidence: "Knowledge/angular-10-to-15-migration.md router section"
+    clientDiscovery: ["app-routing.module.ts", "app-route.service.ts", "*.routes.ts", "provideRouter"]
+    action: "Update initialNavigation at the client's real router composition point."
+    automation: AUTO_AFTER_MAPPING
+    validation: "app bootstraps; routing works"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-05
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Remove obsolete entryComponents"
+    description: "Remove entryComponents arrays (removed in Ivy/Angular 13+); components are resolved without them."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["ngModuleMetadata"]
+    sourceEvidence: "release-notes.md 8.0.0 entryComponents; Knowledge migration"
+    clientDiscovery: ["entryComponents"]
+    action: "Delete entryComponents entries from NgModule metadata."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds with no entryComponents"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-06
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Replace polyfills.ts Zone.js content"
+    description: "Replace the contents of polyfills with the target Core version (Zone.js import changes for Angular 14/15)."
+    scope: FRONTEND
+    category: polyfill
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["polyfills"]
+    sourceEvidence: "release-notes.md 9.0.0 'Replace the contents of polyfills.js with the version from Core'"
+    clientDiscovery: ["polyfills.ts", "polyfills.js"]
+    action: "Overwrite polyfills with Core baseline."
+    automation: AUTO_AFTER_MAPPING
+    validation: "zone.js loads; app runs"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-07
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Update angular.json workspace settings"
+    description: "Remove obsolete aot/extractCss, set defaultConfiguration, update optimization to the object form, add ngx-spinner style, add eslint lint builder."
+    scope: FRONTEND
+    category: build configuration
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["angularWorkspace"]
+    sourceEvidence: "release-notes.md 9.0.0 angular.json; ESLint migration"
+    clientDiscovery: ["angular.json"]
+    action: "Apply angular.json edits at the resolved project/architect nodes."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build/lint use updated config"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-08
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Convert NgRx @Effect() to createEffect()"
+    description: "Replace the removed @Effect() decorator with createEffect() in all effects files."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["ngrxEffects"]
+    sourceEvidence: "Knowledge/syntax-migration-patterns.md EFFECT_DECORATOR; config/rules.yaml"
+    clientDiscovery: ["*.effects.ts", "@Effect"]
+    action: "Rewrite @Effect() members as createEffect()."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds; effects registered"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-09
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Fix SCSS tilde imports"
+    description: "Remove leading tilde from node_modules SCSS imports (e.g. ngx-toastr) as required by the updated Sass resolver."
+    scope: FRONTEND
+    category: style
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["styles"]
+    sourceEvidence: "Knowledge/syntax-migration-patterns.md tilde imports"
+    clientDiscovery: ["*.scss", "styles.scss"]
+    action: "Rewrite '~pkg' imports to node_modules-relative paths."
+    automation: AUTO_AFTER_MAPPING
+    validation: "styles compile"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-10
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Update Lodash / Moment / Marked imports"
+    description: "Update default-vs-namespace import styles for lodash, moment, and marked to match the new TypeScript esModuleInterop behavior."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["thirdPartyImports"]
+    sourceEvidence: "Knowledge/syntax-migration-patterns.md lodash/moment/marked"
+    clientDiscovery: ["lodash", "moment", "marked"]
+    action: "Rewrite imports to the supported form."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-11
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Adopt Angular untyped forms"
+    description: "Replace FormGroup/FormControl/FormArray with Untyped* equivalents where the client relied on loose typing."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["reactiveForms"]
+    sourceEvidence: "Knowledge/syntax-migration-patterns.md UntypedFormGroup"
+    clientDiscovery: ["FormGroup", "FormControl", "FormArray"]
+    action: "Introduce Untyped* form types where required to compile."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-12
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Update front-end production build command"
+    description: "Update the front-end pipeline to the Angular 15 production build command (ng build --configuration production) and remove deprecated flags."
+    scope: PIPELINE
+    category: CI/CD
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["frontendPipeline"]
+    sourceEvidence: "Knowledge/build-pipeline-changes.md"
+    clientDiscovery: ["build-pipeline-angular.yml", "azure-pipelines*.yml"]
+    action: "Update the pipeline build command and node version."
+    automation: MANUAL_EXECUTION
+    validation: "pipeline builds successfully"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "pipeline-owner"
+  - schemaVersion: 1
+    id: MIG-NG1015-FRONTEND-13
+    releaseVersion: "8.0.0"
+    reusableMigration: angular-10-to-15
+    title: "Bootstrap 4 -> 5 style overrides"
+    description: "Remove the Bootstrap 4 CDN import and add the Bootstrap 5 modal-backdrop z-index override in styles."
+    scope: FRONTEND
+    category: style
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["styles"]
+    sourceEvidence: "release-notes.md 8.0.0 styles.css Bootstrap 5 override"
+    clientDiscovery: ["styles.css", "styles.scss"]
+    action: "Remove BS4 import; append BS5 modal-backdrop override."
+    automation: AUTO_AFTER_MAPPING
+    validation: "modals render correctly"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE

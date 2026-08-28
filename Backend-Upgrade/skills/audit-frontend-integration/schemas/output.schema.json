@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/audit-frontend-integration/schemas/output.schema.json",
+  "title": "audit-frontend-integration output",
+  "type": "object",
+  "required": ["skillId", "status", "bootstrapStyle", "resolvedRoles", "buildResults", "installOnlySuccess", "remainingUncertainty", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "audit-frontend-integration" },
+    "status": { "type": "string", "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_DEVELOPER"] },
+    "workspaceStructure": { "type": "object" },
+    "bootstrapStyle": { "type": "string", "enum": ["NGMODULE", "STANDALONE", "HYBRID", "UNKNOWN", "NOT_APPLICABLE"] },
+    "resolvedRoles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "status"],
+        "properties": {
+          "role": { "type": "string" },
+          "status": { "type": "string", "enum": ["RESOLVED_AND_INSPECTED", "NOT_APPLICABLE_WITH_EVIDENCE", "MISSING_BLOCKING", "MISSING_NON_BLOCKING", "REQUIRES_DEVELOPER"] }
+        }
+      }
+    },
+    "packageCompatibility": { "type": "object" },
+    "typescriptFindings": { "type": "object" },
+    "buildResults": {
+      "type": "object",
+      "properties": {
+        "dependencyResolution": { "type": ["string", "null"] },
+        "typeCheck": { "type": ["string", "null"] },
+        "developmentBuild": { "type": ["string", "null"] },
+        "productionBuild": { "type": ["string", "null"] },
+        "tests": { "type": ["string", "null"] },
+        "bootstrapSmoke": { "type": ["string", "null"] }
+      }
+    },
+    "installOnlySuccess": { "type": "boolean", "const": false },
+    "remainingUncertainty": { "type": "array", "items": { "type": "string" } },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,39 @@
+version: "7.5.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.5.0-FRONTEND-01
+    releaseVersion: "7.5.0"
+    title: "Add Emergency/Non-Project finance modules + env keys"
+    description: "Add EmergencyFinanceModule and NonProjectFinanceModule to the app module and add nonProjectFinance and emergencyFinance API URLs to environment files."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["ngModuleMetadata", "environmentConfig", "runtimeConfigService"]
+    sourceEvidence: "release-notes.md 7.5.0 Emergency & Non-Project"
+    clientDiscovery: ["app.module.ts", "bootstrapApplication", "environment.ts", "app-environment.service.ts"]
+    action: "Register modules and add env keys at the client's resolved points."
+    automation: AUTO_AFTER_MAPPING
+    validation: "modules load; endpoints resolve"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-7.5.0-FRONTEND-02
+    releaseVersion: "7.5.0"
+    title: "Align BudgetFormComponent override"
+    description: "If the client extends BudgetFormComponent, follow the Core change to fix reffield options not saving in 2nd/3rd levels."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["coreSymbolUsage"]
+    sourceEvidence: "release-notes.md 7.5.0 BudgetFormComponent"
+    clientDiscovery: ["BudgetFormComponent"]
+    action: "Apply Core fix to the client override."
+    automation: MANUAL_DECISION
+    validation: "reffield options save at all levels"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE

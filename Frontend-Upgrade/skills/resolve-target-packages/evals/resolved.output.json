@@ -1,0 +1,7 @@
+{
+  "skillId": "resolve-target-packages",
+  "status": "RESOLVED_WITH_UNCERTAINTY",
+  "manifestRef": "target-package-manifest.yaml",
+  "alignmentMapRef": "package-alignment-map.yaml",
+  "packageCount": 14
+}

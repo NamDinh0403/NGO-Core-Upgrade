@@ -1,0 +1,31 @@
+# Template for a learned pattern (candidate). Copy into memory/candidates/**.
+# Validate against schemas/fix-pattern.schema.json before committing.
+schemaVersion: 1
+patternId: cand-<short-stable-id>
+status: candidate            # candidate | under-review | approved | deprecated | rejected | superseded
+title: <one line>
+problemSignature: <error text / signature this pattern recognizes>
+applicability:
+  sourceVersions: []
+  targetVersions: []
+  errorCodes: []
+  packages: []
+  symbols: []
+  requiredRepoCharacteristics: []
+exclusions: []
+rootCauseHypothesis: <why this happens>
+proposedActions: []
+risk: low                    # low | medium | high
+requiredVerification: []
+successfulEvidence: []       # links under runs/ or memory/episodes
+failedEvidence: []
+knownCounterexamples: []
+confidence: 0.5              # 0..1; one success alone must not reach approval threshold
+reviewHistory: []
+approvalStatus: none         # none | pending | approved | rejected
+approvedBy: null
+rejectionReason: null
+supersedes: null
+supersededBy: null
+expiresAt: null
+createdAt: <ISO-8601-UTC>

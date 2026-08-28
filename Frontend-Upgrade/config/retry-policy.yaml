@@ -1,0 +1,12 @@
+schemaVersion: 1
+id: retry-policy
+description: Bounded retries for build-fix and requirement-mapping loops before escalation.
+
+buildFix:
+  maxIterations: 5
+  maxAttemptsPerIdenticalFix: 2
+mapping:
+  maxResearchAttemptsPerRequirement: 2
+onExhaustion:
+  action: "developer-escalation"
+  requireResumeCommand: true

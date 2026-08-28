@@ -1,0 +1,21 @@
+version: "6.2.0"
+scope: DATABASE
+requirements:
+  - schemaVersion: 1
+    id: REQ-6.2.0-DATABASE-01
+    releaseVersion: "6.2.0"
+    title: "Fix AllocationDate not updated on approved allocations"
+    description: "If AllocationDate was not updated in confirmed allocations, run Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql."
+    scope: DATABASE
+    category: datafix
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_DATABASE_DATA_MATCHES
+    semanticRoles: ["databaseDatafix"]
+    sourceEvidence: "release-notes.md 6.2.0 allocation date"
+    action: "Run the datafix when confirmed allocations have stale AllocationDate."
+    automation: MANUAL_EXECUTION
+    validation: "AllocationDate correct on confirmed allocations"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

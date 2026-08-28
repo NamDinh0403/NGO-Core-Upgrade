@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "8.3.0"
+title: "NGO Core 8.3.0"
+summary: "Angular 14 -> 15; catch-all route; task view-permission function; UpdateIdeaMembers SP folders."
+frameworkTransition: { angularFrom: "14", angularTo: "15", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["frontend", "backend", "deployment"]
+sourceEvidence: "release-notes.md 8.3.0"

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "CS0311",
+  "title": "Generic type constraint violation",
+  "classifyAs": "generic-constraint-change",
+  "sourceOfTruth": {
+    "rule": "Read the exact generic constraint from the compiler error or installed DLL.",
+    "authoritativeInputs": [
+      "compiler error constraint text",
+      "decompiled where clauses"
+    ]
+  },
+  "symptoms": [
+    "A type cannot be used as a generic parameter because there is no implicit reference conversion.",
+    "DTO type supplied where Core model type is required."
+  ],
+  "investigation": [
+    "Read the failing type parameter and required constraint from the error.",
+    "Decompile the generic declaration if the compiler output is incomplete.",
+    "Find every occurrence of the wrong type in class declarations and DI registrations."
+  ],
+  "patchRules": [
+    "Use the type that satisfies the decompiled constraint.",
+    "Prefer Core.Model types when the constraint is Core.Model.X.",
+    "Apply the same correction consistently across DI and generic base declarations."
+  ],
+  "antiPatterns": [
+    "Do not silence the error with casts.",
+    "Do not swap to a client DTO when the constraint names a Core model.",
+    "Do not change generic constraints in client code to avoid the package contract."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "The CS0311 family reaches zero.",
+      "No CS0305 arity errors remain for the same generic type."
+    ]
+  }
+}

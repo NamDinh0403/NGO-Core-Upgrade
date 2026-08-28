@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/execute-frontend-upgrade/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "planRef", "clientPath"],
+  "properties": {
+    "skillId": { "type": "string", "const": "execute-frontend-upgrade" },
+    "runDir": { "type": "string" },
+    "planRef": { "type": "string" },
+    "clientPath": { "type": "string" },
+    "changeId": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,25 @@
+id: "candidate-config-key-diff-must-be-complete-not-truncated"
+kind: "error-pattern"
+tier: candidate
+signature: "environment/config key reconciliation misses keys because the reference file was read/compared only partially"
+context: >
+  MISTAKE MADE: reconciling ngo-core's environment.ts apiControllerPrefix against the client, the agent read
+  only ~the first 90 lines of Core's environment.ts and diffed that head. It added the 11 finance keys but
+  silently missed the ~13 keys after line 90 (adminWebJobMonitoring, partnerExpenditureImport, deputyAdministration,
+  financeMonitoring, pageImport, adminIATIPage, entityIATI, iatiDocument, iatitransactions, logframeImported,
+  adminMinimumRequirements, minimumRequirements, aiwriter). The client had to add them by hand. Nothing errored --
+  missing runtime endpoint keys just silently break those features (the compiler is blind to absent config; see
+  candidate-two-oracles-and-match-core-strictness).
+resolution: >
+  When reconciling any key set (apiControllerPrefix, config objects, provider maps), extract the COMPLETE key list
+  from the ENTIRE reference file AND the ENTIRE client file programmatically -- parse the whole object or grep every
+  key -- never from a truncated/partial read of a long file. Assert the client key set is a SUPERSET of the reference's
+  before marking done, and apply additions to EVERY applicable file (environment.ts AND environment.prod.ts, plus any
+  runtime config). Prefer a scripted key-diff over eyeballing.
+applicability: "Any config/environment reconciliation, especially long files where a partial read drops deltas."
+confidence: HIGH
+evidence:
+  - "client added the missing 13 keys manually (user report + env compare showing client superset only after)"
+  - "runs/ngo-client/brc-upgrade-running-log.md sections 13.12, 13.13"
+  - "skills/map-core-to-client/SKILL.md v1.1.1 (complete programmatic key extraction)"
+redacted: true

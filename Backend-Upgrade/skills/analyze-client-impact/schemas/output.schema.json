@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/analyze-client-impact/schemas/output.schema.json",
+  "title": "analyze-client-impact output",
+  "type": "object",
+  "required": ["skillId", "status", "readOnly", "bootstrapStyle", "affectedFiles", "affectedSymbols", "configRoles", "clientImpactMapRef", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "analyze-client-impact" },
+    "status": { "type": "string", "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_DEVELOPER"] },
+    "readOnly": { "type": "boolean" },
+    "bootstrapStyle": { "type": "string", "enum": ["NGMODULE", "STANDALONE", "HYBRID", "UNKNOWN", "NOT_APPLICABLE"] },
+    "affectedFiles": { "type": "array", "items": { "type": "object" } },
+    "affectedSymbols": { "type": "array", "items": { "type": "object" } },
+    "configRoles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "status"],
+        "properties": {
+          "role": { "type": "string" },
+          "status": { "type": "string", "enum": ["RESOLVED_AND_INSPECTED", "NOT_APPLICABLE_WITH_EVIDENCE", "MISSING_BLOCKING", "MISSING_NON_BLOCKING", "REQUIRES_DEVELOPER"] }
+        }
+      }
+    },
+    "expectedAdaptations": { "type": "array", "items": { "type": "object" } },
+    "uncertaintyCreated": { "type": "array", "items": { "type": "string" } },
+    "clientImpactMapRef": { "type": "string" },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

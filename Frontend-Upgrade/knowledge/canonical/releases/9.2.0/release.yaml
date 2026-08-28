@@ -1,0 +1,11 @@
+schemaVersion: 1
+version: "9.2.0"
+title: "NGO Core 9.2.0"
+summary: "Outlook add-in permission reduction, CSP frame-src config, Analyse table config, Logframe2 export fields, role/field mapping cleanup."
+frameworkTransition:
+  angularFrom: "15"
+  angularTo: "15"
+  dotnetFrom: "10"
+  dotnetTo: "10"
+scopes: ["frontend", "backend", "database", "deployment", "decisions"]
+sourceEvidence: "release-notes.md 9.2.0"

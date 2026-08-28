@@ -1,0 +1,149 @@
+version: "9.0.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-01
+    releaseVersion: "9.0.0"
+    title: "Migrate InfoFieldFactory.getComponentFactory() to getComponentType()"
+    description: "BREAKING: InfoFieldFactory.getComponentFactory() renamed to getComponentType(); return type changed from ComponentFactory<any> to Type<any>. Update all custom callers."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["coreSymbolUsage"]
+    sourceEvidence: "release-notes.md 9.0.0 remove ComponentFactoryResolver"
+    corePaths: ["InfoFieldFactory"]
+    clientDiscovery: ["getComponentFactory", "InfoFieldFactory"]
+    action: "Rename calls to getComponentType() and adapt to Type<any> return."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds; dynamic fields render"
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-02
+    releaseVersion: "9.0.0"
+    title: "Angular ESLint migration"
+    description: "Delete src/tslint.json and tslint.json; add .eslintrc.json copied from Core; add the eslint lint builder to angular.json; copy the entire devDependencies from Core."
+    scope: FRONTEND
+    category: build configuration
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["angularWorkspace", "packageManifest"]
+    sourceEvidence: "release-notes.md 9.0.0 Fix deprecated linting"
+    clientDiscovery: ["tslint.json", "angular.json", ".eslintrc.json"]
+    action: "Replace tslint with eslint config and lint builder; align devDependencies."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng lint runs with eslint"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-03
+    releaseVersion: "9.0.0"
+    title: "Remove ngx-contextmenu and flex-layout; migrate context menu"
+    description: "Upgrade @angular/cdk to 15.2.0 and @angular/animations to 15.2.10; remove @angular/flex-layout and ngx-contextmenu. BREAKING: replace <context-menu>/contextMenuItem with <ngo-context-menu>/ngoContextMenuItem in custom implementations."
+    scope: FRONTEND
+    category: package
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["packageManifest", "templateSyntax"]
+    sourceEvidence: "release-notes.md 9.0.0 Modernize Angular Dependencies"
+    clientDiscovery: ["ngx-contextmenu", "context-menu", "contextMenuItem", "@angular/flex-layout"]
+    action: "Update packages; migrate context-menu markup to ngo-context-menu."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds; context menus work"
+    risk: HIGH
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-04
+    releaseVersion: "9.0.0"
+    title: "Refresh spinner and libraries; tsconfig lib ES2022"
+    description: "Replace dependencies and devDependencies from Core; replace polyfills.js from Core; add ngx-spinner ball-clip-rotate-multiple.css style to angular.json; set tsconfig lib to ['ES2022','dom']."
+    scope: FRONTEND
+    category: build configuration
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["packageManifest", "polyfills", "angularWorkspace", "tsconfigChain"]
+    sourceEvidence: "release-notes.md 9.0.0 Update spinner"
+    clientDiscovery: ["package.json", "polyfills.ts", "angular.json", "tsconfig.json"]
+    action: "Align packages/polyfills/styles/lib to Core baseline at resolved points."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds with ES2022"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-05
+    releaseVersion: "9.0.0"
+    title: "Application Insights web SDK migration"
+    description: "Remove @types/applicationinsights-js and applicationinsights-js; add @microsoft/applicationinsights-web ^3.0.4."
+    scope: FRONTEND
+    category: package
+    timing: DURING_UPGRADE
+    applicability: IF_PACKAGE_USED
+    semanticRoles: ["packageManifest"]
+    sourceEvidence: "release-notes.md 9.0.0 user-tracking-in-application-insights"
+    clientDiscovery: ["applicationinsights-js", "@microsoft/applicationinsights-web"]
+    action: "Swap App Insights packages and update usage."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds; telemetry initializes"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-06
+    releaseVersion: "9.0.0"
+    title: "Add aiwriter environment key (Write-with-AI)"
+    description: "Add aiwriter: 'api/core/aiwriter' to environment files. Feature is optional and may incur cost; only enable with PM approval."
+    scope: FRONTEND
+    category: environment key
+    timing: DURING_UPGRADE
+    applicability: IF_PM_APPROVES
+    semanticRoles: ["environmentConfig", "runtimeConfigService"]
+    sourceEvidence: "release-notes.md 9.0.0 Write with AI"
+    clientDiscovery: ["environment.ts", "environment.prod.ts", "app-environment.service.ts", "assets/config/*.json"]
+    action: "Add aiwriter key at the resolved config layer when the feature is enabled."
+    automation: MANUAL_DECISION
+    validation: "key present only when Write-with-AI is enabled"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "project-manager"
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-07
+    releaseVersion: "9.0.0"
+    title: "CSP: index.html and main.ts changes"
+    description: "Remove the FontAwesome config script block from index.html; in main.ts use textContent instead of innerHtml and add the csp-nonce to the injected office.js script; update angular.json optimization to the object form; replace custom.css from Core; replace <a href='javascript:void(0)'> with <button class='inline-btn'>."
+    scope: FRONTEND
+    category: HTML structure
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["indexHtml", "appBootstrap", "angularWorkspace", "styles"]
+    sourceEvidence: "release-notes.md 9.0.0 Add Content Security Policy"
+    clientDiscovery: ["index.html", "main.ts", "angular.json", "custom.css"]
+    action: "Apply CSP-related index.html/main.ts/angular.json/custom.css edits."
+    automation: AUTO_AFTER_MAPPING
+    validation: "app loads under CSP; office.js nonce applied"
+    risk: HIGH
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.0.0-FRONTEND-08
+    releaseVersion: "9.0.0"
+    title: "Import faExternalLink in app.module"
+    description: "Import faExternalLink from '@fortawesome/pro-light-svg-icons' in app.module for workflow/task template linking and search preview."
+    scope: FRONTEND
+    category: icon
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["iconRegistration", "ngModuleMetadata"]
+    sourceEvidence: "release-notes.md 9.0.0 faExternalLink"
+    clientDiscovery: ["app.module.ts", "library.addIcons", "bootstrapApplication"]
+    action: "Register faExternalLink at the client's real icon registration point."
+    automation: AUTO_AFTER_MAPPING
+    validation: "icon renders; ng build succeeds"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE

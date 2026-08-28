@@ -1,0 +1,27 @@
+{
+  "skillId": "audit-frontend-integration",
+  "status": "SUCCEEDED",
+  "workspaceStructure": { "projects": ["app"], "libraries": [] },
+  "bootstrapStyle": "STANDALONE",
+  "resolvedRoles": [
+    { "role": "bootstrapApplication", "status": "RESOLVED_AND_INSPECTED" },
+    { "role": "provideRouter", "status": "RESOLVED_AND_INSPECTED" },
+    { "role": "provideHttpClient", "status": "RESOLVED_AND_INSPECTED" },
+    { "role": "app.module.ts", "status": "NOT_APPLICABLE_WITH_EVIDENCE" },
+    { "role": "production-build-config", "status": "RESOLVED_AND_INSPECTED" }
+  ],
+  "packageCompatibility": { "angular": "compatible" },
+  "typescriptFindings": { "typeCheck": "passed" },
+  "buildResults": {
+    "dependencyResolution": "ok",
+    "typeCheck": "passed",
+    "developmentBuild": "passed",
+    "productionBuild": "passed",
+    "tests": "passed",
+    "bootstrapSmoke": "passed"
+  },
+  "installOnlySuccess": false,
+  "remainingUncertainty": [],
+  "evidence": ["runs/synthetic-acme/run-1/artifacts/frontend/prod-build.log"],
+  "nextAction": "Front-end integration verified (dev + prod). Proceed to learn-from-run."
+}

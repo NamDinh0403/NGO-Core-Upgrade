@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "symbol",
+  "symbol": "PaymentService",
+  "fullyQualifiedName": "NGO.Core.Services.PaymentService",
+  "package": "NGO.Core.Services",
+  "kind": "class",
+  "riskLevel": "medium",
+  "sourceOfTruth": {
+    "rule": "Decompile installed NGO.Core.Services.dll and extract constructor signature before patching.",
+    "dllSearchPatterns": [
+      "%USERPROFILE%/.nuget/packages/ngo.core.services/**/NGO.Core.Services.dll"
+    ]
+  },
+  "knownBreakingChanges": [
+    {
+      "fromVersion": "7.x",
+      "toVersion": "8.x",
+      "changeType": "constructor-parameters-added",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "knownNewParameters": [
+        "fieldOptionService",
+        "projectService",
+        "emailService"
+      ]
+    }
+  ],
+  "relatedFilesToSearch": [
+    "*PaymentService*.cs",
+    "*PaymentMapper*.cs",
+    "*Registration*.cs",
+    "Startup.cs",
+    "Program.cs"
+  ],
+  "antiPatterns": [
+    "Do not add parameters to the client constructor without passing them to base(...).",
+    "Do not omit DI registration for new service dependencies."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "PaymentService CS7036 family is gone.",
+      "No new DI resolution error appears for the added dependencies."
+    ]
+  }
+}

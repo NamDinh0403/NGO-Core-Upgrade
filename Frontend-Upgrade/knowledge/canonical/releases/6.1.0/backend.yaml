@@ -1,0 +1,20 @@
+version: "6.1.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-6.1.0-BACKEND-01
+    releaseVersion: "6.1.0"
+    title: "Align ManageTask checklist override"
+    description: "If the client copied ManageTask from Core, use ManageTask from BaseService or remove task.Checklist = null and task.ChecklistTitle = null so checklists do not disappear on save."
+    scope: BACKEND
+    category: customization
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["coreSymbolUsage"]
+    sourceEvidence: "release-notes.md 6.1.0 checklist disappear"
+    action: "Update the client ManageTask override."
+    automation: MANUAL_DECISION
+    validation: "checklist persists on save"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE

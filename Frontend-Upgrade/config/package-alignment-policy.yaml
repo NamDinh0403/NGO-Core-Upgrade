@@ -1,0 +1,48 @@
+schemaVersion: 1
+id: frontend-package-alignment-policy
+description: >
+  How target client dependencies are resolved from the local NGO Core
+  repository. Core package.json is authoritative for direct dependencies when
+  clients must align with Core.
+
+requireExactAlignment: true
+introduceRangesOrLatest: false
+
+authorityOrder:
+  - approved-manifest
+  - core-package.json
+  - core-lockfile
+  - published-metadata
+  - resolution-probe
+  - developer
+
+mergeRules:
+  - If a package exists in both Core and client, compare versions and align to the exact Core version.
+  - If a package is required by Core and missing from the client, add it only when the client architecture requires direct ownership.
+  - Preserve client-only dependencies unless evidence proves removal is required.
+  - Do not add every Core development dependency to the client.
+  - Do not remove a client package solely because it is absent from Core.
+  - Flag client ngo-* packages absent from target Core for investigation.
+  - Never introduce latest, wildcard, or broad version ranges.
+
+clientRelevantDevDependencies:
+  - "@angular/cli"
+  - "@angular-devkit/*"
+  - "@angular/compiler-cli"
+  - typescript
+  - tslib
+  - rxjs
+  - zone.js
+  - "@ngrx/*"
+  - "karma*"
+  - "jasmine*"
+  - "jest*"
+  - "@types/*"
+  - "eslint*"
+  - "@angular-eslint/*"
+  - "@typescript-eslint/*"
+
+conflictHandling:
+  clientAheadOfCore: confirm-downgrade
+  unparseableVersions: create-uncertainty
+  nonExactCoreVersion: resolve-from-lockfile-else-research

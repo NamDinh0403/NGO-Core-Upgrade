@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/execute-upgrade/schemas/input.schema.json",
+  "title": "execute-upgrade input",
+  "type": "object",
+  "required": ["skillId", "runDir", "planRef", "planStatus", "rollbackCheckpointExists", "baselineRecorded"],
+  "properties": {
+    "skillId": { "type": "string", "const": "execute-upgrade" },
+    "runDir": { "type": "string" },
+    "planRef": { "type": "string" },
+    "planStatus": { "type": "string", "enum": ["READY", "READY_WITH_ASSUMPTIONS"] },
+    "policyPermitsAssumptions": { "type": "boolean" },
+    "rollbackCheckpointExists": { "type": "boolean" },
+    "baselineRecorded": { "type": "boolean" },
+    "approvedSteps": { "type": "array", "items": { "type": "object" } }
+  },
+  "additionalProperties": true
+}

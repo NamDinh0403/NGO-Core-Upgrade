@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "CS7036",
+  "title": "Missing constructor parameter",
+  "classifyAs": "constructor-signature-change",
+  "sourceOfTruth": {
+    "rule": "Decompile the installed package and extract the exact constructor signature before editing.",
+    "authoritativeInputs": [
+      "installed NGO.Core.*.dll constructor signature",
+      "compiler error missing parameter name"
+    ]
+  },
+  "symptoms": [
+    "There is no argument given that corresponds to the required parameter.",
+    "A client subclass base(...) call no longer matches the Core base constructor.",
+    "Manual construction or DI registration may fail after the constructor patch."
+  ],
+  "investigation": [
+    "Extract the class and missing parameter from the compiler error.",
+    "Load the symbol route from Knowledge/index.json if one exists.",
+    "Decompile the installed DLL for the base class constructor.",
+    "Compare client constructor parameters with the decompiled constructor.",
+    "Find DI registrations and direct new(...) call sites for the changed type."
+  ],
+  "patchRules": [
+    "Add only the new required constructor parameters.",
+    "Pass the parameters to base(...) in the decompiled order.",
+    "Update DI registration and direct construction sites in the same patch batch.",
+    "Do not add private fields unless existing client code needs them."
+  ],
+  "relatedSymbolRoutes": [
+    "Knowledge/symbols/NGO.Core.Services.EntityService.json",
+    "Knowledge/symbols/NGO.Core.Services.ExportPdfService.json",
+    "Knowledge/symbols/NGO.Core.Services.TaskService.json",
+    "Knowledge/symbols/NGO.Core.Services.PaymentService.json"
+  ],
+  "antiPatterns": [
+    "Do not guess parameter order from old diffs.",
+    "Do not add dummy nulls or default values for required dependencies.",
+    "Do not patch constructor code without the matching DI or call-site update."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "The CS7036 family for the symbol reaches zero.",
+      "No new missing-service DI errors are introduced for the same constructor family."
+    ]
+  }
+}

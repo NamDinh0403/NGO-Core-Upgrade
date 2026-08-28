@@ -1,0 +1,12 @@
+{
+  "skillId": "learn-from-run",
+  "status": "SUCCEEDED",
+  "episodeRef": "memory/episodes/synthetic-acme/ep-run-1.json",
+  "candidateRefs": ["memory/candidates/fix-patterns/cand-exportpdf-arity.json"],
+  "classification": ["CANDIDATE_FIX_PATTERN", "CLIENT_SPECIFIC"],
+  "wroteToCanonical": false,
+  "approvedOwnCandidates": false,
+  "redactionStatus": "redacted",
+  "clientIdentifiersInGlobalMemory": false,
+  "nextAction": "Hand candidate cand-exportpdf-arity to the developer review / knowledge-promotion workflow; close the run."
+}

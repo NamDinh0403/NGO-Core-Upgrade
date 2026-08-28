@@ -1,0 +1,110 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "version",
+  "version": "8.0.0",
+  "releaseDate": "2025-03-01",
+  "targetFramework": "net9.0",
+  "packageVersionMustMatch": true,
+  "sourceOfTruth": {
+    "rule": "Use installed package DLLs for signatures. This version entry predicts common changes only."
+  },
+  "summary": "Core 8 moves to net9.0 and introduces high-risk generic, constructor, IATI, DI, config, and EF migration changes.",
+  "highRiskChanges": [
+    {
+      "changeType": "framework",
+      "impact": "high",
+      "likelyErrors": [
+        "NU1201"
+      ],
+      "notes": [
+        "Update projects to net9.0 before restoring Core 8 packages."
+      ]
+    },
+    {
+      "changeType": "generic-args",
+      "symbol": "EntityService",
+      "route": "Knowledge/symbols/NGO.Core.Services.EntityService.json",
+      "impact": "high",
+      "likelyErrors": [
+        "CS0305",
+        "CS0311"
+      ]
+    },
+    {
+      "changeType": "constructor-param",
+      "symbol": "EntityService",
+      "route": "Knowledge/symbols/NGO.Core.Services.EntityService.json",
+      "impact": "high",
+      "likelyErrors": [
+        "CS7036"
+      ]
+    },
+    {
+      "changeType": "generic-args",
+      "symbol": "ExportPdfService",
+      "route": "Knowledge/symbols/NGO.Core.Services.ExportPdfService.json",
+      "impact": "high",
+      "likelyErrors": [
+        "CS0305",
+        "CS0311"
+      ]
+    },
+    {
+      "changeType": "constructor-param",
+      "symbol": "ExportPdfService",
+      "route": "Knowledge/symbols/NGO.Core.Services.ExportPdfService.json",
+      "impact": "high",
+      "likelyErrors": [
+        "CS7036"
+      ]
+    },
+    {
+      "changeType": "constructor-param",
+      "symbol": "PaymentService",
+      "route": "Knowledge/symbols/NGO.Core.Services.PaymentService.json",
+      "impact": "medium",
+      "likelyErrors": [
+        "CS7036"
+      ]
+    },
+    {
+      "changeType": "method-signature",
+      "symbol": "TaskFlowServiceBase.PushEntityToQueueManagement",
+      "route": "Knowledge/symbols/NGO.Core.Services.TaskFlowServiceBase.json",
+      "impact": "medium",
+      "likelyErrors": [
+        "CS7036",
+        "CS1503"
+      ]
+    }
+  ],
+  "newDependencies": [
+    "IIATITransactionService",
+    "IIATIDocumentRepository",
+    "ILogframe2ExportExcelService",
+    "IBankAccountRepository",
+    "IMinimumRequirementExportExcelService",
+    "IFieldDefinitionRepository",
+    "IExchangeRateService",
+    "IBeneficiaryService",
+    "IOverviewBoxDefinitionRepository"
+  ],
+  "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json",
+  "efMigration": {
+    "requiredAfterSuccessfulBuild": true,
+    "route": "Knowledge/migrations/ef-migration-patterns.json"
+  },
+  "diffFiles": [],
+  "validation": {
+    "commands": [
+      "dotnet restore --force",
+      "dotnet build --no-restore",
+      "dotnet ef migrations add UpgradeCore8x --context NgoContext --project <migrations-project>"
+    ],
+    "successCriteria": [
+      "Package references match 8.0.0 or later 8.x target.",
+      "Build succeeds.",
+      "EF migration command creates a migration or reports no changes detected."
+    ]
+  }
+}

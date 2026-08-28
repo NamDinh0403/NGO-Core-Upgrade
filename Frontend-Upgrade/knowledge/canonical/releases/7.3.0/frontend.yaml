@@ -1,0 +1,21 @@
+version: "7.3.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.3.0-FRONTEND-01
+    releaseVersion: "7.3.0"
+    title: "Logframe route override for Logframe1/Logframe2"
+    description: "If Logframe1 is used, override entity-route.service.ts and replace the 'logframe' path with logframeRouteService; add always-run override script 20250930_DisableLogframe2.sql. If Logframe2 is used, manually run 20250917_DisableLogframe1.sql."
+    scope: FRONTEND
+    category: route
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["dynamicRouteService", "routerComposition"]
+    sourceEvidence: "release-notes.md 7.3.0 Logframe2 separate tabs"
+    clientDiscovery: ["entity-route.service.ts", "app-route.service.ts"]
+    action: "Override the route service at the client's real routing point per Logframe mode."
+    automation: MANUAL_DECISION
+    validation: "logframe routes resolve for the active mode"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE

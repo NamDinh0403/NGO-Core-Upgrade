@@ -1,0 +1,17 @@
+{
+  "skillId": "research-version",
+  "status": "SUCCEEDED",
+  "clientUnchanged": true,
+  "ladderStoppedAt": "compile-probe",
+  "provenance": [{ "package": "NGO.Core.Services", "requested": "8.0.0", "resolved": "8.0.0", "sha256": "..." }],
+  "findings": [
+    { "statement": "EntityService constructor adds configurationRepository parameter", "verification": "VERIFIED_BY_METADATA" },
+    { "statement": "Client subclasses compile after forwarding the new parameter", "verification": "VERIFIED_BY_COMPILE" }
+  ],
+  "candidateCompatibilityManifest": { "targetVersion": "8.0.0", "targetFramework": "net9.0", "breakingSymbols": ["NGO.Core.Services.EntityService"] },
+  "uncertaintyResolved": ["U-ENTITYSERVICE-CTOR"],
+  "uncertaintyRemaining": [],
+  "capabilitiesActivated": ["acquire-nuget-package", "compare-dotnet-public-api"],
+  "evidence": ["runs/synthetic-acme/run-1/artifacts/research/apicompat.txt"],
+  "nextAction": "Return to plan-upgrade; the plan can move to READY with EntityService adaptation planned."
+}

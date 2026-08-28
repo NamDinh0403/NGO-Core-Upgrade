@@ -1,0 +1,21 @@
+version: "7.3.1"
+scope: CROSS_CUTTING
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.3.1-DECISIONS-01
+    releaseVersion: "7.3.1"
+    title: "Opt into new Logframe objective form behaviour"
+    description: "If the client wants the new objective-form behaviour for standard/custom indicators (matching Indicators), follow the dev-notes checklist."
+    scope: CROSS_CUTTING
+    category: decision
+    timing: MANUAL_REVIEW
+    applicability: IF_PM_APPROVES
+    semanticRoles: ["decision"]
+    sourceEvidence: "release-notes.md 7.3.1 Logframe objective form"
+    action: "Decide whether to opt in; follow checklist if yes."
+    automation: REPORT_ONLY
+    validation: "decision recorded"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "project-manager"

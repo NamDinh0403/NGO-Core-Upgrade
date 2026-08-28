@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/research-version/schemas/output.schema.json",
+  "title": "research-version output",
+  "type": "object",
+  "required": ["skillId", "status", "clientUnchanged", "findings", "candidateCompatibilityManifest", "uncertaintyResolved", "uncertaintyRemaining", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "research-version" },
+    "status": { "type": "string", "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "BLOCKED_NEEDS_DEVELOPER", "FAILED_POLICY", "FAILED_BUDGET"] },
+    "clientUnchanged": { "type": "boolean", "const": true },
+    "ladderStoppedAt": { "type": ["string", "null"] },
+    "provenance": { "type": "array", "items": { "type": "object" } },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["statement", "verification"],
+        "properties": {
+          "statement": { "type": "string" },
+          "verification": { "type": "string", "enum": ["OBSERVED", "INFERRED", "VERIFIED_BY_METADATA", "VERIFIED_BY_COMPILE", "VERIFIED_BY_TEST", "VERIFIED_AT_RUNTIME", "UNCONFIRMED"] }
+        }
+      }
+    },
+    "candidateCompatibilityManifest": { "type": "object" },
+    "uncertaintyResolved": { "type": "array", "items": { "type": "string" } },
+    "uncertaintyRemaining": { "type": "array", "items": { "type": "string" } },
+    "capabilitiesActivated": { "type": "array", "items": { "type": "string" } },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

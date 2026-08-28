@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/package-alignment.schema.json",
+  "title": "Package alignment map",
+  "type": "object",
+  "required": ["schemaVersion", "status", "packages"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "generatedAt": { "type": "string" },
+    "status": { "enum": ["RESOLVED", "RESOLVED_WITH_UNCERTAINTY", "BLOCKED_INVALID_CORE_PACKAGE"] },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "classification", "selectedTargetVersion", "action", "evidence", "risk", "validation"],
+        "properties": {
+          "name": { "type": "string" },
+          "clientDeclaredVersion": { "type": ["string", "null"] },
+          "clientResolvedVersion": { "type": ["string", "null"] },
+          "targetCoreDeclaredVersion": { "type": ["string", "null"] },
+          "targetCoreResolvedVersion": { "type": ["string", "null"] },
+          "targetPeerRange": { "type": ["string", "null"] },
+          "classification": {
+            "enum": [
+              "CORE_REQUIRED_DIRECT", "CORE_REQUIRED_PEER", "CLIENT_AND_CORE_SHARED",
+              "CLIENT_ONLY_KEEP", "CORE_ONLY_NOT_APPLICABLE", "REMOVED_FROM_CORE_REVIEW",
+              "VERSION_CONFLICT", "REQUIRES_RESEARCH"
+            ]
+          },
+          "selectedTargetVersion": { "type": ["string", "null"] },
+          "action": { "type": "string" },
+          "evidence": { "type": "string" },
+          "risk": { "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+          "validation": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

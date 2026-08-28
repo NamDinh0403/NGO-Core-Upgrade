@@ -1,0 +1,7 @@
+{
+  "skillId": "developer-escalation",
+  "status": "ESCALATED",
+  "escalationRef": "developer-escalation.md",
+  "nextAction": "Commit or stash the uncommitted changes in the local NGO Core repository, then resume.",
+  "resumeCommand": "frontend-upgrade-agent resume --client acme --run 2025-06-01-001"
+}

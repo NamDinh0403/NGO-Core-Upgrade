@@ -1,0 +1,28 @@
+id: "candidate-adapt-api-via-dts-not-anycast-and-apply-all-plan-targets"
+kind: "fix-pattern"
+tier: candidate
+signature: "agent used `as any` to force a changed API to compile, and left some of a plan change's target files unapplied"
+context: >
+  Two MISTAKES surfaced by the client's own correction commit (11eb4cf6 on top of the agent's
+  BRC upgrade commit).
+  (1) When ngo-core's UploaderDirective changed, the agent cast `(this.uploader as any).cancelUpload(file.id)`
+  and set `uploader.formData = obj` -- it compiled but was wrong (formData is not the API; file.id is not a
+  FileItem) and would break upload at runtime. The client's correct fix read the directive's .d.ts and adapted:
+  UploadFile->FileItem, file.progress.status->file.progress, `updateEvent(obj)`+`startUpload()`,
+  `cancelUpload(file)`/`removeFile(file)` (pass the FileItem).
+  (2) A plan change listing multiple env/runtime-config target files had a listed path left unapplied even
+  though the change existed in the plan.
+resolution: >
+  Never `as any`/`@ts-ignore`/`eslint-disable` to paper over a real API change. Read the new contract in
+  node_modules/<dep>/**/*.d.ts and adapt the calling code's TYPES and CALLS. `any` is only for genuinely
+  un-typable dynamic data and must be flagged. And: apply EVERY `targetClientFiles` path of a plan change
+  (or record it N/A-with-evidence); after a change, diff its declared target set against the files actually
+  written and flag any gap, so a change is never left half-done.
+applicability: "Every ngo-core client upgrade; general principle for API-adaptation and plan execution completeness."
+confidence: HIGH
+evidence:
+  - "client correction commit 11eb4cf6 diff of actual-importer.component.ts (FileItem + updateEvent + cancelUpload(file))"
+  - "node_modules/ngo-core/**/uploader.directive.d.ts (updateEvent, cancelUpload(item:FileItem), removeFile(item:FileItem))"
+  - "runs/ngo-client/brc-upgrade-running-log.md sections 13.11, 13.12"
+  - "skills/investigate-frontend-failure v1.1.1 (no any-cast); skills/execute-frontend-upgrade (apply all targets)"
+redacted: true

@@ -1,0 +1,118 @@
+# NGO Core Upgrade — explicit workflow state machine.
+# This is the authority for workflow progression. Prompts do not track progress;
+# runs/<client>/<run-id>/state.json does.
+schemaVersion: 1
+id: core-upgrade
+version: 1.0.0
+lastReviewedAt: 2026-08-13
+
+# Per-step machine-readable status (exactly one must be emitted per attempt).
+stepStatusEnum:
+  - SUCCEEDED
+  - RETRYABLE_FAILURE
+  - BLOCKED_NEEDS_CONTEXT
+  - BLOCKED_NEEDS_DEVELOPER
+  - BLOCKED_NEEDS_APPROVAL
+  - FAILED_POLICY
+  - FAILED_BUDGET
+  - CANCELLED
+
+states:
+  - DISCOVERY
+  - TOOL_BOOTSTRAP
+  - BASELINE
+  - PLAN
+  - UPGRADE
+  - BUILD_AND_FIX
+  - TEST
+  - DOCUMENT
+  - HANDOVER
+  - COMPLETE
+
+# Allowed transitions. Backward transitions permitted only where listed.
+transitions:
+  DISCOVERY:     [TOOL_BOOTSTRAP, HANDOVER]
+  TOOL_BOOTSTRAP: [BASELINE, HANDOVER]      # research tooling must be AVAILABLE before analysis
+  BASELINE:      [PLAN, HANDOVER]
+  PLAN:          [UPGRADE, HANDOVER]
+  UPGRADE:       [BUILD_AND_FIX, HANDOVER]
+  BUILD_AND_FIX: [TEST, UPGRADE, HANDOVER]        # back to UPGRADE if package choice was wrong
+  TEST:          [DOCUMENT, BUILD_AND_FIX, HANDOVER] # back to BUILD_AND_FIX if a fix regressed tests
+  DOCUMENT:      [HANDOVER, COMPLETE]
+  HANDOVER:      [COMPLETE, DOCUMENT]              # DOCUMENTATION_PENDING resolves via DOCUMENT
+  COMPLETE:      []
+
+# Any BLOCKED_NEEDS_* / FAILED_* status routes the run to HANDOVER, which must
+# emit a developer escalation and a safeResumeInstruction. No other exit exists.
+terminalStates: [COMPLETE]
+blockedStatuses: [BLOCKED, DOCUMENTATION_PENDING]
+
+phases:
+  - id: "01-discovery"
+    state: DISCOVERY
+    card: workflows/core-upgrade/phases/01-discovery.md
+  - id: "01b-tool-bootstrap"
+    state: TOOL_BOOTSTRAP
+    card: workflows/core-upgrade/phases/01b-tool-bootstrap.md
+  - id: "02-baseline"
+    state: BASELINE
+    card: workflows/core-upgrade/phases/02-baseline.md
+  - id: "03-plan"
+    state: PLAN
+    card: workflows/core-upgrade/phases/03-plan.md
+  - id: "04-upgrade"
+    state: UPGRADE
+    card: workflows/core-upgrade/phases/04-upgrade.md
+  - id: "05-build-and-fix"
+    state: BUILD_AND_FIX
+    card: workflows/core-upgrade/phases/05-build-and-fix.md
+  - id: "06-test"
+    state: TEST
+    card: workflows/core-upgrade/phases/06-test.md
+  - id: "07-document"
+    state: DOCUMENT
+    card: workflows/core-upgrade/phases/07-document.md
+  - id: "08-handover"
+    state: HANDOVER
+    card: workflows/core-upgrade/phases/08-handover.md
+
+# Capability gates resolved via runs/<client>/<run-id>/tool-manifest.json before a
+# phase may begin. A phase is BLOCKED_NEEDS_DEVELOPER if a required capability is
+# unavailable after bootstrap + install + retry.
+capabilityGates:
+  TOOL_BOOTSTRAP:
+    requiredCapabilities:
+      - repository-version-control
+      - search-repository
+    optionalCapabilities:
+      - container-isolation
+  BUILD_AND_FIX:
+    requiredCapabilities:
+      - restore-nuget-dependency-graph
+      - build-dotnet
+    optionalCapabilities:
+      - selectively-decompile-dotnet     # decompile-first evidence when applicable+permitted
+      - compare-dotnet-public-api
+  # A VERSION_RESEARCH activity (when approved knowledge is insufficient) requires:
+  VERSION_RESEARCH:
+    requiredCapabilities:
+      - acquire-nuget-package
+      - compare-dotnet-public-api
+    optionalCapabilities:
+      - selectively-decompile-dotnet
+      - acquire-npm-package
+      - typecheck-typescript
+    blockedWhen:
+      - anyRequiredCapabilityMissing
+      - anyRequiredToolValidationFailed
+      - requiredCredentialUnavailable
+
+exceptionHandling:
+  onUnexpectedException:
+    - capture-exception-and-evidence
+    - update-durable-state
+    - write-checkpoint
+    - generate-safe-resume-instruction
+    - retry-only-if-policy-permits
+    - else-create-developer-escalation
+    - never-leave-run-active-without-next-action

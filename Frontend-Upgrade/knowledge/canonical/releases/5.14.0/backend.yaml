@@ -1,0 +1,21 @@
+version: "5.14.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-5.14.0-BACKEND-01
+    releaseVersion: "5.14.0"
+    title: "Fix GetLogframeIndicatorTrackers ObjectiveNo (introduced)"
+    description: "If the client customizes GetLogframeIndicatorTrackers, update isnull(obj.ObjectiveNo, glObj.ObjectiveNo) to obj.[ObjectiveNo] so the global objective ID is not shown when the number objective is blank."
+    scope: BACKEND
+    category: customization
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["databaseFunction"]
+    sourceEvidence: "release-notes.md 5.14.0 indicator tracker"
+    action: "Update the client override per the Core PR."
+    automation: MANUAL_DECISION
+    validation: "objective number displays correctly"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    notes: "Primary card; re-listed in 6.4.0."

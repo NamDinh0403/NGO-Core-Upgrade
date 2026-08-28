@@ -1,0 +1,31 @@
+schemaVersion: 1
+id: release-coverage-policy
+description: Gates that make release-requirement coverage mandatory in planning, execution, and completion.
+
+planning:
+  # A plan cannot be READY unless every applicable release requirement is dispositioned.
+  requireResolvedReleaseRange: true
+  requireApplicabilityForEveryRequirement: true
+  requireMappingForEveryAutomatableRequirement: true
+  requireOwnerForEveryManualRequirement: true
+  rejectPlanWithBlockedRequirements: true
+
+execution:
+  # Only requirements that are applicable, mapped, planned, policy-permitted and
+  # within the current timing phase may be applied.
+  allowedAutomation: ["AUTO_SAFE", "AUTO_AFTER_MAPPING"]
+  neverAutoApply: ["MANUAL_DECISION", "MANUAL_EXECUTION", "REPORT_ONLY"]
+  timingPhasesApplicableDuringUpgrade: ["DURING_UPGRADE"]
+  deploymentTimings: ["BEFORE_DEPLOYMENT", "AFTER_DEPLOYMENT"]
+  destructiveSqlRequiresApproval: true
+
+completion:
+  # A run cannot be COMPLETE while any applicable requirement remains unmapped,
+  # unplanned, unimplemented, unverified, or a manual item without an owner.
+  requireVerifiedOrManualWithOwner: true
+  blockOnMissingSteps: true
+
+appsettings:
+  preserveExistingClientValues: true
+  rejectCommittedSecretValues: true
+  requireAzureOwnerForDeploymentKeys: true

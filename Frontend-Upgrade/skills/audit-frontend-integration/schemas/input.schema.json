@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/audit-frontend-integration/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "planRef", "clientPath", "corePath"],
+  "properties": {
+    "skillId": { "type": "string", "const": "audit-frontend-integration" },
+    "runDir": { "type": "string" },
+    "planRef": { "type": "string" },
+    "clientPath": { "type": "string" },
+    "corePath": { "type": "string" }
+  },
+  "additionalProperties": true
+}

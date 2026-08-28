@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+'use strict';
+/* ILSpyCmd wrapper: selective decompilation / assembly metadata. Gated by policy. */
+const { runWrapper } = require('./lib/wrapper');
+const r = runWrapper({
+  toolId: 'ilspycmd', capability: 'selectively-decompile-dotnet',
+  argsPrefix: ['tool', 'run', 'ilspycmd', '--'], userArgs: process.argv.slice(2), mutatingVerbs: [],
+});
+process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+process.exit(r.status === 'SUCCEEDED' ? 0 : 1);

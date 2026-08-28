@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "version",
+  "version": "7.2.0",
+  "releaseDate": "2024-06-01",
+  "targetFramework": "net8.0",
+  "packageVersionMustMatch": true,
+  "sourceOfTruth": {
+    "rule": "Use installed package DLLs for signatures. This version entry predicts common changes only."
+  },
+  "summary": "Core 7.2 keeps net8.0 and introduces an EntityService constructor change plus MaxEmailAttachmentFileSizeMb configuration.",
+  "highRiskChanges": [
+    {
+      "changeType": "constructor-param",
+      "symbol": "EntityService",
+      "route": "Knowledge/symbols/NGO.Core.Services.EntityService.json",
+      "impact": "high",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "notes": [
+        "configurationRepository parameter added."
+      ]
+    }
+  ],
+  "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json",
+  "diffFiles": [],
+  "validation": {
+    "commands": [
+      "dotnet restore --force",
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "Package references match 7.2.0.",
+      "Build has no unresolved EntityService constructor errors."
+    ]
+  }
+}

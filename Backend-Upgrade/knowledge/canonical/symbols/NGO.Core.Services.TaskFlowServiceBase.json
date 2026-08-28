@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "symbol",
+  "symbol": "TaskFlowServiceBase",
+  "fullyQualifiedName": "NGO.Core.Services.TaskFlowServiceBase",
+  "package": "NGO.Core.Services",
+  "kind": "class",
+  "riskLevel": "medium",
+  "sourceOfTruth": {
+    "rule": "Decompile installed NGO.Core.Services.dll and extract method signatures before changing call sites or overrides.",
+    "dllSearchPatterns": [
+      "%USERPROFILE%/.nuget/packages/ngo.core.services/**/NGO.Core.Services.dll"
+    ]
+  },
+  "knownBreakingChanges": [
+    {
+      "fromVersion": "7.x",
+      "toVersion": "8.x",
+      "changeType": "method-parameters-added",
+      "method": "PushEntityToQueueManagement",
+      "likelyErrors": [
+        "CS7036",
+        "CS1503"
+      ],
+      "knownNewParameters": [
+        "taskflowId",
+        "lockRelatedDocuments"
+      ]
+    }
+  ],
+  "relatedFilesToSearch": [
+    "*TaskFlow*.cs",
+    "*TaskService*.cs"
+  ],
+  "antiPatterns": [
+    "Do not add arbitrary default values without matching existing behavior.",
+    "Do not update one call site and leave other overload users unchanged."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "TaskFlowServiceBase call-site errors are gone."
+    ]
+  }
+}

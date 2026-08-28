@@ -1,0 +1,6 @@
+{
+  "skillId": "derive-release-requirements",
+  "status": "SUCCEEDED",
+  "requirementsRef": "core-target-requirements.yaml",
+  "requirementCount": 12
+}

@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "6.3.0"
+title: "NGO Core 6.3.0"
+summary: "Partner expenditure reporting update tool; search preview external-link icon (re-listed)."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["frontend", "deployment"]
+sourceEvidence: "release-notes.md 6.3.0"

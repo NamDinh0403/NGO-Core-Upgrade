@@ -1,0 +1,23 @@
+version: "8.2.0"
+scope: DATABASE
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.2.0-DATABASE-01
+    releaseVersion: "8.2.0"
+    title: "Run DisableLogframe1.sql if using Logframe2 (re-listed)"
+    description: "If using Logframe2, read and manually run 20250917_DisableLogframe1.sql."
+    scope: DATABASE
+    category: script
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["databaseScript"]
+    sourceEvidence: "release-notes.md 8.2.0 logframe migration scripts"
+    action: "Manually run the disable script when Logframe2 is used."
+    automation: MANUAL_EXECUTION
+    validation: "Logframe1 disabled"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: DUPLICATE
+    duplicateOf: REQ-7.6.0-DATABASE-01
+    owner: "deployment-owner"
+    notes: "Re-list (backport) of the 7.6.0 database card."

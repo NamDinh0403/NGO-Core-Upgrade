@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/workflow-event.schema.json",
+  "title": "Workflow Event",
+  "description": "One line in an append-only JSONL stream (observations/actions/failures/decisions).",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "timestamp", "stream", "type"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "stream": { "type": "string", "enum": ["observation","action","failure","decision"] },
+    "phase": { "type": "string" },
+    "type": { "type": "string" },
+    "status": {
+      "type": ["string","null"],
+      "enum": [null,"SUCCEEDED","RETRYABLE_FAILURE","BLOCKED_NEEDS_CONTEXT","BLOCKED_NEEDS_DEVELOPER","BLOCKED_NEEDS_APPROVAL","FAILED_POLICY","FAILED_BUDGET","CANCELLED"]
+    },
+    "idempotencyKey": { "type": ["string","null"] },
+    "detail": { "type": "object" },
+    "evidenceRefs": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

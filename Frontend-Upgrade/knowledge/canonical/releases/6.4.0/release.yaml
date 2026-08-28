@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "6.4.0"
+title: "NGO Core 6.4.0"
+summary: "Indicator tracker ObjectiveNo fix (re-listed); generate missing logframe reports."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["backend", "deployment"]
+sourceEvidence: "release-notes.md 6.4.0"

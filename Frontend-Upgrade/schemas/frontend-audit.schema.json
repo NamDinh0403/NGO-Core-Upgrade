@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/frontend-audit.schema.json",
+  "title": "Front-end integration audit result",
+  "type": "object",
+  "required": ["schemaVersion", "status", "checks", "blockers"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "generatedAt": { "type": "string" },
+    "status": { "enum": ["PASSED", "BLOCKED"] },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "ok", "detail"],
+        "properties": {
+          "id": { "type": "string" },
+          "ok": { "type": "boolean" },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "blockers": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

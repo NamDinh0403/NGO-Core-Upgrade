@@ -1,0 +1,21 @@
+version: "8.4.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.4.0-FRONTEND-01
+    releaseVersion: "8.4.0"
+    title: "Remove Google Analytics gtag script"
+    description: "Remove the Global site tag (gtag.js) Google Analytics script block from src/index.html."
+    scope: FRONTEND
+    category: HTML structure
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["indexHtml"]
+    sourceEvidence: "release-notes.md 8.4.0 Update Google Analytics script"
+    clientDiscovery: ["index.html", "gtag"]
+    action: "Delete the gtag script block from index.html."
+    automation: AUTO_AFTER_MAPPING
+    validation: "gtag block absent; app builds"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE

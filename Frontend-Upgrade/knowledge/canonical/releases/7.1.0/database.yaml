@@ -1,0 +1,21 @@
+version: "7.1.0"
+scope: DATABASE
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.1.0-DATABASE-01
+    releaseVersion: "7.1.0"
+    title: "Inactivate global indicator for custom global objective field"
+    description: "Before deployment, if the client uses a custom global objective field, run DataFix/20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql to fix breakdown template population."
+    scope: DATABASE
+    category: datafix
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_DATABASE_DATA_MATCHES
+    semanticRoles: ["databaseDatafix"]
+    sourceEvidence: "release-notes.md 7.1.0 Breakdown template"
+    action: "Run the datafix when a custom global objective field is used."
+    automation: MANUAL_EXECUTION
+    validation: "breakdown template populates correctly"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

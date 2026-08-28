@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/validate-local-repositories/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "clientPath", "corePath", "sourceVersion"],
+  "properties": {
+    "skillId": { "type": "string", "const": "validate-local-repositories" },
+    "runDir": { "type": "string" },
+    "clientPath": { "type": "string" },
+    "corePath": { "type": "string" },
+    "sourceVersion": { "type": "string" },
+    "targetVersion": { "type": ["string", "null"] },
+    "targetRef": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

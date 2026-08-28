@@ -1,0 +1,56 @@
+# Knowledge Authority Hierarchy
+# Lower rank number = higher authority. A source may never override a
+# higher-authority source without an explicit conflict-resolution record.
+schemaVersion: 1
+id: knowledge-priority
+lastReviewedAt: 2026-08-13
+
+# Domain-specific override that predates this refactor and is preserved:
+# the decompiled installed NGO.Core.*.dll signature is authoritative for any
+# concrete API/signature question. It sits above canonical knowledge for
+# "what does the symbol actually look like now" decisions.
+evidenceOverride:
+  rule: >
+    For a concrete symbol signature, dependency, return type, generic arity, or
+    constructor parameter, the decompiled installed DLL wins over every written
+    source. Record the override in the run state and in the episode.
+  appliesTo: [symbol-signature, generic-arity, constructor-params, return-type]
+
+authority:
+  - rank: 1
+    source: current-run-state-and-approved-developer-decisions
+    location: runs/<client>/<run-id>/state.json + decisions.jsonl
+  - rank: 2
+    source: workflow-and-safety-policies
+    location: workflows/ + config/
+  - rank: 3
+    source: approved-canonical-knowledge
+    location: knowledge/canonical/ (errors, symbols, migrations, appsettings, anti-patterns) + memory/approved/
+  - rank: 4
+    source: version-specific-canonical-knowledge
+    location: knowledge/canonical/versions/*.json
+  - rank: 5
+    source: approved-reusable-memory-patterns
+    location: memory/approved/**
+  - rank: 6
+    source: current-repository-evidence-and-tool-results
+    location: client working tree + decompiled DLL (see evidenceOverride)
+  - rank: 7
+    source: candidate-memory-patterns
+    location: memory/candidates/**   # labelled, never applied as authoritative
+  - rank: 8
+    source: historical-episodes
+    location: memory/episodes/**
+  - rank: 9
+    source: derived-human-readable-documents
+    location: knowledge/derived/**/*.md + docs/**
+  - rank: 10
+    source: raw-logs-and-unvalidated-notes
+    location: runs/<client>/<run-id>/*.jsonl + build logs
+
+conflictResolution:
+  rule: >
+    When two sources disagree, prefer the lower rank number. Ranks 7-10 (candidate
+    patterns, episodes, derived docs, raw logs) must NEVER override ranks 1-4
+    without a recorded conflict-resolution decision in decisions.jsonl.
+  onUnresolvedCanonicalConflict: escalate   # BLOCKED_NEEDS_DEVELOPER

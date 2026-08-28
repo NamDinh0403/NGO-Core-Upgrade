@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/validate-local-repositories/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "doctorReportRef", "readOnly", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "validate-local-repositories" },
+    "status": {
+      "enum": [
+        "READY_FOR_INVENTORY", "READY_FOR_PLANNING", "BLOCKED_INVALID_REQUEST",
+        "BLOCKED_INVALID_CLIENT_REPOSITORY", "BLOCKED_INVALID_CORE_REPOSITORY",
+        "BLOCKED_VERSION_MISMATCH", "BLOCKED_MISSING_PREREQUISITE", "BLOCKED_NEEDS_DEVELOPER"
+      ]
+    },
+    "doctorReportRef": { "type": "string" },
+    "readOnly": { "type": "boolean", "const": true },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

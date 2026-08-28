@@ -1,0 +1,9 @@
+{
+  "skillId": "inventory-client-frontend",
+  "status": "SUCCEEDED",
+  "workspaceType": "NGMODULE",
+  "bootstrapStyle": "bootstrapModule",
+  "coverageRef": "frontend-coverage.yaml",
+  "fileInventoryRef": "frontend-file-inventory.json",
+  "semanticGraphRef": "frontend-semantic-graph.json"
+}

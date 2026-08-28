@@ -1,0 +1,88 @@
+# Agent execution policy for the Core upgrade workflow.
+schemaVersion: 1
+id: agent-policy
+lastReviewedAt: 2026-08-13
+
+workflow:
+  id: core-upgrade
+  version: 1.0.0
+  entryPoint: AGENTS.md
+
+principles:
+  - inspect-before-modifying
+  - deterministic-orchestration-over-prompt-only
+  - installed-dll-is-authoritative-for-signatures
+  - minimal-diff
+  - never-silently-stop
+  - state-lives-in-files-not-chat
+
+# How the authoritative installed DLL is obtained. The installed package in the
+# NuGet cache is the source of truth; the preferred way to get it is the client
+# solution's own credentialed restore, not a standalone download.
+packageAcquisition:
+  primaryMethod: edit-project-file-then-dotnet-restore
+  methodsInPriorityOrder:
+    - id: restore-in-place
+      mutatesClient: true          # allowed: this IS the planned upgrade edit, not a bypass
+      requiresReadyPlan: true
+      description: "Bump NGO.Core.* versions and target frameworks in the client project files (a planned, checkpointed mutation), then run dotnet restore --force on the client solution. Restore uses the solution's configured NuGet sources and credentials (NuGet.config, VSS_NUGET_EXTERNAL_FEED_ENDPOINTS, or cached credentials), so it can succeed even when a standalone .nupkg download cannot. The restored package populates the NuGet cache for installed-DLL inspection."
+    - id: isolated-probe-download
+      mutatesClient: false
+      optional: true
+      description: "Optional research probe (acquire-nuget-package) that downloads the .nupkg into isolated storage without touching the client. Use only when the feed is anonymously reachable."
+  probeDownloadOptional: true
+  blockOnProbeAuthFailure: false
+  escalateForCredentialsWhen: client-dotnet-restore-fails-authentication
+  note: "Bumping the project file version to enable dotnet restore is the canonical way to acquire the installed DLL that is the source of truth. It does not bypass installed-DLL inspection; it is what makes that inspection possible."
+
+statusEnum:                          # exactly one per attempted step
+  - SUCCEEDED
+  - RETRYABLE_FAILURE
+  - BLOCKED_NEEDS_CONTEXT
+  - BLOCKED_NEEDS_DEVELOPER
+  - BLOCKED_NEEDS_APPROVAL
+  - FAILED_POLICY
+  - FAILED_BUDGET
+  - CANCELLED
+
+runStatusEnum:
+  - DISCOVERY
+  - BASELINE
+  - PLAN
+  - UPGRADE
+  - BUILD_AND_FIX
+  - TEST
+  - DOCUMENT
+  - HANDOVER
+  - DOCUMENTATION_PENDING
+  - BLOCKED
+  - COMPLETE
+  - CANCELLED
+
+checkpoints:
+  writeBefore:
+    - repository-mutation
+    - side-effecting-tool-call
+    - waiting-for-human
+    - phase-change
+    - termination
+  writeAfter:
+    - repository-mutation
+    - tool-result-received
+    - every-workflow-step
+
+resume:
+  rule: >
+    A resumed run continues from the most recent valid checkpoint in
+    runs/<client>/<run-id>/checkpoints/. Completed mutating actions recorded in
+    actions.jsonl with a matching idempotencyKey must not be repeated.
+
+response:
+  # No progress-only replies. The agent may return to the user only when a step
+  # ends in a terminal or blocked status with a recorded nextAction.
+  allowProgressOnlyReplies: false
+
+mutationSafety:
+  requireIdempotencyKey: true
+  requireCheckpointAroundMutations: true
+  revertUnverifiedChangesOnBlock: when-safe

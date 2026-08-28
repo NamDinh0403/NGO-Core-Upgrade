@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/core-requirement.schema.json",
+  "title": "Semantic Core target requirement",
+  "type": "object",
+  "required": ["id", "category", "description", "evidenceSource", "verification", "risk", "confidence"],
+  "properties": {
+    "id": { "type": "string" },
+    "targetVersion": { "type": ["string", "null"] },
+    "category": {
+      "enum": [
+        "package", "peer dependency", "compiler option", "Angular compiler option",
+        "environment key", "runtime configuration key", "module", "provider",
+        "initializer", "route", "icon", "asset", "font", "skin", "theme", "style",
+        "script", "polyfill", "manifest", "HTML structure", "test configuration",
+        "build configuration", "service worker", "deployment", "CI/CD"
+      ]
+    },
+    "description": { "type": "string" },
+    "applicability": { "type": ["string", "null"] },
+    "possibleImplementationRoles": { "type": "array", "items": { "type": "string" } },
+    "packageOrSymbol": { "type": ["string", "null"] },
+    "moduleOrProvider": { "type": ["string", "null"] },
+    "configurationKey": { "type": ["string", "null"] },
+    "route": { "type": ["string", "null"] },
+    "assetStyleScript": { "type": ["string", "null"] },
+    "evidenceSource": { "type": "string" },
+    "verification": { "type": "string" },
+    "risk": { "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+    "confidence": { "enum": ["LOW", "MEDIUM", "HIGH"] },
+    "status": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

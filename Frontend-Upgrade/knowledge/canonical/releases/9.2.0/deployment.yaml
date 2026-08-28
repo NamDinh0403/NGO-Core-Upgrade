@@ -1,0 +1,39 @@
+version: "9.2.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.2.0-DEPLOYMENT-01
+    releaseVersion: "9.2.0"
+    title: "Remove Microsoft Graph Mail.Read (Application) Azure permission"
+    description: "After deployment, remove the Azure App permission Microsoft Graph Mail.Read (Application) as Outlook add-in permissions are reduced."
+    scope: DEPLOYMENT
+    category: azure-permission
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_DEPLOYMENT_ENVIRONMENT_USES
+    semanticRoles: ["azurePermissions"]
+    sourceEvidence: "release-notes.md 9.2.0 AfterDeployment"
+    action: "Remove the Application-level Mail.Read permission from the Entra app registration."
+    automation: MANUAL_EXECUTION
+    validation: "permission removed; Outlook add-in still functions"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: REQ-9.2.0-DEPLOYMENT-02
+    releaseVersion: "9.2.0"
+    title: "Optionally add Mail.Read (Delegated) permission"
+    description: "Optionally add Microsoft Graph Mail.Read (Delegated) permission for the Outlook add-in."
+    scope: DEPLOYMENT
+    category: azure-permission
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_PM_APPROVES
+    semanticRoles: ["azurePermissions"]
+    sourceEvidence: "release-notes.md 9.2.0 AfterDeployment optional"
+    action: "Add the Delegated Mail.Read permission if the add-in is used."
+    automation: MANUAL_DECISION
+    validation: "permission present when required"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

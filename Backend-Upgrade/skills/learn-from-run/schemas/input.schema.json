@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/learn-from-run/schemas/input.schema.json",
+  "title": "learn-from-run input",
+  "type": "object",
+  "required": ["skillId", "runDir", "finalOutcome"],
+  "properties": {
+    "skillId": { "type": "string", "const": "learn-from-run" },
+    "runDir": { "type": "string" },
+    "finalOutcome": { "type": "string", "enum": ["succeeded", "blocked", "failed"] },
+    "developerFeedback": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

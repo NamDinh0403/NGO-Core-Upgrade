@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "symbol",
+  "symbol": "TaskService",
+  "fullyQualifiedName": "NGO.Core.Services.TaskService",
+  "package": "NGO.Core.Services",
+  "kind": "class",
+  "riskLevel": "high",
+  "sourceOfTruth": {
+    "rule": "Decompile installed NGO.Core.Services.dll and extract constructor signature and generic constraints before patching.",
+    "dllSearchPatterns": [
+      "%USERPROFILE%/.nuget/packages/ngo.core.services/**/NGO.Core.Services.dll"
+    ]
+  },
+  "knownBreakingChanges": [
+    {
+      "fromVersion": "7.2.x",
+      "toVersion": "7.3.0",
+      "changeType": "constructor-parameters-added",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "knownNewParameters": [
+        "logframe2Service",
+        "taskFlowRepository",
+        "minimumRequirementRepository"
+      ]
+    }
+  ],
+  "relatedFilesToSearch": [
+    "*TaskService*.cs",
+    "*TaskFlowService*.cs",
+    "*Registration*.cs",
+    "Startup.cs",
+    "Program.cs"
+  ],
+  "antiPatterns": [
+    "Do not patch TaskService alone if TaskFlowService or TaskAssignmentService share the same dependency family.",
+    "Do not infer generic arguments without checking constraints."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "TaskService-family CS7036 errors are gone.",
+      "TaskFlowService and TaskAssignmentService constructor cascades are checked."
+    ]
+  }
+}

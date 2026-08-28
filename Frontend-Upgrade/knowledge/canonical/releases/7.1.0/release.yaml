@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "7.1.0"
+title: "NGO Core 7.1.0"
+summary: "IATI email attachment size config; custom indicator breakdown datafix."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "9", dotnetTo: "9" }
+scopes: ["backend", "database"]
+sourceEvidence: "release-notes.md 7.1.0"

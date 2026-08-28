@@ -1,0 +1,57 @@
+version: "8.0.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.0.0-DEPLOYMENT-01
+    releaseVersion: "8.0.0"
+    title: "IATI transaction import queue + SharePoint deployment"
+    description: "Run SharePoint deployment; update Azure setting Core:Queue:IATITransactionImportQueue; add IATITransactionImportQueue to appsettings files."
+    scope: DEPLOYMENT
+    category: azure-setting
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["azureSetting", "appsettings"]
+    sourceEvidence: "release-notes.md 8.0.0 IATI - Transaction import"
+    action: "Configure queue in appsettings + Azure; run SharePoint deployment."
+    automation: MANUAL_EXECUTION
+    validation: "queue present; import works"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: REQ-8.0.0-DEPLOYMENT-02
+    releaseVersion: "8.0.0"
+    title: "Run UpdateIdeaMembers after deployment"
+    description: "After deployment, update all settings in appsettings.json to match the environment and run NGO.Core.Tools.UpdateIdeaMembers for Idea/FundingIdea document permissions."
+    scope: DEPLOYMENT
+    category: tool
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["migrationTool"]
+    sourceEvidence: "release-notes.md 8.0.0 Idea and FundingIdea document permissions"
+    action: "Run UpdateIdeaMembers after deployment."
+    automation: MANUAL_EXECUTION
+    validation: "idea members updated"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: REQ-8.0.0-DEPLOYMENT-03
+    releaseVersion: "8.0.0"
+    title: "Add AppOnly app role and API permission"
+    description: "Before deployment, in the Entra ID app registration add an AppOnly app role (Applications) and grant the AppOnly application permission for the Core API Versions function; admin consent may be required."
+    scope: AZURE
+    category: azure-permission
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_DEPLOYMENT_ENVIRONMENT_USES
+    semanticRoles: ["azurePermissions"]
+    sourceEvidence: "release-notes.md 8.0.0 Core API Versions security"
+    action: "Add AppOnly role + permission; request admin consent."
+    automation: MANUAL_EXECUTION
+    validation: "AppOnly permission granted"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

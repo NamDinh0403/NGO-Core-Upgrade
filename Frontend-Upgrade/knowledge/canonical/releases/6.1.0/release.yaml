@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "6.1.0"
+title: "NGO Core 6.1.0"
+summary: "Checklist disappearing on save in Agreement (ManageTask override)."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["backend"]
+sourceEvidence: "release-notes.md 6.1.0"

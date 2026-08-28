@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "3.2.0",
+  "projectName": "${PROJECT_NAME}",
+  "createdAt": "${TIMESTAMP}",
+  "updatedAt": null,
+  "currentVersion": null,
+  "targetVersion": null,
+  "solutionPath": null,
+  "currentStep": "INIT",
+  "completedSteps": [],
+  "iteration": 0,
+  "maxIterations": 5,
+  "lastCommand": null,
+  "lastBuild": {
+    "timestamp": null,
+    "command": null,
+    "succeeded": false,
+    "errorCount": null,
+    "warningCount": null,
+    "errorsByCode": {},
+    "rootCauseFamilies": []
+  },
+  "previousBuild": null,
+  "activeHypotheses": [],
+  "hypothesisHistory": [],
+  "investigationLog": [],
+  "playbookOverrides": [],
+  "triageOverrides": [],
+  "changedFiles": [],
+  "pendingErrors": [],
+  "blockedErrors": [],
+  "fixesApplied": [],
+  "revertedChanges": [],
+  "resolvedSignatures": [],
+  "nextAction": "Run Step 0 pre-flight check",
+  "responseGate": {
+    "canRespond": false,
+    "reason": null,
+    "allowedReasons": [
+      "Build succeeded and EF migration attempted",
+      "Five build-fix iterations exhausted",
+      "True blocker documented with evidence"
+    ]
+  }
+}

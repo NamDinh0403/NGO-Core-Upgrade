@@ -1,0 +1,61 @@
+version: "9.1.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.1.0-BACKEND-01
+    releaseVersion: "9.1.0"
+    title: "SPSignedOffAdditionalDocumentsFolderName config (re-listed)"
+    description: "Add system config SPSignedOffAdditionalDocumentsFolderName controlling the optional approval subfolder for Mark as Paid / Cancel actions; run UpdatePaymentDocumentLinks if used."
+    scope: BACKEND
+    category: configuration
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["backendConfig"]
+    sourceEvidence: "release-notes.md 9.1.0 (repeat of 8.6.0)"
+    action: "Set config; run NGO.Core.Tools.UpdatePaymentDocumentLinks if Mark as Paid/Cancel is used."
+    automation: MANUAL_EXECUTION
+    validation: "config present; tool run when applicable"
+    risk: MEDIUM
+    confidence: HIGH
+    status: DUPLICATE
+    duplicateOf: REQ-8.6.0-BACKEND-01
+    owner: "deployment-owner"
+    notes: "Backport/repeat of the 8.6.0 card; deduplicated by the release-range resolver."
+  - schemaVersion: 1
+    id: REQ-9.1.0-BACKEND-02
+    releaseVersion: "9.1.0"
+    title: "Add EF Core Design and Tools nuget 10.0.7"
+    description: "Update/add Microsoft.EntityFrameworkCore.Design and Microsoft.EntityFrameworkCore.Tools version 10.0.7 for NGO.API."
+    scope: BACKEND
+    category: package
+    timing: DURING_UPGRADE
+    applicability: ALWAYS
+    semanticRoles: ["backendPackages"]
+    sourceEvidence: "release-notes.md 9.1.0 EF Core tooling"
+    action: "Add/update the two EF Core tooling packages at version 10.0.7."
+    automation: MANUAL_EXECUTION
+    validation: "NGO.API restores; migrations use EF Core"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "backend-owner"
+  - schemaVersion: 1
+    id: REQ-9.1.0-BACKEND-03
+    releaseVersion: "9.1.0"
+    title: "Logframe2 saved-query migration tool (review then update)"
+    description: "If Logframe2 is used, run NGO.Core.Tools.Logframe2SavedQueryMigration in REVIEW mode first, resolve all warnings, then run in UPDATE mode."
+    scope: BACKEND
+    category: tool
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["migrationTool"]
+    sourceEvidence: "release-notes.md 9.1.0 Logframe2SavedQueryMigration (repeat of 8.6.0)"
+    action: "Run tool in review mode; resolve warnings; then run in update mode."
+    automation: MANUAL_EXECUTION
+    validation: "review mode clean before update mode is run"
+    risk: HIGH
+    confidence: HIGH
+    status: DUPLICATE
+    duplicateOf: REQ-8.6.0-BACKEND-02
+    owner: "deployment-owner"
+    notes: "REVIEW-before-UPDATE ordering is mandatory. Backport/repeat of 8.6.0."

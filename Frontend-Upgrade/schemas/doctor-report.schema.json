@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/doctor-report.schema.json",
+  "title": "Dual-repository doctor report",
+  "type": "object",
+  "required": ["schemaVersion", "kind", "status", "nextAction", "client", "core", "readOnly"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "kind": { "type": "string", "const": "frontend-doctor-report" },
+    "generatedAt": { "type": "string" },
+    "status": {
+      "enum": [
+        "READY_FOR_INVENTORY", "READY_FOR_PLANNING", "BLOCKED_INVALID_REQUEST",
+        "BLOCKED_INVALID_CLIENT_REPOSITORY", "BLOCKED_INVALID_CORE_REPOSITORY",
+        "BLOCKED_VERSION_MISMATCH", "BLOCKED_MISSING_PREREQUISITE", "BLOCKED_NEEDS_DEVELOPER"
+      ]
+    },
+    "nextAction": { "type": "string" },
+    "requestErrors": { "type": "array", "items": { "type": "string" } },
+    "prerequisites": { "type": "array" },
+    "client": { "type": "object", "required": ["checks", "summary"] },
+    "core": { "type": "object", "required": ["checks", "summary"] },
+    "contradictions": { "type": "array" },
+    "readOnly": { "type": "boolean", "const": true }
+  },
+  "additionalProperties": true
+}

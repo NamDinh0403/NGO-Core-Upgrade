@@ -1,0 +1,21 @@
+version: "6.0.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-6.0.0-DEPLOYMENT-01
+    releaseVersion: "6.0.0"
+    title: "Add page-import, AD sync, and reminder queues/schedules"
+    description: "Add PageImportAddDataQueue, ADSyncGroupsQueue/ADSyncUsersQueue and ADSyncGroupsSchedule/ADSyncUsersSchedule, and ReminderTaskDeadlineSchedule to appsettings.json and the matching Azure App Service keys."
+    scope: DEPLOYMENT
+    category: azure-setting
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["appsettings", "azureSetting"]
+    sourceEvidence: "release-notes.md 6.0.0 queues/schedules"
+    action: "Add queue/schedule keys to appsettings + Azure."
+    automation: AUTO_AFTER_MAPPING
+    validation: "APPSET-PAGEIMPORT-QUEUE, APPSET-ADSYNC-GROUPS-*, APPSET-REMINDER-SCHEDULE satisfied"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

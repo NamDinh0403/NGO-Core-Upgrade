@@ -1,0 +1,450 @@
+﻿# ============================================================
+# Frontend Upgrade - Auto-Fix Rules
+# Target: Angular 10 → 15, NGO Core 5.x → 8.x
+# ============================================================
+
+version: "2.0"
+target: "Angular 15"
+
+# ============================================================
+# SECTION 1: SYNTAX TRANSFORMATION RULES
+# Rules applied to .ts, .html, .scss files during Phase 3
+# ============================================================
+
+syntax_rules:
+
+  # --- Import fixes ---
+
+  - id: ZONE_JS_IMPORT
+    scope: "polyfills.ts"
+    detect: "import 'zone.js/dist/zone'"
+    action: "import 'zone.js'"
+    risk: AUTO_SAFE
+    notes: "Zone.js import path simplified"
+
+  - id: LODASH_IMPORT
+    scope: "**/*.ts"
+    detect: "import * as _imported from 'lodash';"
+    action: "import _ from 'lodash';"
+    risk: AUTO_SAFE
+    notes: "Modern ES module syntax"
+
+  - id: MOMENT_IMPORT
+    scope: "**/*.ts"
+    detect: "import * as momentImported from 'moment';"
+    action: "import moment from 'moment';"
+    risk: AUTO_SAFE
+    notes: "Modern ES module syntax"
+
+  - id: MARKED_REQUIRE
+    scope: "**/*.ts"
+    detect: "var marked = require('marked')"
+    action: "import { marked } from 'marked';"
+    risk: AUTO_SAFE
+    notes: "Replace CommonJS require with ES import"
+
+  - id: SCSS_TILDE_IMPORT
+    scope: "**/*.scss"
+    detect: "@import '~"
+    action: "@import '"
+    risk: AUTO_SAFE
+    notes: "Tilde prefix no longer needed in Angular 13+"
+
+  # --- Angular Forms (typed forms migration) ---
+
+  - id: FORM_GROUP_UNTYPED
+    scope: "**/*.ts"
+    detect: "FormGroup"
+    action: "UntypedFormGroup"
+    risk: AUTO_SAFE
+    import_add: "UntypedFormGroup"
+    import_remove: "FormGroup"
+    import_from: "@angular/forms"
+    notes: "Angular 14 typed forms — use Untyped for migration path"
+
+  - id: FORM_CONTROL_UNTYPED
+    scope: "**/*.ts"
+    detect: "FormControl"
+    action: "UntypedFormControl"
+    risk: AUTO_SAFE
+    import_add: "UntypedFormControl"
+    import_remove: "FormControl"
+    import_from: "@angular/forms"
+    notes: "Angular 14 typed forms"
+
+  - id: FORM_BUILDER_UNTYPED
+    scope: "**/*.ts"
+    detect: "FormBuilder"
+    action: "UntypedFormBuilder"
+    risk: AUTO_SAFE
+    import_add: "UntypedFormBuilder"
+    import_remove: "FormBuilder"
+    import_from: "@angular/forms"
+    notes: "Angular 14 typed forms"
+
+  # --- NgRx Effects ---
+
+  - id: EFFECT_DECORATOR
+    scope: "**/*.effects.ts"
+    detect: "@Effect()"
+    action: "createEffect(() =>"
+    risk: AUTO_WITH_WARNING
+    import_add: "createEffect"
+    import_remove: "Effect"
+    import_from: "@ngrx/effects"
+    notes: "@Effect() deprecated in NgRx 12+, use createEffect()"
+
+  - id: EFFECT_DISPATCH_FALSE
+    scope: "**/*.effects.ts"
+    detect: "@Effect({ dispatch: false })"
+    action: "createEffect(() => ..., { dispatch: false })"
+    risk: AUTO_WITH_WARNING
+    notes: "Non-dispatching effect syntax"
+
+  # --- Routing ---
+
+  - id: LAZY_LOAD_STRING_SYNTAX
+    scope: "**/*.ts"
+    detect: "loadChildren: '<path>#<Module>'"
+    action: "loadChildren: () => import('<path>').then(m => m.<Module>)"
+    risk: AUTO_WITH_WARNING
+    notes: "String-based lazy loading deprecated in Angular 12+"
+
+  - id: ROUTER_INITIAL_NAVIGATION
+    scope: "app-routing.module.ts"
+    detect: "initialNavigation: 'enabled'"
+    action: "initialNavigation: 'enabledNonBlocking'"
+    risk: AUTO_SAFE
+    notes: "Router option renamed in Angular 14+"
+
+  # --- Module cleanup ---
+
+  - id: ENTRY_COMPONENTS_REMOVE
+    scope: "**/*.module.ts"
+    detect: "entryComponents: [...]"
+    action: "Remove entirely"
+    risk: AUTO_SAFE
+    notes: "Not needed with Ivy (Angular 13+)"
+
+  - id: BROWSER_MODULE_TRANSITION
+    scope: "app.module.ts"
+    detect: "BrowserModule.withServerTransition(...)"
+    action: "BrowserModule"
+    risk: AUTO_SAFE
+    notes: "Simplified in Angular 14+"
+
+  # --- ViewChild / ContentChild ---
+
+  - id: VIEW_CHILD_STATIC
+    scope: "**/*.ts"
+    detect: "@ViewChild('name')"
+    action: "@ViewChild('name', { static: false })"
+    risk: AUTO_WITH_WARNING
+    notes: "Explicit static flag required in Angular 9+"
+
+  # --- tsconfig ---
+
+  - id: TSCONFIG_TARGET
+    scope: "tsconfig.json"
+    detect: '"target": "es2015"'
+    action: '"target": "ES2022"'
+    risk: AUTO_SAFE
+    notes: "Angular 15 requires ES2022"
+    condition: "tsconfig_target_is_lower_than_locked_version"
+
+  - id: TSCONFIG_SYNTHETIC_IMPORTS
+    scope: "tsconfig.json"
+    detect: "compilerOptions (missing allowSyntheticDefaultImports)"
+    action: 'Add "allowSyntheticDefaultImports": true'
+    risk: AUTO_SAFE
+    condition: "key_not_exists: allowSyntheticDefaultImports"
+
+  - id: TSCONFIG_CLASS_FIELDS
+    scope: "tsconfig.json"
+    detect: "compilerOptions (missing useDefineForClassFields)"
+    action: 'Add "useDefineForClassFields": false'
+    risk: AUTO_SAFE
+    condition: "key_not_exists: useDefineForClassFields"
+
+
+# ============================================================
+# SECTION 2: DEPENDENCY SYNC RULES
+# Controls how package.json versions are merged (Phase 2)
+# ============================================================
+
+dependency_rules:
+
+  version_comparison:
+    - id: PATCH_BUMP
+      pattern: "Same major.minor, different patch"
+      example: "1.2.3 → 1.2.5"
+      risk: AUTO_SAFE
+      action: "Take Core version"
+
+    - id: MINOR_BUMP
+      pattern: "Same major, different minor"
+      example: "1.2.3 → 1.5.0"
+      risk: AUTO_WITH_WARNING
+      action: "Take Core version, log warning"
+
+    - id: MAJOR_BUMP
+      pattern: "Different major"
+      example: "1.2.3 → 2.0.0"
+      risk: HUMAN_REQUIRED
+      action: "Prompt user for confirmation"
+
+  package_specific:
+    - id: ANGULAR_PACKAGES
+      packages:
+        - "@angular/core"
+        - "@angular/common"
+        - "@angular/compiler"
+        - "@angular/forms"
+        - "@angular/platform-browser"
+        - "@angular/platform-browser-dynamic"
+        - "@angular/router"
+        - "@angular/animations"
+      rule: "All must be same version"
+      risk: AUTO_WITH_WARNING
+      breaking_changes:
+        "10 → 15":
+          - "Ivy is default — entryComponents removed"
+          - "FormGroup → UntypedFormGroup"
+          - "Typed forms introduced"
+          - "@Effect() deprecated"
+
+    - id: ANGULAR_CLI
+      packages:
+        - "@angular/cli"
+        - "@angular-devkit/build-angular"
+      rule: "Version must match @angular/core major"
+      risk: AUTO_WITH_WARNING
+
+    - id: RXJS
+      packages: ["rxjs"]
+      breaking_changes:
+        "6.x → 7.x":
+          - "toPromise() deprecated — use lastValueFrom()"
+          - "Some operators renamed"
+      risk: AUTO_WITH_WARNING
+
+    - id: NGRX
+      packages:
+        - "@ngrx/store"
+        - "@ngrx/effects"
+        - "@ngrx/router-store"
+        - "@ngrx/entity"
+      breaking_changes:
+        "9.x → 15.x":
+          - "@Effect() → createEffect()"
+          - "Feature registration syntax changed"
+      risk: HUMAN_REQUIRED
+
+    - id: TYPESCRIPT
+      packages: ["typescript"]
+      version_matrix:
+        "Angular 10": "~3.9.0"
+        "Angular 15": "~4.9.0"
+      risk: AUTO_WITH_WARNING
+
+    - id: ZONEJS
+      packages: ["zone.js"]
+      version_matrix:
+        "Angular 10": "~0.10.0"
+        "Angular 15": "~0.13.0"
+      risk: AUTO_SAFE
+
+    - id: NGO_SPECIFIC_V700
+      applies_when: "upgrading to v7.0.0 or higher"
+      add:
+        - "ng2-file-upload: ^1.3.0"
+        - "ngx-file-drop: ^10.0.0"
+      remove:
+        - "ngx-uploader"
+      risk: AUTO_SAFE
+
+  client_only_rules:
+    - id: KNOWN_LEGACY
+      packages:
+        - "angular-bootstrap-md"
+        - "ngx-bootstrap@4.x"
+      action: "Warn — may conflict with Bootstrap 5"
+      risk: HUMAN_REQUIRED
+
+    - id: CUSTOM_PACKAGES
+      pattern: "@client/*"
+      action: "Keep — client-internal"
+      risk: AUTO_SAFE
+
+  conflict_resolution:
+    - id: PEER_DEP_CONFLICT
+      description: "Package A requires X@1.0, Package B requires X@2.0"
+      action: "Take higher version, log warning"
+      risk: AUTO_WITH_WARNING
+
+    - id: DUPLICATE_PACKAGE
+      description: "Same package in deps and devDeps"
+      action: "Keep in deps only, remove from devDeps"
+      risk: AUTO_SAFE
+
+  install_commands:
+    normal:
+      - "npm cache clean --force"
+      - "Remove-Item -Recurse -Force .\\node_modules -ErrorAction SilentlyContinue"
+      - "Remove-Item -Force .\\package-lock.json -ErrorAction SilentlyContinue"
+      - "npm install"
+    fallback:
+      - "npm install --legacy-peer-deps"
+    last_resort:
+      - "npm install --force"
+    verify:
+      - "ng version"
+      - "npm ls @angular/core"
+
+
+# ============================================================
+# SECTION 3: EVOLUTIONARY FIX PATTERNS
+# Self-improving patterns with confidence tracking (Phase 5)
+# ============================================================
+
+evolution:
+  fitness_config:
+    initial_confidence: 0.5
+    min_to_apply: 0.7
+    success_boost: 0.05
+    failure_penalty: 0.1
+    max_mutations: 3
+    batch_threshold: 3
+
+  patterns:
+
+    - id: SCSS_TILDE_REMOVE
+      category: SCSS
+      confidence: 0.99
+      detect: "@import '~"
+      fix:
+        search: "@import '~"
+        replace: "@import '"
+      batch_eligible: true
+
+    - id: TS_ZONE_IMPORT
+      category: TypeScript
+      confidence: 0.98
+      detect: "zone.js/dist/zone"
+      fix:
+        search: "import 'zone.js/dist/zone'"
+        replace: "import 'zone.js'"
+      batch_eligible: false
+
+    - id: TS_LODASH_IMPORT
+      category: TypeScript
+      confidence: 0.97
+      detect: "import * as .* from 'lodash'"
+      fix:
+        search: "import * as _imported from 'lodash';\nconst _ = _imported;"
+        replace: "import _ from 'lodash';"
+      mutations:
+        - search: "import * as _ from 'lodash'"
+          replace: "import _ from 'lodash'"
+      batch_eligible: true
+
+    - id: TS_FORMGROUP_UNTYPED
+      category: TypeScript
+      confidence: 0.96
+      detect: "FormGroup"
+      fix:
+        search: "FormGroup"
+        replace: "UntypedFormGroup"
+        import_add: "UntypedFormGroup"
+        import_from: "@angular/forms"
+      batch_eligible: true
+
+    - id: HTML_NGIF_TO_ATIF
+      category: HTML
+      confidence: 0.95
+      detect: "*ngIf=\"...\""
+      fix:
+        type: regex
+        search: "<([\\w-]+)\\s+\\*ngIf=\"([^\"]+)\"([^>]*)>"
+        replace: "@if ($2) {\n  <$1$3>"
+      batch_eligible: true
+
+    - id: TS_CONSTRUCTOR_ADD_PARAM
+      category: TypeScript
+      confidence: 0.90
+      detect:
+        error_code: "TS2554"
+        message_pattern: "Expected \\d+ arguments, but got \\d+"
+      fix:
+        type: constructor_sync
+        strategy: "Add missing params from Core parent constructor"
+      mutations:
+        - template: "{type} {name} = null"
+        - template: "{type}? {name}"
+        - template: "@Optional() {type} {name}"
+      batch_eligible: false
+      requires_core_lookup: true
+
+    - id: TS_NGRX_EFFECT
+      category: TypeScript
+      confidence: 0.88
+      detect: "@Effect()"
+      fix:
+        type: multi_step
+        steps:
+          - "Update import: Effect → createEffect"
+          - "Replace decorator: @Effect() → createEffect(() =>"
+          - "Wrap pipe: close with }, { dispatch: true })"
+      mutations:
+        - strategy: "Install @ngrx/effects-compat and keep @Effect"
+      batch_eligible: true
+
+    - id: TS_SUPER_CALL_FIX
+      category: TypeScript
+      confidence: 0.85
+      detect:
+        error_code: "TS2554"
+        context: "super("
+      fix:
+        type: super_sync
+        strategy: "Match super() args to parent constructor signature"
+      mutations:
+        - template: "super(...existing, null)"
+        - template: "super(...(existing as any))"
+        - template: "// @ts-ignore FRONTEND_UPGRADE_ISSUE\nsuper(...existing)"
+      batch_eligible: false
+      requires_core_lookup: true
+
+    - id: HTML_STRUCTURAL_MERGE
+      category: HTML
+      confidence: 0.70
+      detect: "Core HTML structure changed significantly"
+      fix:
+        type: merge_with_markers
+        strategy: "Take Core structure, inject Client custom elements with markers"
+      batch_eligible: false
+      human_review_recommended: true
+
+    - id: GRACEFUL_FALLBACK
+      category: ALL
+      confidence: 1.0
+      detect: "All other patterns exhausted"
+      fix:
+        template: |
+          // FRONTEND_UPGRADE_ISSUE: Auto-fix failed
+          // Error: {error_message}
+          // Patterns tried: {patterns_tried}
+          // @ts-ignore
+          {original_code}
+      batch_eligible: true
+
+  on_success:
+    - "Increase success_rate by 0.01"
+    - "Log pattern effectiveness"
+
+  on_failure:
+    - "Decrease confidence by 0.05"
+    - "If confidence < 0.5, mark for human review"
+
+  on_mutation_success:
+    - "Promote mutation to primary fix"

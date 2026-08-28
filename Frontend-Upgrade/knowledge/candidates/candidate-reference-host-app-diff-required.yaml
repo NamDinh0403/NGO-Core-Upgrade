@@ -1,0 +1,30 @@
+id: "candidate-reference-host-app-diff-required"
+kind: "requirement-pattern"
+tier: candidate
+signature: "app-level Core release upgrade misses new modules/providers/routes/env-keys/icons because inspection is scoped to roles the client already uses"
+context: >
+  ngo-client (BRC) upgrade Angular 9->15 + ngo-core 5.12.5->9.2.1. The
+  requirement-derived pipeline (inspect-local-core scoped to client-used roles +
+  requirement-only map-core-to-client) produced no concrete app-level host-app
+  delta, so the plan collapsed real changes into a single vague "ngo-core API
+  surface" item. A manual diff of Core's reference host app (src/app) vs the
+  client revealed 9 new ngo-core modules, 4 new FontAwesome icons, a missing
+  @Injectable on AppEnvironmentService, app-routing.module MSAL/Outlook init,
+  12+ new environment keys, main.ts security/config changes, and an Angular-15
+  SCSS "~" import removal.
+resolution: >
+  inspect-local-core must capture the target Core reference host application as a
+  FULL structural baseline (core-host-app-baseline.yaml), not scoped away by
+  current client usage; map-core-to-client must structurally diff that baseline
+  against the client and emit concrete deltas (frontend-host-app-delta.yaml),
+  dispositioning new Core elements as MISSING while preserving client -Ext/
+  override providers, custom modules/routes, and customized config values/paths.
+applicability: >
+  Any client that consumes the Core library as a package and mirrors a Core
+  reference host app, upgrading across one or more Core majors.
+confidence: HIGH
+evidence:
+  - "runs/ngo-client/ngo-client-2026-08-25T02-58-13Z/host-app-delta.yaml"
+  - "Core reference host app: ngo-client-core/src/app/{app.module.ts,app-route.service.ts,app-environment.service.ts,app-routing.module.ts}"
+  - "skills/inspect-local-core/SKILL.md v1.1.0; skills/map-core-to-client/SKILL.md v1.1.0"
+redacted: true

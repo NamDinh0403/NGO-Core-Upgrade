@@ -1,0 +1,76 @@
+version: "8.0.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.0.0-FRONTEND-01
+    releaseVersion: "8.0.0"
+    title: "Bootstrap 5 styles migration"
+    description: "Remove the Bootstrap 4 CDN @import from src/styles.css and append the Bootstrap 5 modal-backdrop z-index override."
+    scope: FRONTEND
+    category: style
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["styles"]
+    sourceEvidence: "release-notes.md 8.0.0 styles.css"
+    reusableMigration: angular-10-to-15
+    clientDiscovery: ["styles.css", "styles.scss"]
+    action: "Remove BS4 import; add BS5 modal-backdrop override."
+    automation: AUTO_AFTER_MAPPING
+    validation: "modals render correctly"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-8.0.0-FRONTEND-02
+    releaseVersion: "8.0.0"
+    title: "Add MinimumRequirement module + env keys + icon"
+    description: "Import MinimumRequirementModule into the app module, register farExclamationCircle, and add adminMinimumRequirements and minimumRequirements API URLs to environment files."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["ngModuleMetadata", "iconRegistration", "environmentConfig", "runtimeConfigService"]
+    sourceEvidence: "release-notes.md 8.0.0 Minimum requirements function"
+    clientDiscovery: ["app.module.ts", "bootstrapApplication", "environment.ts", "app-environment.service.ts"]
+    action: "Register module/icon and add env keys at the client's resolved points."
+    automation: AUTO_AFTER_MAPPING
+    validation: "module loads; endpoints resolve"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-8.0.0-FRONTEND-03
+    releaseVersion: "8.0.0"
+    title: "Import faLock icon"
+    description: "Import faLock from '@fortawesome/pro-light-svg-icons' and add it to the icon library for the lock-entities feature."
+    scope: FRONTEND
+    category: icon
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["iconRegistration"]
+    sourceEvidence: "release-notes.md 8.0.0 Lock entities"
+    clientDiscovery: ["app.module.ts", "library.addIcons"]
+    action: "Register faLock at the client's icon registration point."
+    automation: AUTO_AFTER_MAPPING
+    validation: "icon renders"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-8.0.0-FRONTEND-04
+    releaseVersion: "8.0.0"
+    title: "Guard getCurrentConfiguration null filtering"
+    description: "If custom code uses getCurrentConfiguration, ensure it includes filter(config => config != null)."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["coreSymbolUsage"]
+    sourceEvidence: "release-notes.md 8.0.0 loading-tabs"
+    clientDiscovery: ["getCurrentConfiguration"]
+    action: "Add null filter to custom getCurrentConfiguration usage."
+    automation: AUTO_AFTER_MAPPING
+    validation: "no null-config errors"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE

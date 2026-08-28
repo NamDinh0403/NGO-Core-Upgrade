@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "7.2.0"
+title: "NGO Core 7.2.0"
+summary: "Partner expenditure PDF template; Outlook add-in Mail.Read permission; income planned vs received config."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "9", dotnetTo: "9" }
+scopes: ["backend", "deployment"]
+sourceEvidence: "release-notes.md 7.2.0"

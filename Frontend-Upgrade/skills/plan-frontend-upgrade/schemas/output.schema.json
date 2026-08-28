@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/plan-frontend-upgrade/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "planRef", "uncertaintyRegisterRef", "readOnly", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "plan-frontend-upgrade" },
+    "status": { "enum": ["READY", "READY_WITH_ASSUMPTIONS", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_CONTEXT", "BLOCKED_NEEDS_DEVELOPER", "FAILED_POLICY"] },
+    "planRef": { "type": "string" },
+    "uncertaintyRegisterRef": { "type": "string" },
+    "readOnly": { "type": "boolean", "const": true },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "6.2.0"
+title: "NGO Core 6.2.0"
+summary: "Allocation date fix; income schedule task link characteristic; lock-documents webjob move."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["database", "backend"]
+sourceEvidence: "release-notes.md 6.2.0"

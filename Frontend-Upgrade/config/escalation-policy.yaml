@@ -1,0 +1,31 @@
+schemaVersion: 1
+id: frontend-escalation-policy
+description: Budgets and escalation conditions for the front-end upgrade agent.
+
+budgets:
+  maxAttemptsPerIdenticalFix: 2
+  maxBuildFixIterations: 5
+  maxToolCallsPerPhase: 40
+  confidenceThreshold: 0.6
+
+escalateWhen:
+  - A HIGH or CRITICAL uncertainty blocks a required mutation.
+  - The same build error recurs after maxAttemptsPerIdenticalFix attempts.
+  - Configuration authority or precedence cannot be resolved with evidence.
+  - A Core requirement maps AMBIGUOUS and no evidence disambiguates it.
+  - The actual installed dependency graph differs materially from the plan.
+  - The Core repository is detected to have changed during the run.
+  - A client ngo-* package is absent from target Core and removal is unconfirmed.
+
+onEscalation:
+  - Preserve the exact error and evidence.
+  - Write skills/developer-escalation output with the exact next action.
+  - Set run status to BLOCKED with a safeResumeInstruction.
+
+blockedReasonMapping:
+  invalidRequest: BLOCKED_NEEDS_DEVELOPER
+  invalidClientRepository: BLOCKED_NEEDS_DEVELOPER
+  invalidCoreRepository: BLOCKED_NEEDS_DEVELOPER
+  versionMismatch: BLOCKED_NEEDS_DEVELOPER
+  ambiguousRequirement: BLOCKED_NEEDS_CONTEXT
+  retriesExceeded: FAILED_BUDGET

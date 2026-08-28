@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "knowledge-manifest",
+  "lastUpdated": "2026-08-13",
+  "purpose": "Map of the reorganized knowledge base. Canonical machine-consumed records live under knowledge/canonical/; narrative docs under knowledge/derived/; routing + retrieval under knowledge/index/.",
+  "canonical": {
+    "routingTable": "knowledge/index/routing-table.json",
+    "errors": "knowledge/canonical/errors/",
+    "symbols": "knowledge/canonical/symbols/",
+    "versions": "knowledge/canonical/versions/",
+    "migrations": "knowledge/canonical/migrations/",
+    "appsettings": "knowledge/canonical/appsettings/",
+    "antiPatterns": "knowledge/canonical/anti-patterns/anti-patterns.json"
+  },
+  "derived": {
+    "note": "Narrative/derived documentation. Not authoritative; never patch from these before the routed canonical record and the decompiled DLL.",
+    "breakingChanges": "knowledge/derived/breaking-changes/breaking-changes-registry.md",
+    "commonErrors": "knowledge/derived/common-error-solutions/common-error-solutions.md",
+    "errorPatterns": "knowledge/derived/common-error-solutions/error-fix-patterns.md",
+    "codeChangesByVersion": "knowledge/derived/breaking-changes/code-changes-by-version.md",
+    "deploymentInstructions": "knowledge/derived/deployment-guides/deployment-instructions-by-version.md",
+    "core8DeepDive": "knowledge/derived/breaking-changes/core-8-migration-detailed.md",
+    "core800ClassCatalogue": "knowledge/derived/breaking-changes/core-8.0.0-changes-by-class.md",
+    "versionChanges": "knowledge/derived/version-changes/changelog.md"
+  },
+  "legacy": {
+    "versionManifest": "knowledge/index/version-manifest.json"
+  },
+  "memory": {
+    "episodes": "memory/episodes/",
+    "candidates": "memory/candidates/",
+    "approved": "memory/approved/",
+    "rejected": "memory/rejected/"
+  },
+  "schemas": {
+    "version": "schemas/version-knowledge.schema.json",
+    "episode": "schemas/episode.schema.json",
+    "fixPattern": "schemas/fix-pattern.schema.json",
+    "errorPattern": "schemas/error-pattern.schema.json"
+  }
+}

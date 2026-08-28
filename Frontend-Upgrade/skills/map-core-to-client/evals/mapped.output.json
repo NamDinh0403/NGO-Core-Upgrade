@@ -1,0 +1,7 @@
+{
+  "skillId": "map-core-to-client",
+  "status": "SUCCEEDED",
+  "requirementMapRef": "frontend-requirement-map.yaml",
+  "impactMapRef": "frontend-impact-map.yaml",
+  "unresolvedCount": 0
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/plan-upgrade/schemas/output.schema.json",
+  "title": "plan-upgrade output",
+  "type": "object",
+  "required": ["skillId", "status", "planRef", "uncertaintyRegisterRef", "requiredCapabilities", "deferredCapabilities", "nextAction", "readOnly"],
+  "properties": {
+    "skillId": { "type": "string", "const": "plan-upgrade" },
+    "status": { "type": "string", "enum": ["READY", "READY_WITH_ASSUMPTIONS", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_CONTEXT", "BLOCKED_NEEDS_DEVELOPER", "FAILED_POLICY"] },
+    "readOnly": { "type": "boolean", "const": true },
+    "planRef": { "type": "string" },
+    "uncertaintyRegisterRef": { "type": "string" },
+    "knownFacts": { "type": "array", "items": { "type": "object" } },
+    "assumptions": { "type": "array", "items": { "type": "object" } },
+    "contradictions": { "type": "array", "items": { "type": "object" } },
+    "requiredCapabilities": { "type": "array", "items": { "type": "string" } },
+    "optionalCapabilities": { "type": "array", "items": { "type": "string" } },
+    "deferredCapabilities": { "type": "array", "items": { "type": "string" } },
+    "researchRequired": { "type": "boolean" },
+    "verificationStrategy": { "type": "string" },
+    "rollbackStrategy": { "type": "string" },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

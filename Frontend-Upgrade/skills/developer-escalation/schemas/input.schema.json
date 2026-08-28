@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/developer-escalation/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "reason"],
+  "properties": {
+    "skillId": { "type": "string", "const": "developer-escalation" },
+    "runDir": { "type": "string" },
+    "reason": { "type": "string" },
+    "sourceSkill": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

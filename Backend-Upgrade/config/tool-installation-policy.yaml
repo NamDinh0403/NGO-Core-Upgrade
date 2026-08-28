@@ -1,0 +1,75 @@
+# Installation safety policy for research tooling. Infrastructure setup only —
+# never touches the client application's dependency files.
+schemaVersion: 1
+id: tool-installation-policy
+lastReviewedAt: 2026-08-13
+
+privileges:
+  allowAdminOrRoot: false
+  allowSudo: false
+  allowMachineWidePathEdit: false
+
+scopePriority:
+  - EXISTING_APPROVED
+  - REPOSITORY_LOCAL
+  - RUN_LOCAL
+  - CONTAINER_LOCAL
+  - USER_LOCAL
+  - MACHINE_GLOBAL
+
+dotnetTools:
+  allowLocalToolManifest: true
+  allowGlobalInstall: false
+  manifestPath: .config/dotnet-tools.json
+
+npmTools:
+  allowGlobalInstall: false
+  addToClientPackageJson: false
+  isolatedToolingDir: tools/frontend-runtime
+  requireLockfile: true
+  useCleanInstall: true
+  allowUnpinnedNpx: false
+  runLifecycleScripts: false
+
+sources:
+  allowedNuGetSources:
+    - https://api.nuget.org/v3/index.json
+  allowedNpmRegistries:
+    - https://registry.npmjs.org
+  allowArbitraryUrlDownloads: false
+  preferOfficialRegistries: true
+
+clientProtection:
+  neverModify:
+    - "**/*.sln"
+    - "**/*.slnx"
+    - "**/*.csproj"
+    - "**/package.json"
+    - "**/package-lock.json"
+    - "**/*.cs"
+  note: The client's own dependency files are off-limits during research-tool setup.
+
+secrets:
+  redactInLogsAndManifests: true
+  redactPatterns:
+    - "(password|passwd|pwd)\s*[:=]\s*\S+"
+    - "(token|apikey|api-key|secret|access[_-]?key|_authToken)\s*[:=]\s*\S+"
+    - "Bearer\s+[A-Za-z0-9._-]+"
+    - "//[^/@\\s]+:[^/@\\s]+@"
+
+gates:
+  decompilation-permitted: true      # decompile-first is the agent's approved evidence policy
+  container-permitted: true
+
+execution:
+  useIsolatedCacheAndTemp: true
+  pinVersions: true
+  recordProvenanceAndHashes: true
+  defaultTimeoutSeconds: 600
+  treatLifecycleScriptsAsUnsafe: true
+
+onBlocked:
+  # If installation needs admin, license acceptance, credentials, proxy/cert
+  # changes, or security approval — do NOT work around it. Escalate.
+  action: generate-developer-escalation
+  status: BLOCKED_NEEDS_DEVELOPER

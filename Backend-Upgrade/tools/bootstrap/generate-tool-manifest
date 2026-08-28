@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+'use strict';
+/* Entry: generate + persist the tool manifest, print its path. */
+const bootstrap = require('./lib/bootstrap');
+const out = bootstrap.run('check');
+process.stdout.write(`tool-manifest written to ${out.runDirRel}/tool-manifest.json\n`);
+process.stdout.write(`latest pointer: runs/${bootstrap.BOOTSTRAP_CLIENT}/tool-manifest.json\n`);
+process.exit(out.result.exitCode);

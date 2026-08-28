@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "<ISO-8601-UTC>",
+  "suite": "core-upgrade regression",
+  "totals": { "scenarios": 0, "passed": 0, "failed": 0 },
+  "metrics": {
+    "silentStopRate": 0,
+    "incorrectPatternApplicationRate": 0,
+    "crossClientIsolationFailures": 0,
+    "resumeSuccessRate": null,
+    "correctEscalationRate": null
+  },
+  "scenarios": []
+}

@@ -1,0 +1,41 @@
+version: "8.6.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.6.0-BACKEND-01
+    releaseVersion: "8.6.0"
+    title: "SPSignedOffAdditionalDocumentsFolderName config (introduced)"
+    description: "Add system config SPSignedOffAdditionalDocumentsFolderName controlling the optional approval subfolder for Mark as Paid / Cancel. Default 'Additional documents'. Check usage; if used, update appsettings.json and run NGO.Core.Tools.UpdatePaymentDocumentLinks."
+    scope: BACKEND
+    category: configuration
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["backendConfig"]
+    sourceEvidence: "release-notes.md 8.6.0 Files uploaded mark as paid"
+    action: "Set config; run UpdatePaymentDocumentLinks when Mark as Paid/Cancel is used."
+    automation: MANUAL_EXECUTION
+    validation: "config present; tool run when applicable"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+    notes: "Primary card. Re-listed (backport) in 9.1.0 as REQ-9.1.0-BACKEND-01."
+  - schemaVersion: 1
+    id: REQ-8.6.0-BACKEND-02
+    releaseVersion: "8.6.0"
+    title: "Logframe2 saved-query migration tool (review then update)"
+    description: "If Logframe2 is used, run NGO.Core.Tools.Logframe2SavedQueryMigration in REVIEW mode first, resolve all warnings, then run UPDATE mode."
+    scope: BACKEND
+    category: tool
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["migrationTool"]
+    sourceEvidence: "release-notes.md 8.6.0 Logframe2SavedQueryMigration"
+    action: "Run tool in review mode; resolve warnings; then run update mode."
+    automation: MANUAL_EXECUTION
+    validation: "review mode clean before update mode is run"
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+    notes: "Primary card. REVIEW-before-UPDATE ordering mandatory. Re-listed in 9.1.0."

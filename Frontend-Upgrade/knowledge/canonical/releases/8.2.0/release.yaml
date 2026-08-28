@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "8.2.0"
+title: "NGO Core 8.2.0"
+summary: "ADSync AzureAdId tool (upgrade person); Logframe1 disable script."
+frameworkTransition: { angularFrom: "14", angularTo: "14", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["deployment", "database"]
+sourceEvidence: "release-notes.md 8.2.0"

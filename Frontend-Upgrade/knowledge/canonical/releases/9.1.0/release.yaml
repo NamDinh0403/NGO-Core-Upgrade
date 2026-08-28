@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "9.1.0"
+title: "NGO Core 9.1.0"
+summary: "RelatedEntity log fields, mark-as-paid additional documents folder, EF Core tooling, Logframe2 saved-query migration, text-area icon datafix."
+frameworkTransition: { angularFrom: "15", angularTo: "15", dotnetFrom: "10", dotnetTo: "10" }
+scopes: ["backend", "database"]
+sourceEvidence: "release-notes.md 9.1.0"

@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/plan.schema.json",
+  "title": "Frontend upgrade plan",
+  "type": "object",
+  "required": ["schemaVersion", "status", "clientId", "runId", "changes"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "status": { "enum": ["DRAFT", "READY", "READY_WITH_ASSUMPTIONS", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_CONTEXT", "BLOCKED_NEEDS_DEVELOPER", "FAILED_POLICY"] },
+    "clientId": { "type": "string" },
+    "runId": { "type": "string" },
+    "sourceVersion": { "type": ["string", "null"] },
+    "targetVersion": { "type": ["string", "null"] },
+    "workspaceClassification": { "enum": ["NGMODULE", "STANDALONE", "HYBRID", "UNKNOWN"] },
+    "bootstrapStyle": { "type": ["string", "null"] },
+    "packageAlignmentStatus": { "type": ["string", "null"] },
+    "coreRequirementCount": { "type": ["integer", "null"] },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["changeId", "coreRequirementId", "semanticRole", "targetClientFiles", "currentState", "targetState", "reason", "mutationPhase", "validation", "status"],
+        "properties": {
+          "changeId": { "type": "string" },
+          "coreRequirementId": { "type": "string" },
+          "semanticRole": { "type": "string" },
+          "targetClientProject": { "type": ["string", "null"] },
+          "targetClientFiles": { "type": "array", "items": { "type": "string" } },
+          "authoritativeImplementationPoint": { "type": ["string", "null"] },
+          "currentState": { "type": "string" },
+          "targetState": { "type": "string" },
+          "reason": { "type": "string" },
+          "coreEvidence": { "type": ["string", "null"] },
+          "clientEvidence": { "type": ["string", "null"] },
+          "uncertaintyIds": { "type": "array", "items": { "type": "string" } },
+          "risk": { "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+          "mutationPhase": { "enum": ["CHECKPOINT", "EXECUTE", "BUILD_AND_FIX"] },
+          "validation": { "type": "string" },
+          "status": { "enum": ["PLANNED", "APPLIED", "SKIPPED", "REVERTED", "FAILED"] }
+        }
+      }
+    },
+    "nextAction": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

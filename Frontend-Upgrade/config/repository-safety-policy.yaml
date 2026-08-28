@@ -1,0 +1,47 @@
+schemaVersion: 1
+id: frontend-repository-safety-policy
+description: >
+  Guarantees that the local NGO Core repository is never modified and that the
+  client repository is modified only after the plan is READY.
+
+client:
+  mutable: true
+  mutationAllowedAfter: plan-ready-and-mutation-gate-open
+  requireRollbackCheckpointBeforeMutation: true
+  preserveLockfileBaselineBeforeInstall: true
+
+core:
+  readOnly: true
+  prohibited:
+    - modify Core package.json
+    - modify Core lockfiles
+    - modify Core source
+    - create files in the Core repository
+    - switch Core branches destructively
+    - reset the Core repository
+    - install packages into Core
+    - run migrations against Core
+    - write snapshots or reports into Core
+  fingerprintFiles:
+    - package.json
+    - package-lock.json
+    - npm-shrinkwrap.json
+    - yarn.lock
+    - pnpm-lock.yaml
+    - angular.json
+    - tsconfig.json
+  verifyUnchanged:
+    before: true
+    after: true
+
+targetRefResolution:
+  # When the requested target ref differs from the current Core checkout, use a
+  # read-only worktree OUTSIDE both repositories; never switch the developer's
+  # existing Core working tree.
+  strategy: readonly-worktree
+  worktreeLocation: runs/<client>/<run-id>/research/core-target/
+  recordExactTargetCommit: true
+
+pathValidation:
+  forbidIdenticalClientAndCorePaths: true
+  forbidOverlappingPaths: true

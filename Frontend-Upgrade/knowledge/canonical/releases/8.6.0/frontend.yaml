@@ -1,0 +1,21 @@
+version: "8.6.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.6.0-FRONTEND-01
+    releaseVersion: "8.6.0"
+    title: "RelatedEntity fields on Log/Log2/Log3 (multiple)"
+    description: "New RelatedEntity fields added to Log, Log2, Log3. If the field should be multiple, change the type of field instances in code."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["fieldInstances"]
+    sourceEvidence: "release-notes.md 8.6.0 add-new-relatedentity-fields"
+    clientDiscovery: ["field instance definitions"]
+    action: "Change field instance type to multiple where required."
+    automation: MANUAL_DECISION
+    validation: "fields behave as multiple when configured"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE

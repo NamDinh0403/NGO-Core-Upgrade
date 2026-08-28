@@ -1,0 +1,73 @@
+{
+  "projectName": "${PROJECT_NAME}",
+  "createdAt": "${TIMESTAMP}",
+  "currentVersion": null,
+  "targetVersion": null,
+  "migrations": [],
+  "failedAttempts": [],
+  "successfulPatterns": [],
+  "knownTraps": [
+    {
+      "id": "trap-001",
+      "description": "Changing 'override' to 'new' for CS0115 errors",
+      "why": "Hides the error but breaks polymorphism - method won't be called by base class",
+      "correctApproach": "Find exact new signature in decompiled code and match it"
+    },
+    {
+      "id": "trap-002",
+      "description": "Using Dto type when Model type is required",
+      "why": "Generic constraint requires Core.Model.X, not Core.Model.Dto.X",
+      "correctApproach": "Check constraint carefully - use full namespace to avoid ambiguity"
+    },
+    {
+      "id": "trap-003",
+      "description": "Fixing constructor without updating DI registration",
+      "why": "Creates cascading errors - DI container can't resolve new dependencies",
+      "correctApproach": "Always update constructor AND DI registration as atomic operation"
+    },
+    {
+      "id": "trap-004",
+      "description": "Adding generic type args without updating all usages",
+      "why": "Interface, class, and DI registration must all have same type arg count",
+      "correctApproach": "Search for all usages of the type and update consistently"
+    }
+  ],
+  "schemaVersion": "3.2.0",
+  "runtimeStateFile": ".upgrade-state.json",
+  "buildIterations": [],
+  "activeHypotheses": [],
+  "hypothesisHistory": [],
+  "investigationLog": [],
+  "playbookOverrides": [],
+  "triageOverrides": [],
+  "resolvedSignatures": [],
+  "fixBatches": [],
+  "revertedChanges": [],
+  "blockedErrors": [],
+  "responseGateChecks": [],
+  "completionCriteriaLog": [],
+  "shellEnvironment": {
+    "os": null,
+    "shell": null,
+    "deleteLockFilesCommandUsed": null
+  },
+  "hypothesisExample": {
+    "id": "hyp-001",
+    "status": "ACCEPTED",
+    "errorFamily": "CS7036",
+    "hypothesis": "Core base constructor added a new dependency that must be passed through by the client derived service.",
+    "evidence": [
+      "Compiler error identifies missing parameter on base constructor call",
+      "Decompiled NGO.Core.Services.dll shows new public/protected constructor signature"
+    ],
+    "patchSummary": "Added constructor parameter and passed it to base(...); DI registration checked.",
+    "validation": "dotnet build --no-restore reduced CS7036 errors from 8 to 0"
+  },
+  "playbookOverrideExample": {
+    "playbook": "CS7036",
+    "defaultRecommendation": "Update constructor and DI registration",
+    "contradictingEvidence": "The failing construction site is a factory method, not DI-created service",
+    "alternativeAction": "Updated factory construction arguments only",
+    "validationResult": "CS7036 resolved after build"
+  }
+}

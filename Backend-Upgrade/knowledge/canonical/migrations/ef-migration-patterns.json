@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "migration-pattern",
+  "sourceOfTruth": {
+    "rule": "EF migration runs only after build succeeds. The client DbContext and generated migration output are authoritative for schema changes."
+  },
+  "whenToRun": [
+    "After BUILD_SUCCEEDED.",
+    "For Core 8.x and major version upgrades unless the version entry explicitly says no EF migration is required."
+  ],
+  "contextDetection": {
+    "searchPatterns": [
+      "*NgoContext*.cs",
+      "*DbContext*.cs"
+    ],
+    "fallbackContextNames": [
+      "NgoContext",
+      "NGO.Repositories.NgoContext"
+    ]
+  },
+  "commands": {
+    "default": "dotnet ef migrations add UpgradeCore{major}x --context NgoContext --project <migrations-project>",
+    "efCorePackageManagerConsole": "EntityFrameworkCore\\Add-Migration UpgradeCore{major}x -Context NgoContext -Project <migrations-project>"
+  },
+  "acceptableOutputs": [
+    "Migration created successfully",
+    "No changes detected",
+    "No changes were detected"
+  ],
+  "retryRules": [
+    {
+      "whenOutputContains": "No DbContext was found",
+      "action": "Search for the concrete DbContext and rerun with fully qualified --context."
+    },
+    {
+      "whenOutputContains": "Build failed",
+      "action": "Return to the build-fix loop before retrying migration."
+    },
+    {
+      "whenOutputContains": "No migrations configuration type was found",
+      "action": "Retry with fully qualified context name."
+    }
+  ],
+  "antiPatterns": [
+    "Do not run EF migration before build succeeds.",
+    "Do not manually edit the model snapshot without EF output evidence.",
+    "Do not treat no changes detected as failure."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore",
+      "dotnet ef migrations add UpgradeCore{major}x --context NgoContext --project <migrations-project>"
+    ],
+    "successCriteria": [
+      "Migration command exits successfully or reports no changes detected.",
+      "Generated migration and snapshot changes are included in the final report when present."
+    ]
+  }
+}

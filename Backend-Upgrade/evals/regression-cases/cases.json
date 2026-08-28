@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "note": "SYNTHETIC scenarios. Exercised by tools/run-evals.js against the state machine.",
+  "cases": [
+    { "id": "normal-success", "expect": "COMPLETE", "desc": "Normal successful upgrade with docs complete." },
+    { "id": "known-error-approved-fix", "expect": "SUCCEEDED", "desc": "Known compiler error resolved by an approved pattern." },
+    { "id": "unknown-error", "expect": "BLOCKED_NEEDS_DEVELOPER", "desc": "Unknown compiler error, no approved pattern, decompile inconclusive." },
+    { "id": "fix-causes-regression", "expect": "BUILD_AND_FIX", "desc": "A fix regresses tests; TEST routes back to BUILD_AND_FIX." },
+    { "id": "missing-client-decision", "expect": "BLOCKED_NEEDS_CONTEXT", "desc": "Required client information missing." },
+    { "id": "tool-timeout", "expect": "RETRYABLE_FAILURE", "desc": "Transient tool timeout retries within budget, then escalates." },
+    { "id": "interruption-resume", "expect": "RESUME_FROM_CHECKPOINT", "desc": "Process interruption resumes from last valid checkpoint without repeating mutations." },
+    { "id": "docs-not-completed", "expect": "DOCUMENTATION_PENDING", "desc": "Implementation done, documentation incomplete: must NOT be COMPLETE." },
+    { "id": "candidate-not-auto-applied", "expect": "NOT_AUTHORITATIVE", "desc": "Candidate pattern must not be applied as an approved fix." },
+    { "id": "cross-client-isolation", "expect": "DENIED", "desc": "One client's unapproved memory must not be retrievable for another client." },
+    { "id": "repeated-error-escalates", "expect": "ESCALATE", "desc": "Same error after max attempts escalates instead of looping." },
+    { "id": "blocked-produces-episode", "expect": "EPISODE", "desc": "A blocked run still produces an episode." }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/execute-upgrade/schemas/output.schema.json",
+  "title": "execute-upgrade output",
+  "type": "object",
+  "required": ["skillId", "status", "changedFiles", "buildResult", "currentCheckpoint", "documentationStatusRef", "remainingUncertainty", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "execute-upgrade" },
+    "status": { "type": "string", "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "RESEARCH_REQUIRED", "RETRYABLE_FAILURE", "BLOCKED_NEEDS_DEVELOPER", "BLOCKED_NEEDS_APPROVAL", "FAILED_POLICY", "FAILED_BUDGET"] },
+    "packageChanges": { "type": "array", "items": { "type": "object" } },
+    "sourceChanges": { "type": "array", "items": { "type": "object" } },
+    "configChanges": { "type": "array", "items": { "type": "object" } },
+    "migrationChanges": { "type": "array", "items": { "type": "object" } },
+    "frontendChanges": { "type": "array", "items": { "type": "object" } },
+    "changedFiles": { "type": "array", "items": { "type": "string" } },
+    "attemptedFixes": { "type": "array", "items": { "type": "object" } },
+    "revertedAttempts": { "type": "array", "items": { "type": "object" } },
+    "buildResult": { "type": "string" },
+    "testResult": { "type": ["string", "null"] },
+    "runtimeVerification": { "type": ["string", "null"] },
+    "documentationStatusRef": { "type": "string" },
+    "remainingUncertainty": { "type": "array", "items": { "type": "string" } },
+    "currentCheckpoint": { "type": "string" },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

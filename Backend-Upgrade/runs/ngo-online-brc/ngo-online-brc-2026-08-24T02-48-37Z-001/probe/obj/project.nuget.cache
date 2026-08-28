@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "wcFMgmS66cI=",
+  "success": false,
+  "projectFilePath": "D:\\NGO Client\\ngo-online-brc\\ngo-api\\NGO\\NGO\\Backend-Upgrade\\runs\\ngo-online-brc\\ngo-online-brc-2026-08-24T02-48-37Z-001\\probe\\probe.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Error",
+      "message": "Failed to download package 'NGO.Core.Model.9.2.1' from 'https://pkgs.dev.azure.com/preciofishbone/_packaging/c123f79a-3561-46ae-9fcc-506c649f3336/nuget/v3/flat2/ngo.core.model/9.2.1/ngo.core.model.9.2.1.nupkg'.\r\nResponse status code does not indicate success: 401 (Unauthorized).",
+      "projectPath": "D:\\NGO Client\\ngo-online-brc\\ngo-api\\NGO\\NGO\\Backend-Upgrade\\runs\\ngo-online-brc\\ngo-online-brc-2026-08-24T02-48-37Z-001\\probe\\probe.csproj",
+      "filePath": "D:\\NGO Client\\ngo-online-brc\\ngo-api\\NGO\\NGO\\Backend-Upgrade\\runs\\ngo-online-brc\\ngo-online-brc-2026-08-24T02-48-37Z-001\\probe\\probe.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Failed to retrieve information about 'NGO.Core.Model' from remote source 'https://pkgs.dev.azure.com/preciofishbone/_packaging/c123f79a-3561-46ae-9fcc-506c649f3336/nuget/v3/flat2/ngo.core.model/index.json'.\r\n  Response status code does not indicate success: 401 (Unauthorized).",
+      "projectPath": "D:\\NGO Client\\ngo-online-brc\\ngo-api\\NGO\\NGO\\Backend-Upgrade\\runs\\ngo-online-brc\\ngo-online-brc-2026-08-24T02-48-37Z-001\\probe\\probe.csproj",
+      "filePath": "D:\\NGO Client\\ngo-online-brc\\ngo-api\\NGO\\NGO\\Backend-Upgrade\\runs\\ngo-online-brc\\ngo-online-brc-2026-08-24T02-48-37Z-001\\probe\\probe.csproj",
+      "targetGraphs": []
+    }
+  ]
+}

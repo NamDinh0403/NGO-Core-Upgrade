@@ -1,0 +1,26 @@
+id: "candidate-install-feed-auth-and-clean-reinstall"
+kind: "error-pattern"
+tier: candidate
+signature: "npm install E401 auth failure and post-failure inconsistent node_modules during upgrade"
+context: >
+  Two MISTAKES to avoid.
+  (1) Belief "the install needs an old Node version". The real symptom was `E401 Unable to
+  authenticate` on every private-feed `.tgz`, with an Azure-AD WWW-Authenticate challenge --
+  a credential problem independent of the Node runtime. The token in the tracked .npmrc was an
+  expiring VssSessionToken.
+  (2) Re-running `npm install` on top of a node_modules left partial by the earlier failed
+  installs produced a tree missing `webpack`, so `ng build` failed with `Cannot find module 'webpack'`.
+resolution: >
+  Auth: refresh the feed credential (Azure Artifacts: `& "$env:APPDATA\\npm\\vsts-npm-auth.cmd"
+  -config .npmrc -R` -- use the .cmd shim; the .ps1 is blocked by PowerShell exec policy). This
+  writes a fresh token to the user ~/.npmrc. Verify with `npm view <corePkg>@<ver> version`. Then
+  install under the required (new) Node. Read the ACTUAL error before accepting a user's causal theory.
+  Clean install: after any failed/interrupted install, delete node_modules + package-lock.json and
+  install clean; never incrementally patch a partial tree.
+  Security: prefer tokens in the user/CI .npmrc, not committed in the project .npmrc.
+applicability: "Any client installing from a private Azure Artifacts (or similar) npm feed."
+confidence: HIGH
+evidence:
+  - "npm-cache debug log: repeated `http fetch GET 401 https://pkgs.dev.azure.com/.../*.tgz`"
+  - "runs/ngo-client/brc-upgrade-running-log.md sections 2, 13.6, 13.7"
+redacted: true

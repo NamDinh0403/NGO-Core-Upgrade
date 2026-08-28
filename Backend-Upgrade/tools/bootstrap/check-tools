@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+'use strict';
+/* Entry: detect + validate tools (no installation). Prints check results. */
+const bootstrap = require('./lib/bootstrap');
+const out = bootstrap.run('check');
+process.stdout.write(JSON.stringify(out.checks, null, 2) + '\n');
+process.exit(out.result.exitCode);

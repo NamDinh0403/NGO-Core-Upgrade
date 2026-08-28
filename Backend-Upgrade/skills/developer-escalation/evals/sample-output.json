@@ -1,0 +1,15 @@
+{
+  "skillId": "developer-escalation",
+  "outcome": "WAITING_FOR_DEVELOPER_DECISION",
+  "escalationRef": "runs/synthetic-acme/run-1/developer-escalation.md",
+  "decisionRequired": "Approve retargeting NGO.Migration.CostStructure to net9.0, or provide the constraint that keeps it on net8.0.",
+  "options": [
+    { "option": "Retarget to net9.0", "risk": "low" },
+    { "option": "Keep net8.0 and exclude from Core reference", "risk": "medium" }
+  ],
+  "recommendedOption": "Retarget to net9.0",
+  "repositorySafetyState": "partially-modified-safe",
+  "safeResumeInstruction": "Resume from checkpoints/0002.json after the developer decides the target framework; packages already bumped (do not repeat).",
+  "exactResumeCommand": "node tools/upgrade-agent.js resume --client synthetic-acme --run run-1",
+  "nextAction": "Wait for developer decision, then resume via the exact resume command."
+}

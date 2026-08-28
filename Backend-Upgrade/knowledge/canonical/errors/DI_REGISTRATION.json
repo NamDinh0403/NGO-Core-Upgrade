@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "DI_REGISTRATION",
+  "title": "Dependency injection registration mismatch",
+  "classifyAs": "runtime-di-contract-change",
+  "sourceOfTruth": {
+    "rule": "Use constructor signatures from the installed DLL and startup error text to verify required registrations.",
+    "authoritativeInputs": [
+      "decompiled constructor signatures",
+      "WebHost or service-provider startup error",
+      "existing DI registration files"
+    ]
+  },
+  "symptoms": [
+    "Build succeeds but application startup fails because a service cannot be resolved.",
+    "Constructor/generic changes compiled but DI still points to the old registration shape."
+  ],
+  "investigation": [
+    "Read the exact startup error and missing service type.",
+    "Find the constructor that requires the missing dependency.",
+    "Search registration files, Startup.cs, Program.cs, and CommonDIRegistrations.cs.",
+    "Check whether the service is generic and requires matching type arguments."
+  ],
+  "patchRules": [
+    "Register missing dependencies with the same lifetime pattern used by adjacent Core services.",
+    "Update open-generic or closed-generic registration arity to match the decompiled service contract.",
+    "Keep constructor and DI registration fixes in the same patch batch where possible."
+  ],
+  "antiPatterns": [
+    "Do not change service lifetimes arbitrarily.",
+    "Do not register a concrete type if the existing convention uses interfaces.",
+    "Do not hide missing dependency errors with service locator fallbacks."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore",
+      "run application startup or the project's existing smoke test when available"
+    ],
+    "successCriteria": [
+      "The missing-service startup error is gone.",
+      "No new DI error appears for the same constructor family."
+    ]
+  }
+}

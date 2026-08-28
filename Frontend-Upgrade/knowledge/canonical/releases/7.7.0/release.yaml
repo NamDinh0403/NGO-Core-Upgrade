@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "7.7.0"
+title: "NGO Core 7.7.0"
+summary: "Task view-permission DB function change; catch-all route in app-route.service.ts."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "9", dotnetTo: "9" }
+scopes: ["frontend", "backend"]
+sourceEvidence: "release-notes.md 7.7.0"

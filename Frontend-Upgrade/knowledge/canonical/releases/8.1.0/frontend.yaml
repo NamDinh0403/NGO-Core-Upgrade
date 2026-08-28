@@ -1,0 +1,23 @@
+version: "8.1.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.1.0-FRONTEND-01
+    releaseVersion: "8.1.0"
+    title: "Enable Emergency/Non-Project finance modules (re-listed)"
+    description: "Add EmergencyFinanceModule and NonProjectFinanceModule to the app module and add nonProjectFinance and emergencyFinance API URLs to environment files. Ensure the Entra app has Mail.Read (Application) with admin consent."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["ngModuleMetadata", "environmentConfig", "runtimeConfigService"]
+    sourceEvidence: "release-notes.md 8.1.0 Enable finance tabs"
+    clientDiscovery: ["app.module.ts", "environment.ts", "app-environment.service.ts"]
+    action: "Register modules and add env keys at resolved points."
+    automation: AUTO_AFTER_MAPPING
+    validation: "modules load; endpoints resolve"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: DUPLICATE
+    duplicateOf: REQ-7.5.0-FRONTEND-01
+    notes: "Re-list (backport) of the 7.5.0 finance-module card; deduplicated by the resolver."

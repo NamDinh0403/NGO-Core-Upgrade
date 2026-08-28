@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "5.14.0"
+title: "NGO Core 5.14.0"
+summary: "Logframe indicator tracker ObjectiveNo fix (baseline before Angular migration)."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["backend"]
+sourceEvidence: "release-notes.md 5.14.0"

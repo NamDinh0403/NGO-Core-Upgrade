@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "anti-patterns",
+  "sourceOfTruth": {
+    "rule": "These are global guardrails. If a symbol or error entry gives a stricter rule, follow the stricter rule."
+  },
+  "global": [
+    "Do not patch from Markdown examples without checking the relevant JSON route and installed DLL.",
+    "Do not treat historical version diffs as authoritative.",
+    "Do not invent signatures, dependencies, generic arguments, return types, or business logic.",
+    "Do not refactor unrelated client code during an upgrade.",
+    "Do not reformat whole files.",
+    "Do not copy Core base-class method bodies into client overrides.",
+    "Do not edit packages under the NuGet cache.",
+    "Do not skip plan or report files.",
+    "Do not mark COMPLETED until the report exists."
+  ],
+  "byError": {
+    "CS7036": [
+      "Do not add constructor parameters without passing them to base(...).",
+      "Do not forget DI registration and direct new(...) call sites."
+    ],
+    "CS0305": [
+      "Do not update only one of interface, implementation, base, and DI registration.",
+      "Do not guess the generic argument order."
+    ],
+    "CS0311": [
+      "Do not use DTO types when the constraint requires Core model types."
+    ],
+    "CS0115": [
+      "Never blindly change override to new."
+    ],
+    "CS1503": [
+      "Do not cast away a changed API contract."
+    ],
+    "NU1201": [
+      "Do not leave projects on mixed target frameworks after a major Core upgrade."
+    ]
+  },
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore",
+      "review final diff for unrelated formatting/refactor churn"
+    ],
+    "successCriteria": [
+      "The final diff is limited to required package, config, migration, and compile-fix changes.",
+      "Every override or constructor change has package evidence recorded."
+    ]
+  }
+}

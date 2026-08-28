@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "CS0305",
+  "title": "Wrong generic argument count",
+  "classifyAs": "generic-arity-change",
+  "sourceOfTruth": {
+    "rule": "Use the compiler-required arity and decompiled generic type declaration from the installed DLL.",
+    "authoritativeInputs": [
+      "compiler error required generic arity",
+      "decompiled generic class or interface declaration"
+    ]
+  },
+  "symptoms": [
+    "Using the generic type requires more type arguments.",
+    "A service, interface, base class, or DI registration still uses the previous arity."
+  ],
+  "investigation": [
+    "Read required generic argument count from the compiler error.",
+    "Decompile the implicated generic type.",
+    "Load the symbol route for known Core 8 generic changes.",
+    "Search all class declarations, interfaces, base clauses, DI registrations, and call sites for the old arity."
+  ],
+  "patchRules": [
+    "Add the missing type arguments at the exact positions shown by the decompiled declaration.",
+    "Update interface, implementation, base class, and DI registration together.",
+    "Use types that satisfy the decompiled generic constraints."
+  ],
+  "relatedSymbolRoutes": [
+    "Knowledge/symbols/NGO.Core.Services.EntityService.json",
+    "Knowledge/symbols/NGO.Core.Services.ExportPdfService.json"
+  ],
+  "antiPatterns": [
+    "Do not use DTO types when the constraint requires model types.",
+    "Do not update only the class declaration and leave DI on the old arity.",
+    "Do not infer arity from a stale diff when the installed DLL disagrees."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "The CS0305 family for the symbol reaches zero.",
+      "Any resulting CS0311 constraint errors are handled using the CS0311 route."
+    ]
+  }
+}

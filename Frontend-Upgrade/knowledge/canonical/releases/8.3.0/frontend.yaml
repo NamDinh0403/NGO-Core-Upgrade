@@ -1,0 +1,23 @@
+version: "8.3.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.3.0-FRONTEND-01
+    releaseVersion: "8.3.0"
+    title: "Add catch-all ** route (re-listed)"
+    description: "In app-route.service.ts add { path: '**', redirectTo: 'start' } below the 'outlook-addin' route at the same level."
+    scope: FRONTEND
+    category: route
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["routerComposition", "dynamicRouteService"]
+    sourceEvidence: "release-notes.md 8.3.0 Default page not loaded"
+    clientDiscovery: ["app-route.service.ts", "app-routing.module.ts", "provideRouter"]
+    action: "Add catch-all route at the client's real routing composition point."
+    automation: AUTO_AFTER_MAPPING
+    validation: "unknown URL redirects to start"
+    risk: LOW
+    confidence: HIGH
+    status: DUPLICATE
+    duplicateOf: REQ-7.7.0-FRONTEND-01
+    notes: "Re-list (backport) of the 7.7.0 catch-all route card."

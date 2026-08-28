@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+'use strict';
+/* Entry: re-validate tools (version + smoke) without installing. */
+const bootstrap = require('./lib/bootstrap');
+const out = bootstrap.run('check');
+for (const tool of out.manifest.tools) {
+  process.stdout.write(`${tool.id}: status=${tool.status} versionCheck=${tool.validation.versionCheck} smoke=${tool.validation.smokeTest}\n`);
+}
+process.exit(out.result.exitCode);

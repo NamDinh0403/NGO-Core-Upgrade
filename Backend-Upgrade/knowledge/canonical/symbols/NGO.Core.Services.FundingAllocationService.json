@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "symbol",
+  "symbol": "FundingAllocationService",
+  "fullyQualifiedName": "NGO.Core.Services.FundingAllocationService",
+  "package": "NGO.Core.Services",
+  "kind": "class",
+  "riskLevel": "medium",
+  "sourceOfTruth": {
+    "rule": "Decompile installed NGO.Core.Services.dll and extract GetAllocationsForEntity signature before updating call sites.",
+    "dllSearchPatterns": [
+      "%USERPROFILE%/.nuget/packages/ngo.core.services/**/NGO.Core.Services.dll"
+    ]
+  },
+  "knownBreakingChanges": [
+    {
+      "fromVersion": "7.3.x",
+      "toVersion": "7.4.0",
+      "changeType": "method-parameter-type-changed",
+      "method": "GetAllocationsForEntity",
+      "likelyErrors": [
+        "CS1503"
+      ],
+      "knownChange": "Third parameter changed from int[] to bool."
+    }
+  ],
+  "relatedFilesToSearch": [
+    "*FundingAllocation*.cs",
+    "*Budget*.cs",
+    "*Payment*.cs"
+  ],
+  "antiPatterns": [
+    "Do not cast int[] to bool or use a placeholder value without documenting behavior.",
+    "Do not update only the first call site."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "GetAllocationsForEntity CS1503 errors are gone.",
+      "The selected boolean value is recorded in .upgrade-state.json if behavior was inferred."
+    ]
+  }
+}

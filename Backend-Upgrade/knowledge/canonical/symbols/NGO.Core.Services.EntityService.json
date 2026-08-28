@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "symbol",
+  "symbol": "EntityService",
+  "fullyQualifiedName": "NGO.Core.Services.EntityService",
+  "package": "NGO.Core.Services",
+  "kind": "class",
+  "riskLevel": "high",
+  "sourceOfTruth": {
+    "rule": "Decompile installed NGO.Core.Services.dll and extract public/protected constructor, generic declaration, constraints, and overridden method signatures before patching.",
+    "dllSearchPatterns": [
+      "%USERPROFILE%/.nuget/packages/ngo.core.services/**/NGO.Core.Services.dll"
+    ]
+  },
+  "knownBreakingChanges": [
+    {
+      "fromVersion": "7.x",
+      "toVersion": "8.x",
+      "changeType": "generic-arguments-added",
+      "likelyErrors": [
+        "CS0305",
+        "CS0311"
+      ],
+      "knownNewTypeArguments": [
+        "DtoPartnerExpenditureReporting",
+        "DtoBudgetVersion",
+        "TIATIDocument"
+      ],
+      "rule": "Confirm exact arity, position, and constraints from installed DLL before patching."
+    },
+    {
+      "fromVersion": "7.x",
+      "toVersion": "8.x",
+      "changeType": "constructor-parameters-added",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "knownNewParameters": [
+        "configurationRepository",
+        "iatiTransactionService",
+        "iatiDocumentRepository",
+        "logframe2ExportExcelService",
+        "bankAccountRepository",
+        "minimumRequirementExportExcelService"
+      ],
+      "rule": "Patch constructor, base(...) call, DI registration, and direct construction sites together."
+    }
+  ],
+  "relatedFilesToSearch": [
+    "*EntityService*.cs",
+    "*Registration*.cs",
+    "Startup.cs",
+    "Program.cs"
+  ],
+  "antiPatterns": [
+    "Do not guess missing dependencies.",
+    "Do not add private fields unless client code uses them.",
+    "Do not rewrite override bodies.",
+    "Do not change override to new."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "EntityService CS7036, CS0305, and CS0311 families are gone.",
+      "DI registration arity matches the compiled service contract."
+    ]
+  }
+}

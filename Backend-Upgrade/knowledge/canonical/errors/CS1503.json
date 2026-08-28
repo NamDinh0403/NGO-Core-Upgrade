@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "CS1503",
+  "title": "Argument type mismatch",
+  "classifyAs": "call-site-signature-change",
+  "sourceOfTruth": {
+    "rule": "Use the decompiled target method signature to update call sites.",
+    "authoritativeInputs": [
+      "compiler argument position and type",
+      "decompiled target method signature"
+    ]
+  },
+  "symptoms": [
+    "Argument N cannot convert from old type to new type.",
+    "A method changed one parameter type while keeping a similar name."
+  ],
+  "investigation": [
+    "Read the argument index, source type, and expected type from the compiler error.",
+    "Decompile the target method signature.",
+    "Search all call sites for the old argument shape.",
+    "Check version and symbol routes for known call-site migrations."
+  ],
+  "patchRules": [
+    "Update every call site to the decompiled method contract.",
+    "Preserve business intent when converting values.",
+    "If the old argument encoded multiple meanings, choose the boolean or enum value that matches existing behavior and document it in .upgrade-state.json."
+  ],
+  "relatedSymbolRoutes": [
+    "Knowledge/symbols/NGO.Core.Services.FundingAllocationService.json",
+    "Knowledge/symbols/NGO.Core.Services.TaskFlowServiceBase.json"
+  ],
+  "antiPatterns": [
+    "Do not add unsafe casts just to satisfy the compiler.",
+    "Do not change method overloads or extensions without package evidence.",
+    "Do not update only the first call site found."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "The CS1503 family for the method reaches zero.",
+      "No new runtime behavior ambiguity remains undocumented."
+    ]
+  }
+}

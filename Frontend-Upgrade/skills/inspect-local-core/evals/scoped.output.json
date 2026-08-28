@@ -1,0 +1,8 @@
+{
+  "skillId": "inspect-local-core",
+  "status": "SUCCEEDED",
+  "coreUnchanged": true,
+  "coreFileInventoryRef": "core-file-inventory.json",
+  "coreSemanticGraphRef": "core-semantic-graph.json",
+  "requirementsRef": "core-target-requirements.yaml"
+}

@@ -1,0 +1,33 @@
+id: "candidate-full-upgrade-flow-angular9to15-core5to9"
+kind: "requirement-pattern"
+tier: candidate
+signature: "end-to-end order of operations for an Angular 9->15 + ngo-core 5->9 client front-end upgrade"
+context: >
+  Verified on client BRC (ngo-online-brc/ngo-client). The sequence below took the
+  production build from ~40 errors to green with the fewest wasted cycles.
+resolution: >
+  1) Provision Node >=18.13 (Angular 15 CLI hard requirement).
+  2) Authenticate the private npm feed FIRST (stale token 401s every download).
+  3) resolve-target-packages: align package.json to Core-exact versions AND add ALL
+     CORE_REQUIRED_PEER + CORE_IMPLICIT_PEER packages up front (scan installed Core
+     .d.ts/fesm for bare imports). Remove flex-layout/rxjs-compat; retire protractor/tslint/codelyzer.
+  4) Deterministic config edits: tsconfig (ES2022, useDefineForClassFields:false,
+     strictInjectionParameters:false), angular.json (drop extractCss, eslint builder,
+     remove protractor e2e), .eslintrc.json (mirror Core), polyfills (import 'zone.js'),
+     styles.scss (remove '~' imports).
+  5) Mechanical code migrations: remove entryComponents; tests async->waitForAsync;
+     NgRx @Effect->createEffect; rxjs6->7 (remove rxjs-compat).
+  6) Reference host-app diff (map-core-to-client): adopt new Core app.module modules/icons,
+     routes/guards, app-environment @Injectable, app-routing MSAL init, environment keys,
+     main.ts security, index.html SRI -- while PRESERVING client -Ext overrides/custom keys.
+  7) npm install --legacy-peer-deps; iterate `ng build --configuration production`, fixing by
+     category via investigate-frontend-failure; add build-revealed CORE_IMPLICIT_PEER pkgs.
+  8) Flag chart tooltip/datalabels, NgbNav styling, uploader migration, Bootstrap 4->5 for QA.
+applicability: >
+  Any client consuming ngo-core as a package and mirroring the Core reference host app,
+  upgrading across one or more Angular/Core majors.
+confidence: HIGH
+evidence:
+  - "runs/ngo-client/brc-upgrade-running-log.md (full playbook + reasoning + failures)"
+  - "runs/ngo-client/ngo-client-2026-08-25T02-58-13Z/plan.yaml, host-app-delta.yaml, target-package-manifest.yaml"
+redacted: true

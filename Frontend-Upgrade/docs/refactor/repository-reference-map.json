@@ -1,0 +1,75 @@
+{
+  "$comment": "Reference map: which paths reference which, so renames/moves update all consumers. Generated during repository cleanup (phase 2).",
+  "gitRoot": "d:/NGO Client/NGO Core Upgrade",
+  "subProject": "Frontend-Upgrade",
+  "sharedRootFiles": {
+    "README.md": {
+      "scope": "workspace",
+      "references": ["Backend-Upgrade/README.md", "Frontend-Upgrade/README.md", "release-notes.md", "compiler-error-fix-loop.png"],
+      "referencedBy": [],
+      "disposition": "KEEP_AS_CANONICAL"
+    },
+    "release-notes.md": {
+      "scope": "shared-both-tracks",
+      "referencedBy": ["README.md (root)"],
+      "runtimeReaders": [],
+      "disposition": "SPLIT_AND_REMOVE_SOURCE(frontend) + MANUAL_BLOCKER(root)",
+      "sensitivity": "contains IATI subscription key -> redact + rotate"
+    },
+    "compiler-error-fix-loop.png": {
+      "scope": "shared-both-tracks",
+      "referencedBy": ["README.md (root)"],
+      "disposition": "MANUAL_BLOCKER(root) + copy to Frontend-Upgrade/docs/assets/"
+    }
+  },
+  "renames": {
+    "Frontend-Upgrade/Knowledge/": {
+      "to": "Frontend-Upgrade/knowledge/",
+      "referencedBy": [
+        "Frontend-Upgrade/README.md#L97",
+        "Frontend-Upgrade/README.md#L131",
+        "Frontend-Upgrade/AGENTS.md#L19",
+        "Frontend-Upgrade/docs/refactor/frontend-local-core-refactor-report.md#L17",
+        "Frontend-Upgrade/docs/refactor/frontend-local-core-refactor-report.md#L25",
+        "Frontend-Upgrade/docs/refactor/frontend-local-core-refactor-report.md#L111",
+        "Frontend-Upgrade/config/repository-layout-policy.yaml (allowedRootDirectories)"
+      ],
+      "runtimeReaders": []
+    },
+    "Frontend-Upgrade/Templates/": {
+      "to": "Frontend-Upgrade/templates/",
+      "referencedBy": [
+        "Frontend-Upgrade/README.md#L101",
+        "Frontend-Upgrade/config/repository-layout-policy.yaml (allowedRootDirectories)"
+      ],
+      "runtimeReaders": []
+    }
+  },
+  "runtimeKnowledgeReaders": {
+    "$comment": "Confirmed: no runtime module under tools/lib/ reads Knowledge/, Templates/, or release-notes.md. Verified by grep across Frontend-Upgrade/tools.",
+    "modules": []
+  },
+  "newSourceModules": {
+    "tools/lib/release-knowledge.js": "IReleaseKnowledgeStore - load/query canonical release records",
+    "tools/lib/release-range.js": "IReleaseRangeResolver - S < v <= T + reusable migration triggers",
+    "tools/lib/applicability.js": "IRequirementApplicabilityEvaluator - evaluate applicability against client evidence",
+    "tools/lib/requirement-map.js": "IRequirementToClientMapper - map semantic requirement to client file/config",
+    "tools/lib/requirement-coverage.js": "IRequirementCoverageValidator - coverage + missing-step detection",
+    "tools/lib/appsettings-inventory.js": "IAppSettingsInventory + mapper - discover/verify appsettings",
+    "tools/lib/knowledge-context.js": "build small release-context packet (keeps prompts small)"
+  },
+  "schemasToAdd": [
+    "schemas/release-requirement.schema.json",
+    "schemas/release-manifest.schema.json",
+    "schemas/appsettings-requirement.schema.json",
+    "schemas/requirement-coverage.schema.json"
+  ],
+  "canonicalKnowledgeLayout": {
+    "releases": "knowledge/canonical/releases/<version>/{release,frontend,backend,database,deployment,decisions}.yaml",
+    "migrations": "knowledge/canonical/migrations/angular-10-to-15.yaml (+ .md derived)",
+    "appsettings": "knowledge/canonical/appsettings/backend-appsettings.yaml (+ .md derived)",
+    "versions": "knowledge/canonical/versions/version-manifest.json",
+    "raw": "knowledge/raw/release-note-import/release-notes-sanitized.md + import-manifest.json",
+    "index": "knowledge/index/releases.index.json"
+  }
+}

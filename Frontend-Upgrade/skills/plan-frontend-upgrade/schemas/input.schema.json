@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/plan-frontend-upgrade/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "alignmentMapRef", "requirementMapRef"],
+  "properties": {
+    "skillId": { "type": "string", "const": "plan-frontend-upgrade" },
+    "runDir": { "type": "string" },
+    "alignmentMapRef": { "type": "string" },
+    "requirementMapRef": { "type": "string" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,7 @@
+{
+  "skillId": "learn-from-frontend-run",
+  "status": "SUCCEEDED",
+  "candidatesRef": "learning-candidates.yaml",
+  "candidateCount": 3,
+  "approvedWritten": false
+}

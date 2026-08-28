@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "patternId": "rej-cs0115-change-override-to-new",
+  "status": "rejected",
+  "title": "Silence CS0115 by changing 'override' to 'new'",
+  "problemSignature": "CS0115: no suitable method found to override",
+  "applicability": {
+    "sourceVersions": [],
+    "targetVersions": [],
+    "errorCodes": ["CS0115"],
+    "packages": [],
+    "symbols": [],
+    "requiredRepoCharacteristics": []
+  },
+  "exclusions": ["Never apply."],
+  "rootCauseHypothesis": "The Core base member signature changed; the override no longer matches.",
+  "proposedActions": [
+    "REJECTED APPROACH: replacing 'override' with 'new' to make the compiler stop complaining."
+  ],
+  "risk": "high",
+  "requiredVerification": [],
+  "successfulEvidence": [],
+  "failedEvidence": ["knowledge/canonical/anti-patterns/anti-patterns.json (CS0115)"],
+  "knownCounterexamples": [
+    "Changing override to new hides the base member and silently breaks polymorphic dispatch; the client method is no longer invoked by Core. The correct fix is to align the override signature with the new base signature from the decompiled DLL."
+  ],
+  "confidence": 0.0,
+  "reviewHistory": [
+    { "at": "2026-08-13", "by": "refactor", "decision": "rejected", "reason": "Breaks runtime polymorphism; masks the real signature change." }
+  ],
+  "approvalStatus": "rejected",
+  "approvedBy": null,
+  "rejectionReason": "Masks a real base-signature change and breaks polymorphic dispatch at runtime.",
+  "supersedes": null,
+  "supersededBy": null,
+  "expiresAt": null,
+  "createdAt": "2026-08-13T00:00:00Z"
+}

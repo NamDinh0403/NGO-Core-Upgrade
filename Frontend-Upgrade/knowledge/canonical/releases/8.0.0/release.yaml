@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "8.0.0"
+title: "NGO Core 8.0.0"
+summary: "Angular 10 -> 14 jump, Bootstrap 4 -> 5, entryComponents removal, MinimumRequirement/IATI/Summary modules, env keys, icons, IATI transaction import, UpdateIdeaMembers."
+frameworkTransition: { angularFrom: "10", angularTo: "14", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["frontend", "deployment"]
+sourceEvidence: "release-notes.md 8.0.0; Upgrade Angular 10-15.docx"

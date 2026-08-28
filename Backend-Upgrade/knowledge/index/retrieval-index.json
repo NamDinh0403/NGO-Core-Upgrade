@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "retrieval-index",
+  "lastUpdated": "2026-08-13",
+  "purpose": "Deterministic filter order for building a compact context packet for a single workflow step. Apply filters top-to-bottom BEFORE any semantic similarity.",
+  "filterOrder": [
+    "client-scope-and-data-access-permission",
+    "approved-vs-candidate-status",
+    "current-workflow-phase",
+    "target-version",
+    "source-version",
+    "error-code",
+    "package-or-symbol",
+    "application-or-project-type",
+    "repository-characteristics",
+    "similarity-and-confidence"
+  ],
+  "contextPacket": {
+    "includeOnly": [
+      "current-task",
+      "run-state-projection",
+      "current-plan-segment",
+      "current-observations-and-evidence",
+      "applicable-workflow-rules",
+      "applicable-version-records",
+      "matching-approved-error-patterns",
+      "matching-approved-symbol-or-migration-knowledge",
+      "relevant-successful-episodes",
+      "relevant-failed-episodes",
+      "constraints-and-safety-policies",
+      "required-output-schema"
+    ],
+    "candidatePatterns": "included only when labelled 'candidate' and never applied as authoritative",
+    "rawToolOutput": "summarized/projected before entering context; full output preserved as an artifact under runs/"
+  },
+  "routes": {
+    "note": "Concrete record paths live in the routing table to avoid duplication.",
+    "source": "knowledge/index/routing-table.json#routes"
+  }
+}

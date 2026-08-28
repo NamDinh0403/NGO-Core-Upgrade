@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "patternId": "cand-nu1201-align-tfm",
+  "status": "candidate",
+  "title": "Raise auxiliary project TargetFramework to match Core's new framework (NU1201)",
+  "problemSignature": "NU1201: Project NGO.Core.* is not compatible with net<old>. It supports net<new>.",
+  "applicability": {
+    "sourceVersions": ["7.4.0", "8.0.0"],
+    "targetVersions": ["8.0.0", "8.1.0"],
+    "errorCodes": ["NU1201"],
+    "packages": ["NGO.Core.Repositories", "NGO.Core.Services"],
+    "symbols": [],
+    "requiredRepoCharacteristics": ["auxiliary NGO.Migration.* or NGO.DataMigration projects reference Core"]
+  },
+  "exclusions": [
+    "Do not raise TargetFramework on projects that must remain on an older framework for deployment reasons without approval."
+  ],
+  "rootCauseHypothesis": "A Core major bump raises the target framework; downstream projects still pinned to the old framework fail NuGet resolution.",
+  "proposedActions": [
+    "Identify projects failing NU1201 against a Core package.",
+    "Set their <TargetFramework> to the framework the target Core version supports (see knowledge/canonical/versions/{target}.json.targetFramework).",
+    "Restore and rebuild."
+  ],
+  "risk": "low",
+  "requiredVerification": ["dotnet restore --force succeeds", "NU1201 no longer reported"],
+  "successfulEvidence": ["memory/episodes/imported/ep-wvuk-core8x-001.json"],
+  "failedEvidence": [],
+  "knownCounterexamples": [],
+  "confidence": 0.6,
+  "reviewHistory": [],
+  "approvalStatus": "none",
+  "approvedBy": null,
+  "rejectionReason": null,
+  "supersedes": null,
+  "supersededBy": null,
+  "expiresAt": null,
+  "createdAt": "2026-08-13T00:00:00Z"
+}

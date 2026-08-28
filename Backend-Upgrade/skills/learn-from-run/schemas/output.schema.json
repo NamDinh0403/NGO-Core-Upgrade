@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/learn-from-run/schemas/output.schema.json",
+  "title": "learn-from-run output",
+  "type": "object",
+  "required": ["skillId", "status", "episodeRef", "candidateRefs", "classification", "wroteToCanonical", "approvedOwnCandidates", "redactionStatus", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "learn-from-run" },
+    "status": { "type": "string", "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "BLOCKED_NEEDS_DEVELOPER"] },
+    "episodeRef": { "type": "string" },
+    "candidateRefs": { "type": "array", "items": { "type": "string" } },
+    "classification": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["EPISODE_ONLY", "CLIENT_SPECIFIC", "CANDIDATE_ERROR_PATTERN", "CANDIDATE_FIX_PATTERN", "CANDIDATE_VERSION_FINDING", "CANDIDATE_WORKFLOW_IMPROVEMENT", "INSUFFICIENT_EVIDENCE"] }
+    },
+    "wroteToCanonical": { "type": "boolean", "const": false },
+    "approvedOwnCandidates": { "type": "boolean", "const": false },
+    "redactionStatus": { "type": "string", "enum": ["redacted", "not-required", "pending"] },
+    "clientIdentifiersInGlobalMemory": { "type": "boolean", "const": false },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

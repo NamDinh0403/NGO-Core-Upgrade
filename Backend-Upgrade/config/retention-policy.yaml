@@ -1,0 +1,38 @@
+# Client data retention & isolation policy.
+schemaVersion: 1
+id: retention-policy
+lastReviewedAt: 2026-08-13
+
+clientIsolation:
+  runDirectory: runs/<sanitized-client-id>/<run-id>/
+  sanitizedIdRule: lowercase kebab-case, no spaces, no secrets, stable per client
+  crossClientRetrieval: forbidden          # one client's memory must not enter another client's context
+  candidateMemoryRetrieval: never-as-authoritative
+
+redaction:
+  beforeCreatingReusableMemory:
+    - remove-secrets                       # keys, tokens, connection strings, passwords
+    - remove-personal-data
+    - remove-client-business-rules-unless-reviewed
+    - do-not-store-source-code-bodies-in-global-memory-unless-approved
+  traceability: reusable pattern must link to redacted evidence under runs/, not raw client code
+
+retention:
+  runArtifacts:
+    keepFor: 365d                          # configurable; evidence for episodes
+    location: runs/<client>/<run-id>/
+  episodes:
+    keepFor: indefinite                    # sanitized only
+  candidates:
+    reviewWithin: 90d
+    expireIfUnreviewed: mark-stale
+
+deletion:
+  clientMemoryRemoval:
+    steps:
+      - delete runs/<sanitized-client-id>/ (raw evidence)
+      - delete client rows from memory/episodes with that client scope
+      - detach or delete candidate patterns whose only evidence was that client
+      - keep approved patterns only if evidence was redacted and re-sourced
+    verify: run tools/memory/verify-isolation to confirm no residual client identifiers
+  procedureDoc: docs/operations/remove-client-memory.md

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "CS0029",
+  "title": "Cannot implicitly convert type",
+  "classifyAs": "return-or-assignment-contract-change",
+  "sourceOfTruth": {
+    "rule": "Inspect the producer and consumer signatures before changing assignments.",
+    "authoritativeInputs": [
+      "compiler source and target type text",
+      "decompiled method/property signatures"
+    ]
+  },
+  "symptoms": [
+    "A method return type changed.",
+    "A property or collection type changed between Core versions.",
+    "The caller expects the old contract."
+  ],
+  "investigation": [
+    "Identify both sides of the failed assignment.",
+    "Decompile the method or property producing the new type.",
+    "Search for other callers already adapted to the new type.",
+    "Check whether a tuple, dictionary, or model/DTO split was introduced."
+  ],
+  "patchRules": [
+    "Update the consuming code to the new contract with the smallest local change.",
+    "Preserve old behavior by extracting the equivalent member when return types became compound.",
+    "Update method signatures when the changed contract propagates through client abstractions."
+  ],
+  "antiPatterns": [
+    "Do not cast between unrelated collection types.",
+    "Do not discard new return data unless the old behavior explicitly ignored it.",
+    "Do not rewrite caller logic beyond the changed contract."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "The CS0029 family reaches zero.",
+      "Any propagated signature changes compile through callers."
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "skillId": "execute-upgrade",
+  "status": "RESEARCH_REQUIRED",
+  "packageChanges": [{ "package": "NGO.Core.Services", "from": "7.4.0", "to": "8.0.0" }],
+  "sourceChanges": [],
+  "configChanges": [],
+  "migrationChanges": [],
+  "frontendChanges": [],
+  "changedFiles": ["NGO.Services/NGO.Services.csproj"],
+  "attemptedFixes": [],
+  "revertedAttempts": [],
+  "buildResult": "12 errors (paused: unexpected CRITICAL uncertainty on ExportPdfService generic arity)",
+  "testResult": null,
+  "runtimeVerification": null,
+  "documentationStatusRef": "runs/synthetic-acme/run-1/documentation-status.json",
+  "remainingUncertainty": ["U-EXPORTPDF-ARITY"],
+  "currentCheckpoint": "checkpoints/0002.json",
+  "nextAction": "Mutation paused. Run research-version for U-EXPORTPDF-ARITY in isolated storage, then replan before resuming."
+}

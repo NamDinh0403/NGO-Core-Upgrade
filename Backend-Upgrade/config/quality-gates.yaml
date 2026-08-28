@@ -1,0 +1,63 @@
+# Quality gates. A run cannot reach COMPLETE unless every required gate passes.
+schemaVersion: 1
+id: quality-gates
+lastReviewedAt: 2026-08-13
+
+gates:
+  plan-written:
+    phase: PLAN
+    required: true
+    check: upgrade-plan-YYYY-MM-DD.md exists at solution root
+  packages-updated:
+    phase: UPGRADE
+    required: true
+    check: all NGO.Core.* references and target frameworks match target version
+  restore-succeeded:
+    phase: BUILD_AND_FIX
+    required: true
+    check: dotnet restore --force exits 0
+  build-succeeded:
+    phase: BUILD_AND_FIX
+    required: true
+    check: dotnet build --no-restore reports 0 errors
+    onFail: enter fix loop (see escalation-policy budgets)
+  tests-run:
+    phase: TEST
+    required: true
+    allowNoTests: true          # if the client solution has no test project, record and pass
+    check: test command executed and results captured in test-results.json
+  ef-migration-attempted:
+    phase: TEST
+    required: true
+    check: EF migration attempted when a DbContext exists; "no changes detected" counts as success
+  documentation-complete:
+    phase: DOCUMENT
+    required: true
+    check: documentation-status.json has all required items true
+    requiredItems:
+      - upgradePlanCompleted
+      - changesApplied
+      - restoreCompleted
+      - buildCompleted
+      - testsCompleted
+      - changedFilesRecorded
+      - configChangesDocumented
+      - breakingChangesDocumented
+      - deploymentImplicationsDocumented
+      - unresolvedIssuesDocumented
+      - developerDecisionsRecorded
+      - upgradeReportGenerated
+  final-report:
+    phase: DOCUMENT
+    required: true
+    check: upgrade-report-YYYY-MM-DD.md exists at solution root
+  episode-produced:
+    phase: HANDOVER
+    required: true
+    check: an episode record exists under memory/episodes for this run (success OR blocked)
+
+completion:
+  rule: >
+    Status COMPLETE is only permitted when every required gate above passes.
+    If implementation gates pass but documentation-complete fails, set status
+    DOCUMENTATION_PENDING, never COMPLETE.

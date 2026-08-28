@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/resolve-target-packages/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "clientPath", "corePath"],
+  "properties": {
+    "skillId": { "type": "string", "const": "resolve-target-packages" },
+    "runDir": { "type": "string" },
+    "clientPath": { "type": "string" },
+    "corePath": { "type": "string" },
+    "targetVersion": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

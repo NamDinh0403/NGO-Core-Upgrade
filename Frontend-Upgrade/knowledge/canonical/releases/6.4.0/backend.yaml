@@ -1,0 +1,22 @@
+version: "6.4.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-6.4.0-BACKEND-01
+    releaseVersion: "6.4.0"
+    title: "Fix GetLogframeIndicatorTrackers ObjectiveNo (re-listed)"
+    description: "If the client customizes GetLogframeIndicatorTrackers, update isnull(obj.ObjectiveNo, glObj.ObjectiveNo) to obj.[ObjectiveNo]."
+    scope: BACKEND
+    category: customization
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["databaseFunction"]
+    sourceEvidence: "release-notes.md 6.4.0 indicator tracker (repeat of 5.14.0)"
+    action: "Update the client override per the Core PR."
+    automation: MANUAL_DECISION
+    validation: "objective number displays correctly"
+    risk: LOW
+    confidence: MEDIUM
+    status: DUPLICATE
+    duplicateOf: REQ-5.14.0-BACKEND-01
+    notes: "Re-list (backport) of the 5.14.0 indicator tracker card."

@@ -1,0 +1,19 @@
+# Generated run output - never commit per config/repository-layout-policy.yaml.
+# Keep the runs/ directory (placeholder README) but ignore actual runs.
+/runs/*
+!/runs/README.md
+
+# Node / tooling
+node_modules/
+npm-debug.log*
+*.tmp
+*.out
+
+# Extracted Core sources / temporary package archives / tool caches / logs
+**/research/core-target/
+*.tgz
+*.log
+.angular/
+dist/
+out-tsc/
+coverage/

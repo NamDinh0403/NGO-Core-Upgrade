@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "9.0.0"
+title: "NGO Core 9.0.0"
+summary: "Workflow instance tables, ComponentFactoryResolver removal, Angular ESLint migration, ngx-contextmenu removal, spinner/library refresh, Draft/Published workflow queue, .NET 10, Node 18, App Insights web, Write-with-AI, security headers, CSP."
+frameworkTransition: { angularFrom: "15", angularTo: "15", dotnetFrom: "9", dotnetTo: "10" }
+scopes: ["frontend", "backend", "database", "deployment"]
+sourceEvidence: "release-notes.md 9.0.0"

@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/map-core-to-client/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "requirementMapRef", "impactMapRef", "unresolvedCount"],
+  "properties": {
+    "skillId": { "type": "string", "const": "map-core-to-client" },
+    "status": { "enum": ["SUCCEEDED", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_CONTEXT", "BLOCKED_NEEDS_DEVELOPER"] },
+    "requirementMapRef": { "type": "string" },
+    "impactMapRef": { "type": "string" },
+    "unresolvedCount": { "type": "integer" }
+  },
+  "additionalProperties": true
+}

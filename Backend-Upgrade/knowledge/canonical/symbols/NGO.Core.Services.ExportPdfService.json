@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "symbol",
+  "symbol": "ExportPdfService",
+  "fullyQualifiedName": "NGO.Core.Services.ExportPdfService",
+  "package": "NGO.Core.Services",
+  "kind": "class",
+  "riskLevel": "high",
+  "sourceOfTruth": {
+    "rule": "Decompile installed NGO.Core.Services.dll and extract generic declaration, constructor, and constraints before patching.",
+    "dllSearchPatterns": [
+      "%USERPROFILE%/.nuget/packages/ngo.core.services/**/NGO.Core.Services.dll"
+    ]
+  },
+  "knownBreakingChanges": [
+    {
+      "fromVersion": "7.x",
+      "toVersion": "8.x",
+      "changeType": "generic-arguments-added",
+      "likelyErrors": [
+        "CS0305",
+        "CS0311",
+        "CS1503"
+      ],
+      "knownNewTypeArguments": [
+        "TBeneficiaryVersion",
+        "DBeneficiaryVersion",
+        "DLogframeVersion",
+        "DLogframeReporting"
+      ]
+    },
+    {
+      "fromVersion": "7.x",
+      "toVersion": "8.x",
+      "changeType": "constructor-parameters-added",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "knownNewDependencies": [
+        "IFieldDefinitionRepository",
+        "IExchangeRateService",
+        "IPartnerExpenditureReportingExportExcelService",
+        "IBeneficiaryService",
+        "beneficiaryVersionMapper",
+        "ILogframe2Service",
+        "logframeVersionMapper",
+        "logframeReportingMapper"
+      ]
+    }
+  ],
+  "relatedFilesToSearch": [
+    "*ExportPdfService*.cs",
+    "*Registration*.cs",
+    "Startup.cs",
+    "Program.cs"
+  ],
+  "antiPatterns": [
+    "Do not add generic arguments only to the implementation and forget the interface or DI registration.",
+    "Do not choose DTO/model types without reading constraints."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "ExportPdfService generic arity and constructor error families are gone.",
+      "DI registrations match the installed package arity."
+    ]
+  }
+}

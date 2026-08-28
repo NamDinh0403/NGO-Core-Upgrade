@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# POSIX entry shim for the upgrade-agent CLI.
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec node "$DIR/upgrade-agent.js" "$@"

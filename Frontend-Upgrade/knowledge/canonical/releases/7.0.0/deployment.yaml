@@ -1,0 +1,40 @@
+version: "7.0.0"
+scope: PIPELINE
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.0.0-DEPLOYMENT-01
+    releaseVersion: "7.0.0"
+    title: "Upgrade to .NET 9"
+    description: "Find and replace net8.0 with net9.0 in all .csproj before installing NuGet packages; set netVersion 9.0 and dotnet-ef 9.0.1 in build-pipeline-api.yml; update the Azure web service to .NET 9."
+    scope: PIPELINE
+    category: CI/CD
+    timing: BEFORE_UPGRADE
+    applicability: ALWAYS
+    semanticRoles: ["backendPipeline"]
+    sourceEvidence: "release-notes.md 7.0.0 .NET Upgrade"
+    clientDiscovery: ["*.csproj", "build-pipeline-api.yml"]
+    action: "Target net9.0; update pipeline and Azure runtime."
+    automation: MANUAL_EXECUTION
+    validation: "backend builds on .NET 9"
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+    owner: "pipeline-owner"
+  - schemaVersion: 1
+    id: REQ-7.0.0-DEPLOYMENT-02
+    releaseVersion: "7.0.0"
+    title: "Add site-collection and reminder queues/schedules"
+    description: "Add SwitchCurrentSiteCollectionQueue/Schedule and ReminderTaskDeadlineQueue to appsettings and Azure App Service keys."
+    scope: DEPLOYMENT
+    category: azure-setting
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["appsettings", "azureSetting"]
+    sourceEvidence: "release-notes.md 7.0.0 Manage Site Collection"
+    action: "Add queue/schedule keys to appsettings + Azure."
+    automation: AUTO_AFTER_MAPPING
+    validation: "APPSET-SWITCHSITE-SCHEDULE coverage satisfied; keys present"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

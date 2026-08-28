@@ -1,0 +1,8 @@
+{
+  "skillId": "plan-frontend-upgrade",
+  "status": "READY",
+  "planRef": "plan.yaml",
+  "uncertaintyRegisterRef": "uncertainty-register.yaml",
+  "readOnly": true,
+  "nextAction": "Run execute-frontend-upgrade behind the mutation gate; create the client rollback checkpoint first."
+}

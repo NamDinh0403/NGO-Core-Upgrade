@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/developer-escalation/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "escalationRef", "nextAction", "resumeCommand"],
+  "properties": {
+    "skillId": { "type": "string", "const": "developer-escalation" },
+    "status": { "enum": ["ESCALATED"] },
+    "escalationRef": { "type": "string" },
+    "nextAction": { "type": "string" },
+    "resumeCommand": { "type": "string" }
+  },
+  "additionalProperties": true
+}

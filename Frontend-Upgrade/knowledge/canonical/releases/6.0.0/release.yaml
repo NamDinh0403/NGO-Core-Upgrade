@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "6.0.0"
+title: "NGO Core 6.0.0"
+summary: "Entity import Admin UI + page-import queue; finance monitoring/summary modules; email deadline reminder; AD sync groups; multi-language tooltip."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "8", dotnetTo: "8" }
+scopes: ["frontend", "deployment"]
+sourceEvidence: "release-notes.md 6.0.0"

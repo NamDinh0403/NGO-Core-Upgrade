@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/release-requirement.schema.json",
+  "title": "Atomic release requirement",
+  "description": "One atomic, testable requirement derived from a release note. Canonical structured knowledge; Markdown is derived from this.",
+  "type": "object",
+  "required": [
+    "schemaVersion", "id", "releaseVersion", "title", "description",
+    "scope", "category", "timing", "applicability", "action",
+    "automation", "validation", "risk", "confidence", "status"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^(REQ-[0-9]+\\.[0-9]+\\.[0-9]+|MIG-[A-Z0-9]+)-[A-Z]+-[0-9]+$" },
+    "releaseVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "reusableMigration": { "type": ["string", "null"] },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "scope": {
+      "enum": ["FRONTEND", "BACKEND", "DATABASE", "SHAREPOINT", "PIPELINE", "AZURE", "DEPLOYMENT", "CROSS_CUTTING"]
+    },
+    "category": { "type": "string" },
+    "timing": {
+      "enum": ["BEFORE_UPGRADE", "DURING_UPGRADE", "BEFORE_DEPLOYMENT", "AFTER_DEPLOYMENT", "MANUAL_REVIEW"]
+    },
+    "applicability": {
+      "enum": [
+        "ALWAYS", "IF_FILE_EXISTS", "IF_SYMBOL_USED", "IF_PACKAGE_USED",
+        "IF_FEATURE_ENABLED", "IF_CLIENT_CUSTOMIZED", "IF_CONFIGURATION_EXISTS",
+        "IF_DATABASE_DATA_MATCHES", "IF_PM_APPROVES", "IF_DEPLOYMENT_ENVIRONMENT_USES"
+      ]
+    },
+    "semanticRoles": { "type": "array", "items": { "type": "string" } },
+    "sourceEvidence": { "type": "string" },
+    "corePaths": { "type": "array", "items": { "type": "string" } },
+    "clientDiscovery": { "type": "array", "items": { "type": "string" } },
+    "action": { "type": "string" },
+    "automation": {
+      "enum": ["AUTO_SAFE", "AUTO_AFTER_MAPPING", "MANUAL_DECISION", "MANUAL_EXECUTION", "REPORT_ONLY"]
+    },
+    "validation": { "type": "string" },
+    "risk": { "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+    "confidence": { "enum": ["LOW", "MEDIUM", "HIGH"] },
+    "status": { "enum": ["ACTIVE", "SUPERSEDED", "DUPLICATE", "DRAFT"] },
+    "owner": { "type": ["string", "null"] },
+    "duplicateOf": { "type": ["string", "null"] },
+    "supersedes": { "type": "array", "items": { "type": "string" } },
+    "supersededBy": { "type": ["string", "null"] },
+    "sensitive": { "type": "boolean" },
+    "notes": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

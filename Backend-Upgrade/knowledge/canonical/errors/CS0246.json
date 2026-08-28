@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "error-playbook",
+  "errorCode": "CS0246",
+  "title": "Type or namespace not found",
+  "classifyAs": "missing-or-moved-type",
+  "sourceOfTruth": {
+    "rule": "Confirm whether the type exists in the installed packages before adding using statements or replacements.",
+    "authoritativeInputs": [
+      "compiler missing type text",
+      "installed package decompile or source-in-package files"
+    ]
+  },
+  "symptoms": [
+    "The type or namespace name could not be found.",
+    "A moved Core type is referenced without the new namespace.",
+    "A newly required dependency type is missing from the project references or using directives."
+  ],
+  "investigation": [
+    "Search the solution for the missing type.",
+    "Search/decompile installed NGO.Core packages for the type name.",
+    "Identify whether this is a namespace move, removed type, renamed type, or missing package reference.",
+    "Load a matching symbol route if the type belongs to a high-risk Core service family."
+  ],
+  "patchRules": [
+    "Add a using directive only when the type exists and namespace is confirmed.",
+    "Prefer fully qualified names when ambiguity exists.",
+    "Add missing package references only when restore evidence proves the package is absent."
+  ],
+  "antiPatterns": [
+    "Do not invent placeholder interfaces.",
+    "Do not add broad using directives without confirming the namespace.",
+    "Do not assume absence from a diff means the type does not exist."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "The CS0246 family reaches zero for the type.",
+      "No new ambiguous-reference errors were introduced."
+    ]
+  }
+}

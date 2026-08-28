@@ -1,0 +1,65 @@
+# Retry, budget and escalation policy.
+schemaVersion: 1
+id: escalation-policy
+lastReviewedAt: 2026-08-13
+
+budgets:
+  maxAttemptsPerIdenticalFix: 2
+  maxDistinctFixPatternsPerIssue: 4
+  maxRepeatsOfSameErrorAfterFix: 2
+  maxBuildFixIterations: 5           # preserves legacy 5-iteration loop
+  maxToolCallsPerPhase: 40
+  maxTokensPerPhase: null            # configurable per environment
+rules:
+  - no-infinite-loops
+  - no-repeated-unmodified-tool-call-after-same-failure
+
+escalateWhen:
+  - no-applicable-approved-pattern-exists
+  - confidence-below-threshold
+  - same-error-remains-after-max-attempts
+  - change-affects-public-api
+  - destructive-database-migration-may-be-required
+  - security-behaviour-changes
+  - auth-behaviour-changes
+  - repository-wide-architectural-change-required
+  - tests-regress-after-fix
+  - required-client-information-missing
+  - canonical-sources-conflict
+  - tool-unavailable
+  - side-effect-cannot-be-safely-retried
+  - decision-requires-business-context
+  - run-exceeds-budget
+  - unexpected-repository-state
+  # Credential escalation applies to the CLIENT restore, not the optional probe download.
+  - client-package-restore-fails-authentication
+
+# A standalone/probe package download failure is NOT by itself an escalation: fall back
+# to restore-in-place (config/agent-policy.yaml#packageAcquisition). Escalate for
+# credentials only when the client `dotnet restore` fails authentication.
+
+confidenceThreshold: 0.6
+
+onEscalation:                        # ordered actions
+  - save-checkpoint
+  - set-blocked-status                # choose specific BLOCKED_NEEDS_* reason
+  - preserve-logs-and-diffs
+  - revert-unverified-changes-when-safe
+  - generate-developer-escalation      # templates/developer-escalation.md
+  - record-attempted-fixes-and-why-each-failed
+  - state-exact-decision-or-info-required
+  - state-safest-resume-point
+  - state-exact-resume-instruction
+  - update-documentation-status
+
+blockedReasonMapping:
+  missing-client-info: BLOCKED_NEEDS_CONTEXT
+  needs-business-decision: BLOCKED_NEEDS_DEVELOPER
+  public-api-or-destructive-change: BLOCKED_NEEDS_APPROVAL
+  security-or-auth-change: BLOCKED_NEEDS_APPROVAL
+  policy-violation: FAILED_POLICY
+  budget-exceeded: FAILED_BUDGET
+
+invariant: >
+  No run may be left appearing active without a defined nextAction. Every
+  terminal or blocked status MUST carry a safeResumeInstruction.

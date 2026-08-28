@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "version",
+  "version": "9.0.0",
+  "releaseDate": "2026-06-01",
+  "targetFramework": "net10.0",
+  "packageVersionMustMatch": true,
+  "sourceOfTruth": {
+    "rule": "Use installed package DLLs for signatures. No prepared diff folder exists for this version."
+  },
+  "summary": "Core 9 moves to net10.0 and introduces workflow-instance table conversion plus a draft/published workflow queue setting.",
+  "highRiskChanges": [
+    {
+      "changeType": "framework",
+      "impact": "high",
+      "likelyErrors": [
+        "NU1201"
+      ],
+      "notes": [
+        "Update all projects to net10.0 before restoring.",
+        "Update build-pipeline-api.yml netVersion to 10.0 when present.",
+        "Update Azure App Service runtime to .NET 10."
+      ]
+    },
+    {
+      "changeType": "data-model",
+      "impact": "high",
+      "notes": [
+        "Workflow instances moved from JSON config to relational tables.",
+        "After deployment, run ConvertWorkflowInstanceJsonConfigToTables or the Workflow Cycle tab will not render."
+      ]
+    },
+    {
+      "changeType": "configuration",
+      "impact": "medium",
+      "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json"
+    }
+  ],
+  "deploymentTools": [
+    {
+      "tool": "ConvertWorkflowInstanceJsonConfigToTables",
+      "when": "after-deployment",
+      "required": true
+    }
+  ],
+  "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json",
+  "diffFiles": [],
+  "validation": {
+    "commands": [
+      "dotnet restore --force",
+      "dotnet build --no-restore",
+      "dotnet ef migrations add UpgradeCore9x --context NgoContext --project <migrations-project>"
+    ],
+    "successCriteria": [
+      "All projects target net10.0.",
+      "Build succeeds.",
+      "SyncPublishedWorkflowQueue is present where required."
+    ]
+  }
+}

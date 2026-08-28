@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/analyze-client-impact/schemas/input.schema.json",
+  "title": "analyze-client-impact input",
+  "type": "object",
+  "required": ["skillId", "runDir", "targetVersion"],
+  "properties": {
+    "skillId": { "type": "string", "const": "analyze-client-impact" },
+    "runDir": { "type": "string" },
+    "targetVersion": { "type": "string" },
+    "candidateCompatibilityManifest": { "type": ["object", "null"] },
+    "mode": { "type": "string", "enum": ["analysis", "approved-mutation"] }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,59 @@
+version: "9.0.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.0.0-BACKEND-01
+    releaseVersion: "9.0.0"
+    title: "Draft/Published workflow queue setting"
+    description: "Add SyncPublishedWorkflowQueue to all appSettings.json files and the Azure App Setting Core:Queue:SyncPublishedWorkflowQueue."
+    scope: BACKEND
+    category: appsettings
+    timing: BEFORE_DEPLOYMENT
+    applicability: ALWAYS
+    semanticRoles: ["appsettings"]
+    sourceEvidence: "release-notes.md 9.0.0 Draft and Published workflow"
+    action: "Add queue key to appsettings and Azure."
+    automation: AUTO_AFTER_MAPPING
+    validation: "APPSET-SYNCPUBWF-QUEUE coverage satisfied"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: REQ-9.0.0-BACKEND-02
+    releaseVersion: "9.0.0"
+    title: "Write-with-AI Azure OpenAI settings"
+    description: "If Write-with-AI is enabled, add Core:AzureOpenAISettings:Endpoint and DeploymentName; grant the Entra app the Cognitive Services OpenAI Contributor role. Values come from a secret provider, never committed."
+    scope: BACKEND
+    category: appsettings
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["appsettings"]
+    sourceEvidence: "release-notes.md 9.0.0 Write with AI"
+    action: "Configure AzureOpenAI settings from the secret provider; assign role."
+    automation: MANUAL_DECISION
+    validation: "APPSET-OPENAI-* coverage satisfied; endpoint from secret provider"
+    risk: HIGH
+    confidence: MEDIUM
+    status: ACTIVE
+    sensitive: true
+    owner: "deployment-owner"
+    notes: "Never commit endpoint/deployment name; PM approval required (cost)."
+  - schemaVersion: 1
+    id: REQ-9.0.0-BACKEND-03
+    releaseVersion: "9.0.0"
+    title: "Security headers in NGO.API web.config"
+    description: "Add removeServerHeader='true' to requestFiltering and remove the X-Powered-By custom header in NGO.API web.config."
+    scope: BACKEND
+    category: security
+    timing: DURING_UPGRADE
+    applicability: IF_FILE_EXISTS
+    semanticRoles: ["webConfig"]
+    sourceEvidence: "release-notes.md 9.0.0 Use security headers"
+    action: "Edit web.config security headers."
+    automation: MANUAL_EXECUTION
+    validation: "response omits Server and X-Powered-By headers"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "backend-owner"

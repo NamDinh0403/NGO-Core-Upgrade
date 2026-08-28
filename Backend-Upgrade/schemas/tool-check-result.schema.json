@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/tool-check-result.schema.json",
+  "title": "Tool Check Result",
+  "type": "object",
+  "required": ["schemaVersion", "toolId", "applicable", "found", "status", "checkedAt"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "toolId": { "type": "string" },
+    "applicable": { "type": "boolean" },
+    "found": { "type": "boolean" },
+    "executable": { "type": ["string", "null"] },
+    "rawVersion": { "type": ["string", "null"] },
+    "normalizedVersion": { "type": ["string", "null"] },
+    "minimumVersion": { "type": ["string", "null"] },
+    "meetsMinimum": { "type": ["boolean", "null"] },
+    "candidateExecutables": { "type": "array", "items": { "type": "string" } },
+    "selectedScope": { "type": ["string", "null"] },
+    "selectionReason": { "type": ["string", "null"] },
+    "status": {
+      "type": "string",
+      "enum": ["AVAILABLE", "AVAILABLE_WITH_WARNING", "MISSING", "INSTALLATION_REQUIRED", "INSTALLATION_BLOCKED", "VERSION_TOO_OLD", "VERSION_UNSUPPORTED", "VALIDATION_FAILED", "POLICY_BLOCKED", "NOT_APPLICABLE"]
+    },
+    "checkedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "7.3.1"
+title: "NGO Core 7.3.1"
+summary: "Logframe objective form optional behaviour for standard/custom indicators."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "9", dotnetTo: "9" }
+scopes: ["decisions"]
+sourceEvidence: "release-notes.md 7.3.1"

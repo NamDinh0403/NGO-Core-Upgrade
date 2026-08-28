@@ -1,0 +1,65 @@
+schemaVersion: 1
+id: frontend-quality-gates
+description: Phase gates that must pass before the run can be marked COMPLETE.
+
+gates:
+  - id: doctor
+    phase: DOCTOR
+    required: true
+    check: Dual-repository doctor returned READY_FOR_INVENTORY or READY_FOR_PLANNING.
+  - id: coreReadOnly
+    phase: INSPECT_CORE
+    required: true
+    check: Core fingerprint before and after inspection is identical.
+  - id: packageAlignment
+    phase: RESOLVE_PACKAGES
+    required: true
+    check: Exact target package versions resolved from Core; no wildcard/latest introduced.
+  - id: planReady
+    phase: PLAN
+    required: true
+    check: Plan status is READY (or policy-approved READY_WITH_ASSUMPTIONS) with exact files + evidence per change.
+  - id: rollback
+    phase: CHECKPOINT
+    required: true
+    check: Client rollback checkpoint created before any client mutation.
+  - id: dependencyReconciliation
+    phase: EXECUTE
+    required: true
+    check: Actual resolved dependency graph reconciled with the planned graph; material differences force replanning.
+  - id: developmentBuild
+    phase: VALIDATE
+    required: true
+    check: Target development build ran.
+  - id: productionBuild
+    phase: VALIDATE
+    required: true
+    check: Target production build ran.
+  - id: tests
+    phase: VALIDATE
+    required: true
+    check: Relevant tests ran.
+  - id: integrationAudit
+    phase: AUDIT
+    required: true
+    check: Front-end integration audit passed with no completion blockers.
+  - id: report
+    phase: REPORT
+    required: true
+    check: Final report written with changes, fixes, deviations, and uncertainty.
+
+requiredDocItems:
+  - planCompleted
+  - packageAlignmentResolved
+  - clientInventoryCompleted
+  - coreInspectionCompleted
+  - coreRemainedUnchanged
+  - changesApplied
+  - baselineBuildsRecorded
+  - targetDevelopmentBuildCompleted
+  - targetProductionBuildCompleted
+  - testsCompleted
+  - integrationAuditCompleted
+  - changedFilesRecorded
+  - uncertaintyResolvedOrDeferred
+  - finalReportGenerated

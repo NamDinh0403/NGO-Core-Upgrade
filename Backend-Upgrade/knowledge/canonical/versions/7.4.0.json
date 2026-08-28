@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "version",
+  "version": "7.4.0",
+  "releaseDate": "2024-12-01",
+  "targetFramework": "net8.0",
+  "packageVersionMustMatch": true,
+  "sourceOfTruth": {
+    "rule": "Use installed package DLLs for signatures. This version entry predicts common changes only."
+  },
+  "summary": "Core 7.4 keeps net8.0 and changes FundingAllocationService call-site shape.",
+  "highRiskChanges": [
+    {
+      "changeType": "method-signature",
+      "symbol": "FundingAllocationService.GetAllocationsForEntity",
+      "route": "Knowledge/symbols/NGO.Core.Services.FundingAllocationService.json",
+      "impact": "high",
+      "likelyErrors": [
+        "CS1503"
+      ],
+      "notes": [
+        "Third parameter changed from int[] to bool."
+      ]
+    }
+  ],
+  "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json",
+  "diffFiles": [],
+  "validation": {
+    "commands": [
+      "dotnet restore --force",
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "Package references match 7.4.0.",
+      "FundingAllocationService call-site errors are resolved."
+    ]
+  }
+}

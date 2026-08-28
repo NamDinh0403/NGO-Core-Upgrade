@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "projects": {
+    "acme-ngo-client": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "index": "src/index.html",
+            "styles": ["src/styles.scss"]
+          },
+          "configurations": {
+            "production": { "optimization": true }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+version: "7.7.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.7.0-BACKEND-01
+    releaseVersion: "7.7.0"
+    title: "Adjust GetTaskThatUserHasViewPermission override"
+    description: "DB function GetTaskThatUserHasViewPermission changed; if the client overrides it, inner join Tasks with CoreEntities to ensure only view-accessible entities are returned."
+    scope: BACKEND
+    category: customization
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["databaseFunction"]
+    sourceEvidence: "release-notes.md 7.7.0 analyse-task"
+    action: "Update client override to inner join Tasks with CoreEntities."
+    automation: MANUAL_DECISION
+    validation: "only accessible entities returned"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    notes: "Primary card. Re-listed (backport) in 8.3.0."

@@ -1,0 +1,7 @@
+{
+  "skillId": "validate-local-repositories",
+  "status": "READY_FOR_INVENTORY",
+  "doctorReportRef": "doctor-report.json",
+  "readOnly": true,
+  "nextAction": "Run inventory-client-frontend. Core will be inspected read-only."
+}

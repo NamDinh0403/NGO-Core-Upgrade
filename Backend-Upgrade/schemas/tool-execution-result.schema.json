@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/tool-execution-result.schema.json",
+  "title": "Tool Execution Result (wrapper output)",
+  "type": "object",
+  "required": ["schemaVersion", "toolId", "capability", "status", "startedAt", "completedAt", "exitCode"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "toolId": { "type": "string" },
+    "toolVersion": { "type": ["string", "null"] },
+    "capability": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["SUCCEEDED", "FAILED", "TIMED_OUT", "REFUSED_CLIENT_MUTATION", "POLICY_BLOCKED", "TOOL_UNAVAILABLE"]
+    },
+    "workingDirectory": { "type": ["string", "null"] },
+    "phase": { "type": ["string", "null"] },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" },
+    "exitCode": { "type": ["integer", "null"] },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256"],
+        "properties": { "path": { "type": "string" }, "sha256": { "type": "string" } }
+      }
+    },
+    "stdoutArtifact": { "type": ["string", "null"] },
+    "stderrArtifact": { "type": ["string", "null"] },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "nextRecommendedAction": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

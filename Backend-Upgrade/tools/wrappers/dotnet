@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+'use strict';
+/* dotnet SDK wrapper (restore/build/test for research; refuses `add` which mutates a client project). */
+const { runWrapper } = require('./lib/wrapper');
+const r = runWrapper({
+  toolId: 'dotnet-sdk', capability: 'restore-nuget-dependency-graph', argsPrefix: [],
+  userArgs: process.argv.slice(2), mutatingVerbs: ['add'],
+});
+process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+process.exit(r.status === 'SUCCEEDED' ? 0 : 1);

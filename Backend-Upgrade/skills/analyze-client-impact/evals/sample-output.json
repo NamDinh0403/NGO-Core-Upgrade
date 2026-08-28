@@ -1,0 +1,19 @@
+{
+  "skillId": "analyze-client-impact",
+  "status": "SUCCEEDED",
+  "readOnly": true,
+  "bootstrapStyle": "STANDALONE",
+  "affectedFiles": [{ "path": "src/NGO.Services/EntityService.cs", "reason": "constructor signature change", "risk": "medium" }],
+  "affectedSymbols": [{ "symbol": "NGO.Core.Services.EntityService", "change": "constructor-param", "evidence": "candidate-compatibility-manifest" }],
+  "configRoles": [
+    { "role": "bootstrap", "status": "RESOLVED_AND_INSPECTED" },
+    { "role": "standalone-app-config", "status": "RESOLVED_AND_INSPECTED" },
+    { "role": "app.module.ts", "status": "NOT_APPLICABLE_WITH_EVIDENCE" },
+    { "role": "production-build-config", "status": "RESOLVED_AND_INSPECTED" }
+  ],
+  "expectedAdaptations": [{ "target": "EntityService subclass ctor", "action": "forward configurationRepository", "risk": "medium" }],
+  "uncertaintyCreated": [],
+  "clientImpactMapRef": "runs/synthetic-acme/run-1/client-impact-map.json",
+  "evidence": ["angular.json", "tsconfig.app.json"],
+  "nextAction": "Proceed to execute-upgrade for the planned EntityService adaptation."
+}

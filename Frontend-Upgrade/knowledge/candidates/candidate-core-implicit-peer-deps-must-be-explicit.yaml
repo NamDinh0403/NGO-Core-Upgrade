@@ -1,0 +1,25 @@
+id: "candidate-core-implicit-peer-deps-must-be-explicit"
+kind: "config-pattern"
+tier: candidate
+signature: "production build fails 'Cannot find module <x>' because ngo-core's compiled output imports undeclared peers"
+context: >
+  MISTAKE MADE: resolve-target-packages originally added a CORE_REQUIRED_DIRECT package
+  only "when the client needs direct ownership" (client source imports it). This under-scoped
+  the deps: only `uuid` was added, then the build failed one-by-one on ng2-file-upload,
+  ngx-file-drop, @popperjs/core, date-fns, @microsoft/applicationinsights-web/-angularplugin-js
+  -- each miss costing a full build+install cycle. `--legacy-peer-deps` (required, see related
+  candidate) does not auto-install peers, so undeclared/implicit peers are simply missing.
+resolution: >
+  Add every package the INSTALLED Core imports, even if the client's own .ts never imports it.
+  Detect by scanning node_modules/<core>/**/*.d.ts and fesm*/*.mjs for bare-specifier imports,
+  not just Core's peerDependencies. Classify as CORE_IMPLICIT_PEER and add unconditionally.
+  Resolve the whole set up front. BRC concrete list: ng2-file-upload@1.4.0, ngx-file-drop@13.0.0,
+  @popperjs/core@2.11.8 (ng-bootstrap 14 peer), date-fns@2.30.0, @microsoft/applicationinsights-web@3.3.10,
+  @microsoft/applicationinsights-angularplugin-js@15.3.8 (+ uuid@10.0.0 which BRC imports directly).
+applicability: "Any app consuming ngo-core (or any lib whose fesm/.d.ts import undeclared peers)."
+confidence: HIGH
+evidence:
+  - "node_modules/ngo-core/**/*.d.ts import 'ng2-file-upload'/'ngx-file-drop'; ng-bootstrap 14 imports '@popperjs/core'"
+  - "skills/resolve-target-packages/SKILL.md v1.1.0 (CORE_IMPLICIT_PEER rule)"
+  - "runs/ngo-client/brc-upgrade-running-log.md sections 3.3 + 13.1"
+redacted: true

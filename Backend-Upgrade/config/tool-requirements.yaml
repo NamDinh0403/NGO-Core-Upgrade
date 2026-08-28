@@ -1,0 +1,186 @@
+# Tool requirements for the NGO Core upgrade agent, expressed as capabilities.
+# Classification: REQUIRED | REQUIRED_IF_APPLICABLE | RECOMMENDED | OPTIONAL | FORBIDDEN
+# appliesWhen conditions are evaluated against detected repository evidence + policy gates.
+# pinnedVersion: null means "resolve the latest policy-compatible version at install
+# time and pin the resolved version into the manifest" (recorded in the install log).
+schemaVersion: 1
+id: tool-requirements
+lastReviewedAt: 2026-08-13
+
+tools:
+  - id: git
+    classification: REQUIRED
+    capabilities:
+      - repository-version-control
+      - create-git-worktree
+      - generate-diff
+    detect:
+      - git
+      - --version
+    minimumVersion: 2.20.0
+    installScopePreference:
+      - EXISTING_APPROVED
+      - USER_LOCAL
+    autoInstall: false
+    smoke: git-worktree-support
+
+  - id: dotnet-sdk
+    classification: REQUIRED_IF_APPLICABLE
+    appliesWhen:
+      domainDotnet: true
+    capabilities:
+      - restore-nuget-dependency-graph
+      - build-dotnet
+      - test-dotnet
+      - run-local-dotnet-tools
+      - acquire-nuget-package
+    detect:
+      - dotnet
+      - --version
+    minimumVersion: 8.0.0
+    installScopePreference:
+      - EXISTING_APPROVED
+    autoInstall: false
+    smoke: dotnet-info
+
+  - id: node
+    classification: REQUIRED
+    capabilities:
+      - validate-json-schema
+    detect:
+      - node
+      - --version
+    minimumVersion: 14.0.0
+    installScopePreference:
+      - EXISTING_APPROVED
+    autoInstall: false
+    smoke: node-eval
+
+  - id: npm
+    classification: REQUIRED_IF_APPLICABLE
+    appliesWhen:
+      frontendPresent: true
+    capabilities:
+      - inspect-npm-registry-metadata
+      - acquire-npm-package
+      - compare-npm-package-content
+      - install-isolated-npm-dependencies
+    detect:
+      - npm
+      - --version
+    minimumVersion: 6.0.0
+    installScopePreference:
+      - EXISTING_APPROVED
+    autoInstall: false
+    smoke: npm-version
+
+  - id: tar
+    classification: RECOMMENDED
+    capabilities:
+      - extract-archive
+    detect:
+      - tar
+      - --version
+    installScopePreference:
+      - EXISTING_APPROVED
+    autoInstall: false
+    smoke: version
+
+  - id: ripgrep
+    classification: RECOMMENDED
+    capabilities:
+      - search-repository
+    detect:
+      - rg
+      - --version
+    installScopePreference:
+      - EXISTING_APPROVED
+      - USER_LOCAL
+    autoInstall: false
+    fallback: git-grep-or-findstr
+    smoke: version
+
+  - id: docker
+    classification: OPTIONAL
+    appliesWhen:
+      containerRequested: true
+    capabilities:
+      - container-isolation
+    detect:
+      - docker
+      - --version
+    installScopePreference:
+      - EXISTING_APPROVED
+    autoInstall: false
+    smoke: version
+
+  - id: dotnet-apicompat
+    classification: REQUIRED_IF_APPLICABLE
+    appliesWhen:
+      managedPackageComparison: true
+    capabilities:
+      - compare-dotnet-public-api
+    installation:
+      type: dotnet-local-tool
+      package: Microsoft.DotNet.ApiCompat.Tool
+      pinnedVersion: null
+      command: apicompat
+    installScopePreference:
+      - REPOSITORY_LOCAL
+      - RUN_LOCAL
+    autoInstall: true
+    smoke: apicompat-help
+
+  - id: ilspycmd
+    classification: REQUIRED_IF_APPLICABLE
+    appliesWhen:
+      selectiveDecompilationApproved: true
+    capabilities:
+      - inspect-dotnet-assembly-metadata
+      - selectively-decompile-dotnet
+    installation:
+      type: dotnet-local-tool
+      package: ilspycmd
+      pinnedVersion: null
+      command: ilspycmd
+    installScopePreference:
+      - REPOSITORY_LOCAL
+      - RUN_LOCAL
+    autoInstall: true
+    policyGate:
+      - decompilation-permitted
+    smoke: ilspycmd-help
+
+  - id: typescript
+    classification: REQUIRED_IF_APPLICABLE
+    appliesWhen:
+      typescriptDetected: true
+    capabilities:
+      - typecheck-typescript
+      - scan-typescript-symbols
+    installation:
+      type: isolated-npm-dev-dependency
+      package: typescript
+      versionSource: client-compatible
+    installScopePreference:
+      - RUN_LOCAL
+    autoInstall: true
+    clientMutationAllowed: false
+    smoke: tsc-noemit-fixture
+
+  - id: angular-cli
+    classification: REQUIRED_IF_APPLICABLE
+    appliesWhen:
+      angularDetected: true
+    capabilities:
+      - inspect-angular-workspace
+      - run-angular-build
+    installation:
+      type: isolated-npm-dev-dependency
+      package: "@angular/cli"
+      versionSource: client-compatible
+    installScopePreference:
+      - RUN_LOCAL
+    autoInstall: true
+    clientMutationAllowed: false
+    smoke: angular-workspace-fixture

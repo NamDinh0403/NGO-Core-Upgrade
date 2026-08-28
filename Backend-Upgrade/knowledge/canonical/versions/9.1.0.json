@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "version",
+  "version": "9.1.0",
+  "releaseDate": "2026-07-01",
+  "targetFramework": "net10.0",
+  "packageVersionMustMatch": true,
+  "sourceOfTruth": {
+    "rule": "Use installed package DLLs for signatures. No prepared diff folder exists for this version."
+  },
+  "summary": "Core 9.1 stays on net10.0 and adds payment document folder configuration plus EF tooling dependencies for NGO.API.",
+  "highRiskChanges": [
+    {
+      "changeType": "configuration",
+      "impact": "medium",
+      "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json",
+      "notes": [
+        "Confirm SPSignedOffAdditionalDocumentsFolderName value with client PM/AM.",
+        "After deployment, run NGO.Core.Tools.UpdatePaymentDocumentLinks when the client uses Mark as Paid or Cancel on payments."
+      ]
+    },
+    {
+      "changeType": "data-model",
+      "symbol": "Log / Log2 / Log3",
+      "impact": "low",
+      "notes": [
+        "New RelatedEntity fields added. If a client needs multiple values, change field type to instances in code."
+      ]
+    }
+  ],
+  "newDependencies": [
+    "Microsoft.EntityFrameworkCore.Design@10.0.7 (NGO.API)",
+    "Microsoft.EntityFrameworkCore.Tools@10.0.7 (NGO.API)"
+  ],
+  "deploymentTools": [
+    {
+      "tool": "NGO.Core.Tools.UpdatePaymentDocumentLinks",
+      "when": "after-deployment",
+      "required": false,
+      "condition": "client uses Mark as Paid or Cancel on payments"
+    }
+  ],
+  "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json",
+  "diffFiles": [],
+  "validation": {
+    "commands": [
+      "dotnet restore --force",
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "Package references match 9.1.0.",
+      "EF tooling dependencies are present on NGO.API.",
+      "SPSignedOffAdditionalDocumentsFolderName is present or deliberately recorded as client-specific."
+    ]
+  }
+}

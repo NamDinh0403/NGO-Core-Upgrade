@@ -1,0 +1,7 @@
+{
+  "skillId": "investigate-frontend-failure",
+  "status": "RESOLVED",
+  "classification": "PEER_DEPENDENCY_CONFLICT",
+  "fixApplied": true,
+  "filesChanged": ["package.json"]
+}

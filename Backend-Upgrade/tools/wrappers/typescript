@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+'use strict';
+/* TypeScript wrapper: typecheck (--noEmit) via the isolated tooling install. */
+const { runWrapper } = require('./lib/wrapper');
+const r = runWrapper({
+  toolId: 'typescript', capability: 'typecheck-typescript', argsPrefix: [],
+  userArgs: process.argv.slice(2), mutatingVerbs: ['install', 'add'],
+});
+process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+process.exit(r.status === 'SUCCEEDED' ? 0 : 1);

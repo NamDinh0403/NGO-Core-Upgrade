@@ -1,0 +1,23 @@
+version: "6.3.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-6.3.0-FRONTEND-01
+    releaseVersion: "6.3.0"
+    title: "Import faExternalLink for search preview (re-listed)"
+    description: "Import faExternalLink from '@fortawesome/pro-light-svg-icons' and add it to the constructor/library in app.module for the search preview dialog."
+    scope: FRONTEND
+    category: icon
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["iconRegistration"]
+    sourceEvidence: "release-notes.md 6.3.0 preview document (repeat of 5.12.0)"
+    clientDiscovery: ["app.module.ts", "library.addIcons"]
+    action: "Register faExternalLink at the client's icon registration point."
+    automation: AUTO_AFTER_MAPPING
+    validation: "icon renders"
+    risk: LOW
+    confidence: MEDIUM
+    status: DUPLICATE
+    duplicateOf: REQ-5.12.0-FRONTEND-01
+    notes: "Re-list (backport) of the 5.12.0 search-preview icon card."

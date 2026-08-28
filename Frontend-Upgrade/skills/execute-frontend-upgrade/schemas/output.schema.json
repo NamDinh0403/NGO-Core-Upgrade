@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/execute-frontend-upgrade/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "coreUnchanged", "appliedChanges", "rollbackAvailable"],
+  "properties": {
+    "skillId": { "type": "string", "const": "execute-frontend-upgrade" },
+    "status": { "enum": ["SUCCEEDED", "PARTIAL", "RETRYABLE_FAILURE", "BLOCKED_GATE", "BLOCKED_NEEDS_DEVELOPER", "ROLLED_BACK"] },
+    "coreUnchanged": { "type": "boolean" },
+    "appliedChanges": { "type": "array", "items": { "type": "string" } },
+    "rollbackAvailable": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

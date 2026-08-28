@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "symbol",
+  "symbol": "NgoContext",
+  "fullyQualifiedName": "NGO.Core.Repositories.NgoContext",
+  "package": "NGO.Core.Repositories",
+  "kind": "db-context",
+  "riskLevel": "medium",
+  "sourceOfTruth": {
+    "rule": "Use the client source for DbContext overrides and installed NGO.Core.Repositories.dll for inherited contract changes.",
+    "dllSearchPatterns": [
+      "%USERPROFILE%/.nuget/packages/ngo.core.repositories/**/NGO.Core.Repositories.dll"
+    ]
+  },
+  "knownBreakingChanges": [
+    {
+      "fromVersion": "7.x",
+      "toVersion": "8.x",
+      "changeType": "audit-or-savechanges-contract",
+      "likelyErrors": [
+        "CS0115",
+        "CS1503",
+        "CS0029"
+      ],
+      "rule": "Inspect SaveChanges-related overrides and audit compression helpers before patching."
+    }
+  ],
+  "relatedFilesToSearch": [
+    "*NgoContext*.cs",
+    "*DbContext*.cs",
+    "*Migration*.cs"
+  ],
+  "antiPatterns": [
+    "Do not regenerate migrations before the build succeeds.",
+    "Do not manually edit EF model snapshot unless the EF command produced a verified change."
+  ],
+  "validation": {
+    "commands": [
+      "dotnet build --no-restore",
+      "dotnet ef migrations add UpgradeCore{major}x --context NgoContext --project <migrations-project>"
+    ],
+    "successCriteria": [
+      "DbContext compile errors are gone.",
+      "EF migration command succeeds or reports no changes detected."
+    ]
+  }
+}

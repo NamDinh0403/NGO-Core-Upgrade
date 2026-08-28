@@ -1,0 +1,23 @@
+version: "8.2.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.2.0-DEPLOYMENT-01
+    releaseVersion: "8.2.0"
+    title: "Set AzureAdId for CoreUsers (upgrade person)"
+    description: "Update appsettings.json then run NGO.Core.Tools.SetAzureAdIdForUser to set AzureAdId for CoreUsers; verify all AzureAdId rows are populated, manually updating deleted users if needed. Ownership moved to the upgrade person."
+    scope: DEPLOYMENT
+    category: tool
+    timing: DURING_UPGRADE
+    applicability: ALWAYS
+    semanticRoles: ["migrationTool"]
+    sourceEvidence: "release-notes.md 8.2.0 ADSync webjob"
+    action: "Run SetAzureAdIdForUser; verify AzureAdId populated."
+    automation: MANUAL_EXECUTION
+    validation: "all CoreUsers have AzureAdId"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    supersedes: ["REQ-7.6.0-DEPLOYMENT-01"]
+    owner: "upgrade-person"
+    notes: "Supersedes REQ-7.6.0-DEPLOYMENT-01 (ownership change)."

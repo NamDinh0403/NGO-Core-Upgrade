@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "8.4.0"
+title: "NGO Core 8.4.0"
+summary: "Remove Google Analytics gtag script from index.html."
+frameworkTransition: { angularFrom: "15", angularTo: "15", dotnetFrom: "9", dotnetTo: "9" }
+scopes: ["frontend"]
+sourceEvidence: "release-notes.md 8.4.0"

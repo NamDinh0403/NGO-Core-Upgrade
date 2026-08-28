@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/uncertainty.schema.json",
+  "title": "Uncertainty register entry",
+  "type": "object",
+  "required": ["id", "statement", "category", "impact", "status", "blocksMutation", "blocksCompletion"],
+  "properties": {
+    "id": { "type": "string" },
+    "statement": { "type": "string" },
+    "category": { "enum": ["KNOWN", "ASSUMED", "UNCERTAIN", "CONTRADICTORY", "NOT_APPLICABLE"] },
+    "impact": { "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+    "confidence": { "enum": ["LOW", "MEDIUM", "HIGH"] },
+    "evidenceAvailable": { "type": ["string", "null"] },
+    "evidenceMissing": { "type": ["string", "null"] },
+    "resolutionOptions": { "type": "array", "items": { "type": "string" } },
+    "requiredCapability": { "type": ["string", "null"] },
+    "blocksMutation": { "type": "boolean" },
+    "blocksCompletion": { "type": "boolean" },
+    "owner": { "type": "string" },
+    "status": { "enum": ["OPEN", "RESEARCHING", "RESOLVED", "ACCEPTED_RISK", "DEFERRED", "REQUIRES_DEVELOPER", "NOT_APPLICABLE"] },
+    "finalResolution": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

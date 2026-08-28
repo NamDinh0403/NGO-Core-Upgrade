@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "7.0.0"
+title: "NGO Core 7.0.0"
+summary: ".NET 9 upgrade; IATI modular; PartnerExpenditureReportingImport, Summary, Logframe2 modules; drag/drop upload packages; site-collection and reminder queues."
+frameworkTransition: { angularFrom: "10", angularTo: "10", dotnetFrom: "8", dotnetTo: "9" }
+scopes: ["frontend", "backend", "deployment"]
+sourceEvidence: "release-notes.md 7.0.0"

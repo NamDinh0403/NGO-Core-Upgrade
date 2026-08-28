@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/workflow-event.schema.json",
+  "title": "Append-only workflow event",
+  "type": "object",
+  "required": ["ts", "phase", "type"],
+  "properties": {
+    "ts": { "type": "string" },
+    "phase": { "type": "string" },
+    "type": { "type": "string" },
+    "status": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

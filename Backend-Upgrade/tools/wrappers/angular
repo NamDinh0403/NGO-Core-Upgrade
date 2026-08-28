@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+'use strict';
+/* Angular workspace inspector wrapper. Read-only inspection of angular.json/tsconfig. */
+const { runWrapper } = require('./lib/wrapper');
+const r = runWrapper({
+  toolId: 'angular-cli', capability: 'inspect-angular-workspace', argsPrefix: [],
+  userArgs: process.argv.slice(2), mutatingVerbs: ['add', 'update', 'install', 'generate'],
+});
+process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+process.exit(r.status === 'SUCCEEDED' ? 0 : 1);

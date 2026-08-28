@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/inspect-local-core/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "corePath", "clientInventoryRef"],
+  "properties": {
+    "skillId": { "type": "string", "const": "inspect-local-core" },
+    "runDir": { "type": "string" },
+    "corePath": { "type": "string" },
+    "clientInventoryRef": { "type": "string" },
+    "targetCommit": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

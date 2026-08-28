@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/derive-release-requirements/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "requirementsRef", "requirementCount"],
+  "properties": {
+    "skillId": { "type": "string", "const": "derive-release-requirements" },
+    "status": { "enum": ["SUCCEEDED", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_DEVELOPER"] },
+    "requirementsRef": { "type": "string" },
+    "requirementCount": { "type": "integer" }
+  },
+  "additionalProperties": true
+}

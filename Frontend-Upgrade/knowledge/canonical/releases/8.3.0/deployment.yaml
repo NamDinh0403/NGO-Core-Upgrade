@@ -1,0 +1,21 @@
+version: "8.3.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-8.3.0-DEPLOYMENT-01
+    releaseVersion: "8.3.0"
+    title: "Move idea folders with UpdateIdeaMembers (SP groups)"
+    description: "Run the UpdateIdeaMembers tool (update appSettings first). BeforeDeployment moves idea folders to other site collections; AfterDeployment finalizes. Before creating the deployment, set Core:Deployment:DeploySPFieldsAndCTypesEnabled=true, then revert when done."
+    scope: DEPLOYMENT
+    category: tool
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_DEPLOYMENT_ENVIRONMENT_USES
+    semanticRoles: ["migrationTool", "sharepoint"]
+    sourceEvidence: "release-notes.md 8.3.0 SP groups limits"
+    action: "Run UpdateIdeaMembers before/after deployment; toggle DeploySPFieldsAndCTypesEnabled."
+    automation: MANUAL_EXECUTION
+    validation: "idea folders relocated; SP group limits respected"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

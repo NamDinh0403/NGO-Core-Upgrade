@@ -1,0 +1,21 @@
+version: "7.3.0"
+scope: DATABASE
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.3.0-DATABASE-01
+    releaseVersion: "7.3.0"
+    title: "Ensure indicator frequency then rebind period names"
+    description: "After deployment, update 20251003_EnsureFrequencyIndicator.sql list of input objective levels and run it to ensure every indicator has a frequency, then run NGO.Core.Tools.RebindPeriodNameForIndicatorTargetReport."
+    scope: DATABASE
+    category: script
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["databaseScript", "migrationTool"]
+    sourceEvidence: "release-notes.md 7.3.0 period labels"
+    action: "Run frequency script, then the rebind tool."
+    automation: MANUAL_EXECUTION
+    validation: "all indicators have frequency; period names correct"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

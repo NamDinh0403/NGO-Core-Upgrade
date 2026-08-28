@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/derive-release-requirements/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "requirementsScaffoldRef"],
+  "properties": {
+    "skillId": { "type": "string", "const": "derive-release-requirements" },
+    "runDir": { "type": "string" },
+    "requirementsScaffoldRef": { "type": "string" }
+  },
+  "additionalProperties": true
+}

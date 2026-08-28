@@ -1,0 +1,21 @@
+version: "9.2.0"
+scope: CROSS_CUTTING
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.2.0-DECISIONS-01
+    releaseVersion: "9.2.0"
+    title: "Update and reinstall Outlook add-in manifest"
+    description: "Tell the PM that the Outlook add-in manifest must be updated (remove the hash from URLs) and then reinstalled."
+    scope: CROSS_CUTTING
+    category: decision
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_PM_APPROVES
+    semanticRoles: ["decision"]
+    sourceEvidence: "release-notes.md 9.2.0 manifest reinstall"
+    action: "Coordinate manifest update and reinstall with the PM."
+    automation: REPORT_ONLY
+    validation: "PM confirms manifest reinstalled"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "project-manager"

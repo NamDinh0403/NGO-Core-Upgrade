@@ -1,0 +1,15 @@
+{
+  "skillId": "investigate-build-failure",
+  "status": "SUCCEEDED",
+  "classification": "changed-api",
+  "preExisting": false,
+  "rankedCauses": [{ "cause": "EntityService constructor added configurationRepository", "confidence": 0.8, "evidence": "apicompat" }],
+  "actionTaken": { "action": "forward configurationRepository in subclass ctor + base call", "risk": "medium" },
+  "verification": { "command": "dotnet build --no-restore", "exitCode": 0, "errorFamily": "CS7036", "after": 0 },
+  "attemptCount": 1,
+  "failedAttemptsPreserved": true,
+  "appliedPatternId": "cand-cs7036-add-ctor-param",
+  "usedCandidateAsAuthoritative": false,
+  "evidence": ["runs/synthetic-acme/run-1/build.log"],
+  "nextAction": "Return to execute-upgrade; CS7036 family resolved. Continue with next planned group."
+}

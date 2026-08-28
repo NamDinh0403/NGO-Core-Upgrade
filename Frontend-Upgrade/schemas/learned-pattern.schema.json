@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/learned-pattern.schema.json",
+  "title": "Candidate learned pattern (never auto-approved)",
+  "type": "object",
+  "required": ["id", "kind", "tier", "signature", "evidence"],
+  "properties": {
+    "id": { "type": "string" },
+    "kind": { "enum": ["error-pattern", "fix-pattern", "requirement-pattern", "config-pattern"] },
+    "tier": { "type": "string", "const": "candidate" },
+    "signature": { "type": "string" },
+    "context": { "type": ["string", "null"] },
+    "resolution": { "type": ["string", "null"] },
+    "applicability": { "type": ["string", "null"] },
+    "confidence": { "enum": ["LOW", "MEDIUM", "HIGH"] },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "redacted": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

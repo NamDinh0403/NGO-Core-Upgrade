@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/audit-frontend-integration/schemas/input.schema.json",
+  "title": "audit-frontend-integration input",
+  "type": "object",
+  "required": ["skillId", "runDir", "workspaceRoot"],
+  "properties": {
+    "skillId": { "type": "string", "const": "audit-frontend-integration" },
+    "runDir": { "type": "string" },
+    "workspaceRoot": { "type": "string" },
+    "changedFiles": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

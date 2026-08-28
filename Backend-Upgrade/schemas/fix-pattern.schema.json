@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/fix-pattern.schema.json",
+  "title": "Fix / Error Pattern",
+  "description": "Candidate or approved reusable pattern. Used for memory/candidates and memory/approved.",
+  "type": "object",
+  "required": [
+    "schemaVersion", "patternId", "status", "problemSignature", "applicability",
+    "proposedActions", "risk", "requiredVerification", "confidence", "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "patternId": { "type": "string", "description": "stable, location-independent id" },
+    "status": { "type": "string", "enum": ["candidate","under-review","approved","deprecated","rejected","superseded"] },
+    "title": { "type": "string" },
+    "problemSignature": { "type": "string" },
+    "applicability": {
+      "type": "object",
+      "properties": {
+        "sourceVersions": { "type": "array", "items": { "type": "string" } },
+        "targetVersions": { "type": "array", "items": { "type": "string" } },
+        "errorCodes": { "type": "array", "items": { "type": "string" } },
+        "packages": { "type": "array", "items": { "type": "string" } },
+        "symbols": { "type": "array", "items": { "type": "string" } },
+        "requiredRepoCharacteristics": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "exclusions": { "type": "array", "items": { "type": "string" } },
+    "rootCauseHypothesis": { "type": "string" },
+    "proposedActions": { "type": "array", "items": { "type": "string" } },
+    "risk": { "type": "string", "enum": ["low","medium","high"] },
+    "requiredVerification": { "type": "array", "items": { "type": "string" } },
+    "successfulEvidence": { "type": "array", "items": { "type": "string" } },
+    "failedEvidence": { "type": "array", "items": { "type": "string" } },
+    "knownCounterexamples": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "reviewHistory": { "type": "array", "items": { "type": "object" } },
+    "approvalStatus": { "type": "string", "enum": ["none","pending","approved","rejected"] },
+    "approvedBy": { "type": ["string","null"] },
+    "rejectionReason": { "type": ["string","null"] },
+    "supersedes": { "type": ["string","null"] },
+    "supersededBy": { "type": ["string","null"] },
+    "expiresAt": { "type": ["string","null"], "format": "date-time" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

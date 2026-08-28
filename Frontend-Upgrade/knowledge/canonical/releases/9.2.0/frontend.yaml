@@ -1,0 +1,40 @@
+version: "9.2.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.2.0-FRONTEND-01
+    releaseVersion: "9.2.0"
+    title: "Port app-routing.module.ts and main.ts Outlook add-in changes"
+    description: "Compare and copy the app-routing.module.ts and main.ts changes from Core PR 36783 relating to reduced Outlook add-in permissions."
+    scope: FRONTEND
+    category: route
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["routerComposition", "appBootstrap"]
+    sourceEvidence: "release-notes.md 9.2.0 PR 36783"
+    corePaths: ["src/app/app-routing.module.ts", "src/main.ts"]
+    clientDiscovery: ["app-routing.module.ts", "app-route.service.ts", "main.ts"]
+    action: "Diff Core changes against the client's real routing/bootstrap point and apply."
+    automation: MANUAL_DECISION
+    validation: "routing + bootstrap match Core intent; app builds"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-9.2.0-FRONTEND-02
+    releaseVersion: "9.2.0"
+    title: "Remove logframes2 from environment files"
+    description: "Remove the logframes2 base URL entry from environment files (base URL confusion fix)."
+    scope: FRONTEND
+    category: environment key
+    timing: DURING_UPGRADE
+    applicability: IF_CONFIGURATION_EXISTS
+    semanticRoles: ["environmentConfig", "runtimeConfigService"]
+    sourceEvidence: "release-notes.md 9.2.0 Logframe2 base url"
+    clientDiscovery: ["environment.ts", "environment.prod.ts", "app-environment.service.ts", "assets/config/*.json"]
+    action: "Remove the logframes2 key from the client's resolved config layer."
+    automation: AUTO_AFTER_MAPPING
+    validation: "key absent; logframe routing works"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE

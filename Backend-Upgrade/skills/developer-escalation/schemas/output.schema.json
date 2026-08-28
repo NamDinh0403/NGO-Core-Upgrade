@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/developer-escalation/schemas/output.schema.json",
+  "title": "developer-escalation output",
+  "type": "object",
+  "required": ["skillId", "outcome", "escalationRef", "safeResumeInstruction", "exactResumeCommand", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "developer-escalation" },
+    "outcome": { "type": "string", "enum": ["WAITING_FOR_CONTEXT", "WAITING_FOR_DEVELOPER_DECISION", "WAITING_FOR_APPROVAL", "WAITING_FOR_TOOL", "WAITING_FOR_CREDENTIAL", "WAITING_FOR_VENDOR", "TERMINAL_UNSAFE", "CANCELLED"] },
+    "escalationRef": { "type": "string" },
+    "decisionRequired": { "type": "string" },
+    "options": { "type": "array", "items": { "type": "object" } },
+    "recommendedOption": { "type": ["string", "null"] },
+    "repositorySafetyState": { "type": "string", "enum": ["clean", "partially-modified-safe", "needs-rollback"] },
+    "safeResumeInstruction": { "type": "string", "minLength": 1 },
+    "exactResumeCommand": { "type": "string", "minLength": 1 },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

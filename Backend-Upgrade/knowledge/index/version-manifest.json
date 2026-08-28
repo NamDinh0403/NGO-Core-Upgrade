@@ -1,0 +1,412 @@
+{
+  "$schema": "./version-manifest.schema.json",
+  "manifestVersion": "2.1.0",
+  "lastUpdated": "2026-07-06",
+  "corePackages": [
+    "NGO.Core.API",
+    "NGO.Core.Common",
+    "NGO.Core.Model",
+    "NGO.Core.Repositories",
+    "NGO.Core.Services",
+    "NGO.Core.Infrastructure",
+    "NGO.Core.Deployment",
+    "NGO.Core.WebJobs.Common",
+    "NGO.Core.WebJobs.Job",
+    "NGO.Core.Tools.Common",
+    "DocumentFormat.OpenXml.Extensions"
+  ],
+  "versions": {
+    "7.2.0": {
+      "releaseDate": "2024-06-01",
+      "targetFramework": "net8.0",
+      "breakingChanges": [
+        {
+          "type": "constructor-param",
+          "class": "EntityService",
+          "change": "Added configurationRepository parameter",
+          "impact": "high",
+          "autoFix": false
+        }
+      ],
+      "newDependencies": [],
+      "requiredSettings": {
+        "queue": [],
+        "core": [
+          { "key": "MaxEmailAttachmentFileSizeMb", "default": 20 }
+        ]
+      },
+      "diffFiles": [
+        "01-Controllers.diff",
+        "02-Services",
+        "03-Models-DTOs.diff",
+        "04-Mappers.diff",
+        "05-Repositories.diff",
+        "08-Extensions-Utilities.diff",
+        "09-Constants-Enums.diff",
+        "12-SQL-Scripts.diff",
+        "14-Config.diff"
+      ]
+    },
+    "7.3.0": {
+      "releaseDate": "2024-09-01",
+      "targetFramework": "net8.0",
+      "breakingChanges": [
+        {
+          "type": "constructor-param",
+          "class": "TaskService",
+          "change": "Added logframe2Service, taskFlowRepository, minimumRequirementRepository",
+          "impact": "high",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "TaskFlowService",
+          "change": "Added logframe2Service parameter",
+          "impact": "medium",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "TaskAssignmentService",
+          "change": "Added logframe2Service parameter",
+          "impact": "medium",
+          "autoFix": false
+        }
+      ],
+      "newDependencies": [
+        "ILogframe2Service",
+        "ITaskFlowRepository"
+      ],
+      "requiredSettings": {
+        "queue": [],
+        "core": []
+      },
+      "diffFiles": [
+        "01-Controllers.diff",
+        "02-Services",
+        "03-Models-DTOs.diff",
+        "04-Mappers.diff",
+        "05-Repositories.diff",
+        "05a-Migrations",
+        "07-DI-Registration.diff",
+        "08-Extensions-Utilities.diff",
+        "09-Constants-Enums.diff",
+        "11-Tests.diff",
+        "12-SQL-Scripts.diff",
+        "13-Project-Files.diff",
+        "14-Config.diff",
+        "15-Other-CSharp.diff"
+      ]
+    },
+    "7.4.0": {
+      "releaseDate": "2024-12-01",
+      "targetFramework": "net8.0",
+      "breakingChanges": [
+        {
+          "type": "method-signature",
+          "class": "FundingAllocationService",
+          "method": "GetAllocationsForEntity",
+          "change": "Third parameter changed from int[] to bool",
+          "impact": "high",
+          "autoFix": false
+        }
+      ],
+      "newDependencies": [],
+      "requiredSettings": {
+        "queue": [],
+        "core": []
+      },
+      "diffFiles": [
+        "01-Controllers.diff",
+        "02-Services.diff",
+        "03-Models-DTOs.diff",
+        "04-Mappers.diff",
+        "05-Repositories.diff",
+        "11-Tests.diff",
+        "12-SQL-Scripts.diff",
+        "13-Project-Files.diff",
+        "14-Config.diff",
+        "15-Other-CSharp.diff"
+      ]
+    },
+    "8.0.0": {
+      "releaseDate": "2025-03-01",
+      "targetFramework": "net9.0",
+      "breakingChanges": [
+        {
+          "type": "framework",
+          "change": "Upgraded to .NET 9",
+          "impact": "high",
+          "autoFix": true
+        },
+        {
+          "type": "generic-args",
+          "class": "EntityService",
+          "change": "Added 3 type parameters: DtoPartnerExpenditureReporting, DtoBudgetVersion, TIATIDocument",
+          "impact": "high",
+          "autoFix": false
+        },
+        {
+          "type": "generic-args",
+          "class": "ExportPdfService",
+          "change": "Added 4 type parameters: TBeneficiaryVersion, DBeneficiaryVersion, DLogframeVersion, DLogframeReporting",
+          "impact": "high",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "EntityService",
+          "change": "Added 6 new parameters including IATI services and repositories",
+          "impact": "high",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "ExportPdfService",
+          "change": "Added 8 new parameters including mappers and services",
+          "impact": "high",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "PaymentService",
+          "change": "Added fieldOptionService, projectService, emailService",
+          "impact": "medium",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "PaymentMapper",
+          "change": "Added incomeScheduleMapper parameter",
+          "impact": "medium",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "ProjectService",
+          "change": "Added partnerExpenditureReportingService parameter",
+          "impact": "medium",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "BudgetService",
+          "change": "Added Lazy<IPartnerExpenditureReportingService> parameter",
+          "impact": "medium",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "FinancialActualService",
+          "change": "Added overviewBoxDefRepository parameter",
+          "impact": "low",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "LogframeService",
+          "change": "Added tabRepository parameter",
+          "impact": "low",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "LogframeExportExcelService",
+          "change": "Added securityService parameter",
+          "impact": "low",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "SendGridMailService",
+          "change": "Added taskTemplateRepository parameter",
+          "impact": "low",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "ConfigurationController",
+          "change": "Added userService parameter",
+          "impact": "low",
+          "autoFix": false
+        },
+        {
+          "type": "constructor-param",
+          "class": "BudgetController",
+          "change": "Added rowNoValidator parameter",
+          "impact": "low",
+          "autoFix": false
+        },
+        {
+          "type": "method-signature",
+          "class": "TaskFlowServiceBase",
+          "method": "PushEntityToQueueManagement",
+          "change": "Added taskflowId and lockRelatedDocuments parameters",
+          "impact": "medium",
+          "autoFix": false
+        }
+      ],
+      "newDependencies": [
+        "IIATITransactionService",
+        "IIATIDocumentRepository",
+        "ILogframe2ExportExcelService",
+        "IBankAccountRepository",
+        "IMinimumRequirementExportExcelService",
+        "IPartnerExpenditureReportingExportExcelService",
+        "IFieldDefinitionRepository",
+        "IExchangeRateService",
+        "IBeneficiaryService",
+        "IOverviewBoxDefinitionRepository"
+      ],
+      "requiredSettings": {
+        "queue": [
+          { "key": "IATITransactionImportQueue", "default": "iatitransactionimportqueue-{env}" },
+          { "key": "GenerateIATIFileQueue", "default": "generateiatifilequeue-{env}" },
+          { "key": "SwitchCurrentSiteCollectionQueue", "default": "switchcurrentsitecollectionqueue-{env}" },
+          { "key": "ReminderTaskDeadlineQueue", "default": "remindertaskdeadlinequeue-{env}" }
+        ],
+        "core": [
+          { "key": "IATIDocumentsBlob", "default": "iati-documents" },
+          { "key": "IATIValidationApi", "default": "https://api.iatistandard.org/validator/validate" },
+          { "key": "IATISubscriptionKey", "default": "e05a6d92d39f445ca81fb90c2f485c8d" },
+          { "key": "GenerateIATIFileSchedule", "default": "0 2 * * *" },
+          { "key": "SwitchCurrentSiteCollectionSchedule", "default": "0 4 * * *" },
+          { "key": "ReminderTaskDeadlineSchedule", "default": "0 2 * * *" }
+        ]
+      },
+      "diffFiles": [
+        "01-Controllers",
+        "02-Services",
+        "03-Models-DTOs",
+        "04-Mappers.diff",
+        "07-DI-Registration.diff",
+        "08-Extensions-Utilities.diff",
+        "09-Constants-Enums.diff",
+        "10-WebJobs.diff",
+        "11-Tests.diff",
+        "13-Project-Files.diff",
+        "14-Config.diff",
+        "15-Other-CSharp.diff",
+        "16-Other.diff"
+      ]
+    },
+    "9.0.0": {
+      "releaseDate": "2026-06-01",
+      "targetFramework": "net10.0",
+      "breakingChanges": [
+        {
+          "type": "framework",
+          "change": "Upgraded to .NET 10. Update all projects to target net10.0 BEFORE upgrading Core packages; update build-pipeline-api.yml netVersion 8.0 -> 10.0; update Azure App Service runtime to .NET 10.",
+          "impact": "high",
+          "autoFix": true
+        },
+        {
+          "type": "data-model",
+          "change": "Workflow instances moved from JSON config to relational tables (CorePhaseInstances, CorePhaseTemplateInstances). After deployment the ConvertWorkflowInstanceJsonConfigToTables tool must be run or the Workflow Cycle tab will not render.",
+          "impact": "high",
+          "autoFix": false
+        },
+        {
+          "type": "configuration",
+          "change": "Draft/Published workflow requires a new queue key SyncPublishedWorkflowQueue = syncpublishedworkflowqueue in every appSettings.json, and Azure App Setting Core:Queue:SyncPublishedWorkflowQueue.",
+          "impact": "medium",
+          "autoFix": true
+        }
+      ],
+      "newDependencies": [],
+      "requiredSettings": {
+        "queue": [
+          { "key": "SyncPublishedWorkflowQueue", "default": "syncpublishedworkflowqueue" }
+        ],
+        "core": []
+      },
+      "deploymentTools": [
+        { "tool": "ConvertWorkflowInstanceJsonConfigToTables", "when": "after-deployment", "required": true }
+      ],
+      "diffFiles": []
+    },
+    "9.1.0": {
+      "releaseDate": "2026-07-01",
+      "targetFramework": "net10.0",
+      "breakingChanges": [
+        {
+          "type": "data-model",
+          "class": "Log / Log2 / Log3",
+          "change": "New RelatedEntity fields added. If a client needs the field to hold multiple values, change the field type to instances in code.",
+          "impact": "low",
+          "autoFix": false
+        },
+        {
+          "type": "configuration",
+          "change": "New system config SPSignedOffAdditionalDocumentsFolderName (default 'Additional documents') controls the optional approval subfolder for Mark as Paid / Cancel actions. Confirm value with client PM/AM. After deployment, if the client uses Mark as Paid or Cancel on payments, update appsettings.json and run NGO.Core.Tools.UpdatePaymentDocumentLinks.",
+          "impact": "medium",
+          "autoFix": false
+        }
+      ],
+      "newDependencies": [
+        "Microsoft.EntityFrameworkCore.Design@10.0.7 (NGO.API)",
+        "Microsoft.EntityFrameworkCore.Tools@10.0.7 (NGO.API)"
+      ],
+      "requiredSettings": {
+        "queue": [],
+        "core": [
+          { "key": "SPSignedOffAdditionalDocumentsFolderName", "default": "Additional documents" }
+        ]
+      },
+      "deploymentTools": [
+        { "tool": "NGO.Core.Tools.UpdatePaymentDocumentLinks", "when": "after-deployment", "required": false, "condition": "client uses Mark as Paid or Cancel on payments" }
+      ],
+      "diffFiles": []
+    }
+  },
+  "upgradeMatrix": {
+    "7.1.x-to-8.x": ["7.2.0", "7.3.0", "7.4.0", "8.0.0"],
+    "7.2.x-to-8.x": ["7.3.0", "7.4.0", "8.0.0"],
+    "7.3.x-to-8.x": ["7.4.0", "8.0.0"],
+    "7.4.x-to-8.x": ["8.0.0"],
+    "8.x-to-9.x": ["9.0.0", "9.1.0"],
+    "7.4.x-to-9.x": ["8.0.0", "9.0.0", "9.1.0"]
+  },
+  "commonlyAffectedFiles": [
+    {
+      "file": "EntityRepository.cs",
+      "changes": ["constructor-param"],
+      "frequency": "always"
+    },
+    {
+      "file": "EntityService.cs",
+      "changes": ["constructor-param", "generic-args"],
+      "frequency": "always"
+    },
+    {
+      "file": "ExportPdfService.cs",
+      "changes": ["constructor-param", "generic-args"],
+      "frequency": "always"
+    },
+    {
+      "file": "EmailService.cs",
+      "changes": ["constructor-param"],
+      "frequency": "often"
+    },
+    {
+      "file": "WebjobEmailService.cs",
+      "changes": ["constructor-param"],
+      "frequency": "often"
+    },
+    {
+      "file": "IdeaService.cs",
+      "changes": ["constructor-param"],
+      "frequency": "sometimes"
+    },
+    {
+      "file": "LogframeService.cs",
+      "changes": ["constructor-param"],
+      "frequency": "sometimes"
+    },
+    {
+      "file": "CommonDIRegistrations.cs",
+      "changes": ["generic-args", "new-registration"],
+      "frequency": "always"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/resolve-target-packages/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "manifestRef", "alignmentMapRef", "packageCount"],
+  "properties": {
+    "skillId": { "type": "string", "const": "resolve-target-packages" },
+    "status": { "enum": ["RESOLVED", "RESOLVED_WITH_UNCERTAINTY", "BLOCKED_INVALID_CORE_PACKAGE"] },
+    "manifestRef": { "type": "string" },
+    "alignmentMapRef": { "type": "string" },
+    "packageCount": { "type": "integer" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/tool-manifest.schema.json",
+  "title": "Tool Manifest",
+  "type": "object",
+  "required": ["schemaVersion", "generatedAt", "platform", "tools", "missingRequiredCapabilities", "warnings"],
+  "properties": {
+    "schemaVersion": { "type": "string" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "runId": { "type": ["string", "null"] },
+    "platform": {
+      "type": "object",
+      "required": ["os", "architecture", "shell"],
+      "properties": {
+        "os": { "type": "string" },
+        "architecture": { "type": "string" },
+        "shell": { "type": "string" }
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "classification", "capabilities", "validation"],
+        "properties": {
+          "id": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["AVAILABLE", "AVAILABLE_WITH_WARNING", "MISSING", "INSTALLATION_REQUIRED", "INSTALLATION_BLOCKED", "VERSION_TOO_OLD", "VERSION_UNSUPPORTED", "VALIDATION_FAILED", "POLICY_BLOCKED", "NOT_APPLICABLE"]
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["REQUIRED", "REQUIRED_IF_APPLICABLE", "RECOMMENDED", "OPTIONAL", "FORBIDDEN"]
+          },
+          "version": { "type": ["string", "null"] },
+          "executable": { "type": ["string", "null"] },
+          "scope": { "type": ["string", "null"], "enum": [null, "EXISTING_APPROVED", "REPOSITORY_LOCAL", "RUN_LOCAL", "CONTAINER_LOCAL", "USER_LOCAL", "MACHINE_GLOBAL"] },
+          "source": { "type": ["string", "null"] },
+          "capabilities": { "type": "array", "items": { "type": "string" } },
+          "selectionReason": { "type": ["string", "null"] },
+          "validation": {
+            "type": "object",
+            "required": ["versionCheck", "smokeTest"],
+            "properties": {
+              "versionCheck": { "type": "string", "enum": ["PASSED", "FAILED", "SKIPPED", "NOT_APPLICABLE"] },
+              "smokeTest": { "type": "string", "enum": ["PASSED", "FAILED", "SKIPPED", "NOT_APPLICABLE"] },
+              "validatedAt": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "missingRequiredCapabilities": { "type": "array", "items": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

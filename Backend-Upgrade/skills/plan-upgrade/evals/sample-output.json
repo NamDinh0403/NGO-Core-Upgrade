@@ -1,0 +1,22 @@
+{
+  "skillId": "plan-upgrade",
+  "status": "READY_WITH_ASSUMPTIONS",
+  "readOnly": true,
+  "planRef": "runs/synthetic-acme/run-1/plan.yaml",
+  "uncertaintyRegisterRef": "runs/synthetic-acme/run-1/uncertainty-register.yaml",
+  "knownFacts": [
+    { "id": "K1", "statement": "Target 8.0.0 targets net9.0", "class": "KNOWN", "evidence": "knowledge/canonical/versions/8.0.0.json" }
+  ],
+  "assumptions": [
+    { "id": "A1", "statement": "No custom NgoContext overrides beyond audit hooks", "whyNecessary": "not yet inspected", "validation": "analyze-client-impact", "impactIfWrong": "MEDIUM", "blocksMutation": false }
+  ],
+  "contradictions": [],
+  "requiredCapabilities": ["read-repository", "search-repository", "inspect-approved-knowledge", "create-plan"],
+  "optionalCapabilities": ["inspect-nuget-metadata"],
+  "deferredCapabilities": ["compare-dotnet-public-api", "selectively-decompile-dotnet"],
+  "researchRequired": false,
+  "verificationStrategy": "restore + build + tests + EF migration attempt",
+  "rollbackStrategy": "git checkpoint branch before mutation",
+  "evidence": ["runs/synthetic-acme/run-1/repository-inventory.json", "knowledge/canonical/versions/8.0.0.json"],
+  "nextAction": "Run analyze-client-impact to validate assumption A1, then execute-upgrade if the plan stays READY."
+}

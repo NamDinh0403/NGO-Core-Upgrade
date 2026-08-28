@@ -1,0 +1,21 @@
+version: "9.1.0"
+scope: DATABASE
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.1.0-DATABASE-01
+    releaseVersion: "9.1.0"
+    title: "Preserve custom text-area control icons"
+    description: "Datafix 20260527 sets iconWhenHaveValue/iconWhenHaveNoValue = 'pen' by default. If the client uses another icon, manually set both to the client's existing icon value."
+    scope: DATABASE
+    category: datafix
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_DATABASE_DATA_MATCHES
+    semanticRoles: ["databaseDatafix"]
+    sourceEvidence: "release-notes.md 9.1.0 20260527 icon datafix"
+    action: "Set icon characteristics to the client's existing icon when customized."
+    automation: MANUAL_EXECUTION
+    validation: "text-area control icons unchanged for client"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

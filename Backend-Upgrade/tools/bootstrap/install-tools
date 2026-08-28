@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+'use strict';
+/* Entry: install permitted + applicable missing tools, then validate. */
+const bootstrap = require('./lib/bootstrap');
+const out = bootstrap.run('bootstrap');
+bootstrap.summarize(out);
+process.exit(out.result.exitCode);

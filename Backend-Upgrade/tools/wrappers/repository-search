@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+'use strict';
+/* Repository search wrapper: ripgrep when available, else git grep fallback. Read-only. */
+const { runWrapper } = require('./lib/wrapper');
+const r = runWrapper({
+  toolId: 'ripgrep', capability: 'search-repository', argsPrefix: [],
+  userArgs: process.argv.slice(2), mutatingVerbs: [],
+  fallback: { toolId: 'git', argsPrefix: ['grep', '-n'] },
+});
+process.stdout.write(JSON.stringify(r, null, 2) + '\n');
+process.exit(r.status === 'SUCCEEDED' ? 0 : 1);

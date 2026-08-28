@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "version",
+  "version": "7.3.0",
+  "releaseDate": "2024-09-01",
+  "targetFramework": "net8.0",
+  "packageVersionMustMatch": true,
+  "sourceOfTruth": {
+    "rule": "Use installed package DLLs for signatures. This version entry predicts common changes only."
+  },
+  "summary": "Core 7.3 keeps net8.0 and adds TaskService-family constructor dependencies.",
+  "highRiskChanges": [
+    {
+      "changeType": "constructor-param",
+      "symbol": "TaskService",
+      "route": "Knowledge/symbols/NGO.Core.Services.TaskService.json",
+      "impact": "high",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "notes": [
+        "Adds logframe2Service, taskFlowRepository, and minimumRequirementRepository."
+      ]
+    },
+    {
+      "changeType": "constructor-param",
+      "symbol": "TaskFlowService",
+      "impact": "medium",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "notes": [
+        "Adds logframe2Service."
+      ]
+    },
+    {
+      "changeType": "constructor-param",
+      "symbol": "TaskAssignmentService",
+      "impact": "medium",
+      "likelyErrors": [
+        "CS7036"
+      ],
+      "notes": [
+        "Adds logframe2Service."
+      ]
+    }
+  ],
+  "requiredSettingsRoute": "Knowledge/appsettings/appsettings-by-version.json",
+  "newDependencies": [
+    "ILogframe2Service",
+    "ITaskFlowRepository"
+  ],
+  "diffFiles": [],
+  "validation": {
+    "commands": [
+      "dotnet restore --force",
+      "dotnet build --no-restore"
+    ],
+    "successCriteria": [
+      "Package references match 7.3.0.",
+      "TaskService-family constructor errors are resolved."
+    ]
+  }
+}

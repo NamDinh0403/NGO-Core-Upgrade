@@ -1,0 +1,57 @@
+version: "7.0.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-7.0.0-FRONTEND-01
+    releaseVersion: "7.0.0"
+    title: "IATI modular: env keys + IATIModule"
+    description: "Add adminIATIPage, entityIATI, iatiDocument, iatitransactions env keys and import IATIModule into the app module."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["ngModuleMetadata", "environmentConfig", "runtimeConfigService"]
+    sourceEvidence: "release-notes.md 7.0.0 IATI modular"
+    clientDiscovery: ["app.module.ts", "environment.ts", "app-environment.service.ts"]
+    action: "Register IATIModule and add env keys at resolved points."
+    automation: AUTO_AFTER_MAPPING
+    validation: "module loads; endpoints resolve"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-7.0.0-FRONTEND-02
+    releaseVersion: "7.0.0"
+    title: "Drag-and-drop upload package changes"
+    description: "Add ng2-file-upload ^1.3.0 and ngx-file-drop ^10.0.0 to package.json dependencies and remove ngx-uploader."
+    scope: FRONTEND
+    category: package
+    timing: DURING_UPGRADE
+    applicability: IF_PACKAGE_USED
+    semanticRoles: ["packageManifest"]
+    sourceEvidence: "release-notes.md 7.0.0 drag and drop folders"
+    clientDiscovery: ["package.json", "ngx-uploader", "ng2-file-upload", "ngx-file-drop"]
+    action: "Add the two packages; remove ngx-uploader."
+    automation: AUTO_AFTER_MAPPING
+    validation: "ng build succeeds; upload works"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+  - schemaVersion: 1
+    id: REQ-7.0.0-FRONTEND-03
+    releaseVersion: "7.0.0"
+    title: "Add Logframe2, Summary, PartnerExpenditureReportingImport modules + env"
+    description: "Import Logframe2Module and SummaryFinanceModule; add logframes2 and summary env keys; import PartnerExpenditureReportingImportModule and add partnerExpenditureImport env key; import faCommentLines icon."
+    scope: FRONTEND
+    category: module
+    timing: DURING_UPGRADE
+    applicability: IF_FEATURE_ENABLED
+    semanticRoles: ["ngModuleMetadata", "environmentConfig", "iconRegistration"]
+    sourceEvidence: "release-notes.md 7.0.0 Logframe/Summary/Import"
+    clientDiscovery: ["app.module.ts", "environment.ts", "app-environment.service.ts"]
+    action: "Register modules/icon and add env keys at resolved points."
+    automation: AUTO_AFTER_MAPPING
+    validation: "modules load; endpoints resolve"
+    risk: MEDIUM
+    confidence: MEDIUM
+    status: ACTIVE

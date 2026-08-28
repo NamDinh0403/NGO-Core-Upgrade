@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/version-knowledge.schema.json",
+  "title": "Version Knowledge",
+  "description": "Canonical per-version registry. Backwards-compatible superset of existing knowledge/canonical/versions/*.json (schemaVersion string '1.0.0', entryType 'version').",
+  "type": "object",
+  "required": ["schemaVersion", "entryType", "version", "targetFramework", "sourceOfTruth", "validation"],
+  "properties": {
+    "schemaVersion": { "type": ["string","integer"] },
+    "entryType": { "type": "string", "const": "version" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "releaseDate": { "type": "string" },
+    "targetFramework": { "type": "string" },
+    "packageVersionMustMatch": { "type": "boolean" },
+    "sourceOfTruth": { "type": "object", "required": ["rule"] },
+    "summary": { "type": "string" },
+    "highRiskChanges": { "type": "array", "items": { "type": "object" } },
+    "requiredSettingsRoute": { "type": ["string","null"] },
+    "diffFiles": { "type": "array", "items": { "type": "string" } },
+    "validation": { "type": "object", "required": ["commands", "successCriteria"] }
+  },
+  "additionalProperties": true
+}

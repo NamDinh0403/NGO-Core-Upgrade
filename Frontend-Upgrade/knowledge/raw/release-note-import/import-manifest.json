@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "importedAt": "2026-08-24T10:02:31Z",
+  "source": "workspace-root release-notes.md",
+  "sourceSha256": "16024f8c36b4f4eec566f748603fe6b1619c42f181db8f3ae86b210594a5ace3",
+  "discoveredVersions": [
+    "5.12.0",
+    "5.14.0",
+    "6.0.0",
+    "6.1.0",
+    "6.2.0",
+    "6.3.0",
+    "6.4.0",
+    "7.0.0",
+    "7.1.0",
+    "7.2.0",
+    "7.3.0",
+    "7.3.1",
+    "7.5.0",
+    "7.6.0",
+    "7.7.0",
+    "8.0.0",
+    "8.1.0",
+    "8.2.0",
+    "8.3.0",
+    "8.4.0",
+    "8.6.0",
+    "9.0.0",
+    "9.1.0",
+    "9.2.0"
+  ],
+  "recordsCreated": {
+    "releaseRequirements": 72,
+    "migrationRequirements": 13,
+    "appSettingsRequirements": 14
+  },
+  "redactions": [
+    {
+      "type": "IATISubscriptionKey",
+      "action": "replaced with <FROM_SECRET_PROVIDER>",
+      "rotationRequired": true
+    }
+  ],
+  "unresolvedItems": [],
+  "notes": "Root release-notes.md is shared with the Backend track; removing it is a cross-track MANUAL_BLOCKER. Runtime never reads this file."
+}

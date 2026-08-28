@@ -1,0 +1,26 @@
+id: "candidate-two-oracles-and-match-core-strictness"
+kind: "requirement-pattern"
+tier: candidate
+signature: "the build catches what exists but is silent about missing adoptions; match Core compiler strictness, not stricter"
+context: >
+  Two META-lessons that prevent whole categories of error.
+  (1) The first plan collapsed all app-level work into one vague "ngo-core API surface" change,
+  assuming the build would surface it. The build did NOT: a missing Core module import or a missing
+  environment key does not error -- it silently omits a feature. Entire categories were missed until
+  a human/reference-diff caught them.
+  (2) Turning ON strict Angular compiler options ("more correct") produced NG2003 because Core's
+  AppEnvironmentService uses an untyped constructor injected via deps:[APP_CONFIG].
+resolution: >
+  Two oracles: (a) the BUILD/COMPILER is the oracle for things that EXIST (versions, imports, API
+  signatures, templates) -- fix those in investigate-frontend-failure. (b) The build is SILENT about
+  things that are ABSENT (un-adopted Core modules/routes/config keys/icons) and about runtime behavior
+  of any-cast code -- those need the reference host-app diff (map-core-to-client) and functional QA.
+  Never defer a category the compiler cannot see. Strictness: align the client's compiler strictness
+  to Core's, not stricter, during a migration (set strictInjectionParameters:false to match Core);
+  hardening is a separate later task. When a whole category is wrong/missing, suspect the methodology/plan.
+applicability: "Every ngo-core client upgrade; general principle for library-integration migrations."
+confidence: HIGH
+evidence:
+  - "runs/ngo-client/brc-upgrade-running-log.md sections 12.2, 12.9, 13.5, 13.9, 13.10"
+  - "skills/investigate-frontend-failure/SKILL.md v1.1.0 'Two oracles'; AGENTS.md 'Reference host-app diff is mandatory'"
+redacted: true

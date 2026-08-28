@@ -12,6 +12,43 @@ machine where Copilot can see it.* Pick ONE of the three options below.
 - **Node.js 14+** — only needed when the agent runs its CLI / validation scripts
   (`node tools/validate.js`, etc.). Both CLIs are dependency-free, so there is **no
   `npm install`** step.
+- **Git** — for the recommended install path below.
+
+---
+
+## Option 0 — One-command install from Git (recommended) 🚀
+This clones the repo **and** registers the skills + custom agents into your Copilot user
+profile (`~/.copilot/skills`, `~/.copilot/agents`), so they work in **every** VS Code
+workspace and the Copilot CLI — you don't have to open this folder each time.
+
+**Windows (PowerShell):**
+```powershell
+git clone <repo-url> "$HOME\NGO-Core-Upgrade"
+& "$HOME\NGO-Core-Upgrade\install.ps1" -InstallDir "$HOME\NGO-Core-Upgrade"
+```
+Or, once you have the folder (clone or unzip), just run the installer — it can clone for you:
+```powershell
+.\install.ps1 -RepoUrl <repo-url>
+```
+
+**macOS / Linux (bash):**
+```bash
+git clone <repo-url> "$HOME/NGO-Core-Upgrade"
+"$HOME/NGO-Core-Upgrade/install.sh" --dir "$HOME/NGO-Core-Upgrade"
+# or: ./install.sh --repo <repo-url>
+```
+
+**Update later** (pulls latest and re-registers): re-run the same command.
+**Uninstall:** `./uninstall.ps1` (or `./uninstall.sh`) — unregisters the skills/agents but
+keeps the cloned folder.
+
+> The installer stamps each registered file with the absolute install location, so the
+> agent still finds the `Backend-Upgrade/` and `Frontend-Upgrade/` workflow folders even
+> though the skill files now live under `~/.copilot/`.
+
+Prefer to keep it scoped to just this workspace instead of user-wide? Skip the installer
+and use Option A or B below — the `.github/skills` and `.github/agents` in the repo are
+auto-discovered whenever the folder is open in VS Code.
 
 ---
 

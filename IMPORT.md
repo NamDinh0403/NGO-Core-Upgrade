@@ -73,3 +73,25 @@ Copy-Item ".\.github\skills\*" "$env:USERPROFILE\.copilot\skills\" -Recurse -For
 Per-run state lives under `Backend-Upgrade\runs\<client>\<run-id>\` (and the Frontend
 equivalent). To continue a run started on another machine, copy just that specific
 `runs\<client>\<run-id>\` folder across, then tell the agent to resume it.
+
+---
+
+## Using the agent against a client project (two-folder model)
+You do **not** copy this agent into the client repo. Keep two separate folders:
+
+```
+NGO Core Upgrade\      <- this agent (clone/unzip ONCE, reuse for every client)
+YourClientSolution\    <- the project to upgrade (its own repo, stays clean)
+```
+
+The agent reads/edits the client solution and writes its plan/report to the client's
+solution root, but its own machinery (skills, workflow, CLIs, run state) stays in this
+folder. Two ways to run it:
+
+- **Recommended — one VS Code window with both folders.** Use the provided
+  [`ngo-core-upgrade.code-workspace`](ngo-core-upgrade.code-workspace) template: copy it,
+  edit the second folder path to your client solution, then open it. Copilot then sees the
+  agent's skills *and* the client code together.
+- **Simpler — open only this folder** and give the client path in the prompt, e.g.
+  `Upgrade NGO Core packages to 9.2.1. Client solution: D:\Clients\Acme\Acme.sln`.
+

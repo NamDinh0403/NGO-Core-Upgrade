@@ -50,6 +50,10 @@ craft prompts — Copilot discovers and offers them automatically.
 
 ### How a teammate uses it (no setup beyond opening the repo)
 1. Open this workspace folder in VS Code with the GitHub Copilot extension enabled.
+   To upgrade a specific client, open **both** this folder and the client solution in one
+   window — copy the [`ngo-core-upgrade.code-workspace`](ngo-core-upgrade.code-workspace)
+   template, point its second folder at your client solution, and open it (see the
+   two-folder model in [IMPORT.md](IMPORT.md)).
 2. Open Copilot Chat, agent mode. Either:
    - Pick **NGO Core Backend Upgrade Agent** or **NGO Core Frontend Upgrade Agent** from
      the agent/mode picker, or

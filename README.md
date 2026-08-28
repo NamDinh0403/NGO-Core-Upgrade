@@ -63,6 +63,10 @@ craft prompts — Copilot discovers and offers them automatically.
 
 ## Importing This Agent Onto Another Computer
 
+> **Quick reference:** see [IMPORT.md](IMPORT.md) for the condensed step-by-step, and run
+> [`package-agent.ps1`](package-agent.ps1) to build a portable zip you can carry to
+> another machine (no Git host required).
+
 The whole agent is just files in this Git repository plus Node 14+ (for the CLIs) — there
 is no server, install step, or license to configure. To set it up on another machine:
 

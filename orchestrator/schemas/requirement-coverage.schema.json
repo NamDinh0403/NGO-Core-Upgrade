@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "orchestrator/schemas/requirement-coverage.schema.json",
+  "title": "Merged requirement coverage",
+  "description": "orchestrator/runs/<client>/<run-id>/requirement-coverage.yaml — one merged status per requirement across both tracks. Reuses frontend's own requirement-coverage.yaml items verbatim (source: 'frontend-track'); synthesizes a track-level entry for backend when backend has no structured per-requirement coverage of its own (source: 'backend-track-synthetic'), which is an explicit, visible caveat rather than a silent gap.",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "requirements"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string" },
+    "generatedAt": { "type": "string" },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "scope", "status", "source"],
+        "properties": {
+          "id": { "type": "string" },
+          "scope": { "type": "string", "enum": ["BACKEND", "FRONTEND", "SHARED"] },
+          "status": {
+            "type": "string",
+            "enum": ["NOT_APPLICABLE_WITH_EVIDENCE", "DECISION_PENDING", "RESEARCH_REQUIRED", "PLANNED", "IMPLEMENTED", "VERIFIED", "MANUAL_ACTION_PENDING", "FAILED", "BLOCKED"]
+          },
+          "source": { "type": "string", "enum": ["frontend-track", "backend-track-synthetic", "orchestrator"] },
+          "evidence": { "type": ["string", "null"] },
+          "owner": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total": { "type": "integer" },
+        "verifiedOrNotApplicable": { "type": "integer" },
+        "outstanding": { "type": "integer" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

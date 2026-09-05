@@ -1,0 +1,14 @@
+# Root ignore rules. Each track (backend/, frontend/, orchestrator/) has its
+# own .gitignore for its own runs/ directory — this file covers the workspace
+# root and anything not already covered by a track-local file.
+
+# Node / tooling
+node_modules/
+npm-debug.log*
+*.tmp
+*.out
+*.log
+
+# OS / editor junk
+.DS_Store
+Thumbs.db

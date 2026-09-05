@@ -100,7 +100,8 @@ Copy-Item ".\.github\skills\*" "$env:USERPROFILE\.copilot\skills\" -Recurse -For
    `ngo-core-frontend-upgrade` are listed.
 3. Sanity-check the tooling:
    ```powershell
-   cd ingest;         node tools/ingest.test.js
+   cd ingest;          node tools/ingest.test.js
+   cd ..\orchestrator; node tests/orchestrator.test.js
    cd ..\backend;  node tools/validate.js
    cd ..\frontend; node tools/validate.js; node tools/repo-layout.test.js
    ```
@@ -116,6 +117,10 @@ equivalent). To continue a run started on another machine, copy just that specif
 `runs\<client>\<run-id>\` folder across, then tell the agent to resume it. Shared
 Core-release knowledge lives under `ingest\knowledge\candidates\releases\` — copy it
 too if you want the target machine to skip re-ingesting a version already covered.
+If the engagement was run through the orchestrator (both tracks together), also copy
+`orchestrator\runs\<client>\<run-id>\` — it holds the shared requirements seed, the
+merged coverage check, and the merged deployment handover for that engagement, and
+references the two per-track run folders above by path.
 
 ---
 

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "orchestrator/schemas/deployment-checklist.schema.json",
+  "title": "Merged deployment checklist",
+  "description": "orchestrator/runs/<client>/<run-id>/deployment-checklist.yaml — one merged checklist, generated only after verify-coverage succeeds. Reuses frontend's own deployment-checklist.yaml items verbatim (source: 'frontend-track'); backend has no structured deployment-item extraction today, so a single explicit pointer item (source: 'backend-track-manual-review') directs the developer to backend's own report/state.json rather than fabricating structured items that don't exist.",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "items"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "action", "timing", "owner", "status", "source"],
+        "properties": {
+          "id": { "type": "string" },
+          "action": { "type": "string" },
+          "timing": { "type": "string", "enum": ["BEFORE_DEPLOYMENT", "AFTER_DEPLOYMENT"] },
+          "owner": { "type": ["string", "null"] },
+          "instructions": { "type": ["string", "null"] },
+          "risk": { "type": ["string", "null"] },
+          "verification": { "type": ["string", "null"] },
+          "status": { "type": "string" },
+          "coreVersion": { "type": ["string", "null"] },
+          "source": { "type": "string", "enum": ["frontend-track", "backend-track-manual-review", "orchestrator"] }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

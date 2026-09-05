@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "orchestrator/schemas/run-request.schema.json",
+  "title": "Shared orchestrator run request",
+  "description": "Collected once by the orchestrator agent before create-run.",
+  "type": "object",
+  "required": ["clientId", "tracks", "targetVersion"],
+  "properties": {
+    "clientId": { "type": "string", "description": "Sanitized client id, used as the run directory's parent folder name." },
+    "tracks": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["backend", "frontend"] },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "backendClientPath": { "type": ["string", "null"] },
+    "frontendClientPath": { "type": ["string", "null"] },
+    "corePath": { "type": "string" },
+    "releaseNotesPath": { "type": ["string", "null"] },
+    "sourceVersion": { "type": ["string", "null"] },
+    "targetVersion": { "type": "string" },
+    "featureDecisionsPath": { "type": ["string", "null"], "description": "Optional path to a feature-decisions.yaml supplied by the developer/PM." }
+  },
+  "additionalProperties": false
+}

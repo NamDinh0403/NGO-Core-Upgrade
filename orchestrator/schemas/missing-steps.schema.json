@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "orchestrator/schemas/missing-steps.schema.json",
+  "title": "Merged missing steps",
+  "description": "orchestrator/runs/<client>/<run-id>/missing-steps.yaml — every requirement from requirement-coverage.yaml whose status is not VERIFIED or NOT_APPLICABLE_WITH_EVIDENCE, with a reason. Completion (COMPLETE) is not permitted while this list is non-empty for any item lacking an assigned owner.",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "items"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "scope", "status", "reason"],
+        "properties": {
+          "id": { "type": "string" },
+          "scope": { "type": "string", "enum": ["BACKEND", "FRONTEND", "SHARED"] },
+          "status": { "type": "string" },
+          "reason": { "type": "string" },
+          "owner": { "type": ["string", "null"] }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

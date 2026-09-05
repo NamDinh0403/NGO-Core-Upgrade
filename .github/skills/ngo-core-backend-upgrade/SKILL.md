@@ -37,6 +37,14 @@ dependency-free Node CLI. Your job is to **drive it**, not duplicate it.
    at the client solution root, and pass
    `backend/workflows/core-upgrade/checklists/definition-of-done.md`.
 
+## Launched by the orchestrator?
+If invoked with a shared `runId` and an
+`orchestrator/runs/<client>/<runId>/requirements/backend.yaml` seed path,
+treat it as additional read-only context alongside your own `plan-upgrade`
+derivation — never a replacement for it. Keep writing your own
+`runs/<client>/<run-id>/` exactly as you would standalone; the orchestrator
+composes your result into the shared run afterward.
+
 ## Do not
 - Do not hand-edit canonical knowledge, config policies, or approved memory without
   developer approval.

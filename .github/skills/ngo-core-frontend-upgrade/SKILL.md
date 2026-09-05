@@ -35,6 +35,14 @@ drive the existing state machine, skills and CLI instead of improvising.
    manual item with a named owner before the run can be COMPLETE.
 7. Preserve existing client appsettings/config values; never commit secret values.
 
+## Launched by the orchestrator?
+If invoked with a shared `runId` and a
+`orchestrator/runs/<client>/<runId>/requirements/frontend.yaml` seed path,
+treat it as additional read-only context alongside your own
+`derive-release-requirements` pipeline — never a replacement for it. Keep
+writing your own `runs/<client>/<run-id>/` exactly as you would standalone;
+the orchestrator composes your result into the shared run afterward.
+
 ## Do not
 - Do not modify anything under the local NGO Core repository.
 - Do not auto-promote learned patterns to canonical knowledge.

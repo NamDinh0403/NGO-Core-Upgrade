@@ -6,7 +6,7 @@
  * Used only by skills/ingest-core-release. Never targets or mutates the CLIENT
  * repository, and never mutates the Core repository itself — only read verbs
  * are allowed, plus `worktree add --detach` for isolated ref inspection
- * (mirrors Frontend-Upgrade/tools/lib/git.js#addReadonlyWorktree).
+ * (mirrors frontend/tools/lib/git.js#addReadonlyWorktree).
  */
 const { runWrapper } = require('./lib/wrapper');
 

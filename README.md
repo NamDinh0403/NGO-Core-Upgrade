@@ -16,20 +16,24 @@ discovering the structure by exploration.
 
 **Recommended way to run it:** say `Upgrade NGO Core for <client> to <version>`
 (backend, frontend, or both). The **NGO Core Upgrade Orchestrator** collects the inputs
-once, runs the shared [ingest/](ingest/README.md) phase once, then delegates the real
-work to the backend and/or frontend sub-agent **in parallel** and reports one combined
-result. You no longer run two separate agents by hand, and neither one re-derives Core's
-release history independently.
+once, creates one shared run (running the shared [ingest/](ingest/README.md) phase
+internally), then delegates the real work to the backend and/or frontend sub-agent **in
+parallel**, and composes their results into one merged coverage check, one merged
+deployment handover, and one final report — see [`orchestrator/README.md`](orchestrator/README.md).
+You no longer run two separate agents by hand, neither one re-derives Core's release
+history independently, and you no longer have to reconcile two disconnected reports by
+hand.
 
 | | Folder | Contract | How to start |
 |-------|--------|-------------|---------------|
-| **Orchestrator** — single entry point, either/both tracks | — | [AGENTS.md](AGENTS.md) | Say `Upgrade NGO Core for <client> to X.Y.Z`. Delegates to the two sub-agents below. |
+| **Orchestrator** — single entry point, either/both tracks | [orchestrator/](orchestrator/README.md) | [AGENTS.md](AGENTS.md) + [orchestrator/AGENTS.md](orchestrator/AGENTS.md) | Say `Upgrade NGO Core for <client> to X.Y.Z`. Delegates to the two sub-agents below. |
 | **Shared ingest** — read-only Core release ingestion | [ingest/](ingest/README.md) | [ingest/README.md](ingest/README.md) | `node ingest/tools/ingest.js check --core-path <path>` |
 | **Backend** — NGO.Core NuGet, .NET, EF migrations | [backend/](backend/README.md) | [backend/AGENTS.md](backend/AGENTS.md) | Backend-only: pick the backend agent, or load `backend/AGENTS.md`. |
 | **Frontend** — Angular, NgRx, package.json, templates | [frontend/](frontend/README.md) | [frontend/AGENTS.md](frontend/AGENTS.md) | Frontend-only: pick the frontend agent, or load `frontend/AGENTS.md`. |
 
 Each track still works standalone — its `AGENTS.md` remains the authoritative contract
-for that track. The orchestrator is additive routing, not a replacement.
+for that track. The orchestrator adds routing, one shared run, and cross-track merging;
+it is not a replacement for either track.
 
 **You send one prompt — the agent(s) drive everything from there.** They read the
 workflow state machine, call their own tooling (the Node CLI under `tools/`), enforce the
@@ -69,10 +73,10 @@ craft prompts — Copilot discovers and offers them automatically.
   Upgrade Agent`. Selecting one switches Copilot Chat into that persona with the right
   instructions pre-loaded — a colleague just opens the workspace, picks the agent from the
   dropdown, and types the upgrade request.
-- All three simply drive the existing `ingest/`, `backend/AGENTS.md`, and
+- All three simply drive the existing `ingest/`, `orchestrator/`, `backend/AGENTS.md`, and
   `frontend/AGENTS.md` machinery — no logic was duplicated, so the CLI/workflow/
   skills registry stay the single source of truth. The orchestrator persona/skill adds
-  routing + shared ingestion; it does not re-implement either track.
+  routing, one shared run, and cross-track merging; it does not re-implement either track.
 
 
 ### How a teammate uses it (no setup beyond opening the repo)
@@ -91,7 +95,9 @@ craft prompts — Copilot discovers and offers them automatically.
      (the orchestrator skill if no single track is named, a track skill otherwise).
 3. Answer any clarifying questions the agent asks (client path(s), Core path, target
    version) and let it run. Progress and results land under `backend/runs/`
-   and/or `frontend/runs/` as before; shared Core-release knowledge lands under
+   and/or `frontend/runs/` as before; the shared run (normalized requirements, merged
+   coverage, merged deployment handover, final report) lands under
+   `orchestrator/runs/<client>/<run-id>/`; shared Core-release knowledge lands under
    `ingest/knowledge/candidates/releases/`.
 
 ---
@@ -124,9 +130,11 @@ is no server, install step, or license to configure. To set it up on another mac
    Frontend Upgrade Agent` appear in the agent picker, and that `.github/skills/*/SKILL.md`
    are picked up (Command Palette → **Chat: Open Customizations** → Skills tab should
    list all three).
-5. **Sanity-check the tooling** from each track's folder, plus the shared ingestion module:
+5. **Sanity-check the tooling** from each track's folder, plus the shared ingestion and
+   orchestrator modules:
    ```powershell
-   cd ingest;        node tools/ingest.test.js
+   cd ingest;         node tools/ingest.test.js
+   cd ../orchestrator; node tests/orchestrator.test.js
    cd ../backend;  node tools/validate.js;  node tools/run-evals.js
    cd ../frontend; node tools/validate.js; node tools/repo-layout.test.js
    ```
@@ -181,7 +189,6 @@ is no server, install step, or license to configure. To set it up on another mac
 NGO Core Upgrade/                   The agent home. Root AGENTS.md is the single entry point.
 ├── AGENTS.md                       ← START HERE. Routing table + shared ingest phase + non-negotiables.
 ├── README.md                       This file (human orientation)
-├── compiler-error-fix-loop.png     Diagram of the build-fix loop
 │
 ├── ingest/                         Shared Core-release ingestion — run ONCE per version, feeds both tracks
 │   ├── README.md                   Why this exists + record shape
@@ -189,6 +196,15 @@ NGO Core Upgrade/                   The agent home. Root AGENTS.md is the single
 │   ├── schemas/                    release-finding.schema.json, ingested-release.schema.json
 │   ├── tools/                      ingest.js CLI (check/ingest) + lib/ (git, notes, classify) + tests
 │   └── knowledge/candidates/       releases/<version>.json — ONE shared candidate record per version
+│
+├── orchestrator/                   Shared cross-track coordination — one run, merged coverage, merged handover
+│   ├── AGENTS.md                   Contract (what it owns vs. what stays with each track)
+│   ├── config/artifact-ownership.yaml  Write-boundary matrix
+│   ├── schemas/                    run-request, shared-run-state, requirement-coverage, missing-steps, deployment-checklist
+│   ├── templates/                  before/after-deployment.md, final-report.md
+│   ├── tools/                      orchestrator.js CLI (create-run/compose-results/verify-coverage/prepare-handover/final-report) + lib/
+│   ├── tests/                      orchestrator.test.js
+│   └── runs/                       Durable per-engagement shared state (git-ignored)
 │
 ├── backend/                        Sub-agent: .NET / NuGet / EF migrations / appsettings
 │   ├── AGENTS.md                   Track contract (phases, skills, policies)
@@ -210,12 +226,14 @@ NGO Core Upgrade/                   The agent home. Root AGENTS.md is the single
     ├── schemas/ · templates/ · tests/
     ├── tools/                      CLI (frontend-upgrade-agent) + lib/ engine
     ├── runs/                       Durable per-run state (git-ignored)
-    └── docs/                       architecture / operations
+    └── docs/                       architecture / operations · assets/compiler-error-fix-loop.png (build-fix loop diagram)
 ```
 
 Only `backend/` and `frontend/` ever mutate a client repository, each behind its own
 mutation gate. `ingest/` is read-only against the NGO.Core repo and writes only
-**candidate** records that a developer promotes to canonical.
+**candidate** records that a developer promotes to canonical. `orchestrator/` never
+mutates a client repository or the Core repository either — it only reads each track's
+own run output and writes its own shared-run bookkeeping.
 
 ---
 

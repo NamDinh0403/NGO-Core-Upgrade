@@ -29,6 +29,17 @@ Core path you already collected). If the orchestrator launched you, that phase
 has already run: check `../ingest/knowledge/candidates/releases/<version>.json`
 before invoking it again.
 
+## Launched by the orchestrator?
+If invoked with a shared `runId` and a
+`../orchestrator/runs/<client>/<runId>/requirements/frontend.yaml` seed path,
+read it as **additional read-only context** — a first-pass, unconfirmed slice
+of the release findings relevant to frontend — alongside your own
+`derive-release-requirements` pipeline. It never replaces your own
+requirement derivation, and you keep writing your own `runs/<client>/<run-id>/`
+exactly as you would standalone. The orchestrator composes your result into
+the shared run afterward (`orchestrator compose-results`); you do not write to
+`../orchestrator/runs/`.
+
 ## Guardrails
 - Never write to the local NGO Core repository; use a disposable `git worktree`
   under `runs/<client>/<run-id>/research/core-target/` for a different Core ref.

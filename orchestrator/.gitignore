@@ -1,0 +1,12 @@
+# Generated run output - never commit (mirrors backend/.gitignore and
+# frontend/.gitignore). Keep the runs/ directory (placeholder README) but
+# ignore actual runs.
+/runs/*
+!/runs/README.md
+
+# Node / tooling
+node_modules/
+npm-debug.log*
+*.tmp
+*.out
+*.log

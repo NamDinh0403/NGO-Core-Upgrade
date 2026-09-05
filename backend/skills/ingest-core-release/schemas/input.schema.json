@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/ingest-core-release/schemas/input.schema.json",
+  "title": "ingest-core-release input",
+  "type": "object",
+  "required": ["skillId", "runDir", "coreRepoPath"],
+  "properties": {
+    "skillId": { "type": "string", "const": "ingest-core-release" },
+    "runDir": { "type": "string" },
+    "coreRepoPath": { "type": "string", "description": "Local, read-only NGO.Core checkout (config/core-repository.yaml)." },
+    "releaseNotesPath": { "type": ["string", "null"], "description": "Shared release-notes.md, external to the Core repo's own history." },
+    "sinceVersion": { "type": ["string", "null"], "description": "Highest version already present in knowledge/canonical/versions/. Auto-detected from the index when omitted." },
+    "targetVersion": { "type": ["string", "null"], "description": "If set, ingestion stops once this version's boundary is processed; otherwise all tags newer than sinceVersion are processed." },
+    "triggeredBy": { "type": "string", "enum": ["research-version", "plan-upgrade", "manual-maintenance-check"] }
+  },
+  "additionalProperties": true
+}

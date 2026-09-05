@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/ingest-core-release/schemas/output.schema.json",
+  "title": "ingest-core-release output",
+  "type": "object",
+  "required": ["skillId", "status", "coreRepositoryUnchanged", "discoveredVersions", "findings", "candidateRefs", "wroteToCanonical", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "ingest-core-release" },
+    "status": { "type": "string", "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "RESEARCH_REQUIRED", "BLOCKED_NEEDS_CONTEXT", "BLOCKED_NEEDS_DEVELOPER", "FAILED_POLICY", "FAILED_BUDGET"] },
+    "coreRepositoryUnchanged": { "type": "boolean", "const": true, "description": "Fingerprint captured before/after inspection proves the Core repo was never mutated." },
+    "discoveredVersions": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+      "description": "Tags newer than sinceVersion that were processed, oldest first."
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["version", "statement", "source", "crossCheck"],
+        "properties": {
+          "version": { "type": "string" },
+          "statement": { "type": "string" },
+          "source": { "type": "string", "enum": ["git-diff", "release-notes", "both"] },
+          "crossCheck": {
+            "type": "string",
+            "enum": [
+              "CONFIRMED_BY_DIFF_AND_NOTES",
+              "OBSERVED_IN_DIFF_NOT_MENTIONED_IN_NOTES",
+              "NOTED_BUT_UNCONFIRMED_BY_DIFF"
+            ]
+          },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+    "candidateRefs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Paths under ../../ingest/knowledge/candidates/releases/<version>.json — the shared candidate store, never knowledge/canonical/."
+    },
+    "wroteToCanonical": { "type": "boolean", "const": false },
+    "changelogDraftRef": { "type": ["string", "null"], "description": "Regenerated draft for knowledge/derived/version-changes/changelog.md's comparison matrix, pending human approval." },
+    "unresolvedItems": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

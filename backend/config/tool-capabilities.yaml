@@ -1,0 +1,70 @@
+# Capability registry. The workflow requests a CAPABILITY; the bootstrap resolves
+# it to a validated tool + wrapper via the generated tool-manifest.json.
+schemaVersion: 1
+id: tool-capabilities
+lastReviewedAt: 2026-08-13
+
+capabilities:
+  repository-version-control:
+    description: Clone/checkout/branch operations on the repository.
+    providedBy: [git]
+  create-git-worktree:
+    description: Create isolated git worktrees for safe research.
+    providedBy: [git]
+  generate-diff:
+    description: Produce unified diffs.
+    providedBy: [git]
+  inspect-core-repository-history:
+    description: >
+      Read-only tag/log/diff/show inspection of a local NGO.Core source
+      repository (config/core-repository.yaml). Used only by ingest-core-release
+      to derive candidate version knowledge; never mutates the Core repository
+      and never checks out/switches its branch (uses an isolated worktree for
+      any non-current ref).
+    providedBy: [git]
+  search-repository:
+    description: Fast text/symbol search across the tree.
+    providedBy: [ripgrep, git]
+  extract-archive:
+    description: Extract zip/nupkg/tgz archives.
+    providedBy: [tar]
+  validate-json-schema:
+    description: Validate JSON records against schemas.
+    providedBy: [node-json-schema]
+  restore-nuget-dependency-graph:
+    description: Restore NuGet packages for a solution.
+    providedBy: [dotnet-sdk]
+  build-dotnet:
+    providedBy: [dotnet-sdk]
+  test-dotnet:
+    providedBy: [dotnet-sdk]
+  run-local-dotnet-tools:
+    providedBy: [dotnet-sdk]
+  acquire-nuget-package:
+    description: Download a specific NuGet package version into an isolated dir.
+    providedBy: [dotnet-sdk]
+  compare-dotnet-public-api:
+    providedBy: [dotnet-apicompat]
+  inspect-dotnet-assembly-metadata:
+    providedBy: [ilspycmd]
+  selectively-decompile-dotnet:
+    providedBy: [ilspycmd]
+    policyGate: decompilation-permitted
+  acquire-npm-package:
+    providedBy: [npm]
+  inspect-npm-registry-metadata:
+    providedBy: [npm]
+  compare-npm-package-content:
+    providedBy: [npm]
+  install-isolated-npm-dependencies:
+    providedBy: [npm]
+  typecheck-typescript:
+    providedBy: [typescript]
+  scan-typescript-symbols:
+    providedBy: [typescript]
+  inspect-angular-workspace:
+    providedBy: [angular-cli]
+  run-angular-build:
+    providedBy: [angular-cli]
+  container-isolation:
+    providedBy: [docker]

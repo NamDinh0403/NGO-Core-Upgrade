@@ -1,0 +1,263 @@
+# Canonical backend AppSettings knowledge (derived into knowledge/derived).
+# Structured source of truth for configuration requirements consumed by planning,
+# the AppSettings inventory/mapper, and validation. Secrets are NEVER stored here:
+# sensitive values are placeholders and marked sensitive: true.
+schemaVersion: 1
+title: "NGO Core backend AppSettings requirements"
+sourceEvidence: "release-notes.md 6.0.0-9.2.0"
+settings:
+  - schemaVersion: 1
+    id: APPSET-CSP-FRAMESRC
+    releaseVersion: "9.2.0"
+    key: "Core:CspAdditionalFrameSrc"
+    section: "Core"
+    owningProcess: ALL
+    azureKey: "Core:CspAdditionalFrameSrc"
+    dataType: string
+    defaultValue: ""
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: MANUAL_EXECUTION
+    validation: "present in all appsettings.json and Azure App Settings; iframes/maps load"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+    notes: "Allows additional iframe/frame sources; multiple separated by ';'."
+  - schemaVersion: 1
+    id: APPSET-SYNCPUBWF-QUEUE
+    releaseVersion: "9.0.0"
+    key: "SyncPublishedWorkflowQueue"
+    section: "Queue"
+    owningProcess: API
+    azureKey: "Core:Queue:SyncPublishedWorkflowQueue"
+    dataType: string
+    defaultValue: "syncpublishedworkflowqueue"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "queue key present; Azure variable set"
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-OPENAI-ENDPOINT
+    releaseVersion: "9.0.0"
+    key: "Core:AzureOpenAISettings:Endpoint"
+    section: "Core:AzureOpenAISettings"
+    owningProcess: API
+    azureKey: "Core:AzureOpenAISettings:Endpoint"
+    dataType: secret
+    defaultValue: "<FROM_SECRET_PROVIDER>"
+    preserveClientValue: true
+    sensitive: true
+    timing: AFTER_DEPLOYMENT
+    automation: MANUAL_DECISION
+    validation: "endpoint resolves; Write-with-AI works; value from secret provider"
+    risk: HIGH
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"
+    notes: "Only if client enables Write-with-AI (IF_FEATURE_ENABLED, IF_PM_APPROVES). Never commit endpoint."
+  - schemaVersion: 1
+    id: APPSET-OPENAI-DEPLOYMENT
+    releaseVersion: "9.0.0"
+    key: "Core:AzureOpenAISettings:DeploymentName"
+    section: "Core:AzureOpenAISettings"
+    owningProcess: API
+    azureKey: "Core:AzureOpenAISettings:DeploymentName"
+    dataType: secret
+    defaultValue: "<CLIENT_SPECIFIC_VALUE>"
+    preserveClientValue: true
+    sensitive: true
+    timing: AFTER_DEPLOYMENT
+    automation: MANUAL_DECISION
+    validation: "deployment name valid"
+    risk: HIGH
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-MAXEMAILATTACH
+    releaseVersion: "7.1.0"
+    key: "MaxEmailAttachmentFileSizeMb"
+    section: "Core"
+    owningProcess: ALL
+    azureKey: "Core:MaxEmailAttachmentFileSizeMb"
+    dataType: int
+    defaultValue: "20"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "key present in api + webjob appsettings; Azure variable set"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-IATI-BLOB
+    releaseVersion: "7.0.0"
+    key: "Core:IATIDocumentsBlob"
+    section: "Core"
+    owningProcess: ALL
+    azureKey: "Core:IATIDocumentsBlob"
+    dataType: string
+    defaultValue: "iati-documents"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "key present"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-IATI-VALIDATIONAPI
+    releaseVersion: "7.0.0"
+    key: "Core:IATIValidationApi"
+    section: "Core"
+    owningProcess: API
+    azureKey: "Core:IATIValidationApi"
+    dataType: string
+    defaultValue: "<CLIENT_SPECIFIC_VALUE>"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "endpoint reachable"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-IATI-SUBSCRIPTIONKEY
+    releaseVersion: "7.0.0"
+    key: "Core:IATISubscriptionKey"
+    section: "Core"
+    owningProcess: API
+    azureKey: "Core:IATISubscriptionKey"
+    dataType: secret
+    defaultValue: "<FROM_SECRET_PROVIDER>"
+    preserveClientValue: false
+    sensitive: true
+    timing: AFTER_DEPLOYMENT
+    automation: MANUAL_DECISION
+    validation: "resolved from secret provider; NEVER committed"
+    risk: CRITICAL
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+    notes: "A real key was present in the raw release notes and must be ROTATED. See docs/operations/secret-redaction.md."
+  - schemaVersion: 1
+    id: APPSET-IATI-SCHEDULE
+    releaseVersion: "7.0.0"
+    key: "Core:GenerateIATIFileSchedule"
+    section: "Core"
+    owningProcess: WEBJOB
+    azureKey: "Core:GenerateIATIFileSchedule"
+    dataType: cron
+    defaultValue: "0 2 * * *"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "webjob schedule valid"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-ADSYNC-GROUPS-QUEUE
+    releaseVersion: "6.0.0"
+    key: "ADSyncGroupsQueue"
+    section: "Queue"
+    owningProcess: WEBJOB
+    azureKey: "Core:Queue:ADSyncGroupsQueue"
+    dataType: string
+    defaultValue: "adsyncgroupqueue"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "queue key present in webjob appsettings; Azure variable set"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-ADSYNC-GROUPS-SCHEDULE
+    releaseVersion: "6.0.0"
+    key: "ADSyncGroupsSchedule"
+    section: "Core"
+    owningProcess: WEBJOB
+    azureKey: "Core:ADSyncGroupsSchedule"
+    dataType: cron
+    defaultValue: "0 */4 * * *"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "schedule present"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-REMINDER-SCHEDULE
+    releaseVersion: "6.0.0"
+    key: "Core:ReminderTaskDeadlineSchedule"
+    section: "Core"
+    owningProcess: WEBJOB
+    azureKey: "Core:ReminderTaskDeadlineSchedule"
+    dataType: cron
+    defaultValue: "0 2 * * *"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "schedule present in webjob appsettings"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-PAGEIMPORT-QUEUE
+    releaseVersion: "6.0.0"
+    key: "PageImportAddDataQueue"
+    section: "Queue"
+    owningProcess: ALL
+    azureKey: "Core:Queue:PageImportAddDataQueue"
+    dataType: string
+    defaultValue: "pageimportadddataqueue"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "queue key present; Azure variable set"
+    risk: LOW
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
+    id: APPSET-SWITCHSITE-SCHEDULE
+    releaseVersion: "7.0.0"
+    key: "SwitchCurrentSiteCollectionSchedule"
+    section: "Core"
+    owningProcess: WEBJOB
+    azureKey: "Core:SwitchCurrentSiteCollectionSchedule"
+    dataType: cron
+    defaultValue: "0 4 * * *"
+    preserveClientValue: true
+    sensitive: false
+    timing: BEFORE_DEPLOYMENT
+    automation: AUTO_AFTER_MAPPING
+    validation: "schedule present in webjob appsettings"
+    risk: LOW
+    confidence: MEDIUM
+    status: ACTIVE
+    owner: "deployment-owner"

@@ -43,7 +43,7 @@ git clone <repo-url> "$HOME/NGO-Core-Upgrade"
 keeps the cloned folder.
 
 > The installer stamps each registered file with the absolute install location, so the
-> agent still finds the `Backend-Upgrade/` and `Frontend-Upgrade/` workflow folders even
+> agent still finds the `backend/` and `frontend/` workflow folders even
 > though the skill files now live under `~/.copilot/`.
 
 Prefer to keep it scoped to just this workspace instead of user-wide? Skip the installer
@@ -85,31 +85,37 @@ entry-point files into your user profile there:
 Copy-Item ".\.github\agents\*.agent.md" "$env:USERPROFILE\.copilot\agents\" -Force
 Copy-Item ".\.github\skills\*" "$env:USERPROFILE\.copilot\skills\" -Recurse -Force
 ```
-> The skills/agents still reference the `Backend-Upgrade\` and `Frontend-Upgrade\`
+> The skills/agents still reference the `backend\` and `frontend\`
 > folders for the actual workflow, so those folders must still exist on the machine
 > (via Option A or B). Option C only makes the *entry points* globally visible.
 
 ---
 
 ## Verify it worked (on the target computer)
-1. Open Copilot Chat → agent mode → confirm **NGO Core Backend Upgrade Agent** and
-   **NGO Core Frontend Upgrade Agent** appear in the agent picker.
-2. Command Palette → **Chat: Open Customizations** → **Skills** tab → both
-   `ngo-core-backend-upgrade` and `ngo-core-frontend-upgrade` are listed.
+1. Open Copilot Chat → agent mode → confirm **NGO Core Upgrade Orchestrator**, **NGO Core
+   Backend Upgrade Agent**, and **NGO Core Frontend Upgrade Agent** all appear in the
+   agent picker.
+2. Command Palette → **Chat: Open Customizations** → **Skills** tab → all three of
+   `ngo-core-upgrade-orchestrator`, `ngo-core-backend-upgrade`, and
+   `ngo-core-frontend-upgrade` are listed.
 3. Sanity-check the tooling:
    ```powershell
-   cd Backend-Upgrade;  node tools/validate.js
-   cd ..\Frontend-Upgrade; node tools/validate.js; node tools/repo-layout.test.js
+   cd ingest;         node tools/ingest.test.js
+   cd ..\backend;  node tools/validate.js
+   cd ..\frontend; node tools/validate.js; node tools/repo-layout.test.js
    ```
 4. Start a run by either picking an agent from the picker, or just typing a request like
-   `Upgrade NGO Core packages to 9.2.1 for <client>` — Copilot auto-discovers the skill.
+   `Upgrade NGO Core packages to 9.2.1 for <client>` — Copilot auto-discovers the matching
+   skill (the orchestrator if no single track is named).
 
 ---
 
 ## Handing off an in-progress run
-Per-run state lives under `Backend-Upgrade\runs\<client>\<run-id>\` (and the Frontend
+Per-run state lives under `backend\runs\<client>\<run-id>\` (and the Frontend
 equivalent). To continue a run started on another machine, copy just that specific
-`runs\<client>\<run-id>\` folder across, then tell the agent to resume it.
+`runs\<client>\<run-id>\` folder across, then tell the agent to resume it. Shared
+Core-release knowledge lives under `ingest\knowledge\candidates\releases\` — copy it
+too if you want the target machine to skip re-ingesting a version already covered.
 
 ---
 

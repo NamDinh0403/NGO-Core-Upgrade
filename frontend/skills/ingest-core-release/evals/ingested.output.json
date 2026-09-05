@@ -1,0 +1,11 @@
+{
+  "skillId": "ingest-core-release",
+  "status": "SUCCEEDED",
+  "coreRepositoryUnchanged": true,
+  "discoveredVersions": ["9.2.0"],
+  "candidateRefs": ["../../ingest/knowledge/candidates/releases/9.2.0.json"],
+  "unresolvedItems": [
+    "9.2.0: package.json dependency bump for @angular/core has no corresponding release-notes.md entry — confirm with Core team before promoting to canonical."
+  ],
+  "nextAction": "Developer: review ../../ingest/knowledge/candidates/releases/9.2.0.json, resolve the unresolvedItems entry, then promote applicable frontend/shared findings to knowledge/canonical/releases/9.2.0/ if accurate."
+}

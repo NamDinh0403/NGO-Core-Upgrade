@@ -1,0 +1,41 @@
+# Single canonical config for the shared ingest phase. Both backend
+# and frontend reference THIS file (via relative path ../ingest/...)
+# instead of keeping their own copy — a client's local NGO.Core path and tag
+# convention only need to be recorded once per engagement.
+#
+# NOTE: values are deliberately single-line scalars, no ">"/"|" block scalars.
+# Both tracks' hand-rolled tools/bootstrap/lib/yaml.js / tools/lib/yaml.js parsers
+# do not consume multi-line block scalars correctly.
+schemaVersion: 1
+id: core-repository
+lastReviewedAt: 2026-09-05
+
+repository:
+  pathSource: "CLI flag --core-path (ingest/tools/ingest.js), or a per-run request field in either track"
+  readOnly: true
+  note: "Read-only. Non-current refs use an isolated worktree; never checked out in place."
+  tagConvention: "v<version>"   # e.g. v9.2.1 — override per-client below if the client's Core fork differs
+  tagConventionOverride: null
+
+releaseNotes:
+  pathSource: "CLI flag --release-notes (ingest/tools/ingest.js)"
+  sharedAcrossBothTracks: true
+  note: "Not versioned inside the NGO.Core repo's own git history. One file, interleaved backend/frontend/deployment cards per version (see knowledge/raw import in frontend for the historical sanitized copy)."
+
+consumers:
+  - track: backend
+    skill: skills/ingest-core-release
+    reads: "ingest/knowledge/candidates/releases/<version>.json -> findings.backend + findings.shared"
+  - track: frontend
+    skill: skills/ingest-core-release
+    reads: "ingest/knowledge/candidates/releases/<version>.json -> findings.frontend + findings.shared"
+  - command: "node ingest/tools/ingest.js check --core-path <path>"
+    usage: "On-demand, outside any run: lists Core tags newer than the highest version canonical in EITHER track, so staleness is caught proactively."
+  - orchestrator: ngo-core-upgrade-orchestrator
+    usage: "Runs the shared ingest phase once per engagement, before delegating to the backend/frontend sub-agents, so neither sub-agent redoes this work."
+
+safety:
+  neverMutateCoreRepository: true
+  neverCheckoutOrSwitchBranchInCoreRepository: true
+  useIsolatedWorktreeForRefInspection: true
+  outputsAreCandidateOnly: true   # ingest.js NEVER writes either track's knowledge/canonical/ directly

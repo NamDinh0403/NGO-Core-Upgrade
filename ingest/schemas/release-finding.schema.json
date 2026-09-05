@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ingest/schemas/release-finding.schema.json",
+  "title": "Release finding",
+  "description": "One evidence-backed observation about a single Core version boundary, produced by ingest/tools/ingest.js. Never authoritative on its own.",
+  "type": "object",
+  "required": ["scope", "statement", "source", "crossCheck", "evidence"],
+  "properties": {
+    "scope": { "type": "string", "enum": ["backend", "frontend", "shared"] },
+    "statement": { "type": "string" },
+    "source": { "type": "string", "enum": ["git-diff", "release-notes", "both"] },
+    "crossCheck": {
+      "type": "string",
+      "enum": [
+        "CONFIRMED_BY_DIFF_AND_NOTES",
+        "OBSERVED_IN_DIFF_NOT_MENTIONED_IN_NOTES",
+        "NOTED_BUT_UNCONFIRMED_BY_DIFF"
+      ]
+    },
+    "evidence": { "type": "string" },
+    "category": { "type": ["string", "null"] },
+    "path": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

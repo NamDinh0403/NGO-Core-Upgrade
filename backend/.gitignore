@@ -1,0 +1,18 @@
+# Generated run output - never commit per config/repository-layout-policy.yaml.
+# Keep the runs/ directory (placeholder README + .gitkeep) but ignore actual runs.
+# Run directories contain client-identifying data, build logs and probe/obj
+# artifacts; they are local execution state, not repository content.
+/runs/*
+!/runs/README.md
+!/runs/.gitkeep
+
+# Node / tooling
+node_modules/
+npm-debug.log*
+*.tmp
+*.out
+
+# Extracted Core sources / temporary package archives / tool caches / logs
+**/research/core-target/
+*.tgz
+*.log

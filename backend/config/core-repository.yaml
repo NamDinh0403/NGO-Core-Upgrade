@@ -1,0 +1,22 @@
+# Canonical config now lives at ../ingest/config/core-repository.yaml — a
+# single, shared config used by BOTH backend and frontend,
+# instead of each track keeping its own copy of the Core repo path / tag
+# convention / release-notes location.
+#
+# This file is kept only as a backend-facing pointer + backend-specific
+# consumer notes. Do not duplicate the shared config's content here; edit
+# ../ingest/config/core-repository.yaml instead.
+schemaVersion: 1
+id: core-repository-pointer
+lastReviewedAt: 2026-09-05
+canonicalConfig: "../ingest/config/core-repository.yaml"
+
+backendConsumers:
+  - skill: ingest-core-release
+    usage: "Delegates to ../ingest/tools/ingest.js; reads only findings.backend + findings.shared from the shared record."
+  - skill: research-version
+    usage: "Falls back to ingest-core-release (evidence-ladder rung 10.5) before developer/vendor escalation when a Core repository path is configured and approved version knowledge is missing/insufficient."
+  - command: "node ../ingest/tools/ingest.js check --core-path <path>"
+    usage: "On-demand, outside a run: lists tags newer than the highest version canonical in EITHER track, so staleness is discovered proactively."
+
+note: "See ../ingest/README.md for the full shared-ingestion design and record shape."

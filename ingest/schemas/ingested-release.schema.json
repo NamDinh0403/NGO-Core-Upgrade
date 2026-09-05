@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ingest/schemas/ingested-release.schema.json",
+  "title": "Ingested release (shared candidate record)",
+  "description": "One version's shared candidate record, written by ingest/tools/ingest.js and read by both backend and frontend's ingest-core-release skill. Never canonical.",
+  "type": "object",
+  "required": ["schemaVersion", "version", "status", "ingestedAt", "sources", "findings", "nextAction"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "status": { "type": "string", "const": "CANDIDATE" },
+    "ingestedAt": { "type": "string" },
+    "sources": {
+      "type": "object",
+      "required": ["coreRepoPath", "tagRange"],
+      "properties": {
+        "coreRepoPath": { "type": "string" },
+        "releaseNotesPath": { "type": ["string", "null"] },
+        "tagRange": {
+          "type": "object",
+          "required": ["from", "to"],
+          "properties": { "from": { "type": ["string", "null"] }, "to": { "type": "string" } }
+        }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "required": ["backend", "frontend", "shared"],
+      "properties": {
+        "backend": { "type": "array", "items": { "type": "object" } },
+        "frontend": { "type": "array", "items": { "type": "object" } },
+        "shared": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "unresolvedItems": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

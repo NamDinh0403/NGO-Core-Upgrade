@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "schemas/run-request.schema.json",
+  "title": "Run Request",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "clientId", "solutionPath", "sourceVersion", "targetVersion", "workflowVersion", "createdAt"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "runId": { "type": "string", "description": "sanitized-client-id + UTC timestamp + sequence" },
+    "clientId": { "type": "string", "description": "sanitized, kebab-case, no secrets" },
+    "solutionPath": { "type": "string" },
+    "sourceVersion": { "type": "string" },
+    "targetVersion": { "type": "string" },
+    "workflowVersion": { "type": "string" },
+    "modelId": { "type": ["string", "null"] },
+    "toolVersions": { "type": "object" },
+    "requestedBy": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "coreRepoPath": {
+      "type": ["string", "null"],
+      "description": "Optional local, read-only checkout of the NGO.Core source repository (see config/core-repository.yaml). When present, enables the ingest-core-release skill to derive version knowledge from git tags/diffs instead of relying solely on hand-authored knowledge/canonical/versions/*.json."
+    },
+    "coreReleaseNotesPath": {
+      "type": ["string", "null"],
+      "description": "Optional path to the shared release-notes.md (external to the NGO.Core repo's own history; shared with the frontend track). Combined with coreRepoPath by ingest-core-release."
+    }
+  },
+  "additionalProperties": true
+}

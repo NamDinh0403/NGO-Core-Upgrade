@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "version": "9.2.0",
+  "status": "CANDIDATE",
+  "ingestedAt": "2026-09-05T10:00:00Z",
+  "sources": {
+    "coreRepoPath": "<client-specific — set by the run that produced this record>",
+    "releaseNotesPath": "provided",
+    "tagRange": { "from": "v9.1.0", "to": "v9.2.0" }
+  },
+  "findings": {
+    "backend": [],
+    "frontend": [
+      {
+        "scope": "frontend",
+        "category": "npm-dependency",
+        "path": "package.json",
+        "statement": "Peer dependency version bump for @angular/core.",
+        "source": "git-diff",
+        "crossCheck": "OBSERVED_IN_DIFF_NOT_MENTIONED_IN_NOTES",
+        "evidence": "git diff --name-status v9.1.0..v9.2.0"
+      }
+    ],
+    "shared": []
+  },
+  "unresolvedItems": [
+    "9.2.0 [frontend] package.json: @angular/core dependency bump observed in diff, no matching release-notes.md entry — confirm with Core team before promoting to canonical."
+  ],
+  "nextAction": "Developer: review this record, resolve the unresolvedItems entry, then promote applicable frontend findings into frontend/knowledge/canonical/releases/9.2.0/."
+}

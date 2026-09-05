@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/ingest-core-release/schemas/output.schema.json",
+  "type": "object",
+  "required": ["skillId", "status", "coreRepositoryUnchanged", "discoveredVersions", "candidateRefs", "nextAction"],
+  "properties": {
+    "skillId": { "type": "string", "const": "ingest-core-release" },
+    "status": { "enum": ["SUCCEEDED", "SUCCEEDED_WITH_WARNINGS", "BLOCKED_NEEDS_CONTEXT", "BLOCKED_NEEDS_DEVELOPER"] },
+    "coreRepositoryUnchanged": { "type": "boolean", "const": true },
+    "discoveredVersions": { "type": "array", "items": { "type": "string" } },
+    "candidateRefs": { "type": "array", "items": { "type": "string" }, "description": "knowledge/candidates/releases/<version>/*.json — DRAFT, never canonical." },
+    "unresolvedItems": { "type": "array", "items": { "type": "string" } },
+    "nextAction": { "type": "string" }
+  },
+  "additionalProperties": true
+}

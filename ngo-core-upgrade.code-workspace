@@ -8,8 +8,8 @@
   //    upgrade (absolute path, forward slashes work on Windows too).
   // 3. Double-click the file (or File > Open Workspace from File...) to open BOTH the
   //    agent and the client in one VS Code window.
-  // 4. Open Copilot Chat > agent mode > pick "NGO Core Backend Upgrade Agent" (or
-  //    "NGO Core Frontend Upgrade Agent"), or just type your upgrade request.
+  // 4. Open Copilot Chat > agent mode > pick "NGO Core Upgrade Orchestrator" (or a
+  //    single-track agent), or just type your upgrade request.
   //
   // The agent's skills/workflow/CLIs live in THIS folder; the client repo stays clean.
   "folders": [

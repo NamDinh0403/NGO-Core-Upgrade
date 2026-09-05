@@ -1,12 +1,12 @@
 ---
 name: ngo-core-frontend-upgrade
-description: Upgrades a client's Angular/NgRx front-end to match a target NGO Core version using the dual-repository agent workflow in Frontend-Upgrade/. Use when the user asks to upgrade the front-end, align package.json/Angular dependencies to a new NGO Core release, or audit front-end integration against Core.
+description: Upgrades a client's Angular/NgRx front-end to match a target NGO Core version using the dual-repository agent workflow in frontend/. Use when the user asks to upgrade the front-end, align package.json/Angular dependencies to a new NGO Core release, or audit front-end integration against Core.
 ---
 
 # NGO Core Frontend Upgrade
 
 This skill wraps the existing single-session, dual-repository front-end upgrade agent in
-[Frontend-Upgrade/](../../../Frontend-Upgrade/AGENTS.md). Do not re-derive the process —
+[frontend/](../../../frontend/AGENTS.md). Do not re-derive the process —
 drive the existing state machine, skills and CLI instead of improvising.
 
 ## When to use
@@ -21,14 +21,14 @@ drive the existing state machine, skills and CLI instead of improvising.
   `runs/<client>/<run-id>/research/core-target/` if a different ref must be read).
 
 ## How to run it
-1. Read [Frontend-Upgrade/AGENTS.md](../../../Frontend-Upgrade/AGENTS.md) in full.
+1. Read [frontend/AGENTS.md](../../../frontend/AGENTS.md) in full.
 2. Collect three inputs from the user if not already given: the client front-end path, the
    local NGO Core path, and the target Core version.
-3. Create/resume a run under `Frontend-Upgrade/runs/<client>/<run-id>/`.
+3. Create/resume a run under `frontend/runs/<client>/<run-id>/`.
 4. Resolve the release range and canonical requirements as described in `AGENTS.md`
    (never load `knowledge/raw/` release notes directly into context).
-5. Use the 12 skills under `Frontend-Upgrade/skills/` (see
-   [registry.yaml](../../../Frontend-Upgrade/skills/registry.yaml)) in the order the
+5. Use the 12 skills under `frontend/skills/` (see
+   [registry.yaml](../../../frontend/skills/registry.yaml)) in the order the
    AGENTS.md contract defines. Planning is mandatory and read-only before any client
    mutation (mutation gate).
 6. Every applicable requirement must end up verified, not-applicable-with-evidence, or a
@@ -42,6 +42,6 @@ drive the existing state machine, skills and CLI instead of improvising.
   integration point first.
 
 ## Reference
-Full details: [Frontend-Upgrade/README.md](../../../Frontend-Upgrade/README.md),
-[Frontend-Upgrade/skills/](../../../Frontend-Upgrade/skills),
-[Frontend-Upgrade/docs/](../../../Frontend-Upgrade/docs).
+Full details: [frontend/README.md](../../../frontend/README.md),
+[frontend/skills/](../../../frontend/skills),
+[frontend/docs/](../../../frontend/docs).

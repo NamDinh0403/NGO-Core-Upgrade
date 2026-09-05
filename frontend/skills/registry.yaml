@@ -1,0 +1,225 @@
+schemaVersion: 1
+id: frontend-skill-registry
+description: Deterministic skill registry for the dual-repository front-end Core upgrade. Skills are selected by tools/lib/engine.js selectSkill(); transitions are enforced by allowedNextSkills; developer-escalation is reachable from any skill.
+
+resultStatuses:
+  - SUCCEEDED
+  - SUCCEEDED_WITH_WARNINGS
+  - RESEARCH_REQUIRED
+  - RETRYABLE_FAILURE
+  - BLOCKED_NEEDS_CONTEXT
+  - BLOCKED_NEEDS_DEVELOPER
+  - BLOCKED_NEEDS_APPROVAL
+  - FAILED_POLICY
+  - FAILED_BUDGET
+  - CANCELLED
+
+skills:
+  - id: validate-local-repositories
+    name: Validate Local Repositories (Doctor)
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Dual-repository, non-mutating doctor for client and local Core.
+    workflowPhases: [DOCTOR, VALIDATE_REPOS]
+    requiredCapabilities: [read-client-repository, read-core-repository, parse-package-json, parse-angular-workspace]
+    optionalCapabilities: [repository-version-control]
+    inputSchema: skills/validate-local-repositories/schemas/input.schema.json
+    outputSchema: skills/validate-local-repositories/schemas/output.schema.json
+    allowedPrecedingSkills: []
+    allowedNextSkills: [inventory-client-frontend, developer-escalation]
+    completionStatuses: [READY_FOR_INVENTORY, READY_FOR_PLANNING, BLOCKED_NEEDS_DEVELOPER]
+    evals: skills/validate-local-repositories/evals
+
+  - id: inventory-client-frontend
+    name: Inventory Client Front-end
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Recursively inventory the client and classify its structure.
+    workflowPhases: [INVENTORY_CLIENT]
+    requiredCapabilities: [read-client-repository, search-repository, parse-angular-workspace, resolve-typescript-inheritance]
+    optionalCapabilities: []
+    inputSchema: skills/inventory-client-frontend/schemas/input.schema.json
+    outputSchema: skills/inventory-client-frontend/schemas/output.schema.json
+    allowedPrecedingSkills: [validate-local-repositories]
+    allowedNextSkills: [inspect-local-core, developer-escalation]
+    completionStatuses: [SUCCEEDED, SUCCEEDED_WITH_WARNINGS]
+    evals: skills/inventory-client-frontend/evals
+
+  - id: inspect-local-core
+    name: Inspect Local Core
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Scoped, read-only inspection of the local Core repository.
+    workflowPhases: [INSPECT_CORE]
+    requiredCapabilities: [read-core-repository, search-repository]
+    optionalCapabilities: [create-readonly-core-worktree]
+    inputSchema: skills/inspect-local-core/schemas/input.schema.json
+    outputSchema: skills/inspect-local-core/schemas/output.schema.json
+    allowedPrecedingSkills: [inventory-client-frontend]
+    allowedNextSkills: [resolve-target-packages, developer-escalation]
+    completionStatuses: [SUCCEEDED, SUCCEEDED_WITH_WARNINGS]
+    evals: skills/inspect-local-core/evals
+
+  - id: resolve-target-packages
+    name: Resolve Target Packages
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Resolve exact target client dependencies from the local Core.
+    workflowPhases: [RESOLVE_PACKAGES]
+    requiredCapabilities: [read-core-repository, parse-package-json, parse-lockfile]
+    optionalCapabilities: [inspect-npm-registry-metadata, probe-dependency-resolution]
+    inputSchema: skills/resolve-target-packages/schemas/input.schema.json
+    outputSchema: skills/resolve-target-packages/schemas/output.schema.json
+    allowedPrecedingSkills: [inspect-local-core]
+    allowedNextSkills: [derive-release-requirements, ingest-core-release, developer-escalation]
+    completionStatuses: [RESOLVED, RESOLVED_WITH_UNCERTAINTY]
+    evals: skills/resolve-target-packages/evals
+
+  - id: ingest-core-release
+    name: Ingest Core Release
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Derives DRAFT candidate release requirements from the local NGO.Core repository's git history, cross-checked against the shared release-notes.md.
+    workflowPhases: [DERIVE_REQUIREMENTS]
+    requiredCapabilities: [read-core-repository, inspect-configuration]
+    optionalCapabilities: []
+    inputSchema: skills/ingest-core-release/schemas/input.schema.json
+    outputSchema: skills/ingest-core-release/schemas/output.schema.json
+    allowedPrecedingSkills: [resolve-target-packages]
+    allowedNextSkills: [derive-release-requirements, developer-escalation]
+    completionStatuses: [SUCCEEDED, SUCCEEDED_WITH_WARNINGS, BLOCKED_NEEDS_CONTEXT, BLOCKED_NEEDS_DEVELOPER]
+    evals: skills/ingest-core-release/evals
+
+  - id: derive-release-requirements
+    name: Derive Release Requirements
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Normalize canonical release requirements and Core findings into semantic requirements (not patches).
+    workflowPhases: [DERIVE_REQUIREMENTS]
+    requiredCapabilities: [read-core-repository, inspect-configuration]
+    optionalCapabilities: []
+    inputSchema: skills/derive-release-requirements/schemas/input.schema.json
+    outputSchema: skills/derive-release-requirements/schemas/output.schema.json
+    allowedPrecedingSkills: [resolve-target-packages, ingest-core-release]
+    allowedNextSkills: [map-core-to-client, developer-escalation]
+    completionStatuses: [SUCCEEDED, RESEARCH_REQUIRED]
+    evals: skills/derive-release-requirements/evals
+
+
+  - id: map-core-to-client
+    name: Map Core Requirements to Client
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Map each Core requirement to the actual client implementation.
+    workflowPhases: [MAP_REQUIREMENTS]
+    requiredCapabilities: [read-client-repository, resolve-typescript-inheritance]
+    optionalCapabilities: []
+    inputSchema: skills/map-core-to-client/schemas/input.schema.json
+    outputSchema: skills/map-core-to-client/schemas/output.schema.json
+    allowedPrecedingSkills: [derive-release-requirements]
+    allowedNextSkills: [plan-frontend-upgrade, developer-escalation]
+    completionStatuses: [SUCCEEDED, RESEARCH_REQUIRED, BLOCKED_NEEDS_CONTEXT]
+    evals: skills/map-core-to-client/evals
+
+  - id: plan-frontend-upgrade
+    name: Plan Frontend Upgrade
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Produce a complete read-only plan with exact files and evidence.
+    workflowPhases: [PLAN]
+    requiredCapabilities: [create-plan, create-uncertainty-records, validate-json-schema]
+    optionalCapabilities: []
+    inputSchema: skills/plan-frontend-upgrade/schemas/input.schema.json
+    outputSchema: skills/plan-frontend-upgrade/schemas/output.schema.json
+    allowedPrecedingSkills: [map-core-to-client, resolve-target-packages]
+    allowedNextSkills: [execute-frontend-upgrade, developer-escalation]
+    completionStatuses: [READY, READY_WITH_ASSUMPTIONS, RESEARCH_REQUIRED, BLOCKED_NEEDS_CONTEXT, BLOCKED_NEEDS_DEVELOPER, FAILED_POLICY]
+    evals: skills/plan-frontend-upgrade/evals
+
+  - id: execute-frontend-upgrade
+    name: Execute Frontend Upgrade
+    version: 1.0.0
+    status: active
+    risk: high
+    description: Apply the READY plan to the client only, behind the mutation gate.
+    workflowPhases: [CHECKPOINT, EXECUTE, BUILD_AND_FIX]
+    requiredCapabilities: [create-client-checkpoint, install-client-dependencies, run-package-manager]
+    optionalCapabilities: [create-client-worktree, build-angular-development, build-angular-production]
+    inputSchema: skills/execute-frontend-upgrade/schemas/input.schema.json
+    outputSchema: skills/execute-frontend-upgrade/schemas/output.schema.json
+    allowedPrecedingSkills: [plan-frontend-upgrade]
+    allowedNextSkills: [investigate-frontend-failure, audit-frontend-integration, developer-escalation]
+    completionStatuses: [SUCCEEDED, PARTIAL, RETRYABLE_FAILURE, BLOCKED_GATE, BLOCKED_NEEDS_DEVELOPER, ROLLED_BACK]
+    evals: skills/execute-frontend-upgrade/evals
+
+  - id: investigate-frontend-failure
+    name: Investigate Frontend Failure
+    version: 1.0.0
+    status: active
+    risk: medium
+    description: Classify and surgically fix build/test failures within budget.
+    workflowPhases: [BUILD_AND_FIX]
+    requiredCapabilities: [read-client-repository, typecheck-typescript]
+    optionalCapabilities: [build-angular-development, build-angular-production]
+    inputSchema: skills/investigate-frontend-failure/schemas/input.schema.json
+    outputSchema: skills/investigate-frontend-failure/schemas/output.schema.json
+    allowedPrecedingSkills: [execute-frontend-upgrade]
+    allowedNextSkills: [execute-frontend-upgrade, audit-frontend-integration, developer-escalation]
+    completionStatuses: [RESOLVED, REPLAN_REQUIRED, RETRY_BUDGET_EXHAUSTED, BLOCKED_NEEDS_DEVELOPER]
+    evals: skills/investigate-frontend-failure/evals
+
+  - id: audit-frontend-integration
+    name: Audit Frontend Integration
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Mandatory audit that blocks completion on unresolved integration.
+    workflowPhases: [AUDIT, VALIDATE]
+    requiredCapabilities: [read-client-repository, validate-json-schema]
+    optionalCapabilities: [build-angular-production]
+    inputSchema: skills/audit-frontend-integration/schemas/input.schema.json
+    outputSchema: skills/audit-frontend-integration/schemas/output.schema.json
+    allowedPrecedingSkills: [execute-frontend-upgrade, investigate-frontend-failure]
+    allowedNextSkills: [learn-from-frontend-run, developer-escalation]
+    completionStatuses: [PASSED, BLOCKED_INTEGRATION, BLOCKED_BUILD, BLOCKED_CORE_MODIFIED, BLOCKED_NEEDS_DEVELOPER]
+    evals: skills/audit-frontend-integration/evals
+
+  - id: learn-from-frontend-run
+    name: Learn From Frontend Run
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Extract redacted candidate patterns only (never auto-approved).
+    workflowPhases: [LEARN, HANDOVER]
+    requiredCapabilities: [read-client-repository]
+    optionalCapabilities: []
+    inputSchema: skills/learn-from-frontend-run/schemas/input.schema.json
+    outputSchema: skills/learn-from-frontend-run/schemas/output.schema.json
+    allowedPrecedingSkills: [audit-frontend-integration, execute-frontend-upgrade, developer-escalation]
+    allowedNextSkills: [developer-escalation]
+    completionStatuses: [SUCCEEDED, SUCCEEDED_NO_CANDIDATES]
+    evals: skills/learn-from-frontend-run/evals
+
+  - id: developer-escalation
+    name: Developer Escalation
+    version: 1.0.0
+    status: active
+    risk: low
+    description: Produce a precise, evidence-backed handoff with an exact next action.
+    workflowPhases: [HANDOVER]
+    requiredCapabilities: [create-uncertainty-records]
+    optionalCapabilities: []
+    inputSchema: skills/developer-escalation/schemas/input.schema.json
+    outputSchema: skills/developer-escalation/schemas/output.schema.json
+    allowedPrecedingSkills: []
+    allowedNextSkills: []
+    completionStatuses: [ESCALATED]
+    evals: skills/developer-escalation/evals

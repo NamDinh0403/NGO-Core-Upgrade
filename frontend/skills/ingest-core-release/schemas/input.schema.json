@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "skills/ingest-core-release/schemas/input.schema.json",
+  "type": "object",
+  "required": ["skillId", "runDir", "corePath"],
+  "properties": {
+    "skillId": { "type": "string", "const": "ingest-core-release" },
+    "runDir": { "type": "string" },
+    "corePath": { "type": "string", "description": "repositories.core.path — the same local, read-only NGO.Core checkout already resolved for this run." },
+    "releaseNotesPath": { "type": ["string", "null"], "description": "Shared release-notes.md, external to the Core repo's own git history." },
+    "sinceVersion": { "type": ["string", "null"], "description": "Highest version already present in knowledge/canonical/releases/. Auto-detected when omitted." }
+  },
+  "additionalProperties": true
+}

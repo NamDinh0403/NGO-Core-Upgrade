@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.1.0",
+  "lastUpdated": "2026-08-13",
+  "purpose": "Routing table for NGO Core upgrade knowledge. Load this file first, then load only the referenced records for the current version, compiler error, symbol, config area, or migration task.",
+  "convention": {
+    "entryGranularity": "One compiler error, symbol, version, config area, or migration pattern per small JSON record under knowledge/canonical/.",
+    "markdownPolicy": "Files under knowledge/derived/ are legacy narrative evidence only. Do not boot from them and do not patch from them without first using the relevant canonical route and the installed package DLL.",
+    "pathsAreRelativeTo": "backend",
+    "requiredEntryFields": [
+      "schemaVersion",
+      "entryType",
+      "sourceOfTruth",
+      "validation"
+    ]
+  },
+  "sourceOfTruthPolicy": {
+    "authoritative": "decompiled-installed-dll",
+    "corroborating": [
+      "knowledge/canonical route records",
+      "memory/approved patterns",
+      "migration-memory.json",
+      "memory/episodes",
+      "Version-Changes diffs",
+      "knowledge/derived Markdown"
+    ],
+    "rule": "If the installed DLL signature disagrees with any knowledge record, diff, episode, or memory pattern, the installed DLL wins. Record the override in the run state."
+  },
+  "lookupOrder": [
+    "compiler error route",
+    "symbol route",
+    "version route",
+    "config or migration route",
+    "client migration-memory.json",
+    "approved memory pattern",
+    "episode",
+    "Version-Changes diff",
+    "derived Markdown evidence",
+    "decompiled DLL verification"
+  ],
+  "routes": {
+    "errors": {
+      "NU1201": "knowledge/canonical/errors/NU1201.json",
+      "CS7036": "knowledge/canonical/errors/CS7036.json",
+      "CS0305": "knowledge/canonical/errors/CS0305.json",
+      "CS0311": "knowledge/canonical/errors/CS0311.json",
+      "CS0115": "knowledge/canonical/errors/CS0115.json",
+      "CS0246": "knowledge/canonical/errors/CS0246.json",
+      "CS1503": "knowledge/canonical/errors/CS1503.json",
+      "CS0029": "knowledge/canonical/errors/CS0029.json",
+      "DI_REGISTRATION": "knowledge/canonical/errors/DI_REGISTRATION.json"
+    },
+    "versions": {
+      "7.2.0": "knowledge/canonical/versions/7.2.0.json",
+      "7.3.0": "knowledge/canonical/versions/7.3.0.json",
+      "7.4.0": "knowledge/canonical/versions/7.4.0.json",
+      "8.0.0": "knowledge/canonical/versions/8.0.0.json",
+      "9.0.0": "knowledge/canonical/versions/9.0.0.json",
+      "9.1.0": "knowledge/canonical/versions/9.1.0.json"
+    },
+    "symbols": {
+      "EntityService": "knowledge/canonical/symbols/NGO.Core.Services.EntityService.json",
+      "ExportPdfService": "knowledge/canonical/symbols/NGO.Core.Services.ExportPdfService.json",
+      "PaymentService": "knowledge/canonical/symbols/NGO.Core.Services.PaymentService.json",
+      "TaskService": "knowledge/canonical/symbols/NGO.Core.Services.TaskService.json",
+      "TaskFlowServiceBase": "knowledge/canonical/symbols/NGO.Core.Services.TaskFlowServiceBase.json",
+      "FundingAllocationService": "knowledge/canonical/symbols/NGO.Core.Services.FundingAllocationService.json",
+      "NgoContext": "knowledge/canonical/symbols/NGO.Core.Repositories.NgoContext.json"
+    },
+    "config": {
+      "appsettings": "knowledge/canonical/appsettings/appsettings-by-version.json"
+    },
+    "migrations": {
+      "ef": "knowledge/canonical/migrations/ef-migration-patterns.json"
+    },
+    "antiPatterns": "knowledge/canonical/anti-patterns/anti-patterns.json",
+    "legacyManifest": "knowledge/index/version-manifest.json"
+  },
+  "legacyEvidenceRoutes": {
+    "breakingChanges": "knowledge/derived/breaking-changes/breaking-changes-registry.md",
+    "commonErrors": "knowledge/derived/common-error-solutions/common-error-solutions.md",
+    "errorPatterns": "knowledge/derived/common-error-solutions/error-fix-patterns.md",
+    "codeChangesByVersion": "knowledge/derived/breaking-changes/code-changes-by-version.md",
+    "deploymentInstructions": "knowledge/derived/deployment-guides/deployment-instructions-by-version.md",
+    "core8DeepDive": "knowledge/derived/breaking-changes/core-8-migration-detailed.md",
+    "core800ClassCatalogue": "knowledge/derived/breaking-changes/core-8.0.0-changes-by-class.md"
+  }
+}

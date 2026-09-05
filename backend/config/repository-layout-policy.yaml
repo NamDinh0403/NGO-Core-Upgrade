@@ -1,0 +1,81 @@
+# Repository layout policy for the NGO Core upgrade agent (backend).
+# Enforced by tools/repo-layout.test.js. The FINAL_CUTOVER removed the legacy
+# layer; this policy prevents it from returning.
+schemaVersion: 1
+id: repository-layout-policy
+lastReviewedAt: 2026-08-19
+
+allowedRootDirectories:
+  - .config          # standard local .NET tool manifest metadata (narrow purpose)
+  - config           # agent + tool policy
+  - docs
+  - evals
+  - knowledge
+  - memory
+  - runs
+  - schemas
+  - skills
+  - templates
+  - tools
+  - workflows
+
+allowedRootFiles:
+  - AGENTS.md
+  - README.md
+  - .gitignore
+
+requiredDirectories:
+  - config
+  - knowledge/canonical
+  - knowledge/index
+  - memory/episodes
+  - schemas
+  - skills
+  - templates
+  - tools
+  - workflows/core-upgrade/phases
+
+forbiddenLegacyDirectories:
+  - Agent
+  - Case-Studies
+  - Version-Changes
+  - Templates          # normalized to lowercase templates/
+
+forbiddenLegacyFiles:
+  - BOOT.md
+  - ARCHITECTURE.md
+  - refactor.md        # historical refactor plan; removed with docs/refactor/
+  - tools.md           # historical tool-bootstrap plan; removed with docs/refactor/
+
+# These legacy document names must not appear in source or ACTIVE documentation.
+# The historical migration records under docs/refactor/ that used to be exempt
+# here were deleted (they described a completed, superseded refactor); only this
+# policy file itself may still name them.
+forbiddenLegacyReferenceNames:
+  - 1-operating-kernel.md
+  - 2-reasoning-loop.md
+  - 3-execution-guide.md
+  - 4-fix-pattern-workflow.md
+
+# Paths whose contents are historical and exempt from the legacy-reference scan.
+historicalExemptPaths:
+  - config/repository-layout-policy.yaml
+
+namingConvention:
+  directories: kebab-case
+  markdownFiles: kebab-case.md
+  errorRecords: exact-error-code.json      # e.g. CS0246.json
+  versionRecords: full-semver.json         # e.g. 9.1.0.json
+  statusValues: SCREAMING_SNAKE_CASE
+
+canonicalLocations:
+  knowledge: knowledge/canonical
+  derivedKnowledge: knowledge/derived
+  knowledgeIndex: knowledge/index
+  workflow: workflows/core-upgrade
+  skills: skills
+  memoryEpisodes: memory/episodes
+  memoryApproved: memory/approved
+  templates: templates
+  schemas: schemas
+  runs: runs

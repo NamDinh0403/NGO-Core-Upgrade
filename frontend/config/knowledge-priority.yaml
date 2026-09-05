@@ -1,0 +1,33 @@
+schemaVersion: 1
+id: knowledge-priority
+description: Precedence order when sources of truth disagree during a front-end upgrade.
+
+# Highest wins. The local target Core repository and the installed target packages
+# always outrank any written note.
+priority:
+  - id: target-core-repository
+    rank: 1
+    detail: "The local NGO Core repository at the target version/ref - exact dependency versions, config keys, providers, routes, assets."
+  - id: installed-target-packages
+    rank: 2
+    detail: "Versions actually installed in the client node_modules after alignment."
+  - id: canonical-release-requirements
+    rank: 3
+    detail: "knowledge/canonical/releases + migrations + appsettings (atomic, structured)."
+  - id: version-manifest
+    rank: 4
+    detail: "knowledge/canonical/versions/version-manifest.json framework mapping."
+  - id: shared-candidate-release-findings
+    rank: 4.5
+    detail: "../ingest/knowledge/candidates/releases/<version>.json findings.frontend + findings.shared — ingest-core-release output, shared with backend. Never authoritative; used only when rank 3/4 knowledge is missing for the target version."
+  - id: derived-markdown
+    rank: 5
+    detail: "knowledge/derived/*.md human-readable notes (documentation, not authoritative)."
+  - id: raw-release-notes
+    rank: 6
+    detail: "knowledge/raw/release-note-import - import material only; NEVER loaded into model context at runtime."
+
+rules:
+  - "Raw release notes are never authoritative runtime context."
+  - "A release note that names a client file is a hint; the requirement mapper resolves the ACTUAL client point."
+  - "Secrets never enter knowledge, logs, or reports; use placeholders and the secret provider."

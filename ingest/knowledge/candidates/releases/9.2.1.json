@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "version": "9.2.1",
+  "status": "CANDIDATE",
+  "ingestedAt": "2026-09-05T09:00:00Z",
+  "sources": {
+    "coreRepoPath": "<client-specific — set by the run that produced this record>",
+    "releaseNotesPath": "provided",
+    "tagRange": { "from": "v9.2.0", "to": "v9.2.1" }
+  },
+  "findings": {
+    "backend": [
+      {
+        "scope": "backend",
+        "category": "backend-config-key",
+        "path": null,
+        "statement": "CspAdditionalFrameSrc key added under Core section (API + WebJob appsettings).",
+        "source": "both",
+        "crossCheck": "CONFIRMED_BY_DIFF_AND_NOTES",
+        "evidence": "git diff v9.2.0..v9.2.1 -- **/appsettings*.json; release-notes.md#9.2.1"
+      },
+      {
+        "scope": "backend",
+        "category": "dotnet-source",
+        "path": "NGO.Model/Domain/IATIExport/IATIActivities.cs",
+        "statement": "Stale generated file removed; IATI export code aligned to Core 9.2.1 global IATI model types.",
+        "source": "git-diff",
+        "crossCheck": "OBSERVED_IN_DIFF_NOT_MENTIONED_IN_NOTES",
+        "evidence": "git diff --name-status v9.2.0..v9.2.1"
+      }
+    ],
+    "frontend": [],
+    "shared": [
+      {
+        "scope": "shared",
+        "category": "deployment-config",
+        "path": "web.config",
+        "statement": "web.config gains removeServerHeader + removed X-Powered-By security headers.",
+        "source": "git-diff",
+        "crossCheck": "OBSERVED_IN_DIFF_NOT_MENTIONED_IN_NOTES",
+        "evidence": "git diff --name-status v9.2.0..v9.2.1"
+      }
+    ]
+  },
+  "unresolvedItems": [
+    "9.2.1 [backend] NGO.Model/Domain/IATIExport/IATIActivities.cs: observed in diff, no matching release-notes card — confirm with the Core team before promoting to canonical.",
+    "9.2.1 [shared] web.config: security header changes observed in diff, no matching release-notes card."
+  ],
+  "nextAction": "Developer: review this record, resolve the unresolvedItems entries, then promote applicable findings into backend/knowledge/canonical/versions/9.2.1.json. Backfilled from runs/ngo-online-brc/ngo-online-brc-2026-08-24T02-48-37Z-001/developer-review-9.2.1.md, which needed 9.2.1 before canonical knowledge existed for it."
+}

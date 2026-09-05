@@ -1,0 +1,394 @@
+# Skill registry — deterministic catalogue of bounded agent procedures.
+# skills/ define HOW an agent performs a bounded task; workflows/ define WHAT phase
+# comes next; tools/ perform deterministic operations. See skills/README.md.
+schemaVersion: 1
+id: skill-registry
+lastReviewedAt: 2026-08-19
+
+resultStatuses:
+  - SUCCEEDED
+  - SUCCEEDED_WITH_WARNINGS
+  - RESEARCH_REQUIRED
+  - RETRYABLE_FAILURE
+  - BLOCKED_NEEDS_CONTEXT
+  - BLOCKED_NEEDS_DEVELOPER
+  - BLOCKED_NEEDS_APPROVAL
+  - FAILED_POLICY
+  - FAILED_BUDGET
+  - CANCELLED
+
+skills:
+  - id: plan-upgrade
+    name: Plan Upgrade
+    version: 1.0.0
+    status: active
+    description: Creates a read-only evidence-based Core upgrade plan.
+    risk: low
+    triggers:
+      - a new Core upgrade is requested
+      - an interrupted run has no valid plan
+      - material evidence changes the current plan
+      - execution discovers high-impact uncertainty
+    exclusions:
+      - never mutates the client repository
+    workflowPhases:
+      - DISCOVERY
+      - PLAN
+    requiredCapabilities:
+      - read-repository
+      - search-repository
+      - inspect-approved-knowledge
+      - create-plan
+    optionalCapabilities:
+      - inspect-nuget-metadata
+      - inspect-npm-registry-metadata
+    inputSchema: skills/plan-upgrade/schemas/input.schema.json
+    outputSchema: skills/plan-upgrade/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - research-version
+      - analyze-client-impact
+      - ingest-core-release
+    allowedNextSkills:
+      - research-version
+      - analyze-client-impact
+      - execute-upgrade
+      - ingest-core-release
+      - developer-escalation
+    allowedSubskills: []
+    completionStatuses:
+      - READY
+      - READY_WITH_ASSUMPTIONS
+      - RESEARCH_REQUIRED
+      - BLOCKED_NEEDS_CONTEXT
+      - BLOCKED_NEEDS_DEVELOPER
+      - FAILED_POLICY
+    evals: skills/plan-upgrade/evals
+
+  - id: research-version
+    name: Research Version
+    version: 1.0.0
+    status: active
+    description: Researches a Core target version outside the client repository using a progressive evidence ladder.
+    risk: medium
+    triggers:
+      - approved version knowledge is missing, incomplete, contradictory, or insufficient
+    exclusions:
+      - never modifies client package references, manifests, lockfiles, source, or configuration
+      - never installs or invokes every possible tool automatically
+    workflowPhases:
+      - PLAN
+      - BUILD_AND_FIX
+    requiredCapabilities:
+      - inspect-approved-knowledge
+      - inspect-nuget-metadata
+    optionalCapabilities:
+      - acquire-nuget-package
+      - compare-package-content
+      - compare-dotnet-public-api
+      - inspect-dotnet-assembly-metadata
+      - selectively-decompile-dotnet
+      - acquire-npm-package
+      - compare-npm-package-content
+      - typecheck-typescript
+      - inspect-core-repository-history
+    inputSchema: skills/research-version/schemas/input.schema.json
+    outputSchema: skills/research-version/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - plan-upgrade
+      - execute-upgrade
+      - analyze-client-impact
+    allowedNextSkills:
+      - plan-upgrade
+      - analyze-client-impact
+      - ingest-core-release
+      - developer-escalation
+    allowedSubskills: []
+    completionStatuses:
+      - SUCCEEDED
+      - SUCCEEDED_WITH_WARNINGS
+      - BLOCKED_NEEDS_DEVELOPER
+      - FAILED_POLICY
+      - FAILED_BUDGET
+    evals: skills/research-version/evals
+
+  - id: ingest-core-release
+    name: Ingest Core Release
+    version: 1.0.0
+    status: active
+    description: Derives candidate Core version knowledge from the local NGO.Core repository's git history, cross-checked against the shared release-notes.md.
+    risk: low
+    triggers:
+      - research-version's evidence ladder is exhausted for version knowledge and coreRepoPath is configured
+      - plan-upgrade detects targetVersion absent from knowledge/canonical/versions/ and coreRepoPath is configured
+      - a manual maintenance check requests newer Core releases
+    exclusions:
+      - never writes to knowledge/canonical/ (candidate-only output)
+      - never mutates, checks out, resets, or switches branches in the Core repository
+      - never touches the client repository
+    workflowPhases:
+      - PLAN
+      - BUILD_AND_FIX
+    requiredCapabilities:
+      - inspect-core-repository-history
+      - inspect-approved-knowledge
+      - validate-json-schema
+    optionalCapabilities:
+      - search-repository
+    inputSchema: skills/ingest-core-release/schemas/input.schema.json
+    outputSchema: skills/ingest-core-release/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - research-version
+      - plan-upgrade
+    allowedNextSkills:
+      - research-version
+      - plan-upgrade
+      - developer-escalation
+    allowedSubskills: []
+    completionStatuses:
+      - SUCCEEDED
+      - SUCCEEDED_WITH_WARNINGS
+      - BLOCKED_NEEDS_CONTEXT
+      - BLOCKED_NEEDS_DEVELOPER
+      - FAILED_POLICY
+      - FAILED_BUDGET
+    evals: skills/ingest-core-release/evals
+
+
+  - id: analyze-client-impact
+    name: Analyze Client Impact
+    version: 1.0.0
+    status: active
+    description: Maps version and package changes to actual client source and configuration (read-only by default).
+    risk: low
+    triggers:
+      - a plan needs the concrete client impact of a version change
+    exclusions:
+      - read-only unless invoked under an explicitly approved mutation phase
+    workflowPhases:
+      - PLAN
+      - BUILD_AND_FIX
+    requiredCapabilities:
+      - read-repository
+      - search-repository
+    optionalCapabilities:
+      - scan-csharp-symbols
+      - scan-typescript-symbols
+      - inspect-angular-workspace
+    inputSchema: skills/analyze-client-impact/schemas/input.schema.json
+    outputSchema: skills/analyze-client-impact/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - plan-upgrade
+      - research-version
+    allowedNextSkills:
+      - plan-upgrade
+      - execute-upgrade
+      - developer-escalation
+    allowedSubskills: []
+    completionStatuses:
+      - SUCCEEDED
+      - SUCCEEDED_WITH_WARNINGS
+      - RESEARCH_REQUIRED
+      - BLOCKED_NEEDS_DEVELOPER
+    evals: skills/analyze-client-impact/evals
+
+  - id: execute-upgrade
+    name: Execute Upgrade
+    version: 1.0.0
+    status: active
+    description: Applies an approved, evidence-backed upgrade plan to the client repository.
+    risk: high
+    triggers:
+      - a ready plan exists and mutation is permitted
+    exclusions:
+      - refuses to run without a ready plan and a rollback checkpoint
+      - does not perform uncontrolled deep research while the client is partially modified
+    workflowPhases:
+      - UPGRADE
+      - BUILD_AND_FIX
+    requiredCapabilities:
+      - repository-version-control
+      - create-git-checkpoint
+      - restore-nuget-dependency-graph
+      - build-dotnet
+    optionalCapabilities:
+      - run-tests
+      - acquire-npm-package
+    inputSchema: skills/execute-upgrade/schemas/input.schema.json
+    outputSchema: skills/execute-upgrade/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - plan-upgrade
+      - analyze-client-impact
+    allowedNextSkills:
+      - investigate-build-failure
+      - audit-frontend-integration
+      - research-version
+      - learn-from-run
+      - developer-escalation
+    allowedSubskills:
+      - investigate-build-failure
+      - audit-frontend-integration
+    completionStatuses:
+      - SUCCEEDED
+      - SUCCEEDED_WITH_WARNINGS
+      - RESEARCH_REQUIRED
+      - RETRYABLE_FAILURE
+      - BLOCKED_NEEDS_DEVELOPER
+      - BLOCKED_NEEDS_APPROVAL
+      - FAILED_POLICY
+      - FAILED_BUDGET
+    evals: skills/execute-upgrade/evals
+
+  - id: investigate-build-failure
+    name: Investigate Build Failure
+    version: 1.0.0
+    status: active
+    description: Diagnoses backend build/compiler/dependency/runtime failures with evidence, not trial and error.
+    risk: medium
+    triggers:
+      - a restore, build, compiler, MSBuild, dependency, or startup failure occurred
+    exclusions:
+      - must not repeat an unchanged action or exceed retry policy
+      - must not apply a rejected pattern or treat candidate knowledge as authoritative
+    workflowPhases:
+      - BUILD_AND_FIX
+    requiredCapabilities:
+      - read-repository
+      - inspect-approved-knowledge
+    optionalCapabilities:
+      - restore-nuget-dependency-graph
+      - build-dotnet
+      - compare-dotnet-public-api
+      - selectively-decompile-dotnet
+    inputSchema: skills/investigate-build-failure/schemas/input.schema.json
+    outputSchema: skills/investigate-build-failure/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - execute-upgrade
+    allowedNextSkills:
+      - execute-upgrade
+      - research-version
+      - developer-escalation
+    allowedSubskills: []
+    completionStatuses:
+      - SUCCEEDED
+      - RETRYABLE_FAILURE
+      - RESEARCH_REQUIRED
+      - BLOCKED_NEEDS_DEVELOPER
+      - FAILED_BUDGET
+    evals: skills/investigate-build-failure/evals
+
+  - id: audit-frontend-integration
+    name: Audit Frontend Integration
+    version: 1.0.0
+    status: active
+    description: Verifies front-end integration completeness via a semantic configuration graph, not only files that errored.
+    risk: medium
+    triggers:
+      - front-end package or source changes were applied
+      - a front-end client is present and needs post-change verification
+    exclusions:
+      - must not pass with unresolved required semantic roles
+      - must not report success solely because npm install succeeded
+    workflowPhases:
+      - BUILD_AND_FIX
+      - TEST
+    requiredCapabilities:
+      - read-repository
+      - inspect-angular-workspace
+    optionalCapabilities:
+      - typecheck-typescript
+      - build-angular-development
+      - build-angular-production
+      - run-tests
+    inputSchema: skills/audit-frontend-integration/schemas/input.schema.json
+    outputSchema: skills/audit-frontend-integration/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - execute-upgrade
+    allowedNextSkills:
+      - execute-upgrade
+      - research-version
+      - learn-from-run
+      - developer-escalation
+    allowedSubskills: []
+    completionStatuses:
+      - SUCCEEDED
+      - SUCCEEDED_WITH_WARNINGS
+      - RESEARCH_REQUIRED
+      - BLOCKED_NEEDS_DEVELOPER
+    evals: skills/audit-frontend-integration/evals
+
+  - id: learn-from-run
+    name: Learn From Run
+    version: 1.0.0
+    status: active
+    description: Transforms a completed/blocked/failed run into sanitized episodes and candidate learning (never canonical).
+    risk: low
+    triggers:
+      - a run completed, was blocked, or failed
+    exclusions:
+      - never writes to canonical knowledge or approves its own candidates
+      - never exposes client-sensitive information
+    workflowPhases:
+      - HANDOVER
+    requiredCapabilities:
+      - read-repository
+      - validate-json-schema
+    optionalCapabilities: []
+    inputSchema: skills/learn-from-run/schemas/input.schema.json
+    outputSchema: skills/learn-from-run/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - execute-upgrade
+      - audit-frontend-integration
+    allowedNextSkills:
+      - developer-escalation
+    allowedSubskills: []
+    completionStatuses:
+      - SUCCEEDED
+      - SUCCEEDED_WITH_WARNINGS
+      - BLOCKED_NEEDS_DEVELOPER
+    evals: skills/learn-from-run/evals
+
+  - id: developer-escalation
+    name: Developer Escalation
+    version: 1.0.0
+    status: active
+    description: Produces an actionable developer handoff whenever automation cannot safely continue. Callable from every skill and phase.
+    risk: low
+    triggers:
+      - any skill or phase cannot safely continue
+    exclusions:
+      - must not leave a blocked run looking active without a next action
+    workflowPhases:
+      - DISCOVERY
+      - TOOL_BOOTSTRAP
+      - BASELINE
+      - PLAN
+      - UPGRADE
+      - BUILD_AND_FIX
+      - TEST
+      - DOCUMENT
+      - HANDOVER
+    requiredCapabilities:
+      - read-repository
+    optionalCapabilities: []
+    inputSchema: skills/developer-escalation/schemas/input.schema.json
+    outputSchema: skills/developer-escalation/schemas/output.schema.json
+    allowedPrecedingSkills:
+      - plan-upgrade
+      - research-version
+      - analyze-client-impact
+      - execute-upgrade
+      - investigate-build-failure
+      - audit-frontend-integration
+      - learn-from-run
+    allowedNextSkills: []
+    allowedSubskills: []
+    completionStatuses:
+      - WAITING_FOR_CONTEXT
+      - WAITING_FOR_DEVELOPER_DECISION
+      - WAITING_FOR_APPROVAL
+      - WAITING_FOR_TOOL
+      - WAITING_FOR_CREDENTIAL
+      - WAITING_FOR_VENDOR
+      - TERMINAL_UNSAFE
+      - CANCELLED
+    evals: skills/developer-escalation/evals

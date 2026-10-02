@@ -5,31 +5,34 @@
   "title": "Add newly-required constructor parameter and forward to base (CS7036)",
   "problemSignature": "CS7036: There is no argument given that corresponds to the required parameter '<name>' of '<CoreType>'",
   "applicability": {
-    "sourceVersions": ["7.2.0", "8.0.0"],
-    "targetVersions": ["7.3.0", "8.1.0"],
+    "sourceVersions": ["7.2.0", "7.6.3", "8.0.0"],
+    "targetVersions": ["7.3.0", "8.1.0", "9.2.1"],
     "errorCodes": ["CS7036"],
-    "packages": ["NGO.Core.Model", "NGO.Core.Services"],
-    "symbols": ["PaymentMapper", "EntityService"],
+    "packages": ["NGO.Core.Model", "NGO.Core.Services", "NGO.Core.Repositories", "NGO.Core.API"],
+    "symbols": ["PaymentMapper", "EntityService", "EntityRepository", "FinancialActualService", "FundingIdeaService", "IdeaService", "PartnerExpenditureReportingService", "PaymentService", "ProjectService", "StakeholderService", "SendGridMailService", "IdeasController"],
     "requiredRepoCharacteristics": ["client subclass overrides a Core base constructor"]
   },
   "exclusions": [
-    "Do not invent the parameter type. Read the required parameter from the decompiled installed DLL signature; the DLL is authoritative.",
-    "Do not change the client override body."
+    "Do not invent the parameter type. Read the required parameter from the decompiled installed DLL signature (or, if the exact target commit of a local read-only Core reference repo is known/pinned, git show/git grep against that commit is acceptable equivalent-or-better evidence -- confirmed workable in a full multi-minor-version run, cbmi 7.6.3->9.2.1).",
+    "Do not change the client override body.",
+    "Also check whether an EXISTING parameter's type changed (e.g. plain interface -> Lazy<T>) rather than assuming every CS7036/CS1503 pair is purely a new-parameter-count problem -- confirmed to occur at least once (EntityService, partnerExpenditureReportingExportExcelService wrapped in Lazy<> between 7.6.3 and 9.2.1).",
+    "Also check whether an existing constructor parameter was already being captured locally (e.g. into a private field) but simply never forwarded to base() -- fixing this can be as simple as adding the existing identifier to the base(...) argument list, no new parameter needed (confirmed for FundingIdeaService.userRepository and PaymentService.coreAppSettings)."
   ],
-  "rootCauseHypothesis": "Core added a required constructor dependency; the client subclass constructor and its base() call must forward the new parameter.",
+  "rootCauseHypothesis": "Core added a required constructor dependency (or changed an existing parameter's type); the client subclass constructor and its base() call must forward the new/changed parameter.",
   "proposedActions": [
-    "Decompile the Core base type to read the new constructor signature.",
-    "Add the matching parameter to the client subclass constructor.",
-    "Forward it in the base(...) call.",
+    "Decompile the Core base type to read the new constructor signature (or read source directly from a pinned local reference-repo commit if available).",
+    "Diff param-by-param against the client's existing derived constructor and base() call -- do not assume only additions; also check for type changes on existing params.",
+    "Add the matching parameter to the client subclass constructor (or reuse an existing uncaptured/unforwarded one).",
+    "Forward it in the base(...) call in Core's exact required order/name.",
     "Register the new dependency in DI if it is not already registered.",
-    "Rebuild and confirm the CS7036 family reaches zero."
+    "Rebuild and confirm the CS7036 family reaches zero -- expect cascading discovery: fixing one non-compiling file can reveal new CS7036 errors in previously-blocked downstream files on the next build; this is not a regression."
   ],
   "risk": "medium",
-  "requiredVerification": ["decompiled signature recorded", "dotnet build error family == 0", "DI registration present"],
-  "successfulEvidence": ["memory/episodes/imported/ep-wvuk-core8x-001.json"],
+  "requiredVerification": ["decompiled or pinned-source signature recorded", "dotnet build error family == 0", "DI registration present"],
+  "successfulEvidence": ["memory/episodes/imported/ep-wvuk-core8x-001.json", "memory/episodes/ep-cbmi-core9x-001.json (11 applications across a 7.6.3->9.2.1 multi-minor jump: EntityRepository, EntityService, FinancialActualService, FundingIdeaService, IdeaService, PartnerExpenditureReportingService, PaymentService, ProjectService, StakeholderService, SendGridMailService, IdeasController)"],
   "failedEvidence": [],
   "knownCounterexamples": [],
-  "confidence": 0.55,
+  "confidence": 0.75,
   "reviewHistory": [],
   "approvalStatus": "none",
   "approvedBy": null,

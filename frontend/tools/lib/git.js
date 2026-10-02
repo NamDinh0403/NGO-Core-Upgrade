@@ -18,6 +18,12 @@ function git(repoPath, argv, opts) {
   const safety = [
     '-c', 'core.fsmonitor=false',
     '-c', 'core.useBuiltinFSMonitor=false',
+    // Windows: many NGO Core paths exceed MAX_PATH (260 chars); without this a
+    // read-only `git worktree add` for the target ref fails part-way through
+    // ("Filename too long") and forces a fallback to inspecting whatever ref
+    // happens to be checked out. This is command-scoped (-c), so it never
+    // writes to either repository's persisted .git/config.
+    '-c', 'core.longpaths=true',
   ];
   return core.runExec('git', ['-C', `"${repoPath}"`].concat(safety, argv), opts || {});
 }
@@ -58,6 +64,19 @@ function uncommittedFiles(repoPath) {
   const s = statusPorcelain(repoPath);
   if (!s) return [];
   return s.split(/\r?\n/).filter((l) => l.trim().length).map((l) => l.slice(3));
+}
+
+/**
+ * Absolute path to the git repository's top-level working directory. `corePath`
+ * may legitimately be a SUBDIRECTORY of the actual repo root (e.g. a monorepo
+ * where the Angular workspace lives at `<root>/ngo-client-core`); `git -C`
+ * still finds the enclosing repo, so callers that materialize a worktree must
+ * know the root in order to locate the subdirectory inside it.
+ */
+function repoRoot(repoPath) {
+  const r = git(repoPath, ['rev-parse', '--show-toplevel']);
+  if (r.code !== 0) return null;
+  return path.resolve(r.stdout.trim());
 }
 
 /** Resolve a ref (tag/branch/sha) to a commit sha WITHOUT checking it out. */
@@ -119,16 +138,31 @@ function diffNameStatus(repoPath, refA, refB) {
  * Create a READ-ONLY worktree for a Core target ref at an external destination
  * (must be outside both repositories). Used only when the requested target ref
  * differs from the current Core checkout. The developer's Core working tree is
- * never switched. Returns { ok, worktreePath, commit, error }.
+ * never switched. Returns { ok, worktreePath, inspectPath, commit, error }.
+ *
+ * `worktreePath` is the git-registered worktree root (pass this to
+ * removeWorktree). `inspectPath` is the directory downstream inspection should
+ * actually read from: when `corePath` points at a subdirectory of the repo
+ * (e.g. a monorepo's `ngo-client-core` Angular workspace), `git worktree add`
+ * still materializes the WHOLE repo at `destAbs`, so `inspectPath` re-applies
+ * that same subdirectory offset inside the new worktree.
  */
 function addReadonlyWorktree(corePath, ref, destAbs) {
   const commit = resolveRef(corePath, ref);
-  if (!commit) return { ok: false, error: `cannot resolve ref '${ref}' in Core`, commit: null, worktreePath: null };
+  if (!commit) return { ok: false, error: `cannot resolve ref '${ref}' in Core`, commit: null, worktreePath: null, inspectPath: null };
   core.ensureDir(path.dirname(destAbs));
   // --detach avoids creating/moving a branch; the worktree is inspected read-only.
   const r = git(corePath, ['worktree', 'add', '--detach', '--force', `"${destAbs}"`, commit]);
-  if (r.code !== 0) return { ok: false, error: (r.stderr || r.stdout || 'worktree add failed').trim(), commit, worktreePath: null };
-  return { ok: true, worktreePath: destAbs, commit, error: null };
+  if (r.code !== 0) return { ok: false, error: (r.stderr || r.stdout || 'worktree add failed').trim(), commit, worktreePath: null, inspectPath: null };
+  const root = repoRoot(corePath);
+  let inspectPath = destAbs;
+  if (root) {
+    const rel = path.relative(root, path.resolve(corePath));
+    if (rel && !rel.startsWith('..') && !path.isAbsolute(rel)) {
+      inspectPath = path.join(destAbs, rel);
+    }
+  }
+  return { ok: true, worktreePath: destAbs, inspectPath, commit, error: null };
 }
 
 function removeWorktree(corePath, destAbs) {
@@ -184,5 +218,5 @@ function diffFingerprints(before, after) {
 module.exports = {
   git, isGitRepo, currentBranch, headCommit, isDetached, statusPorcelain, isClean,
   uncommittedFiles, resolveRef, refExists, showFileAtRef, listFilesAtRef, listTags, diffNameStatus,
-  addReadonlyWorktree, removeWorktree, fingerprint, diffFingerprints,
+  repoRoot, addReadonlyWorktree, removeWorktree, fingerprint, diffFingerprints,
 };

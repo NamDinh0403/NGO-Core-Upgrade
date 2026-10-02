@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "patternId": "cand-generateentityview-genericitem-definition-core93",
+  "status": "candidate",
+  "title": "AnalyseConfigurationRepository.GenerateEntityView now takes (int, KeyValuePair<GenericItem,TableSqlMapping>) (CS1501)",
+  "problemSignature": "CS1501: No overload for method 'GenerateEntityView' takes 3 arguments",
+  "applicability": {
+    "sourceVersions": [
+      "9.1.1"
+    ],
+    "targetVersions": [
+      "9.3.1"
+    ],
+    "errorCodes": [],
+    "packages": [
+      "NGO.Core.Repositories"
+    ],
+    "symbols": [
+      "NGO.Core.Repositories.AnalyseConfigurationRepository.GenerateEntityView",
+      "NGO.Core.Repositories.AnalyseConfigurationRepository.EntityAnalyseViewDefinitions"
+    ],
+    "requiredRepoCharacteristics": [
+      "client class derives from / overrides a Core service or repository"
+    ]
+  },
+  "exclusions": [
+    "Do not apply without decompiling the installed target DLL to confirm the signature."
+  ],
+  "rootCauseHypothesis": "Core minor release changed a virtual/protected signature.",
+  "proposedActions": [
+    "Decompile the installed AnalyseConfigurationRepository.",
+    "Replace GenerateEntityView(key, dict, nameBuilder) with GenerateEntityView((int)key, new KeyValuePair<GenericItem,TableSqlMapping>(new GenericItem{Id=(int)key, Name=nameBuilder(key)}, definition)).",
+    "Consider whether Core now generates the same view natively (Summary) and the client generation can be removed."
+  ],
+  "risk": "low",
+  "requiredVerification": [
+    "dotnet build --no-restore reports 0 errors"
+  ],
+  "successfulEvidence": [
+    "runs/shelterbox/shelterbox-2026-09-30T04-05-00Z-001"
+  ],
+  "failedEvidence": [],
+  "knownCounterexamples": [],
+  "confidence": 0.6,
+  "reviewHistory": [],
+  "approvalStatus": "none",
+  "approvedBy": null,
+  "rejectionReason": null,
+  "supersedes": null,
+  "supersededBy": null,
+  "expiresAt": null,
+  "createdAt": "2026-09-30T04:40:00Z"
+}

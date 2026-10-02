@@ -98,8 +98,16 @@ function walk(dir, acc, depth) {
   try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return; }
   for (const e of entries) {
     // Skip VCS, dependency caches, run artifacts, and the agent's own isolated tooling
-    // so agent infrastructure is never misread as client evidence.
-    if (['node_modules', '.git', 'runs', 'frontend-runtime'].includes(e.name)) continue;
+    // so agent infrastructure is never misread as client evidence. This also excludes
+    // the agent framework's own test/eval fixture directories (e.g.
+    // frontend/tests/fixtures/client-ngmodule, frontend/evals/fixtures/*), which contain
+    // synthetic package.json/angular.json/tsconfig.json/*.csproj files used by the
+    // framework's own validate.js/run-evals.js suites -- these are agent infrastructure,
+    // never real client repository evidence, and must not trigger REQUIRED_IF_APPLICABLE
+    // tool installation (see runs/_bootstrap tool-manifest.json history for the defect
+    // this fixes: a backend-only run was blocked on typescript/angular-cli because the
+    // evidence walk found these fixtures rather than the real client repository).
+    if (['node_modules', '.git', 'runs', 'frontend-runtime', 'tests', 'evals'].includes(e.name)) continue;
     const full = path.join(dir, e.name);
     if (e.isDirectory()) walk(full, acc, depth + 1);
     else acc.push(full);

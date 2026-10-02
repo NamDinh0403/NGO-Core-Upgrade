@@ -97,7 +97,7 @@ frontend/
   knowledge/     canonical release/migration/appsettings knowledge (structured YAML + derived md)
   runs/          durable per-run state, evidence, checkpoints, artifacts
   schemas/       draft-07 schemas for requests, state, reports, and skill IO
-  skills/        12 skills (SKILL.md + input/output schemas + evals) + registry.yaml
+  skills/        13 skills (SKILL.md + input/output schemas + evals) + registry.yaml
   templates/     report/plan templates
   tools/         CLI, lib/ engine, and dependency-free tests
 ```

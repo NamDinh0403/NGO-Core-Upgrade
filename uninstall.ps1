@@ -16,8 +16,10 @@ $copilotHome = Join-Path $HOME '.copilot'
 $targets = @(
     (Join-Path $copilotHome 'skills\ngo-core-backend-upgrade'),
     (Join-Path $copilotHome 'skills\ngo-core-frontend-upgrade'),
+    (Join-Path $copilotHome 'skills\ngo-core-upgrade-orchestrator'),
     (Join-Path $copilotHome 'agents\ngo-core-backend-upgrade.agent.md'),
-    (Join-Path $copilotHome 'agents\ngo-core-frontend-upgrade.agent.md')
+    (Join-Path $copilotHome 'agents\ngo-core-frontend-upgrade.agent.md'),
+    (Join-Path $copilotHome 'agents\ngo-core-upgrade-orchestrator.agent.md')
 )
 foreach ($t in $targets) {
     if (Test-Path $t) { Remove-Item $t -Recurse -Force; Write-Host "  - removed $t" }

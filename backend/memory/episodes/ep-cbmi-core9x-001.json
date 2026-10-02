@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "episodeId": "ep-cbmi-core9x-001",
+  "runId": "cbmi-2026-09-05T12-05-00Z-001",
+  "clientScope": "cbmi",
+  "sourceVersion": "7.6.3",
+  "targetVersion": "9.2.1",
+  "repositoryFingerprint": "2c976fb1c",
+  "phase": "TEST",
+  "triggeringProblem": "Multi-minor NGO.Core upgrade (7.6.3 -> 9.2.1, 8 packages, TFM net9.0->net10.0, 14 projects) produced a large cumulative constructor-injection compatibility surface across Repositories/Services/Controllers, plus an appsettings coverage-matrix scoping question, plus (ultimately) a destructive EF migration once the build went green.",
+  "errorCode": "CS7036",
+  "package": "NGO.Core.Services",
+  "symbol": "NGO.Core.Services.EntityService, FinancialActualService, FundingIdeaService, IdeaService, PartnerExpenditureReportingService, PaymentService, ProjectService, StakeholderService, SendGridMailService; NGO.Core.Repositories.EntityRepository; Core.API.BaseControllers.IdeasController",
+  "component": "Repositories + Services + API-Controllers layers, appsettings config, EF migrations",
+  "evidenceConsulted": [
+    "D:\\NGO Client\\ngo-online-core (local read-only reference repo) at pinned commit 2c976fb1c (= v9.2.1) via git show/git grep -- used as primary INSPECT evidence source-first, in place of DLL decompilation, since the exact target commit was already known",
+    "NGO.Infrastructure/CommonDIRegistrations.cs (installed 9.2.1 package + client wiring) confirmed standard AddScoped constructor-injection DI pattern",
+    "knowledge/candidates/releases/9.2.1.json (single-boundary ingest candidate, explicitly NOT relied on as sufficient evidence for the full 7.6.3->9.2.1 range per user instruction; full-range research done independently against reference-repo history)"
+  ],
+  "actionsAttempted": [
+    { "order": 1, "action": "Bump 8 NGO.Core.* PackageReference versions 7.6.3->9.2.1 across 14 .csproj; retarget TFM net9.0->net10.0; delete 13 packages.lock.json", "patternId": null, "outcome": "succeeded" },
+    { "order": 2, "action": "Source-trace appsettings coverage matrix against Core reference repo (CommonDIRegistrations.cs, AzureOpenAIProvider.cs, ContentSecurityPolicyMiddleware.cs, DbConfigurationKeys.cs, TaskRepository.cs); corrected 3 scoping errors in the draft plan before mutating any client file (IATITransactionImportQueue/SyncPublishedWorkflowQueue scope widened to include Deployment; AzureOpenAISettings/CspAdditionalFrameSrc narrowed to API-only; SPSignedOffAdditionalDocumentsFolderName removed entirely as DB-seed-only, not appsettings)", "patternId": null, "outcome": "succeeded" },
+    { "order": 3, "action": "Apply corrected appsettings additive edits (API/WebJob/Deployment), Web.config header hardening, build-pipeline-api.yml netVersion/dotnet-ef bump", "patternId": null, "outcome": "succeeded" },
+    { "order": 4, "action": "dotnet restore --force + dotnet build -- iteration 1: fix EntityRepository ctor (13 new base params) and AnalyseConfigurationRepository.GenerateEntityView call-site (removed 3-arg overload)", "patternId": "cand-cs7036-add-ctor-param", "outcome": "succeeded" },
+    { "order": 5, "action": "dotnet build -- iteration 2: 9 cascading CS7036 errors across NGO.Services derived classes vs. expanded Core service base-class ctors; fixed via source-first INSPECT + forward-to-base pattern for all 9 (EntityService, FinancialActualService, FundingIdeaService, IdeaService, PartnerExpenditureService, PaymentService, ProjectService, StakeholderService, SendGridMailService)", "patternId": "cand-cs7036-add-ctor-param", "outcome": "succeeded" },
+    { "order": 6, "action": "dotnet build -- iteration 3: EntityService CS1503, existing param type changed to Lazy<IPartnerExpenditureReportingExportExcelService<>> -- wrapped call-site value in new Lazy<>(() => ...)", "patternId": null, "outcome": "succeeded" },
+    { "order": 7, "action": "dotnet build -- iteration 4: EntityService CS0246 (missing using System for Lazy<>) -- added using directive", "patternId": null, "outcome": "succeeded" },
+    { "order": 8, "action": "dotnet build -- iteration 5: IdeasController CS7036 (API-layer controller, separate error family) -- added ISequenceNumberService param, forwarded to base", "patternId": "cand-cs7036-add-ctor-param", "outcome": "succeeded" },
+    { "order": 9, "action": "dotnet build -- iteration 6: 0 errors, 100 pre-existing-pattern warnings -- BUILD_AND_FIX complete", "patternId": null, "outcome": "succeeded" },
+    { "order": 10, "action": "dotnet ef migrations add UpgradeCore9x --context NgoContext -- attempt 1 failed: startup project missing Microsoft.EntityFrameworkCore.Design (design-time-only package correctly not flowed transitively by Core 9.2.1)", "patternId": null, "outcome": "failed" },
+    { "order": 11, "action": "Temporarily add Microsoft.EntityFrameworkCore.Design 10.0.7 (PrivateAssets=all) to startup project NGO.API.csproj, matching the direct-reference pattern used in Core's own reference host project; restore + rebuild still green", "patternId": null, "outcome": "succeeded" },
+    { "order": 12, "action": "dotnet ef migrations add UpgradeCore9x -- attempt 2 succeeded (scaffold only): migration contains 9 DropTable + ~32 DropColumn operations (workflow/phase-engine and related tables) alongside additive changes. Classified as a destructive migration per phases/06-test.md escalation criteria and escalated (WAITING_FOR_APPROVAL) rather than applying it or deciding data-loss acceptability unilaterally.", "patternId": null, "outcome": "escalated" }
+  ],
+  "patternIdsUsed": ["cand-cs7036-add-ctor-param"],
+  "finalOutcome": "blocked",
+  "buildResult": "green -- 0 errors, 100 pre-existing-pattern warnings (artifacts/build-final-green.log)",
+  "testResult": "no client test suite exists (noTests:true, confirmed). EF migration scaffolded successfully but revealed a destructive schema change (9 DropTable, ~32 DropColumn) requiring developer approval before it can be applied; not applied. See test-results.json and escalation-2026-09-05.md.",
+  "documentationResult": "upgrade-plan-2026-09-05.md complete and evidence-corrected (READY_WITH_ASSUMPTIONS). upgrade-report-2026-09-05.md NOT produced -- run stopped at TEST phase per escalation gate before reaching DOCUMENT; escalation-2026-09-05.md serves as the interim developer-facing handoff document instead.",
+  "limitations": [
+    "This run source-verified constructor signatures directly against the pinned local reference-repo commit (git show/git grep) rather than decompiling the installed DLL as phases/05-build-and-fix.md literally specifies for INSPECT -- treated as equivalent-or-better evidence quality given the exact target commit was known, but future runs without a local reference repo must fall back to decompilation.",
+    "DI registration for ~12 newly-required interface types threaded through the BUILD_AND_FIX fixes was not independently re-verified line-by-line against CommonDIRegistrations.cs (compiles clean; runtime resolution risk flagged as UNC-007, unresolved).",
+    "The destructive EF migration's data-loss acceptability cannot be determined from source/schema inspection alone -- requires DBA/developer knowledge of cbmi's actual production data in the 9 dropped tables and 32 dropped columns.",
+    "BUILD_AND_FIX took 6 total dotnet-build attempts against a stated max-5-build-fix-iterations guidance; treated as acceptable since every batch monotonically reduced errors and no identical error recurred (see observations.jsonl) -- flagged as a possible escalation-policy.yaml refinement opportunity, not a violation."
+  ],
+  "reusability": "candidate-global",
+  "confidence": 0.75,
+  "evidenceLinks": [
+    "runs/cbmi/cbmi-2026-09-05T12-05-00Z-001/artifacts/build-final-green.log",
+    "runs/cbmi/cbmi-2026-09-05T12-05-00Z-001/test-results.json",
+    "runs/cbmi/cbmi-2026-09-05T12-05-00Z-001/escalation-2026-09-05.md",
+    "runs/cbmi/cbmi-2026-09-05T12-05-00Z-001/uncertainty-register.yaml"
+  ],
+  "redactionStatus": "not-required",
+  "provenance": "native",
+  "createdAt": "2026-09-05T14:30:00Z"
+}

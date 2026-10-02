@@ -88,7 +88,20 @@ function reset() { _cache = null; }
 // release manifest frameworkTransition.angularTo).
 function angularMajorAt(version) {
   const store = load();
-  const m = store.manifests[core.normalizeVersion(version)] || store.manifests[version];
+  const norm = core.normalizeVersion(version) || version;
+  let m = store.manifests[norm] || store.manifests[version];
+  if (!m) {
+    // No canonical manifest for this EXACT (often patch-level) version — e.g.
+    // requested source/target is "7.6.3" but canonical knowledge only has a
+    // manifest for the "7.6.0" minor. A patch release inherits its minor's
+    // framework transition unless a more specific manifest says otherwise, so
+    // fall back to the nearest known manifest version <= the requested one.
+    let best = null;
+    for (const v of Object.keys(store.manifests)) {
+      if (core.compareVersions(v, norm) <= 0 && (best === null || core.compareVersions(v, best) > 0)) best = v;
+    }
+    if (best) m = store.manifests[best];
+  }
   if (m && m.frameworkTransition && m.frameworkTransition.angularTo) {
     const p = core.parseVersion(m.frameworkTransition.angularTo + '.0');
     return p ? p[0] : null;

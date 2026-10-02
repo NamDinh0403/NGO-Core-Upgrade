@@ -151,7 +151,7 @@ function startCmd(flags) {
     const dest = path.join(dir, 'research', 'core-target');
     worktree = git.addReadonlyWorktree(req.resolved.corePath, report.core.targetCommit, dest);
     if (worktree.ok) {
-      coreInspectPath = worktree.worktreePath;
+      coreInspectPath = worktree.inspectPath || worktree.worktreePath;
       runStore.event(dir, { phase: 'INSPECT_CORE', type: 'readonly-worktree-created', commit: worktree.commit, path: 'research/core-target' });
       line(`  Core target ref differs from checkout — created read-only worktree at research/core-target/ (${worktree.commit.slice(0, 12)}).`);
     } else {

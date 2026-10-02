@@ -1,0 +1,8 @@
+{
+  "name": "ngo-frontend-runtime",
+  "private": true,
+  "devDependencies": {
+    "@angular/cli": "22.1.7",
+    "typescript": "7.0.2"
+  }
+}

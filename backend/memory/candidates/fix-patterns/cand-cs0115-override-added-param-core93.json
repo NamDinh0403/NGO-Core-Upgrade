@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "patternId": "cand-cs0115-override-added-param-core93",
+  "status": "candidate",
+  "title": "Override no longer matches: Core interface method gained a parameter (CS0115) — update override and base call",
+  "problemSignature": "CS0115: no suitable method found to override (Core virtual method gained a trailing parameter, e.g. GetBrowseListSubEntities(+User currentUser))",
+  "applicability": {
+    "sourceVersions": [
+      "9.1.1"
+    ],
+    "targetVersions": [
+      "9.3.1"
+    ],
+    "errorCodes": [],
+    "packages": [
+      "NGO.Core.Services"
+    ],
+    "symbols": [
+      "NGO.Core.Services.EntityService.GetBrowseListSubEntities"
+    ],
+    "requiredRepoCharacteristics": [
+      "client class derives from / overrides a Core service or repository"
+    ]
+  },
+  "exclusions": [
+    "Do not apply without decompiling the installed target DLL to confirm the signature."
+  ],
+  "rootCauseHypothesis": "Core minor release changed a virtual/protected signature.",
+  "proposedActions": [
+    "Decompile the installed Core class and read the new virtual signature.",
+    "Add the parameter to the client override and to the base.Method(...) call, keeping parameter order.",
+    "Rebuild; also check interface implementers/call sites."
+  ],
+  "risk": "low",
+  "requiredVerification": [
+    "dotnet build --no-restore reports 0 errors"
+  ],
+  "successfulEvidence": [
+    "runs/shelterbox/shelterbox-2026-09-30T04-05-00Z-001"
+  ],
+  "failedEvidence": [],
+  "knownCounterexamples": [],
+  "confidence": 0.6,
+  "reviewHistory": [],
+  "approvalStatus": "none",
+  "approvedBy": null,
+  "rejectionReason": null,
+  "supersedes": null,
+  "supersededBy": null,
+  "expiresAt": null,
+  "createdAt": "2026-09-30T04:40:00Z"
+}

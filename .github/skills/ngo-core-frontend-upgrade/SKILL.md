@@ -27,7 +27,7 @@ drive the existing state machine, skills and CLI instead of improvising.
 3. Create/resume a run under `frontend/runs/<client>/<run-id>/`.
 4. Resolve the release range and canonical requirements as described in `AGENTS.md`
    (never load `knowledge/raw/` release notes directly into context).
-5. Use the 12 skills under `frontend/skills/` (see
+5. Use the 13 skills under `frontend/skills/` (see
    [registry.yaml](../../../frontend/skills/registry.yaml)) in the order the
    AGENTS.md contract defines. Planning is mandatory and read-only before any client
    mutation (mutation gate).

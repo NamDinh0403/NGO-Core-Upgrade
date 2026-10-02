@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "episodeId": "ep-shelterbox-core93x-001",
+  "runId": "shelterbox-2026-09-30T04-05-00Z-001",
+  "clientScope": "shelterbox",
+  "sourceVersion": "9.1.1",
+  "targetVersion": "9.3.1",
+  "repositoryFingerprint": "6ba321df6",
+  "phase": "HANDOVER",
+  "triggeringProblem": "Minor Core upgrade 9.1.1 -> 9.3.1 with no release notes, no 9.x tags and no canonical knowledge; requirements derived from git diff between release branches (origin/releases/9.1..9.3) while preserving pre-existing uncommitted client edits.",
+  "errorCode": "CS1501,CS0115",
+  "package": "NGO.Core.Repositories, NGO.Core.Services",
+  "symbol": "AnalyseConfigurationRepository.GenerateEntityView; EntityService ctor + GetBrowseListSubEntities; ProgramService ctor",
+  "component": "Repositories + Services, appsettings, EF migration",
+  "evidenceConsulted": [
+    "git diff origin/releases/9.1 origin/releases/9.3 in D:\\NGO Client\\ngo-online-core (read-only, refs only)",
+    "decompiled installed NGO.Core.*.dll 9.3.1 (ilspycmd): AnalyseConfigurationRepository, BaseConfigurationRepository, EntityService, ProgramService, CommonDIRegistrations",
+    "NuGet feed listing (9.3.1 highest 9.3.x)"
+  ],
+  "actionsAttempted": [
+    {
+      "action": "Read-only diff of Core release branches; signature-level breaking-change list; appsettings delta (CspAdditionalFrameSrc, AzureOpenAISettings semantics)",
+      "patternId": null,
+      "outcome": "succeeded",
+      "order": 1
+    },
+    {
+      "action": "Baseline restore+build (0 errors); snapshot of pre-existing uncommitted edits",
+      "patternId": null,
+      "outcome": "succeeded",
+      "order": 2
+    },
+    {
+      "action": "Bump 9 NGO.Core.* refs to 9.3.1, delete 8 lockfiles, additive text-only appsettings merge in 3 files (byte-preserving)",
+      "patternId": null,
+      "outcome": "succeeded",
+      "order": 3
+    },
+    {
+      "action": "restore --force + build: CS1501 GenerateEntityView -> adapter call (decompile-confirmed)",
+      "patternId": "cand-generateentityview-genericitem-definition-core93",
+      "outcome": "succeeded",
+      "order": 4
+    },
+    {
+      "action": "build: CS0115 EntityService override + ctor +3 params; ProgramService ctor +queue (decompile-confirmed)",
+      "patternId": "cand-cs0115-override-added-param-core93",
+      "outcome": "succeeded",
+      "order": 5
+    },
+    {
+      "action": "build green (0 errors); dotnet ef migrations add UpgradeCore93x scaffold: non-destructive, not applied; has-pending-model-changes none",
+      "patternId": null,
+      "outcome": "succeeded",
+      "order": 6
+    }
+  ],
+  "patternIdsUsed": [
+    "cand-cs7036-add-ctor-param (hint only)",
+    "cand-cs0115-override-added-param-core93",
+    "cand-generateentityview-genericitem-definition-core93"
+  ],
+  "finalOutcome": "succeeded",
+  "buildResult": "green (0 errors, 3 builds)",
+  "testResult": "noTests",
+  "documentationResult": "complete (plan + report at solution root, documentation-status all true)",
+  "limitations": [
+    "Requirements are git-derived candidate knowledge, not canonical",
+    "No runtime/DB validation performed (migration not applied)",
+    "AzureOpenAI endpoint/deployment left as empty placeholders"
+  ],
+  "reusability": "candidate-global",
+  "confidence": 0.8,
+  "evidenceLinks": [
+    "runs/shelterbox/shelterbox-2026-09-30T04-05-00Z-001/artifacts/core-diff-9.1-to-9.3-findings.md"
+  ],
+  "redactionStatus": "redacted",
+  "provenance": "native",
+  "createdAt": "2026-09-30T04:45:00Z"
+}

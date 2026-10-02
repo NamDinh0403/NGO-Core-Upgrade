@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "patternId": "cand-ef-design-package-missing-startup",
+  "status": "candidate",
+  "title": "dotnet-ef CLI fails on startup project missing Microsoft.EntityFrameworkCore.Design (post-Core-upgrade EF migration attempt)",
+  "problemSignature": "dotnet ef migrations add fails with: \"Your startup project '<name>' doesn't reference Microsoft.EntityFrameworkCore.Design. This package is required for the Entity Framework Core Tools to work.\"",
+  "applicability": {
+    "sourceVersions": ["7.6.3"],
+    "targetVersions": ["9.2.1"],
+    "errorCodes": [],
+    "packages": ["NGO.Core.API", "NGO.Core.Repositories"],
+    "symbols": ["NgoContext"],
+    "requiredRepoCharacteristics": ["client ASP.NET Core startup project references NGO.Core.API but never directly references Microsoft.EntityFrameworkCore.Design", "TEST phase attempting an EF migration per phases/06-test.md"]
+  },
+  "exclusions": [
+    "Do not add Microsoft.EntityFrameworkCore.Design without PrivateAssets=all -- it must never ship in the published/runtime output.",
+    "Do not assume the package will flow transitively from NGO.Core.* packages -- Core's own reference repo references it directly in its own source projects (build-time need) but correctly does not expose it as a transitive dependency of the compiled NuGet packages, matching standard NuGet/EF Core practice.",
+    "Pin the added version to match the already-resolved Microsoft.EntityFrameworkCore version in the solution (verify via 'dotnet list package --include-transitive') to avoid an unintended version bump."
+  ],
+  "rootCauseHypothesis": "Microsoft.EntityFrameworkCore.Design is a design-time-only tool package. It is intentionally excluded from NuGet's transitive dependency graph for consuming libraries (Core's NuGet packages), so any client solution that never explicitly added it to its own startup project cannot run 'dotnet ef' commands even though the runtime EF Core packages are present and the solution builds/runs fine.",
+  "proposedActions": [
+    "Confirm the resolved Microsoft.EntityFrameworkCore version already in the solution via 'dotnet list package --include-transitive' on the startup project.",
+    "Add <PackageReference Include=\"Microsoft.EntityFrameworkCore.Design\" Version=\"<matching version>\"><PrivateAssets>all</PrivateAssets></PackageReference> to the startup project's .csproj (not the migrations project, unless they are the same project).",
+    "dotnet restore --force, then rebuild to confirm still green before retrying the ef migrations command.",
+    "Retry 'dotnet ef migrations add ...'.",
+    "Record the addition in changed-files.json as a TEST-phase, dev-tool-only, reversible change; note in the report that the developer may keep or remove it once they have reviewed/regenerated the migration on their own machine."
+  ],
+  "risk": "low",
+  "requiredVerification": ["dotnet restore succeeds", "dotnet build still 0 errors after the package add", "dotnet ef migrations add no longer reports the missing-Design-package error"],
+  "successfulEvidence": ["memory/episodes/ep-cbmi-core9x-001.json"],
+  "failedEvidence": [],
+  "knownCounterexamples": [],
+  "confidence": 0.6,
+  "reviewHistory": [],
+  "approvalStatus": "none",
+  "approvedBy": null,
+  "rejectionReason": null,
+  "supersedes": null,
+  "supersededBy": null,
+  "expiresAt": null,
+  "createdAt": "2026-09-05T14:35:00Z"
+}

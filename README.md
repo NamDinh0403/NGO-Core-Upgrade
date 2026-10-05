@@ -80,7 +80,17 @@ craft prompts — Copilot discovers and offers them automatically.
 
 
 ### How a teammate uses it (no setup beyond opening the repo)
-1. Open this workspace folder in VS Code with the GitHub Copilot extension enabled.
+
+> **Where this lives.** This agent is published inside the NGO Core repository at
+> `ngo-api-core/NGO/Core Upgrade/`. A teammate who already has `ngo-online-core` cloned
+> gets it with a `git pull` — there is nothing else to download. Paths in this README are
+> relative to that `Core Upgrade/` folder; open **that** folder (not the Core repo root)
+> as the agent's workspace folder so `.github/skills/` and `.github/agents/` are
+> discovered. Alternatively, run [`install.ps1`](install.ps1) / [`install.sh`](install.sh)
+> once to register the skills and agents into your Copilot user profile, after which they
+> work from any workspace.
+
+1. Open this `Core Upgrade/` folder in VS Code with the GitHub Copilot extension enabled.
    To upgrade a specific client, open **both** this folder and the client solution in one
    window — copy the [`ngo-core-upgrade.code-workspace`](ngo-core-upgrade.code-workspace)
    template, point its second folder at your client solution, and open it (see the
@@ -114,15 +124,21 @@ craft prompts — Copilot discovers and offers them automatically.
 The whole agent is just files in this Git repository plus Node 14+ (for the CLIs) — there
 is no server, install step, or license to configure. To set it up on another machine:
 
-1. **Clone the repository** onto the new machine:
+1. **Get the files.** They ship inside the NGO Core repository — clone it and use the
+   nested folder:
    ```powershell
-   git clone <this-repo-url> "NGO Core Upgrade"
-   cd "NGO Core Upgrade"
+   git clone <ngo-online-core-url>
+   cd "ngo-online-core/ngo-api-core/NGO/Core Upgrade"
    ```
-   If you don't have it in a remote yet, first push it: `git remote add origin <url>` then
-   `git push -u origin master` from this machine.
-2. **Install Node.js 14+** (only dependency; both CLIs are dependency-free — no `npm
-   install` needed).
+   (If you instead keep a standalone clone of this agent, the remaining steps are
+   identical.)
+2. **Install Node.js 14+** (only dependency; all CLIs are dependency-free — no `npm
+   install` needed). Node 14+ covers the agent framework and its test suites. A
+   **frontend** upgrade run additionally installs an isolated Angular CLI/TypeScript
+   matching the *client's* declared versions, so your Node version must satisfy that
+   Angular release's engine range (e.g. Angular 17 needs Node 18+, Angular 20+ needs
+   Node 22+). The agent reports `INSTALLATION_BLOCKED` instead of installing a
+   mismatched toolchain.
 3. **Open the cloned folder in VS Code** with the GitHub Copilot extension signed in to an
    account with Copilot access.
 4. **Verify discovery**: open Copilot Chat → agent mode → confirm
@@ -130,14 +146,13 @@ is no server, install step, or license to configure. To set it up on another mac
    Frontend Upgrade Agent` appear in the agent picker, and that `.github/skills/*/SKILL.md`
    are picked up (Command Palette → **Chat: Open Customizations** → Skills tab should
    list all three).
-5. **Sanity-check the tooling** from each track's folder, plus the shared ingestion and
-   orchestrator modules:
+5. **Sanity-check the tooling** with the single validation entry point:
    ```powershell
-   cd ingest;         node tools/ingest.test.js
-   cd ../orchestrator; node tests/orchestrator.test.js
-   cd ../backend;  node tools/validate.js;  node tools/run-evals.js
-   cd ../frontend; node tools/validate.js; node tools/repo-layout.test.js
+   node tools/validate-all.js
    ```
+   It runs every suite in `ingest/`, `orchestrator/`, `backend/` and `frontend/` and
+   fails if any suite fails or modifies a tracked file. See
+   [Tests & Validation](#tests--validation) for the per-suite breakdown.
 6. Start a run exactly as described above — no further configuration required. All
    per-run state (`runs/<client>/<run-id>/`) is local to whichever machine runs the
    upgrade; nothing needs to sync between machines unless you want to hand off an
@@ -245,17 +260,45 @@ Every run is isolated under `runs/<client>/<run-id>/` in each track (state, chec
 
 ## Tests & Validation
 
-For maintainers of this workspace (not part of a client upgrade run). Each track ships dependency-free Node tests (Node 14+, run offline):
+For maintainers of this workspace (not part of a client upgrade run). Everything is
+dependency-free and runs offline on Node 14+.
+
+**One command validates the whole agent** — all 14 suites across `ingest/`,
+`orchestrator/`, `backend/` and `frontend/`, plus a working-tree check that fails if any
+suite modified a tracked file:
 
 ```
+node tools/validate-all.js            # add --verbose to see each suite's output
+```
+
+Individual suites, if you need to narrow down a failure (each must run from its own
+module folder — the suites resolve paths relative to the current directory):
+
+```
+# ingest/
+node tools/ingest.test.js
+
+# orchestrator/
+node tests/orchestrator.test.js
+
 # backend/
 node tools/validate.js
-node tools/run-evals.js
 node tools/repo-layout.test.js
+node tools/skills.test.js
+node tools/release-knowledge.test.js
+node tools/bootstrap/tests/bootstrap.test.js
+node tools/run-evals.js
 
 # frontend/
 node tools/validate.js
 node tools/repo-layout.test.js
 node tools/skills.test.js
-node tests/run.js
+node tests/release-schema.test.js
+node tests/release-knowledge.test.js
+node tools/run-evals.js
 ```
+
+> `backend/tools/release-knowledge.test.js` also audits local run state under
+> `backend/runs/` (git-ignored, machine-specific). Those gaps are reported as warnings by
+> default; run it with `--include-runs` to make them fail the suite when auditing a live
+> engagement.

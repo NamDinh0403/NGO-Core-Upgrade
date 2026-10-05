@@ -12,6 +12,11 @@ npm-debug.log*
 *.tmp
 *.out
 
+# Isolated research tooling installed per run (config/tool-installation-policy.yaml ->
+# npmTools.isolatedToolingDir). Versions are resolved from the client repository at
+# bootstrap time, so committed manifests here would pin the wrong toolchain.
+/tools/frontend-runtime/
+
 # Extracted Core sources / temporary package archives / tool caches / logs
 **/research/core-target/
 *.tgz

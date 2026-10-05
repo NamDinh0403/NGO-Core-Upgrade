@@ -7,6 +7,13 @@
 #   ./install.sh --repo https://github.com/<org>/ngo-core-upgrade.git
 #   ./install.sh --dir "$HOME/NGO-Core-Upgrade"            # update existing clone
 #   ./install.sh --dir "/path/to/unzipped" --skills-only   # register from a copy, no git
+#   ./install.sh --dir "/path/to/copy" --skills-only --copilot-home /tmp/profile
+#
+# Options:
+#   --repo <url>           Git URL to clone from
+#   --dir <path>           Where to clone/find the agent (default: ~/NGO-Core-Upgrade)
+#   --skills-only          Skip clone/update; only (re)register
+#   --copilot-home <path>  Where to register (default: ~/.copilot)
 #
 # Re-run any time to update (idempotent).
 set -euo pipefail
@@ -14,13 +21,15 @@ set -euo pipefail
 REPO_URL=""
 INSTALL_DIR="$HOME/NGO-Core-Upgrade"
 SKILLS_ONLY=0
+COPILOT_HOME="$HOME/.copilot"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --repo)        REPO_URL="$2"; shift 2 ;;
-    --dir)         INSTALL_DIR="$2"; shift 2 ;;
-    --skills-only) SKILLS_ONLY=1; shift ;;
-    -h|--help)     grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    --repo)         REPO_URL="$2"; shift 2 ;;
+    --dir)          INSTALL_DIR="$2"; shift 2 ;;
+    --copilot-home) COPILOT_HOME="$2"; shift 2 ;;
+    --skills-only)  SKILLS_ONLY=1; shift ;;
+    -h|--help)      grep '^#' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
 done
@@ -49,8 +58,8 @@ AGENTS_SRC="$INSTALL_DIR/.github/agents"
 [[ -d "$SKILLS_SRC" ]] || { echo "Skills not found at $SKILLS_SRC — is --dir correct?" >&2; exit 1; }
 
 # 3. Register at the Copilot user level
-SKILLS_DST="$HOME/.copilot/skills"
-AGENTS_DST="$HOME/.copilot/agents"
+SKILLS_DST="$COPILOT_HOME/skills"
+AGENTS_DST="$COPILOT_HOME/agents"
 mkdir -p "$SKILLS_DST" "$AGENTS_DST"
 
 AGENT_ROOT="$(cd "$INSTALL_DIR" && pwd)"

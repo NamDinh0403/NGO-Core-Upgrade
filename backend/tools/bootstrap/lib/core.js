@@ -113,6 +113,31 @@ function walk(dir, acc, depth) {
     else acc.push(full);
   }
 }
+// Exact version a client repository declares for a tooling package, used to install a
+// compatible isolated copy (`versionSource: client-compatible`). Range prefixes are
+// stripped; an unresolvable range (e.g. "*", "latest", a git URL) yields no version so
+// the installer blocks instead of installing an arbitrary release.
+function exactVersionFromRange(range) {
+  if (!range || typeof range !== 'string') return null;
+  const m = range.trim().match(/^[\^~>=<\s v]*(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)/);
+  return m ? m[1] : null;
+}
+function detectClientToolVersions(files, packages) {
+  const out = {};
+  for (const file of files) {
+    if (!/[\\/]package\.json$/i.test(file)) continue;
+    let pkg;
+    try { pkg = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { continue; }
+    const deps = Object.assign({}, pkg.devDependencies, pkg.dependencies);
+    for (const name of packages) {
+      if (out[name]) continue;
+      const v = exactVersionFromRange(deps[name]);
+      if (v) out[name] = v;
+    }
+  }
+  return out;
+}
+
 function gatherEvidence() {
   // Scan the whole workspace (parent of backend) for client tech.
   const workspace = path.resolve(ROOT, '..');
@@ -130,6 +155,7 @@ function gatherEvidence() {
     frontendPresent: packageJson || angular,
     typescriptDetected: tsconfig,
     angularDetected: angular,
+    clientToolVersions: detectClientToolVersions(files, ['typescript', '@angular/cli']),
     // Analysis tools are applicable only when there is a client artifact to analyse.
     managedPackageComparison: dotnetClient,
     selectiveDecompilationApproved: dotnetClient, // still gated by policy gate below
@@ -159,5 +185,5 @@ module.exports = {
   ROOT, P, readYaml, readJson, nowIso, ensureDir, loadConfig,
   redactor, runExec, sha256File, sha256Text,
   parseVersion, normalizeVersion, meetsMinimum,
-  gatherEvidence, appliesWhen, platform,
+  gatherEvidence, appliesWhen, platform, exactVersionFromRange, detectClientToolVersions,
 };

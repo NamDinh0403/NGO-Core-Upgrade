@@ -10,9 +10,22 @@ machine where Copilot can see it.* Pick ONE of the three options below.
 ## Prerequisites on the target computer
 - **VS Code** + the **GitHub Copilot** extension, signed in to an account with Copilot access.
 - **Node.js 14+** — only needed when the agent runs its CLI / validation scripts
-  (`node tools/validate.js`, etc.). Both CLIs are dependency-free, so there is **no
+  (`node tools/validate-all.js`, etc.). All CLIs are dependency-free, so there is **no
   `npm install`** step.
+  - For **frontend** upgrade runs, the agent installs an isolated Angular CLI/TypeScript
+    matching the *client's* declared versions, so your Node version must also satisfy
+    that Angular release's engine range (Angular 17 → Node 18+, Angular 20+ → Node 22+).
+    If it cannot, the bootstrap reports `INSTALLATION_BLOCKED` rather than installing a
+    mismatched toolchain.
 - **Git** — for the recommended install path below.
+
+---
+
+## Where the files come from
+The agent is published inside the NGO Core repository at
+`ngo-api-core/NGO/Core Upgrade/`. If you already have `ngo-online-core` cloned, a
+`git pull` is the whole download; use that nested folder wherever this document says
+"this folder". The options below also work from a standalone clone or a zip.
 
 ---
 
@@ -41,6 +54,10 @@ git clone <repo-url> "$HOME/NGO-Core-Upgrade"
 **Update later** (pulls latest and re-registers): re-run the same command.
 **Uninstall:** `./uninstall.ps1` (or `./uninstall.sh`) — unregisters the skills/agents but
 keeps the cloned folder.
+
+> Both scripts accept `-CopilotHome <path>` (PowerShell) / `--copilot-home <path>` (bash)
+> to register into an alternate profile instead of `~/.copilot` — useful for trying the
+> installer without touching your real profile.
 
 > The installer stamps each registered file with the absolute install location, so the
 > agent still finds the `backend/` and `frontend/` workflow folders even
@@ -98,13 +115,13 @@ Copy-Item ".\.github\skills\*" "$env:USERPROFILE\.copilot\skills\" -Recurse -For
 2. Command Palette → **Chat: Open Customizations** → **Skills** tab → all three of
    `ngo-core-upgrade-orchestrator`, `ngo-core-backend-upgrade`, and
    `ngo-core-frontend-upgrade` are listed.
-3. Sanity-check the tooling:
+3. Sanity-check the tooling with the single validation entry point:
    ```powershell
-   cd ingest;          node tools/ingest.test.js
-   cd ..\orchestrator; node tests/orchestrator.test.js
-   cd ..\backend;  node tools/validate.js
-   cd ..\frontend; node tools/validate.js; node tools/repo-layout.test.js
+   node tools/validate-all.js
    ```
+   All 14 suites must pass and the working tree must stay unchanged. Add `--verbose` to
+   see each suite's output; see the README's *Tests & Validation* section for the
+   per-suite commands.
 4. Start a run by either picking an agent from the picker, or just typing a request like
    `Upgrade NGO Core packages to 9.2.1 for <client>` — Copilot auto-discovers the matching
    skill (the orchestrator if no single track is named).
@@ -142,4 +159,3 @@ folder. Two ways to run it:
   agent's skills *and* the client code together.
 - **Simpler — open only this folder** and give the client path in the prompt, e.g.
   `Upgrade NGO Core packages to 9.2.1. Client solution: D:\Clients\Acme\Acme.sln`.
-

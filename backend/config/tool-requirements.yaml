@@ -162,6 +162,7 @@ tools:
       type: isolated-npm-dev-dependency
       package: typescript
       versionSource: client-compatible
+      binary: tsc
     installScopePreference:
       - RUN_LOCAL
     autoInstall: true
@@ -179,6 +180,7 @@ tools:
       type: isolated-npm-dev-dependency
       package: "@angular/cli"
       versionSource: client-compatible
+      binary: ng
     installScopePreference:
       - RUN_LOCAL
     autoInstall: true

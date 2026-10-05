@@ -34,7 +34,9 @@ Other commands: `tools check`, `tools install-missing`, `tools validate`,
 - **Automatic (permitted):** `.NET` local tools (`Microsoft.DotNet.ApiCompat.Tool`,
   `ilspycmd`) into `.config/dotnet-tools.json`; isolated npm dev tooling
   (`typescript`, `@angular/cli`) into `tools/frontend-runtime/` — only when a
-  matching client is present.
+  matching client is present. That directory is generated per run and is
+  git-ignored: npm tool versions are resolved from the client repository
+  (`versionSource: client-compatible`) and never committed.
 - **Manual (escalated):** the .NET SDK, Node.js, Git, certificates, private-feed
   access, or anything needing administrator rights. The bootstrap never uses
   `sudo`, never installs machine-global tools, and never edits machine PATH.
@@ -55,9 +57,13 @@ dotnet tool restore     # restores tools pinned in .config/dotnet-tools.json
 
 ## Update pinned versions
 
-Edit `.config/dotnet-tools.json` (for .NET tools) or
-`tools/frontend-runtime/package.json` (for npm tools), then re-run
-`tools bootstrap`. Record the decision in the run's installation log.
+Edit `.config/dotnet-tools.json` for .NET tools. npm tool versions are not pinned in
+this repository: they are read from the client repository's `package.json`
+(`typescript`, `@angular/cli`) each run. If neither a client version nor an explicit
+`pinnedVersion` can be resolved, the bootstrap reports `INSTALLATION_BLOCKED` rather
+than installing an arbitrary release. To override, set `installation.pinnedVersion`
+in `config/tool-requirements.yaml`, then re-run `tools bootstrap`. Record the decision
+in the run's installation log.
 
 ## Approve a new tool source
 
@@ -67,6 +73,6 @@ are forbidden.
 
 ## Remove run-local tools and caches
 
-Delete `runs/_bootstrap/` (bootstrap artifacts) and `tools/frontend-runtime/node_modules/`
-(isolated npm tooling). `.config/dotnet-tools.json` can be reset with
-`dotnet new tool-manifest --force`.
+Delete `runs/_bootstrap/` (bootstrap artifacts) and `tools/frontend-runtime/`
+(isolated npm tooling, regenerated on the next run). `.config/dotnet-tools.json` can
+be reset with `dotnet new tool-manifest --force`.

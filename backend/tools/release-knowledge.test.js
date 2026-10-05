@@ -79,12 +79,18 @@ test('05-shared-candidate-records-labelled-candidate', () => {
 //    finding — never neither (which is what happened with 9.2.1 before this
 //    change). A version older than the lowest canonical entry is exempt (out
 //    of the knowledge base's supported range, not a coverage gap).
+//
+//    `runs/` is git-ignored local execution state, so this check is machine-dependent:
+//    it is reported as a warning by default and only fails the suite when explicitly
+//    audited with `--include-runs` (or NGO_AUDIT_RUNS=1). Repository validation must
+//    stay deterministic; auditing a live engagement is a separate, deliberate action.
+const AUDIT_RUNS = process.argv.includes('--include-runs') || process.env.NGO_AUDIT_RUNS === '1';
+const runGaps = [];
 test('06-every-run-target-version-has-coverage', () => {
   const runsRoot = P('runs');
   if (!fs.existsSync(runsRoot)) return; // nothing to check
   const candidateVersions = new Set(exists(SHARED_CANDIDATE_DIR) ? listJson(SHARED_CANDIDATE_DIR).map((f) => f.replace(/\.json$/, '')) : []);
   const canonicalSet = new Set(canonicalVersions);
-  const gaps = [];
   (function walk(dir) {
     for (const name of fs.readdirSync(dir, { withFileTypes: true })) {
       if (name.name === '_bootstrap' || name.name === 'wrapper-logs') continue;
@@ -95,15 +101,19 @@ test('06-every-run-target-version-has-coverage', () => {
       const tv = st.targetVersion;
       if (!tv || !parseVer(tv)) continue;
       if (canonicalSet.has(tv) || candidateVersions.has(tv)) continue;
-      gaps.push(`${path.relative(ROOT, full)} targets ${tv} (no canonical or shared candidate knowledge — run: node ../ingest/tools/ingest.js check --core-path <path>, then skills/ingest-core-release)`);
+      runGaps.push(`${path.relative(ROOT, full)} targets ${tv} (no canonical or shared candidate knowledge — run: node ../ingest/tools/ingest.js check --core-path <path>, then skills/ingest-core-release)`);
     }
   })(runsRoot);
-  assert(gaps.length === 0, gaps.join(' | '));
+  if (AUDIT_RUNS) assert(runGaps.length === 0, runGaps.join(' | '));
 });
 
 // --- report ---
 const passed = results.filter((r) => r.pass).length;
 console.log('Release-knowledge coverage/consistency');
 for (const r of results) console.log(`  ${r.pass ? 'PASS' : 'FAIL'}  ${r.id}${r.error ? '  -> ' + r.error : ''}`);
+if (!AUDIT_RUNS && runGaps.length) {
+  console.log('\nWARN  local run coverage gaps (not a repository defect; re-check with --include-runs):');
+  for (const g of runGaps) console.log('  - ' + g);
+}
 console.log(`\n${passed}/${results.length} passed, ${results.length - passed} failed.`);
 process.exit(passed === results.length ? 0 : 1);

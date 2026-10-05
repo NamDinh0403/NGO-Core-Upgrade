@@ -3,16 +3,21 @@
   Unregisters the NGO Core Upgrade skills and custom agents from your Copilot user profile.
 
 .DESCRIPTION
-  Removes ~/.copilot/skills/ngo-core-* and ~/.copilot/agents/ngo-core-*.agent.md.
+  Removes <CopilotHome>/skills/ngo-core-* and <CopilotHome>/agents/ngo-core-*.agent.md.
   Does NOT delete the cloned agent folder itself.
+
+.PARAMETER CopilotHome
+  Where the skills/agents were registered. Default: ~/.copilot.
 
 .EXAMPLE
   .\uninstall.ps1
 #>
 [CmdletBinding()]
-param()
+param(
+    [string]$CopilotHome = (Join-Path $HOME '.copilot')
+)
 $ErrorActionPreference = 'Stop'
-$copilotHome = Join-Path $HOME '.copilot'
+$copilotHome = $CopilotHome
 $targets = @(
     (Join-Path $copilotHome 'skills\ngo-core-backend-upgrade'),
     (Join-Path $copilotHome 'skills\ngo-core-frontend-upgrade'),

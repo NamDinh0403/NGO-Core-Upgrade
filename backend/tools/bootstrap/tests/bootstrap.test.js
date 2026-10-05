@@ -1,6 +1,6 @@
 'use strict';
 /*
- * TOOL_BOOTSTRAP test suite — 20 scenarios. Dependency-free, offline-deterministic.
+ * TOOL_BOOTSTRAP test suite — 24 scenarios. Dependency-free, offline-deterministic.
  * Process execution is stubbed where a real install/network call would otherwise
  * be required, so the tests validate logic, policy, and safety without side effects.
  *
@@ -23,10 +23,28 @@ function test(id, fn) {
 }
 function assert(c, m) { if (!c) throw new Error(m); }
 
+// Isolated tooling target for install tests. Lives under runs/ which is git-ignored,
+// so no test can ever delete or dirty a tracked file (see test 21).
+const TEST_TOOLING_DIR = 'runs/_bootstrap-test-tooling';
+
+// Snapshot of the working tree, captured before any test runs, so test 24 can prove the
+// suite itself changed nothing tracked (a previous version silently deleted files).
+function gitStatus() {
+  const res = require('child_process').spawnSync('git', ['status', '--porcelain'], {
+    cwd: core.ROOT, encoding: 'utf8', shell: true, windowsHide: true,
+  });
+  return res.status === 0 ? (res.stdout || '').trim() : null;
+}
+function diffLines(before, after) {
+  const b = new Set(before.split(/\r?\n/));
+  return after.split(/\r?\n/).filter((l) => l && !b.has(l)).join('\n') || '(entries disappeared)';
+}
+const TREE_BASELINE = gitStatus();
+
 const ev = (over) => Object.assign({
   domainDotnet: true, dotnetClientPresent: false, frontendPresent: false,
   typescriptDetected: false, angularDetected: false, managedPackageComparison: false,
-  selectiveDecompilationApproved: false, containerRequested: false,
+  selectiveDecompilationApproved: false, containerRequested: false, clientToolVersions: {},
 }, over || {});
 
 // 1. All required tools already available (node is really present).
@@ -45,14 +63,20 @@ test('02-dotnet-local-install', () => {
 });
 
 // 3. Run-local npm tool missing then installed successfully (stubbed).
+//    The isolated tooling dir is redirected under runs/ (git-ignored) so the test can
+//    never delete or dirty tracked repository files.
 test('03-npm-runlocal-install', () => {
+  const fs = require('fs');
+  const testPolicy = JSON.parse(JSON.stringify(policy));
+  testPolicy.npmTools.isolatedToolingDir = TEST_TOOLING_DIR;
   stubExec(() => ({ code: 0, stdout: '', stderr: '', timedOut: false, error: null }));
-  const tool = { id: 'x-ts', classification: 'REQUIRED_IF_APPLICABLE', autoInstall: true, installation: { type: 'isolated-npm-dev-dependency', package: 'typescript' } };
-  const out = tools.installTool(tool, policy, { status: 'INSTALLATION_REQUIRED' }, []);
+  const tool = { id: 'x-ts', classification: 'REQUIRED_IF_APPLICABLE', autoInstall: true, installation: { type: 'isolated-npm-dev-dependency', package: 'typescript', pinnedVersion: '5.4.5', binary: 'tsc' } };
+  const out = tools.installTool(tool, testPolicy, { status: 'INSTALLATION_REQUIRED' }, [], ev());
   try {
     assert(out.status === 'AVAILABLE' && out.selectedScope === 'RUN_LOCAL', 'expected RUN_LOCAL AVAILABLE, got ' + out.status);
+    assert(/[\\/]node_modules[\\/]\.bin[\\/]tsc/.test(out.executable), 'executable must be the installed tsc binary, got ' + out.executable);
   } finally {
-    try { require('fs').rmSync(core.P('tools/frontend-runtime'), { recursive: true, force: true }); } catch (e) { /* best effort */ }
+    try { fs.rmSync(core.P(TEST_TOOLING_DIR), { recursive: true, force: true }); } catch (e) { /* best effort */ }
   }
 });
 
@@ -184,6 +208,47 @@ test('20-manifest-schema', () => {
     assert(t.id && t.status && t.classification && t.validation, 'tool record incomplete: ' + t.id);
     assert(schema.properties.tools.items.properties.status.enum.includes(t.status), 'invalid status ' + t.status);
   }
+});
+
+// 21. `versionSource: client-compatible` installs the exact version the client declares.
+test('21-client-compatible-version-resolved', () => {
+  const fs = require('fs');
+  const testPolicy = JSON.parse(JSON.stringify(policy));
+  testPolicy.npmTools.isolatedToolingDir = TEST_TOOLING_DIR;
+  let captured = null;
+  stubExec((cmd, argv) => { captured = argv; return { code: 0, stdout: '', stderr: '', timedOut: false, error: null }; });
+  const tool = { id: 'x-ng', autoInstall: true, installation: { type: 'isolated-npm-dev-dependency', package: '@angular/cli', versionSource: 'client-compatible', binary: 'ng' } };
+  const out = tools.installTool(tool, testPolicy, { status: 'INSTALLATION_REQUIRED' }, [], ev({ angularDetected: true, clientToolVersions: { '@angular/cli': '17.3.8' } }));
+  try {
+    assert(out.status === 'AVAILABLE', 'expected AVAILABLE, got ' + out.status);
+    assert(captured && captured.join(' ').includes('@angular/cli@17.3.8'), 'client version not used: ' + JSON.stringify(captured));
+  } finally {
+    try { fs.rmSync(core.P(TEST_TOOLING_DIR), { recursive: true, force: true }); } catch (e) { /* best effort */ }
+  }
+});
+
+// 22. No pinned and no client-declared version -> INSTALLATION_BLOCKED (never "latest").
+test('22-unpinned-install-blocked', () => {
+  stubExec(() => ({ code: 0, stdout: '', stderr: '', timedOut: false, error: null }));
+  const tool = { id: 'x-ts', autoInstall: true, installation: { type: 'isolated-npm-dev-dependency', package: 'typescript', versionSource: 'client-compatible', binary: 'tsc' } };
+  const out = tools.installTool(tool, policy, { status: 'INSTALLATION_REQUIRED' }, [], ev({ typescriptDetected: true }));
+  assert(out.status === 'INSTALLATION_BLOCKED', 'expected INSTALLATION_BLOCKED, got ' + out.status);
+});
+
+// 23. Client dependency ranges are normalised to an exact installable version.
+test('23-client-version-range-normalised', () => {
+  assert(core.exactVersionFromRange('^17.3.8') === '17.3.8', 'caret range');
+  assert(core.exactVersionFromRange('~5.4.5') === '5.4.5', 'tilde range');
+  assert(core.exactVersionFromRange('18.0.0-rc.1') === '18.0.0-rc.1', 'prerelease');
+  assert(core.exactVersionFromRange('*') === null, 'wildcard must not resolve');
+  assert(core.exactVersionFromRange('github:x/y') === null, 'git spec must not resolve');
+});
+
+// 24. Clean-tree invariant: running this suite must not modify any tracked file.
+test('24-suite-leaves-tree-clean', () => {
+  const after = gitStatus();
+  assert(after !== null, 'git status unavailable');
+  assert(after === TREE_BASELINE, 'the test suite modified tracked files:\n' + diffLines(TREE_BASELINE, after));
 });
 
 // ---- report ----

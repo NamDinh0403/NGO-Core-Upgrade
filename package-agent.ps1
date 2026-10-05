@@ -26,7 +26,7 @@ Write-Host "Staging from: $root"
 New-Item -ItemType Directory -Path $staging -Force | Out-Null
 
 # Robocopy mirrors the tree; /XD excludes directories by name.
-$excludeDirs = @()
+$excludeDirs = @('node_modules', 'frontend-runtime')  # regenerated locally, never shipped
 if (-not $IncludeGit)  { $excludeDirs += (Join-Path $root '.git') }
 if (-not $IncludeRuns) { $excludeDirs += 'runs' }   # any folder named 'runs' at any depth
 

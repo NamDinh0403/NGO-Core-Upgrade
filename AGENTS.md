@@ -85,9 +85,12 @@ sub-agent's behalf.
 
 ## Validate the framework itself (not per client run)
 
+One command runs every suite in `ingest/`, `orchestrator/`, `backend/` and `frontend/`
+and fails if any suite fails **or** modifies a tracked file:
+
 ```
-node ingest/tools/ingest.test.js
-cd orchestrator && node tests/orchestrator.test.js
-cd backend  && node tools/validate.js && node tools/run-evals.js
-cd frontend && node tools/validate.js && node tools/repo-layout.test.js
+node tools/validate-all.js
 ```
+
+Per-suite commands (each must run from its own module folder) are listed in the README's
+*Tests & Validation* section.

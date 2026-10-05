@@ -22,6 +22,10 @@
 .PARAMETER SkillsOnly
   Skip clone/update; only (re)register skills and agents from -InstallDir.
 
+.PARAMETER CopilotHome
+  Where to register the skills/agents. Default: ~/.copilot. Override to install into an
+  alternate profile or to smoke-test the installer without touching your real profile.
+
 .EXAMPLE
   # First install on a new machine, from a Git host:
   .\install.ps1 -RepoUrl https://github.com/acme/ngo-core-upgrade.git
@@ -38,7 +42,8 @@
 param(
     [string]$RepoUrl,
     [string]$InstallDir = (Join-Path $HOME 'NGO-Core-Upgrade'),
-    [switch]$SkillsOnly
+    [switch]$SkillsOnly,
+    [string]$CopilotHome = (Join-Path $HOME '.copilot')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -69,7 +74,7 @@ $agentsSrc = Join-Path $InstallDir '.github\agents'
 if (-not (Test-Path $skillsSrc)) { throw "Skills not found at $skillsSrc — is -InstallDir correct?" }
 
 # --- 3. Register at the Copilot user level -----------------------------------
-$copilotHome = Join-Path $HOME '.copilot'
+$copilotHome = $CopilotHome
 $skillsDst   = Join-Path $copilotHome 'skills'
 $agentsDst   = Join-Path $copilotHome 'agents'
 New-Item -ItemType Directory -Force -Path $skillsDst, $agentsDst | Out-Null

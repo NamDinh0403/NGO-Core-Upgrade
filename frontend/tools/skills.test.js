@@ -59,7 +59,7 @@ const REQUIRED_SECTIONS = [
   'Prohibited behavior', 'Evaluations',
 ];
 
-test('A00-twelve-skills-registered', () => {
+test('A00-all-skills-registered', () => {
   assert(SKILLS.length === 13, `expected 13 skills, got ${SKILLS.length}`);
 });
 

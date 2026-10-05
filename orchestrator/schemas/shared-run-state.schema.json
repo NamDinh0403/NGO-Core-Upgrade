@@ -26,6 +26,11 @@
     "backendRunRef": { "type": ["string", "null"], "description": "backend/runs/<client>/<run-id>/ path this shared run's backend result was composed from." },
     "frontendRunRef": { "type": ["string", "null"], "description": "frontend/runs/<client>/<run-id>/ path this shared run's frontend result was composed from." },
     "ingestCandidateRef": { "type": ["string", "null"], "description": "ingest/knowledge/candidates/releases/<version>.json this run's requirements were split from." },
+    "ingestCandidateRefs": { "type": "array", "items": { "type": "string" } },
+    "safeResumeInstruction": { "type": "string" },
+    "ingestEvidenceHash": { "type": ["string", "null"] },
+    "coverageEvidenceHash": { "type": ["string", "null"] },
+    "handoverEvidenceHash": { "type": ["string", "null"] },
     "nextAction": { "type": "string" },
     "startedAt": { "type": "string" },
     "updatedAt": { "type": "string" }

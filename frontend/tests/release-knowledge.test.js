@@ -203,6 +203,25 @@ for (const f of fs.readdirSync(libDir)) {
 }
 ok('30-no-runtime-raw-release-notes', readsRaw === false);
 
+store.reset();
+const readYaml = core.readYamlAbs;
+let reads = 0;
+core.readYamlAbs = (file) => { if (file.startsWith(store.RELEASES_DIR)) reads++; return readYaml(file); };
+try {
+  const all = store.allRequirements();
+  const fullReads = reads;
+  store.reset(); reads = 0;
+  const scoped = store.allRequirements('9.1.0', '9.2.0');
+  const scopedReads = reads;
+  const expected = all.filter((requirement) => range.inRange(requirement.releaseVersion, '9.1.0', '9.2.0'));
+  ok('31-scoped-equivalent-to-full-filter', JSON.stringify(scoped) === JSON.stringify(expected));
+  ok('32-scoped-loader-reduces-release-reads', scopedReads < fullReads, `${fullReads} -> ${scopedReads}`);
+  store.allRequirements('9.1.0', '9.2.0');
+  ok('33-same-range-cache-avoids-repeated-reads', reads === scopedReads);
+  ok('34-framework-patch-fallback-preserved', store.angularMajorAt('7.6.3') === store.angularMajorAt('7.6.0'));
+  process.stdout.write(`Release YAML reads (9.1.0 -> 9.2.0): full=${fullReads}, scoped=${scopedReads}\n`);
+} finally { core.readYamlAbs = readYaml; store.reset(); }
+
 process.stdout.write(`\n${pass}/${pass + fail} release-knowledge tests passed\n`);
 if (fail) { for (const f of fails) process.stdout.write(`  - ${f}\n`); process.exit(1); }
 process.exit(0);

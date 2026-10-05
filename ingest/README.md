@@ -12,8 +12,9 @@ tags/diffs, parse release-notes.md, cross-check, write a candidate" — meaning 
 client upgrade that touches both backend and frontend did that work **twice**,
 against the same repository and the same notes file, and could produce two
 candidate records that quietly disagreed with each other. `ingest` does it
-**once** per Core version and writes **one** shared, per-version record both
-tracks read from.
+once per validated release identity and writes one shared, per-version record
+both tracks read from. Identity includes resolved baseline/target commits,
+relevant release-note content and analyzer version, not a filename or timestamp.
 
 ## What it is not
 
@@ -58,7 +59,7 @@ ingest/
 node ingest/tools/ingest.js check --core-path <path to local NGO.Core clone>
 
 # Produce (or refresh) a candidate record for a specific version boundary:
-node ingest/tools/ingest.js ingest --core-path <path> --release-notes <path to release-notes.md> --target 9.2.1
+node ingest/tools/ingest.js ingest --core-path <path> --release-notes <path to release-notes.md> --since 9.1.0 --target 9.2.1
 ```
 
 Both `backend/skills/ingest-core-release` and
@@ -66,6 +67,30 @@ Both `backend/skills/ingest-core-release` and
 than re-implementing git-diff/notes-parsing themselves; each then reads only its
 own domain's section (`backend` / `frontend`) from the resulting record, plus the
 `shared` section for cross-cutting items (deployment, pipeline, SQL scripts).
+
+`--since` selects the client's source release; all intermediate release deltas
+are retained. Standalone maintenance ingestion with only `--target` compares
+its preceding release tag; it is not a substitute for a client source range.
+Shared engagement creation requires a discovered source version. x.y shorthand
+normalizes to x.y.0; missing tags/invalid ranges fail rather than guessing a
+first-parent baseline. `check` still reports versions newer than known canonical
+knowledge; known-version presence never skips required extraction.
+
+## Deterministic Facts And Reuse
+
+Records retain added/modified/deleted/renamed paths and old rename paths, JSON
+package/dependency changes, config key change kinds, migration paths and API
+declaration hints. Config values are not persisted. Project-file changes flag
+structured project/package inspection; API hints and filename/note correlation
+are not semantic compatibility proof. Installed-DLL/target-Core tooling and
+reasoning still resolve those questions.
+
+Unchanged identities reuse integrity-checked candidates without file extraction
+or rewriting. Changed commits/notes/analyzer and corrupt/legacy records refresh.
+Core content and release refs are verified before publication; failed refreshes
+retain old evidence. No cache hit promotes a candidate to canonical knowledge.
+Only the pertinent note section participates in identity, avoiding unrelated
+release-note invalidation. No client-specific knowledge enters this cache.
 
 ## Record shape (one file per version)
 
@@ -75,6 +100,10 @@ own domain's section (`backend` / `frontend`) from the resulting record, plus th
   "version": "9.2.1",
   "status": "CANDIDATE",
   "ingestedAt": "2026-09-05T09:00:00Z",
+  "identity": { "analyzerVersion": "2", "version": "9.2.1", "fromCommit": "...", "toCommit": "...", "notesHash": "...", "key": "..." },
+  "contentHash": "...",
+  "changes": [ /* status, path, oldPath, scope, category */ ],
+  "facts": [ /* dependency/config-key/migration facts; API/project inspection hints */ ],
   "sources": { "coreRepoPath": "...", "releaseNotesPath": "...", "tagRange": { "from": "v9.2.0", "to": "v9.2.1" } },
   "findings": {
     "backend": [ /* release-finding.schema.json items, scope: backend */ ],

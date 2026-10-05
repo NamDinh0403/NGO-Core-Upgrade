@@ -53,6 +53,18 @@ plan-frontend-upgrade -> execute-frontend-upgrade -> investigate-frontend-failur
 (loop) -> audit-frontend-integration -> learn-from-frontend-run`.
 `developer-escalation` is reachable from every skill; no skill silently stops.
 
+## Shared Orchestration
+An orchestrator seed at `orchestrator/runs/<client>/<runId>/requirements/frontend.yaml`
+is additional, unconfirmed read-only evidence, never a replacement for planning.
+Keep your own run state and report terminal/blocked status with exact safe-resume
+instructions. Do not write the shared run. Use the shared ingestion CLI for
+freshness checks; file existence alone does not prove a fresh release.
+Disposition seed findings in your own `release-finding-dispositions.yaml` during
+normal planning/verification: findings with seed id, VERIFIED or
+NOT_APPLICABLE_WITH_EVIDENCE status and concrete evidence. Alternatively, link
+sourceCandidateIds in evidenced verified/not-applicable requirement coverage.
+This traceability never promotes or blindly applies candidate hints.
+
 ## Resume a run
 Read `state.json`; continue from `state.json.nextAction`, restoring the most recent
 valid checkpoint. Never repeat a mutating action whose idempotency key is already

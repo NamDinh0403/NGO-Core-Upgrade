@@ -133,8 +133,20 @@ test('08-e2e-create-run', () => {
     sources: { coreRepoPath: 'x', tagRange: { from: 'v9.2.0', to: 'v9.2.1' } },
     findings: { backend: [], frontend: [], shared: [] }, unresolvedItems: [], nextAction: 'review'
   }, null, 2));
+  fs.mkdirSync(path.join(e2eIngestRoot, 'tools'), { recursive: true });
+  fs.writeFileSync(path.join(e2eIngestRoot, 'tools', 'ingest.js'), `
+    const fs = require('fs'); const path = require('path');
+    exports.ensureReleases = (flags) => {
+      if (flags['core-path'] === 'fail') throw new Error('fixture ingestion failure');
+      const file = path.join(flags.out, flags.target + '.json');
+      fs.writeFileSync(path.join(flags.out, 'last-flags.json'), JSON.stringify(flags));
+      const record = JSON.parse(fs.readFileSync(file, 'utf8'));
+      if (flags['core-path'] === 'race') fs.writeFileSync(file, JSON.stringify(Object.assign({}, record, { findings: { backend: [], frontend: [{ statement: 'concurrent replacement' }], shared: [] } })));
+      return { reused: true, entries: [{ path: file, reused: true, record }] };
+    };
+  `);
 
-  const code = orchestrator.cmdCreateRun.call(null, { client: TEST_CLIENT, tracks: 'backend,frontend', 'target-version': '9.2.1', 'ingest-root': e2eIngestRoot });
+  const code = orchestrator.cmdCreateRun.call(null, { client: TEST_CLIENT, tracks: 'backend,frontend', 'source-version': '9.2.0', 'target-version': '9.2.1', 'core-path': 'fixture', 'ingest-root': e2eIngestRoot });
   assert(code === 0, `expected exit 0, got ${code}`);
   const clientDir = path.join(runLib.RUNS_ROOT, runLib.sanitizeClientId(TEST_CLIENT));
   const runIds = fs.readdirSync(clientDir);
@@ -142,11 +154,15 @@ test('08-e2e-create-run', () => {
   e2eRunId = runIds[0];
   const reqDir = path.join(clientDir, e2eRunId, 'requirements');
   assert(fs.existsSync(path.join(reqDir, 'backend.yaml')) && fs.existsSync(path.join(reqDir, 'frontend.yaml')), 'requirements seeds should be written');
+  const forwarded = JSON.parse(fs.readFileSync(path.join(candidateDir, 'last-flags.json'), 'utf8'));
+  assert(forwarded.since === '9.2.0', 'source release must be forwarded to ingestion');
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 1, 'missing track results must block coverage');
 });
 
 test('09-e2e-compose-results', () => {
   fs.writeFileSync(path.join(e2eBackendRun, 'state.json'), JSON.stringify({ status: 'SUCCEEDED', currentPhase: 'HANDOVER', pendingSteps: [], unresolvedIssues: [], targetVersion: '9.2.1' }));
   fs.writeFileSync(path.join(e2eFrontendRun, 'state.json'), JSON.stringify({ status: 'COMPLETE', targetVersion: '9.2.1' }));
+  fs.writeFileSync(path.join(e2eFrontendRun, 'requirement-coverage.yaml'), yaml.stringify({ requirements: [] }));
   const code = orchestrator.cmdComposeResults.call(null, { run: `${TEST_CLIENT}/${e2eRunId}`, 'backend-run': e2eBackendRun, 'frontend-run': e2eFrontendRun });
   assert(code === 0, `expected exit 0, got ${code}`);
   const state = orchestrator.cmdStatus ? runLib.readJson(path.join(runLib.runDir(TEST_CLIENT, e2eRunId), 'state.json')) : null;
@@ -166,10 +182,12 @@ test('10-e2e-verify-coverage-then-prepare-handover-then-final-report', () => {
   assert(fs.existsSync(path.join(base, 'requirement-coverage.yaml')), 'requirement-coverage.yaml should exist');
   assert(fs.existsSync(path.join(base, 'deployment-checklist.yaml')), 'deployment-checklist.yaml should exist');
   assert(fs.existsSync(path.join(base, 'final-report.md')), 'final-report.md should exist');
+  assert(runLib.readJson(path.join(base, 'state.json')).status === 'COMPLETE', 'valid full run must complete');
+  assert(orchestrator.cmdFinalReport({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0 && runLib.readJson(path.join(base, 'state.json')).status === 'COMPLETE', 'report regeneration must be idempotent');
 });
 
 test('11-e2e-prepare-handover-refuses-before-verify-coverage', () => {
-  const code = orchestrator.cmdCreateRun.call(null, { client: `${TEST_CLIENT}-gate`, tracks: 'backend', 'target-version': '9.2.1' });
+  const code = orchestrator.cmdCreateRun.call(null, { client: `${TEST_CLIENT}-gate`, tracks: 'backend', 'source-version': '9.2.0', 'target-version': '9.2.1', 'core-path': 'fixture', 'ingest-root': e2eIngestRoot });
   assert(code === 0);
   const clientDir = path.join(runLib.RUNS_ROOT, runLib.sanitizeClientId(`${TEST_CLIENT}-gate`));
   const runId = fs.readdirSync(clientDir)[0];
@@ -178,7 +196,141 @@ test('11-e2e-prepare-handover-refuses-before-verify-coverage', () => {
   fs.rmSync(clientDir, { recursive: true, force: true });
 });
 
-test('12-cleanup', () => {
+test('12-failed-ingestion-blocks-delegation', () => {
+  for (const corePath of [null, 'fail']) {
+    const client = `${TEST_CLIENT}-failure-${corePath || 'missing'}`;
+    const code = orchestrator.cmdCreateRun({ client, 'source-version': '9.2.0', 'target-version': '9.2.1', 'core-path': corePath, 'ingest-root': e2eIngestRoot });
+    assert(code === 1, 'missing/failed ingestion must fail');
+    const directory = path.join(runLib.RUNS_ROOT, client);
+    const state = runLib.readJson(path.join(directory, fs.readdirSync(directory)[0], 'state.json'));
+    assert(state.status === 'BLOCKED' && !state.ingestCandidateRef && /do not delegate/.test(state.nextAction), 'failure must retain explicit resumable blocked state');
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('13-missing-or-blocked-track-cannot-complete', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  const original = runLib.readJson(path.join(base, 'state.json'));
+  for (const replacement of [{ frontendRunRef: null }, { trackStatus: { backend: 'SUCCEEDED', frontend: 'BLOCKED' } }]) {
+    const state = Object.assign({}, original, replacement, { status: 'HANDOVER_READY' });
+    if (replacement.trackStatus) fs.writeFileSync(path.join(e2eFrontendRun, 'state.json'), JSON.stringify({ status: 'BLOCKED_NEEDS_CONTEXT', safeResumeInstruction: 'EXACT fixture resume' }));
+    runLib.writeJson(path.join(base, 'state.json'), state);
+    orchestrator.cmdFinalReport({ run: `${TEST_CLIENT}/${e2eRunId}` });
+    const after = runLib.readJson(path.join(base, 'state.json'));
+    assert(after.status === 'BLOCKED', 'missing/blocked track cannot COMPLETE even with clear old coverage');
+    if (replacement.trackStatus) assert(after.nextAction.includes('EXACT fixture resume'), 'exact track resume instruction must survive');
+  }
+});
+
+test('14-cumulative-seed-keeps-intermediate-version', () => {
+  const records = ['9.1.0', '9.2.0'].map((version) => ({ path: version, record: { version, findings: { backend: [{ statement: version }], frontend: [], shared: [] }, unresolvedItems: [version] } }));
+  const split = requirementsLib.splitRequirements({ ingestRoot: tmpIngestRoot, version: '9.2.0', records, runId: 'range' });
+  assert(split.backend.requirements.length === 2 && split.backend.requirements[0].id.startsWith('9.1.0'), 'seed must retain intermediate release and stable IDs');
+  assert(split.all.unresolvedItems.length === 2, 'intermediate unresolved evidence must survive');
+});
+
+test('15-discovery-contract-links-and-installed-root', () => {
+  const root = path.resolve(__dirname, '..', '..');
+  const primary = fs.readFileSync(path.join(root, '.github', 'agents', 'ngo-core-upgrade-orchestrator.agent.md'), 'utf8');
+  assert(/^name: ngo-core-upgrade$/m.test(primary), 'existing primary agent must expose public name');
+  for (const name of ['ngo-core-backend-upgrade', 'ngo-core-frontend-upgrade', 'ngo-core-upgrade-orchestrator']) {
+    for (const relative of [`.github/agents/${name}.agent.md`, `.github/skills/${name}/SKILL.md`]) {
+      const file = path.join(root, relative);
+      const text = fs.readFileSync(file, 'utf8');
+      assert(/^---\r?\n[\s\S]*?\r?\n---\r?\n/.test(text) && /^description: .+/m.test(text), 'discovery frontmatter must remain valid');
+      for (const match of text.matchAll(/\]\(([^)]+)\)/g)) {
+        assert(fs.existsSync(path.resolve(path.dirname(file), match[1].split('#')[0])), `broken discovery link: ${relative} ${match[1]}`);
+      }
+    }
+  }
+  for (const installer of ['install.ps1', 'install.sh']) {
+    const text = fs.readFileSync(path.join(root, installer), 'utf8');
+    assert(text.includes('orchestrator/') && text.includes('ngo-core-upgrade'), 'installer must include shared root and public identity');
+  }
+});
+
+test('16-source-version-is-required', () => {
+  const client = `${TEST_CLIENT}-no-source`;
+  assert(orchestrator.cmdCreateRun({ client, 'target-version': '9.2.1', 'core-path': 'fixture', 'ingest-root': e2eIngestRoot }) === 1, 'undiscovered source must block');
+  fs.rmSync(path.join(runLib.RUNS_ROOT, client), { recursive: true, force: true });
+});
+
+test('17-changed-or-missing-evidence-cannot-complete', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  fs.writeFileSync(path.join(e2eFrontendRun, 'state.json'), JSON.stringify({ status: 'COMPLETE', targetVersion: '9.2.1' }));
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0);
+  assert(orchestrator.cmdPrepareHandover({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0);
+  fs.writeFileSync(path.join(e2eFrontendRun, 'requirement-coverage.yaml'), yaml.stringify({ requirements: [{ id: 'new', status: 'FAILED' }] }));
+  orchestrator.cmdFinalReport({ run: `${TEST_CLIENT}/${e2eRunId}` });
+  assert(runLib.readJson(path.join(base, 'state.json')).status === 'BLOCKED', 'changed coverage must invalidate old clear summary');
+  const candidateFile = path.join(e2eIngestRoot, 'knowledge', 'candidates', 'releases', '9.2.1.json');
+  const candidateContent = fs.readFileSync(candidateFile, 'utf8');
+  fs.unlinkSync(candidateFile);
+  orchestrator.cmdFinalReport({ run: `${TEST_CLIENT}/${e2eRunId}` });
+  assert(runLib.readJson(path.join(base, 'state.json')).status === 'BLOCKED', 'deleted candidate must block');
+  fs.writeFileSync(candidateFile, candidateContent);
+  fs.writeFileSync(path.join(e2eFrontendRun, 'requirement-coverage.yaml'), yaml.stringify({ requirements: [] }));
+});
+
+test('18-unaccounted-seed-finding-blocks-coverage', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  fs.writeFileSync(path.join(base, 'requirements', 'frontend.yaml'), yaml.stringify({ requirements: [{ id: 'unaccounted' }] }));
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 1, 'empty coverage cannot account for a seeded finding');
+  assert(runLib.readJson(path.join(base, 'state.json')).nextAction.includes('unaccounted'), 'missing finding must appear in exact next action');
+  fs.writeFileSync(path.join(e2eFrontendRun, 'requirement-coverage.yaml'), yaml.stringify({ requirements: [{ id: 'hint', status: 'VERIFIED', sourceCandidateIds: ['unaccounted'], evidence: '   ' }] }));
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 1, 'blank linked evidence must not satisfy a seed');
+  fs.writeFileSync(path.join(e2eFrontendRun, 'release-finding-dispositions.yaml'), yaml.stringify({ findings: [{ id: 'unaccounted', status: 'NOT_APPLICABLE_WITH_EVIDENCE', evidence: 'fixture feature absent from client' }] }));
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0, 'explicit evidenced not-applicable disposition must satisfy seed gate');
+  fs.unlinkSync(path.join(base, 'requirements', 'frontend.yaml'));
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 1, 'missing seed must block rather than crash');
+});
+
+test('19-concurrent-cache-replacement-invalidates-seed-provenance', () => {
+  const file = path.join(e2eIngestRoot, 'knowledge', 'candidates', 'releases', '9.2.1.json');
+  const content = fs.readFileSync(file, 'utf8');
+  const client = `${TEST_CLIENT}-race`;
+  try {
+    assert(orchestrator.cmdCreateRun({ client, 'source-version': '9.2.0', 'target-version': '9.2.1', 'core-path': 'race', 'ingest-root': e2eIngestRoot }) === 0);
+    const directory = path.join(runLib.RUNS_ROOT, client);
+    const runId = fs.readdirSync(directory)[0];
+    orchestrator.cmdComposeResults({ run: `${client}/${runId}`, 'backend-run': e2eBackendRun, 'frontend-run': e2eFrontendRun });
+    assert(orchestrator.cmdVerifyCoverage({ run: `${client}/${runId}` }) === 1, 'replacement on disk must not become authoritative over returned-record seeds');
+  } finally {
+    fs.writeFileSync(file, content);
+    fs.rmSync(path.join(runLib.RUNS_ROOT, client), { recursive: true, force: true });
+  }
+});
+
+test('20-changed-deployment-evidence-invalidates-handover', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  fs.writeFileSync(path.join(base, 'requirements', 'frontend.yaml'), yaml.stringify({ requirements: [] }));
+  fs.writeFileSync(path.join(e2eFrontendRun, 'requirement-coverage.yaml'), yaml.stringify({ requirements: [] }));
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0);
+  assert(orchestrator.cmdPrepareHandover({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0);
+  fs.writeFileSync(path.join(e2eFrontendRun, 'deployment-checklist.yaml'), yaml.stringify({ items: [{ id: 'new-action', action: 'Review new deployment action' }] }));
+  orchestrator.cmdFinalReport({ run: `${TEST_CLIENT}/${e2eRunId}` });
+  assert(runLib.readJson(path.join(base, 'state.json')).status === 'BLOCKED', 'changed source deployment checklist must invalidate old report');
+  fs.unlinkSync(path.join(e2eFrontendRun, 'deployment-checklist.yaml'));
+  assert(orchestrator.cmdVerifyCoverage({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0);
+  assert(orchestrator.cmdPrepareHandover({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0);
+  fs.appendFileSync(path.join(base, 'before-deployment.md'), 'changed');
+  orchestrator.cmdFinalReport({ run: `${TEST_CLIENT}/${e2eRunId}` });
+  assert(runLib.readJson(path.join(base, 'state.json')).status === 'BLOCKED', 'changed generated handover must invalidate report');
+});
+
+test('21-malformed-handover-blocks-previously-complete-run', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  for (const text of ['', 'items: null\n']) {
+    const state = runLib.readJson(path.join(base, 'state.json'));
+    state.status = 'COMPLETE';
+    runLib.writeJson(path.join(base, 'state.json'), state);
+    fs.writeFileSync(path.join(base, 'deployment-checklist.yaml'), text);
+    assert(orchestrator.cmdFinalReport({ run: `${TEST_CLIENT}/${e2eRunId}` }) === 0, 'malformed handover must produce blocked report, not throw');
+    assert(runLib.readJson(path.join(base, 'state.json')).status === 'BLOCKED', 'stale COMPLETE must be cleared');
+  }
+});
+
+test('22-cleanup', () => {
   fs.rmSync(path.join(runLib.RUNS_ROOT, runLib.sanitizeClientId(TEST_CLIENT)), { recursive: true, force: true });
   fs.rmSync(tmpIngestRoot, { recursive: true, force: true });
   fs.rmSync(tmpFrontendRun, { recursive: true, force: true });

@@ -109,7 +109,7 @@ Copy-Item ".\.github\skills\*" "$env:USERPROFILE\.copilot\skills\" -Recurse -For
 ---
 
 ## Verify it worked (on the target computer)
-1. Open Copilot Chat → agent mode → confirm **NGO Core Upgrade Orchestrator**, **NGO Core
+1. Open Copilot Chat → agent mode → confirm **ngo-core-upgrade**, **NGO Core
    Backend Upgrade Agent**, and **NGO Core Frontend Upgrade Agent** all appear in the
    agent picker.
 2. Command Palette → **Chat: Open Customizations** → **Skills** tab → all three of

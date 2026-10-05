@@ -15,7 +15,8 @@ ingest phase and the non-negotiables. An agent reads that one small file instead
 discovering the structure by exploration.
 
 **Recommended way to run it:** say `Upgrade NGO Core for <client> to <version>`
-(backend, frontend, or both). The **NGO Core Upgrade Orchestrator** collects the inputs
+(backend, frontend, or both). The **ngo-core-upgrade** custom agent discovers local inputs,
+asks only for actual gaps, and collects the inputs
 once, creates one shared run (running the shared [ingest/](ingest/README.md) phase
 internally), then delegates the real work to the backend and/or frontend sub-agent **in
 parallel**, and composes their results into one merged coverage check, one merged
@@ -69,7 +70,7 @@ craft prompts — Copilot discovers and offers them automatically.
   fans out to both track skills as sub-agents; a request that clearly names one track
   matches that track's skill directly.
 - **Custom agents** (`.github/agents/*.agent.md`) show up in VS Code's agent picker as
-  `NGO Core Upgrade Orchestrator` / `NGO Core Backend Upgrade Agent` / `NGO Core Frontend
+   `ngo-core-upgrade` / `NGO Core Backend Upgrade Agent` / `NGO Core Frontend
   Upgrade Agent`. Selecting one switches Copilot Chat into that persona with the right
   instructions pre-loaded — a colleague just opens the workspace, picks the agent from the
   dropdown, and types the upgrade request.
@@ -96,7 +97,7 @@ craft prompts — Copilot discovers and offers them automatically.
    template, point its second folder at your client solution, and open it (see the
    two-folder model in [IMPORT.md](IMPORT.md)).
 2. Open Copilot Chat, agent mode. Either:
-   - Pick **NGO Core Upgrade Orchestrator** from the agent/mode picker for a full
+   - Pick **ngo-core-upgrade** from the agent/mode picker for a full
      engagement (backend, frontend, or both — you choose when asked), or
    - Pick **NGO Core Backend Upgrade Agent** / **NGO Core Frontend Upgrade Agent**
      directly for a single-track run, or
@@ -142,7 +143,7 @@ is no server, install step, or license to configure. To set it up on another mac
 3. **Open the cloned folder in VS Code** with the GitHub Copilot extension signed in to an
    account with Copilot access.
 4. **Verify discovery**: open Copilot Chat → agent mode → confirm
-   `NGO Core Upgrade Orchestrator` / `NGO Core Backend Upgrade Agent` / `NGO Core
+   `ngo-core-upgrade` / `NGO Core Backend Upgrade Agent` / `NGO Core
    Frontend Upgrade Agent` appear in the agent picker, and that `.github/skills/*/SKILL.md`
    are picked up (Command Palette → **Chat: Open Customizations** → Skills tab should
    list all three).
@@ -171,7 +172,7 @@ is no server, install step, or license to configure. To set it up on another mac
 
 ### Orchestrated (recommended for a full client engagement)
 1. **Open** the client solution/workspace(s) in an agent-capable editor.
-2. **Pick** `NGO Core Upgrade Orchestrator` from the agent picker (or just say
+2. **Pick** `ngo-core-upgrade` from the agent picker (or just say
    `Upgrade NGO Core for <client> to X.Y.Z`).
 3. **Answer once**: which track(s) (backend/frontend/both), each client path, the local
    NGO.Core repo path, the shared `release-notes.md` path (optional), and the target

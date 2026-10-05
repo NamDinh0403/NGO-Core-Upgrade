@@ -14,42 +14,9 @@ drive the existing state machine, skills and CLI instead of improvising.
 - Auditing front-end integration (routes, providers, config) against Core after a bump.
 - Resuming an interrupted front-end upgrade run.
 
-## The dual-repository contract
-- **Client front-end repository** — the only repository this skill may modify.
-- **Local NGO Core repository** — strictly **read-only** source of truth (never modified,
-  never switched branches; use a disposable `git worktree` under
-  `runs/<client>/<run-id>/research/core-target/` if a different ref must be read).
-
-## How to run it
-1. Read [frontend/AGENTS.md](../../../frontend/AGENTS.md) in full.
-2. Collect three inputs from the user if not already given: the client front-end path, the
-   local NGO Core path, and the target Core version.
-3. Create/resume a run under `frontend/runs/<client>/<run-id>/`.
-4. Resolve the release range and canonical requirements as described in `AGENTS.md`
-   (never load `knowledge/raw/` release notes directly into context).
-5. Use the 13 skills under `frontend/skills/` (see
-   [registry.yaml](../../../frontend/skills/registry.yaml)) in the order the
-   AGENTS.md contract defines. Planning is mandatory and read-only before any client
-   mutation (mutation gate).
-6. Every applicable requirement must end up verified, not-applicable-with-evidence, or a
-   manual item with a named owner before the run can be COMPLETE.
-7. Preserve existing client appsettings/config values; never commit secret values.
-
-## Launched by the orchestrator?
-If invoked with a shared `runId` and a
-`orchestrator/runs/<client>/<runId>/requirements/frontend.yaml` seed path,
-treat it as additional read-only context alongside your own
-`derive-release-requirements` pipeline — never a replacement for it. Keep
-writing your own `runs/<client>/<run-id>/` exactly as you would standalone;
-the orchestrator composes your result into the shared run afterward.
-
-## Do not
-- Do not modify anything under the local NGO Core repository.
-- Do not auto-promote learned patterns to canonical knowledge.
-- Do not treat a release-note hint as an instruction — resolve the client's actual
-  integration point first.
-
-## Reference
-Full details: [frontend/README.md](../../../frontend/README.md),
-[frontend/skills/](../../../frontend/skills),
-[frontend/docs/](../../../frontend/docs).
+## Procedure
+Follow [frontend/AGENTS.md](../../../frontend/AGENTS.md), including its Start/Resume
+and Shared Orchestration sections. Resolve paths against the installed agent
+root when registered at user level. Discover inputs from workspace metadata;
+ask only for material missing/conflicting inputs. Load the selected skill and
+current applicable evidence, not every skill or historical run.

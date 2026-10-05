@@ -38,19 +38,20 @@ function isExcludedByDecision(finding, decisions) {
   return { excluded: false };
 }
 
-function splitRequirements({ ingestRoot, version, featureDecisionsPath, runId }) {
-  const loaded = loadCandidateRecord(ingestRoot, version);
+function splitRequirements({ ingestRoot, version, featureDecisionsPath, runId, records }) {
+  const fallback = records === undefined ? loadCandidateRecord(ingestRoot, version) : null;
+  const sources = records === undefined ? (fallback ? [fallback] : []) : records;
+  const loaded = sources[sources.length - 1] || null;
   const decisions = loadFeatureDecisions(featureDecisionsPath);
-  const findings = loaded ? loaded.record.findings : { backend: [], frontend: [], shared: [] };
-  const unresolvedItems = loaded ? loaded.record.unresolvedItems || [] : [];
+  const unresolvedItems = sources.reduce((items, source) => items.concat(source.record.unresolvedItems || []), []);
 
-  const tag = (scope) => (findings[scope] || []).map((f, idx) => {
+  const tag = (scope) => sources.reduce((items, source) => items.concat((source.record.findings[scope] || []).map((f, idx) => {
     const decision = isExcludedByDecision(f, decisions);
-    return Object.assign({ id: `${version}-${scope.toUpperCase()}-${String(idx + 1).padStart(2, '0')}` }, f, {
+    return Object.assign({ id: `${source.record.version}-${scope.toUpperCase()}-${String(idx + 1).padStart(2, '0')}` }, f, {
       excluded: decision.excluded,
       excludedByFeature: decision.excluded ? decision.feature : null
     });
-  });
+  })), []);
 
   const backendFindings = [...tag('backend'), ...tag('shared')];
   const frontendFindings = [...tag('frontend'), ...tag('shared')];
@@ -61,6 +62,7 @@ function splitRequirements({ ingestRoot, version, featureDecisionsPath, runId })
     all: {
       schemaVersion: 1, runId, version,
       ingestCandidateRef: loaded ? loaded.path : null,
+      ingestCandidateRefs: sources.map((source) => source.path),
       requirements: allFindings,
       unresolvedItems
     },

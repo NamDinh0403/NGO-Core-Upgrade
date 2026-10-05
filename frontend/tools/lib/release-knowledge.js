@@ -24,7 +24,9 @@ function parseJsonWithComments(text) {
   try { return JSON.parse(cleaned); } catch (e) { return null; }
 }
 
-let _cache = null;
+const _cache = new Map();
+const _manifests = new Map();
+let _ancillary = null;
 
 function listVersions() {
   if (!core.exists(RELEASES_DIR)) return [];
@@ -34,8 +36,11 @@ function listVersions() {
 }
 
 function loadReleaseManifest(version) {
+  if (_manifests.has(version)) return _manifests.get(version);
   const f = path.join(RELEASES_DIR, version, 'release.yaml');
-  return core.exists(f) ? core.readYamlAbs(f) : null;
+  const manifest = core.exists(f) ? core.readYamlAbs(f) : null;
+  _manifests.set(version, manifest);
+  return manifest;
 }
 
 function loadScopeRequirements(version) {
@@ -50,15 +55,23 @@ function loadScopeRequirements(version) {
   return out;
 }
 
-function load() {
-  if (_cache) return _cache;
-  const versions = listVersions();
+function load(source, target) {
+  const key = JSON.stringify([source || null, target || null]);
+  if (_cache.has(key)) return _cache.get(key);
+  const versions = listVersions().filter((version) => (!source || core.compareVersions(version, source) > 0) && (!target || core.compareVersions(version, target) <= 0));
   const requirements = [];
   const manifests = {};
   for (const v of versions) {
     manifests[v] = loadReleaseManifest(v);
     for (const r of loadScopeRequirements(v)) requirements.push(r);
   }
+  const data = Object.assign({ versions, manifests, requirements }, ancillary());
+  _cache.set(key, data);
+  return data;
+}
+
+function ancillary() {
+  if (_ancillary) return _ancillary;
   const migrations = [];
   if (core.exists(MIGRATIONS_DIR)) {
     for (const n of fs.readdirSync(MIGRATIONS_DIR)) {
@@ -78,30 +91,19 @@ function load() {
   const vmf = path.join(VERSIONS_DIR, 'version-manifest.json');
   if (core.exists(vmf)) versionManifest = parseJsonWithComments(fs.readFileSync(vmf, 'utf8'));
 
-  _cache = { versions, manifests, requirements, migrations, appsettings, versionManifest };
-  return _cache;
+  _ancillary = { migrations, appsettings, versionManifest };
+  return _ancillary;
 }
 
-function reset() { _cache = null; }
+function reset() { _cache.clear(); _manifests.clear(); _ancillary = null; }
 
 // Angular major that the client is on AFTER a given Core version (from the
 // release manifest frameworkTransition.angularTo).
 function angularMajorAt(version) {
-  const store = load();
   const norm = core.normalizeVersion(version) || version;
-  let m = store.manifests[norm] || store.manifests[version];
-  if (!m) {
-    // No canonical manifest for this EXACT (often patch-level) version — e.g.
-    // requested source/target is "7.6.3" but canonical knowledge only has a
-    // manifest for the "7.6.0" minor. A patch release inherits its minor's
-    // framework transition unless a more specific manifest says otherwise, so
-    // fall back to the nearest known manifest version <= the requested one.
-    let best = null;
-    for (const v of Object.keys(store.manifests)) {
-      if (core.compareVersions(v, norm) <= 0 && (best === null || core.compareVersions(v, best) > 0)) best = v;
-    }
-    if (best) m = store.manifests[best];
-  }
+  const candidates = listVersions().filter((known) => core.compareVersions(known, norm) <= 0);
+  const best = candidates[candidates.length - 1];
+  const m = best ? loadReleaseManifest(best) : null;
   if (m && m.frameworkTransition && m.frameworkTransition.angularTo) {
     const p = core.parseVersion(m.frameworkTransition.angularTo + '.0');
     return p ? p[0] : null;
@@ -110,9 +112,9 @@ function angularMajorAt(version) {
   return null;
 }
 
-function allRequirements() { return load().requirements.slice(); }
-function migrations() { return load().migrations.slice(); }
-function appSettings() { return load().appsettings.slice(); }
+function allRequirements(source, target) { return load(source, target).requirements.slice(); }
+function migrations() { return ancillary().migrations.slice(); }
+function appSettings() { return ancillary().appsettings.slice(); }
 function requirementById(id) { return load().requirements.find((r) => r.id === id) || null; }
 
 module.exports = {

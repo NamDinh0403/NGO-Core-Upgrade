@@ -17,7 +17,7 @@ Close the gap documented in `docs/operations/import-release-notes.md` and
 usable knowledge after a human manually re-reads `release-notes.md` and
 hand-splits it into atomic `knowledge/canonical/releases/<version>/*.yaml`
 records. This skill is a thin, frontend-facing wrapper around the **shared**
-ingestion phase in [../../ingest/](../../ingest/README.md) — the
+ingestion phase in [../../../ingest/](../../../ingest/README.md) — the
 actual git-diff / release-notes cross-check logic lives there, once, so a Core
 version is never diffed and parsed twice (once per track, as it would be if
 each track kept its own copy) with two candidate records that could silently
@@ -63,18 +63,16 @@ See `schemas/input.schema.json` — `corePath`, optional `releaseNotesPath`,
 optional `sinceVersion`.
 
 # Procedure
-1. **Check whether the shared record already exists and is fresh.** Read
-   `../../ingest/knowledge/candidates/releases/<version>.json`. If it
-   exists, was produced from the same `corePath`, and its `sources.tagRange.to`
-   matches, skip straight to step 3 (reuse it) — the common case when the
-   orchestrator already ran the shared phase, or a sibling backend run
-   already ingested the same version.
-2. If it doesn't exist or is stale, invoke the shared tool (do not reimplement
-   its logic here):
+1. **Verify freshness through the shared tool, including orchestrator seeds.**
+  Existence/path/tag spelling is not freshness. The tool checks immutable
+  boundary commits, relevant notes, analyzer version and record integrity;
+  matching identities reuse facts without re-extraction or rewriting.
+2. Invoke the shared tool (do not reimplement cache logic here):
    ```
    node ../ingest/tools/ingest.js ingest \
      --core-path <corePath> \
      --release-notes <releaseNotesPath> \
+    --since <sinceVersion> \
      --target <version>
    ```
    This fingerprints the Core repository before/after, enumerates the tag
@@ -88,6 +86,8 @@ optional `sinceVersion`.
    `derive-release-requirements` to consume: `crossCheck:
    "CONFIRMED_BY_DIFF_AND_NOTES"` → higher confidence; `OBSERVED_IN_DIFF_...` /
    `NOTED_BUT_UNCONFIRMED_BY_DIFF` → `confidence: "LOW"`, `status: "DRAFT"`.
+  `correlationOnly` is a filename/note hint, not semantic compatibility proof.
+  Omit optional CLI flags without available values; never pass placeholders.
 4. Redact any secret-looking value before writing anything — the shared tool
    already redacts at ingestion time; this step is a second check, not the
    primary one.

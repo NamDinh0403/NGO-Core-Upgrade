@@ -85,7 +85,7 @@ $stampNote = @"
 $stampHeader
 > **Installed agent location:** ``$agentRoot``
 > This file was registered at the user level by ``install.ps1``. The relative links below
-> may not resolve from here — resolve every ``ingest/``, ``backend/`` and ``frontend/``
+> may not resolve from here — resolve root ``AGENTS.md`` and every ``ingest/``, ``orchestrator/``, ``backend/`` and ``frontend/``
 > reference against the installed agent location above.
 "@
 
@@ -125,5 +125,5 @@ Write-Host ""
 Write-Step "Done."
 Write-Host "The skills and agents are now available in every VS Code workspace and the Copilot CLI."
 Write-Host "Agent workflow + CLIs live at: $InstallDir"
-Write-Host "Next: open Copilot Chat (agent mode) and pick 'NGO Core Upgrade Orchestrator',"
+Write-Host "Next: open Copilot Chat (agent mode) and pick 'ngo-core-upgrade',"
 Write-Host "or just type e.g. 'Upgrade NGO Core packages to 9.2.1 for <client>'."

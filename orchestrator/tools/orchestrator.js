@@ -22,6 +22,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const yaml = require('./lib/yaml');
 const runLib = require('./lib/run');
 const requirementsLib = require('./lib/requirements');
@@ -56,29 +57,27 @@ function saveState(base, state) {
 // Reuse the shared candidate record the same way each track's own
 // ingest-core-release skill already does: reuse if fresh, else invoke the
 // shared tool once. Never re-implements ingest's own git-diff/notes logic.
-function ensureIngested({ corePath, releaseNotesPath, targetVersion, ingestRoot }) {
+function ensureIngested({ corePath, releaseNotesPath, sourceVersion, targetVersion, ingestRoot }) {
   ingestRoot = ingestRoot || INGEST_ROOT;
-  const candidatePath = path.join(ingestRoot, 'knowledge', 'candidates', 'releases', `${targetVersion}.json`);
-  if (fs.existsSync(candidatePath)) {
-    return { reused: true, path: candidatePath };
+  try {
+    const ingest = require(path.join(ingestRoot, 'tools', 'ingest.js'));
+    const result = ingest.ensureReleases({ 'core-path': corePath, 'release-notes': releaseNotesPath,
+      since: sourceVersion, target: targetVersion, out: path.join(ingestRoot, 'knowledge', 'candidates', 'releases') });
+    const target = result.entries[result.entries.length - 1];
+    if (!target) throw new Error('no verified release candidates');
+    return { reused: result.reused, path: target.path, entries: result.entries };
+  } catch (error) {
+    return { reused: false, path: null, entries: [], failed: true, error: error.message };
   }
-  // eslint-disable-next-line global-require
-  const ingest = require(path.join(ingestRoot, 'tools', 'ingest.js'));
-  const code = ingest.cmdIngest({
-    'core-path': corePath,
-    'release-notes': releaseNotesPath,
-    target: targetVersion,
-    out: path.join(ingestRoot, 'knowledge', 'candidates', 'releases')
-  });
-  if (code !== 0) return { reused: false, path: null, failed: true };
-  return { reused: false, path: fs.existsSync(candidatePath) ? candidatePath : null };
 }
 
 function cmdCreateRun(flags) {
   const clientId = flags.client;
   if (!clientId) { process.stderr.write('specify --client <id>\n'); return 2; }
   const tracks = String(flags.tracks || 'backend,frontend').split(',').map((t) => t.trim()).filter(Boolean);
-  const targetVersion = flags['target-version'];
+  if (!tracks.length || tracks.some((track) => !['backend', 'frontend'].includes(track)) || new Set(tracks).size !== tracks.length) return 2;
+  const rawTarget = String(flags['target-version'] || '');
+  const targetVersion = /^\d+\.\d+$/.test(rawTarget) ? `${rawTarget}.0` : rawTarget;
   if (!targetVersion) { process.stderr.write('specify --target-version <x.y.z>\n'); return 2; }
   const corePath = flags['core-path'];
   // Test seam only — production callers never set this; defaults to the
@@ -100,13 +99,15 @@ function cmdCreateRun(flags) {
   };
   fs.writeFileSync(path.join(base, 'request.yaml'), yaml.stringify(request));
 
-  let ingestResult = { reused: false, path: null };
-  if (corePath) {
-    ingestResult = ensureIngested({ corePath, releaseNotesPath: request.releaseNotesPath, targetVersion, ingestRoot });
+  let ingestResult = { reused: false, path: null, entries: [], failed: true, error: 'Core path is required to verify release evidence' };
+  if (corePath && request.sourceVersion) {
+    ingestResult = ensureIngested({ corePath, releaseNotesPath: request.releaseNotesPath,
+      sourceVersion: request.sourceVersion, targetVersion, ingestRoot });
   }
+  if (!request.sourceVersion) ingestResult = { reused: false, path: null, entries: [], failed: true, error: 'source version is required; discover it from client metadata before create-run' };
 
   const split = requirementsLib.splitRequirements({
-    ingestRoot, version: targetVersion,
+    ingestRoot, version: targetVersion, records: ingestResult.entries,
     featureDecisionsPath: request.featureDecisionsPath, runId
   });
   requirementsLib.writeRequirements(path.join(base, 'requirements'), split);
@@ -114,13 +115,18 @@ function cmdCreateRun(flags) {
   const state = {
     schemaVersion: 1, runId, clientId, tracks,
     sourceVersion: request.sourceVersion, targetVersion,
-    status: 'REQUIREMENTS_READY',
+    status: ingestResult.failed ? 'BLOCKED' : 'REQUIREMENTS_READY',
     trackStatus: { backend: null, frontend: null },
     backendRunRef: null, frontendRunRef: null,
     ingestCandidateRef: ingestResult.path,
-    nextAction: `Delegate to ${tracks.join(' and ')}, passing run-id ${runId} and requirements/{${tracks.join(',')}}.yaml as an additional seed. Then run: orchestrator.js compose-results --run ${clientId}/${runId}`,
+    ingestCandidateRefs: ingestResult.entries.map((entry) => entry.path),
+    ingestEvidenceHash: releaseSnapshot(ingestResult.entries),
+    nextAction: ingestResult.failed
+      ? `Ingestion blocked: ${ingestResult.error}. Correct Core path/release boundaries and rerun create-run; do not delegate this run.`
+      : `Delegate to ${tracks.join(' and ')}, passing run-id ${runId} and requirements/{${tracks.join(',')}}.yaml as an additional seed. Then run: orchestrator.js compose-results --run ${clientId}/${runId}`,
     startedAt: new Date().toISOString(), updatedAt: new Date().toISOString()
   };
+  state.safeResumeInstruction = state.nextAction;
   saveState(base, state);
 
   process.stdout.write(JSON.stringify({
@@ -130,7 +136,98 @@ function cmdCreateRun(flags) {
     ingestReused: ingestResult.reused,
     nextAction: state.nextAction
   }, null, 2) + '\n');
-  return 0;
+  return ingestResult.failed ? 1 : 0;
+}
+
+function releaseSnapshot(entries) {
+  if (!entries.length) return null;
+  const hash = crypto.createHash('sha256');
+  for (const entry of entries) hash.update(entry.path).update('\0').update(JSON.stringify(entry.record));
+  return hash.digest('hex');
+}
+
+function fileSnapshot(files) {
+  if (!files.length) return null;
+  try {
+    const hash = crypto.createHash('sha256');
+    for (const file of files) hash.update(file).update('\0').update(fs.readFileSync(file));
+    return hash.digest('hex');
+  } catch (_) { return null; }
+}
+
+function coverageSnapshot(base, state) {
+  const files = [path.join(base, 'requirements', 'all.yaml'), path.join(base, 'requirement-coverage.yaml'), path.join(base, 'missing-steps.yaml')];
+  for (const track of state.tracks) {
+    const reference = state[`${track}RunRef`];
+    if (!reference) return null;
+    files.push(path.join(reference, 'state.json'), path.join(base, 'requirements', `${track}.yaml`));
+    if (track === 'frontend') files.push(path.join(reference, 'requirement-coverage.yaml'));
+    const disposition = path.join(reference, 'release-finding-dispositions.yaml');
+    if (fs.existsSync(disposition)) files.push(disposition);
+    for (const artifact of ['deployment-checklist.yaml', 'before-deployment.md', 'after-deployment.md']) {
+      const file = path.join(reference, artifact);
+      if (fs.existsSync(file)) files.push(file);
+    }
+  }
+  return fileSnapshot(files);
+}
+
+function seedIssues(base, state) {
+  const issues = [];
+  for (const track of state.tracks) {
+    let seed;
+    try {
+      seed = yaml.parse(fs.readFileSync(path.join(base, 'requirements', `${track}.yaml`), 'utf8'));
+      if (!seed || !Array.isArray(seed.requirements)) throw new Error('invalid seed');
+    } catch (_) { issues.push(`${track}: missing or invalid release seed; recreate requirements before coverage`); continue; }
+    const reference = state[`${track}RunRef`];
+    const file = reference && path.join(reference, 'release-finding-dispositions.yaml');
+    let entries = [];
+    try {
+      if (file && fs.existsSync(file)) {
+        entries = yaml.parse(fs.readFileSync(file, 'utf8')).findings;
+        if (!Array.isArray(entries)) throw new Error('invalid dispositions');
+      }
+    } catch (_) { issues.push(`${track}: invalid release-finding-dispositions.yaml; provide structured findings`); continue; }
+    const coverageFile = reference && path.join(reference, 'requirement-coverage.yaml');
+    let coverage = [];
+    try {
+      if (coverageFile && fs.existsSync(coverageFile)) {
+        coverage = yaml.parse(fs.readFileSync(coverageFile, 'utf8')).requirements;
+        if (!Array.isArray(coverage)) throw new Error('invalid coverage');
+      }
+    } catch (_) { issues.push(`${track}: invalid requirement-coverage.yaml; provide structured requirements`); continue; }
+    for (const finding of seed.requirements || []) {
+      const disposition = entries.find((entry) => entry.id === finding.id);
+      const linked = coverage.some((entry) => Array.isArray(entry.sourceCandidateIds) && entry.sourceCandidateIds.includes(finding.id) && ['VERIFIED', 'NOT_APPLICABLE_WITH_EVIDENCE'].includes(entry.status) && typeof entry.evidence === 'string' && entry.evidence.trim());
+      if (!linked && !(disposition && ['VERIFIED', 'NOT_APPLICABLE_WITH_EVIDENCE'].includes(disposition.status) && typeof disposition.evidence === 'string' && disposition.evidence.trim())) {
+        issues.push(`${track}: disposition ${finding.id} in release-finding-dispositions.yaml with verification/not-applicable evidence; a filename hint is not automatically applicable`);
+      }
+    }
+  }
+  return issues;
+}
+
+function requestedTrackIssues(state, successfulOnly) {
+  const issues = [];
+  if (!state.ingestCandidateRef) issues.push('release evidence was not verified; correct ingestion and recreate the shared run');
+  let currentIngest = null;
+  try {
+    const files = state.ingestCandidateRefs || (state.ingestCandidateRef ? [state.ingestCandidateRef] : []);
+    currentIngest = releaseSnapshot(files.map((file) => ({ path: file, record: JSON.parse(fs.readFileSync(file, 'utf8')) })));
+  } catch (_) { currentIngest = null; }
+  if (!state.ingestEvidenceHash || currentIngest !== state.ingestEvidenceHash) issues.push('release evidence is missing or changed; revalidate ingestion before coverage');
+  for (const track of state.tracks) {
+    const reference = state[`${track}RunRef`];
+    const result = reference && runLib.readJson(path.join(reference, 'state.json'));
+    const success = result && ['COMPLETE', 'SUCCEEDED'].includes(result.status);
+    const terminal = success || (result && /^(BLOCKED|FAILED|CANCELLED)/.test(result.status || ''));
+    if (!terminal || (successfulOnly && !success)) issues.push(`${track}: ${result ? result.status : 'NOT_RUN'}; ${result && (result.safeResumeInstruction || result.resumeCommand || result.nextAction) || 'compose the requested terminal track result'}`);
+    else if (result.targetVersion && result.targetVersion !== state.targetVersion) issues.push(`${track}: target version does not match shared run`);
+    else if (track === 'backend' && successfulOnly && result.currentPhase && !['HANDOVER', 'COMPLETE'].includes(result.currentPhase)) issues.push('backend: workflow has not reached handover');
+    if (success && track === 'frontend' && !fs.existsSync(path.join(reference, 'requirement-coverage.yaml'))) issues.push('frontend: structured coverage evidence is missing');
+  }
+  return issues;
 }
 
 function cmdComposeResults(flags) {
@@ -166,6 +263,15 @@ function cmdVerifyCoverage(flags) {
   const base = runLib.runDir(clientId, runId);
   const state = loadState(base);
   if (!state) { process.stderr.write(`no shared run found at ${base}\n`); return 1; }
+  const issues = requestedTrackIssues(state, false).concat(seedIssues(base, state));
+  if (issues.length) {
+    state.status = 'BLOCKED';
+    state.nextAction = issues.join('\n');
+    state.safeResumeInstruction = state.nextAction;
+    saveState(base, state);
+    process.stderr.write(state.nextAction + '\n');
+    return 1;
+  }
 
   const backendState = state.backendRunRef ? runLib.readJson(path.join(state.backendRunRef, 'state.json')) : null;
   const { coverage, missingSteps } = coverageLib.verifyCoverage({
@@ -174,6 +280,7 @@ function cmdVerifyCoverage(flags) {
 
   fs.writeFileSync(path.join(base, 'requirement-coverage.yaml'), yaml.stringify(coverage));
   fs.writeFileSync(path.join(base, 'missing-steps.yaml'), yaml.stringify(missingSteps));
+  state.coverageEvidenceHash = coverageSnapshot(base, state);
 
   state.status = 'COVERAGE_VERIFIED';
   state.nextAction = missingSteps.items.length > 0
@@ -193,6 +300,13 @@ function cmdPrepareHandover(flags) {
     process.stderr.write(`prepare-handover requires verify-coverage to have run first (current status: ${state.status})\n`);
     return 1;
   }
+  if (!state.coverageEvidenceHash || state.coverageEvidenceHash !== coverageSnapshot(base, state)) {
+    state.status = 'BLOCKED';
+    state.nextAction = `Coverage evidence changed; rerun verify-coverage --run ${clientId}/${runId} before handover.`;
+    state.safeResumeInstruction = state.nextAction;
+    saveState(base, state);
+    return 1;
+  }
 
   const backendState = state.backendRunRef ? runLib.readJson(path.join(state.backendRunRef, 'state.json')) : null;
   const { checklist, beforeMd, afterMd } = handoverLib.prepareHandover({
@@ -205,6 +319,7 @@ function cmdPrepareHandover(flags) {
   fs.writeFileSync(path.join(base, 'deployment-checklist.yaml'), yaml.stringify(checklist));
   fs.writeFileSync(path.join(base, 'before-deployment.md'), beforeMd);
   fs.writeFileSync(path.join(base, 'after-deployment.md'), afterMd);
+  state.handoverEvidenceHash = fileSnapshot(['deployment-checklist.yaml', 'before-deployment.md', 'after-deployment.md'].map((file) => path.join(base, file)));
 
   state.status = 'HANDOVER_READY';
   state.nextAction = `orchestrator.js final-report --run ${clientId}/${runId}`;
@@ -219,22 +334,28 @@ function cmdFinalReport(flags) {
   const state = loadState(base);
   if (!state) { process.stderr.write(`no shared run found at ${base}\n`); return 1; }
 
-  const coverage = fs.existsSync(path.join(base, 'requirement-coverage.yaml'))
-    ? yaml.parse(fs.readFileSync(path.join(base, 'requirement-coverage.yaml'), 'utf8')) : null;
-  const checklist = fs.existsSync(path.join(base, 'deployment-checklist.yaml'))
-    ? yaml.parse(fs.readFileSync(path.join(base, 'deployment-checklist.yaml'), 'utf8')) : null;
+  const artifact = (name) => {
+    try { return yaml.parse(fs.readFileSync(path.join(base, name), 'utf8')) || null; }
+    catch (_) { return null; }
+  };
+  const coverage = artifact('requirement-coverage.yaml');
+  const checklist = artifact('deployment-checklist.yaml');
 
   const trackStatusLines = state.tracks.map((t) => `- ${t}: ${state.trackStatus[t] || 'NOT_RUN'} (run ref: ${t === 'backend' ? state.backendRunRef : state.frontendRunRef || 'n/a'})`).join('\n');
-  const coverageSummaryLine = coverage
+  const coverageSummaryLine = coverage && coverage.summary
     ? `${coverage.summary.verifiedOrNotApplicable}/${coverage.summary.total} requirements verified or not-applicable-with-evidence; ${coverage.summary.outstanding} outstanding.`
     : 'verify-coverage has not run yet.';
-  const handoverSummaryLine = checklist
+  const handoverSummaryLine = checklist && Array.isArray(checklist.items)
     ? `${checklist.items.length} deployment item(s) in deployment-checklist.yaml.`
     : 'prepare-handover has not run yet.';
-  const allClear = coverage && coverage.summary.outstanding === 0 && checklist;
+  const issues = requestedTrackIssues(state, true);
+  if (!state.coverageEvidenceHash || state.coverageEvidenceHash !== coverageSnapshot(base, state)) issues.push('coverage evidence changed or is missing; rerun verify-coverage and prepare-handover');
+  const handoverHash = fileSnapshot(['deployment-checklist.yaml', 'before-deployment.md', 'after-deployment.md'].map((file) => path.join(base, file)));
+  if (!state.handoverEvidenceHash || state.handoverEvidenceHash !== handoverHash) issues.push('deployment handover changed or is missing; rerun verify-coverage and prepare-handover');
+  const allClear = issues.length === 0 && ['HANDOVER_READY', 'COMPLETE'].includes(state.status) && coverage && coverage.summary && coverage.summary.outstanding === 0 && checklist && Array.isArray(checklist.items);
   const nextAction = allClear
     ? 'All requirements verified or not-applicable-with-evidence and a deployment handover exists. Run is COMPLETE.'
-    : 'Resolve outstanding items in missing-steps.yaml, then re-run verify-coverage and prepare-handover before declaring COMPLETE.';
+    : issues.length ? issues.join('\n') : 'Resolve outstanding items in missing-steps.yaml, then re-run verify-coverage and prepare-handover before declaring COMPLETE.';
 
   const tpl = fs.readFileSync(path.join(TEMPLATES_DIR, 'final-report.template.md'), 'utf8');
   const fill = (s, vars) => Object.keys(vars).reduce((acc, k) => acc.split(`{{${k}}}`).join(vars[k]), s);
@@ -246,6 +367,7 @@ function cmdFinalReport(flags) {
 
   state.status = allClear ? 'COMPLETE' : 'BLOCKED';
   state.nextAction = nextAction;
+  state.safeResumeInstruction = nextAction;
   saveState(base, state);
   process.stdout.write(JSON.stringify({ runId, status: state.status, nextAction }, null, 2) + '\n');
   return 0;

@@ -15,7 +15,7 @@ Close the gap between "Core shipped a new version" and "the agent has usable
 knowledge about it" without a human re-reading release notes and hand-writing
 `knowledge/canonical/versions/*.json` every time. This skill is a thin,
 backend-facing wrapper around the **shared** ingestion phase in
-[../../ingest/](../../ingest/README.md) — the actual git-diff /
+[../../../ingest/](../../../ingest/README.md) — the actual git-diff /
 release-notes cross-check logic lives there, once, so a Core version is never
 diffed and parsed twice (once per track) with two candidate records that could
 silently disagree.
@@ -69,18 +69,16 @@ See `schemas/input.schema.json` — `coreRepoPath`, optional `releaseNotesPath`,
 optional `sinceVersion`/`targetVersion`.
 
 # Procedure
-1. **Check whether the shared record already exists and is fresh.** Read
-   `../../ingest/knowledge/candidates/releases/<targetVersion>.json`. If it
-   exists, was produced from the same `coreRepoPath`, and its `sources.tagRange.to`
-   matches the target version, skip straight to step 4 (reuse it) — this is the
-   common case when the orchestrator already ran the shared phase, or a sibling
-   frontend run already ingested the same version.
-2. If it doesn't exist or is stale, invoke the shared tool (do not reimplement
-   its logic here):
+1. **Verify freshness through the shared tool, including orchestrator seeds.**
+  Existence/path/tag spelling is not freshness. The tool checks immutable
+  boundary commits, relevant notes, analyzer version and record integrity;
+  matching identities reuse facts without re-extraction or rewriting.
+2. Invoke the shared tool (do not reimplement cache logic here):
    ```
    node ../ingest/tools/ingest.js ingest \
      --core-path <coreRepoPath> \
      --release-notes <releaseNotesPath> \
+    --since <sinceVersion> \
      --target <targetVersion>
    ```
    This fingerprints the Core repository before/after (proving it's unchanged),
@@ -93,9 +91,12 @@ optional `sinceVersion`/`targetVersion`.
    `findings.shared` from the shared record (ignore `findings.frontend` — that's
    frontend's concern). Map each finding into the shape
    `research-version`/`plan-upgrade` expect (statement + verification level:
-   `CONFIRMED_BY_DIFF_AND_NOTES` → `VERIFIED_BY_METADATA`-equivalent confidence,
+  `CONFIRMED_BY_DIFF_AND_NOTES` → file-change metadata confidence only,
    `OBSERVED_IN_DIFF_NOT_MENTIONED_IN_NOTES` / `NOTED_BUT_UNCONFIRMED_BY_DIFF` →
    `UNCONFIRMED`).
+  `correlationOnly` is a filename/note hint, not API compatibility proof.
+  Installed-DLL evidence still controls concrete signatures. Omit optional
+  CLI flags without available values; never pass placeholders.
 5. Surface every `unresolvedItems` entry relevant to `backend`/`shared` scope
    unchanged — do not resolve them here.
 

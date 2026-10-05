@@ -15,6 +15,17 @@ in the linked files; do not inline it here.
 3. `plan` first (read-only), then enter the workflow at `workflows/core-upgrade/phases/01-discovery.md`.
 4. Follow phases 01→08 (the phase cards under `workflows/core-upgrade/phases/`).
 
+## Shared Orchestration
+An orchestrator seed at `orchestrator/runs/<client>/<runId>/requirements/backend.yaml`
+is additional, unconfirmed read-only evidence, never a replacement for planning.
+Keep your own run state and report terminal/blocked status with exact safe-resume
+instructions. Do not write the shared run. Use the shared ingestion CLI for
+freshness checks; file existence alone does not prove a fresh release.
+Disposition seed findings in your own `release-finding-dispositions.yaml` during
+normal planning/verification: findings with seed id, VERIFIED or
+NOT_APPLICABLE_WITH_EVIDENCE status and concrete evidence. Do not blindly apply
+candidate hints or promote them. Shared coverage checks these dispositions.
+
 ## Resume a run
 Read `state.json`. Continue from `state.json.nextAction`, restoring from the most
 recent valid checkpoint in `checkpoints/`. Never repeat a mutating action whose

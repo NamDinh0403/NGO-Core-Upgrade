@@ -20,58 +20,20 @@ own mutation gate. `ingest/` and `orchestrator/` never mutate anything.
 
 | Request | Do this |
 |---|---|
-| Upgrade **both** tracks, or track not stated | Create one shared run via `orchestrator/tools/orchestrator.js create-run` (runs the shared ingest phase internally), then delegate to **both** sub-agents in parallel, then compose results / verify coverage / prepare handover / final report once (see Steps 2-4 below). |
+| Upgrade **both** tracks, or track not stated | Follow `orchestrator/AGENTS.md`: one shared run and validated ingest, parallel track delegation when repositories are independent, one merged handover/report. |
 | Backend only (.NET/NuGet/EF/appsettings) | Run ingest, then load **`backend/AGENTS.md`** and follow it. |
 | Frontend only (Angular/package.json) | Run ingest, then load **`frontend/AGENTS.md`** and follow it. |
 | "Is there a newer Core release?" | `node ingest/tools/ingest.js check --core-path <path>` — nothing else needed. |
 
-## Step 1 — Collect inputs once
+## Context And Inputs
 
-Backend solution path (if backend) · client front-end path (if frontend) · local
-read-only **NGO.Core repo path** · shared `release-notes.md` path (if available)
-· target Core version. Collect these up front so neither sub-agent has to stop
-and ask again mid-run.
-
-## Step 2 — One shared run + shared ingest phase (once per target version)
-
-```
-node orchestrator/tools/orchestrator.js create-run --client <id> --tracks backend,frontend \
-  --core-path <coreRepoPath> --release-notes <notesPath> --target-version <version>
-```
-
-This runs the same shared ingest phase as before internally
-(`node ingest/tools/ingest.js check|ingest`, skipped automatically if the
-version is already covered by either track's canonical knowledge — see
-[ingest/README.md](ingest/README.md) for the record shape) and additionally
-writes a normalized, per-domain requirements seed under
-`orchestrator/runs/<client>/<runId>/requirements/{backend,frontend,shared}.yaml`
-— read by, but never authoritative over, each track's own planning. Output is
-always a **CANDIDATE**; a developer promotes it to canonical, never the agent.
-
-## Step 3 — Delegate
-
-Hand each track the shared `runId` plus the collected inputs and its own
-`requirements/<track>.yaml` seed path. Run both in parallel when both are
-requested; they touch different repositories and cannot conflict. Each track
-keeps writing its own `runs/<client>/<run-id>/` exactly as before — the shared
-run does not replace it.
-
-## Step 4 — Compose, verify coverage once, hand over once
-
-Once each requested track reports a terminal status:
-
-```
-node orchestrator/tools/orchestrator.js compose-results  --run <client>/<runId> --backend-run <path> --frontend-run <path>
-node orchestrator/tools/orchestrator.js verify-coverage   --run <client>/<runId>
-node orchestrator/tools/orchestrator.js prepare-handover  --run <client>/<runId>
-node orchestrator/tools/orchestrator.js final-report      --run <client>/<runId>
-```
-
-Report one combined result from `final-report.md`: status per track, each
-track's plan/report path and `state.json`, the merged coverage summary, the
-merged deployment handover, and one aggregated next action. Surface any
-`BLOCKED_*` with its exact `safeResumeInstruction` rather than retrying on the
-sub-agent's behalf.
+Discover the requested client paths/source version from workspace solution and
+package metadata, and the read-only Core path from supplied inputs/config.
+Ask once only for material missing/conflicting inputs and target version.
+Do not infer a requested target from the highest installed version.
+Load current run state, the owning contract and applicable knowledge only;
+historical runs, raw logs, all skills and unrelated domains are not default context.
+The shared-run loop is owned by `orchestrator/AGENTS.md`, not duplicated here.
 
 ## Non-negotiables (all three modules)
 

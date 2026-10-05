@@ -10,6 +10,21 @@
     "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
     "status": { "type": "string", "const": "CANDIDATE" },
     "ingestedAt": { "type": "string" },
+    "identity": {
+      "type": "object",
+      "required": ["analyzerVersion", "version", "fromCommit", "toCommit", "notesHash", "key"],
+      "properties": {
+        "analyzerVersion": { "type": "string" },
+        "version": { "type": "string" },
+        "fromCommit": { "type": "string" },
+        "toCommit": { "type": "string" },
+        "notesHash": { "type": "string" },
+        "key": { "type": "string" }
+      }
+    },
+    "contentHash": { "type": "string" },
+    "changes": { "type": "array", "items": { "type": "object" } },
+    "facts": { "type": "array", "items": { "type": "object" } },
     "sources": {
       "type": "object",
       "required": ["coreRepoPath", "tagRange"],

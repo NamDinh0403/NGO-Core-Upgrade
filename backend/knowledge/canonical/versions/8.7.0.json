@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "entryType": "version",
+  "version": "8.7.0",
+  "targetFramework": "net9.0",
+  "packageVersionMustMatch": true,
+  "sourceOfTruth": {
+    "rule": "Core branch releases/8.7 at commit 47302270ed1d95d9165087657f4667429f07a0d6."
+  },
+  "summary": "Manual enrichment required; no matching release-note section is present in Upgrade.",
+  "manualEnrichmentRequired": true,
+  "validation": {
+    "commands": [],
+    "successCriteria": ["Add reviewed backend requirements before promoting this entry."]
+  }
+}

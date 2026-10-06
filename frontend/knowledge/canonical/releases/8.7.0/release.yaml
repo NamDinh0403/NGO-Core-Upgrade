@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "8.7.0"
+title: "NGO Core 8.7.0"
+summary: "Manual enrichment required; no matching release-note section is present in Upgrade."
+frameworkTransition: { angularFrom: "15", angularTo: "15", dotnetFrom: "9", dotnetTo: "9" }
+scopes: []
+sourceEvidence: "Core branch releases/8.7 at commit 47302270ed1d95d9165087657f4667429f07a0d6"

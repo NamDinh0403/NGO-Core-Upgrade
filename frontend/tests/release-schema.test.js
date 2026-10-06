@@ -17,36 +17,8 @@ const reqSchema = load('release-requirement.schema.json');
 const appSchema = load('appsettings-requirement.schema.json');
 const manSchema = load('release-manifest.schema.json');
 
-function typeOk(v, t) {
-  if (Array.isArray(t)) return t.some((x) => typeOk(v, x));
-  switch (t) {
-    case 'string': return typeof v === 'string';
-    case 'integer': return Number.isInteger(v);
-    case 'number': return typeof v === 'number';
-    case 'boolean': return typeof v === 'boolean';
-    case 'object': return v && typeof v === 'object' && !Array.isArray(v);
-    case 'array': return Array.isArray(v);
-    case 'null': return v === null;
-    default: return true;
-  }
-}
-
 function validate(obj, schema, pathStr, errs) {
-  if (schema.const !== undefined && obj !== schema.const) errs.push(`${pathStr}: expected const ${JSON.stringify(schema.const)}`);
-  if (schema.enum && schema.enum.indexOf(obj) === -1) errs.push(`${pathStr}: '${obj}' not in enum`);
-  if (schema.type && !typeOk(obj, schema.type)) errs.push(`${pathStr}: type != ${schema.type}`);
-  if (schema.pattern && typeof obj === 'string' && !new RegExp(schema.pattern).test(obj)) errs.push(`${pathStr}: '${obj}' fails pattern ${schema.pattern}`);
-  if (schema.type === 'object' && obj && typeof obj === 'object') {
-    for (const r of (schema.required || [])) if (!(r in obj)) errs.push(`${pathStr}: missing required '${r}'`);
-    const props = schema.properties || {};
-    if (schema.additionalProperties === false) {
-      for (const k of Object.keys(obj)) if (!(k in props)) errs.push(`${pathStr}: unexpected property '${k}'`);
-    }
-    for (const k of Object.keys(props)) if (k in obj) validate(obj[k], props[k], `${pathStr}.${k}`, errs);
-  }
-  if (schema.type === 'array' && Array.isArray(obj) && schema.items) {
-    obj.forEach((it, i) => validate(it, schema.items, `${pathStr}[${i}]`, errs));
-  }
+  errs.push(...require('../../engine/tools/lib/schema').validate(obj, schema, pathStr));
 }
 
 const errs = [];

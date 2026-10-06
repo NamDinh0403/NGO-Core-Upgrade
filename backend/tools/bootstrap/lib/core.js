@@ -11,7 +11,7 @@ const cp = require('child_process');
 const yaml = require('./yaml');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..'); // backend
-const P = (...p) => path.join(ROOT, ...p);
+const P = (...parts) => require('../../../../engine/tools/lib/locations').resolve(ROOT, ...parts);
 
 function readYaml(rel) { return yaml.parse(fs.readFileSync(P(rel), 'utf8')); }
 function readJson(rel) { return JSON.parse(fs.readFileSync(P(rel), 'utf8')); }
@@ -103,7 +103,7 @@ function exactVersionFromRange(range) {
 }
 
 function gatherEvidence(clientPath) {
-  return require('../../../../orchestrator/tools/lib/discovery').backendEvidence(clientPath);
+  return require('../../../../engine/tools/lib/discovery').backendEvidence(clientPath);
 }
 
 function appliesWhen(tool, evidence) {

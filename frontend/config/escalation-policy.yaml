@@ -2,11 +2,7 @@ schemaVersion: 1
 id: frontend-escalation-policy
 description: Budgets and escalation conditions for the front-end upgrade agent.
 
-budgets:
-  maxAttemptsPerIdenticalFix: 2
-  maxBuildFixIterations: 5
-  maxToolCallsPerPhase: 40
-  confidenceThreshold: 0.6
+sharedExecutionPolicy: ../../engine/config/execution-policy.json
 
 escalateWhen:
   - A HIGH or CRITICAL uncertainty blocks a required mutation.

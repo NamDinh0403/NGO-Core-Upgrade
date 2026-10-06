@@ -7,7 +7,7 @@
 Declare, before any mutation, every step and change the run intends to make. **Hard gate.**
 
 ## Required inputs
-`inventory.json`, routed `knowledge/canonical/versions/{target}.json`, routed `knowledge/canonical/appsettings/appsettings-by-version.json`.
+`inventory.json`, routed `knowledge/canonical/versions/{target}.json`, routed `../ingest/knowledge/canonical/backend-appsettings/appsettings-by-version.json`.
 
 ## Preconditions
 Baseline completed. No `.csproj`, `appsettings*.json`, or `.cs` file has been modified.

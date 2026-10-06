@@ -10,13 +10,13 @@ update the canonical knowledge - never the raw notes at runtime.
    Review the resulting `../ingest/knowledge/candidates/releases/<new-version>.json`
    — its `findings.frontend` + `findings.shared` sections are your starting point for
    steps 1-3 below, already cross-checked against the git diff.
-1. Create `knowledge/canonical/releases/<new-version>/release.yaml` with `version`,
+1. Create `../ingest/knowledge/canonical/releases/<new-version>/release.yaml` with `version`,
    `frameworkTransition` (Angular/.NET from/to), `scopes`, and `sourceEvidence`.
 2. Add the non-empty scope files with atomic requirements (see
    [import-release-notes.md](import-release-notes.md)).
 3. If a card re-lists an earlier one, set `status: DUPLICATE` + `duplicateOf`. If it
    replaces one, set `supersedes` on the new record and `supersededBy` on the old.
-4. Add any new AppSettings to `knowledge/canonical/appsettings/backend-appsettings.yaml`.
+4. Add any new AppSettings to `../ingest/knowledge/canonical/appsettings/backend-appsettings.yaml`.
 5. Validate: `node tests/release-schema.test.js` and `node tests/release-knowledge.test.js`.
 
 ## Learn from a run (candidates only)

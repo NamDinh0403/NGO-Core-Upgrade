@@ -21,10 +21,10 @@ How to run and maintain the Core upgrade system.
 4. After the developer provides the decision, record it in `decisions.jsonl` and resume.
 
 ## Approve or reject a candidate pattern
-1. Review the record in `memory/candidates/**` against `config/escalation-policy.yaml` promotion requirements.
+1. Review the record in `../engine/memory/candidates/backend/**` against `config/escalation-policy.yaml` promotion requirements.
 2. Run `node tools/run-evals.js` (regression replay) and confirm no contradiction with canonical knowledge.
-3. To approve: set `status: approved`, `approvalStatus: approved`, `approvedBy`, add a `reviewHistory` entry, and move the file to `memory/approved/<type>/`.
-4. To reject: set `status: rejected` with `rejectionReason`, and move to `memory/rejected/`. Never delete — retain the reason.
+3. To approve: set `status: approved`, `approvalStatus: approved`, `approvedBy`, add a `reviewHistory` entry, and move the file to `../engine/memory/approved/backend/<type>/`.
+4. To reject: set `status: rejected` with `rejectionReason`, and move to `../engine/memory/rejected/backend/`. Never delete — retain the reason.
 
 ## Add version knowledge
 1. Create `knowledge/canonical/versions/<x.y.z>.json` following `schemas/version-knowledge.schema.json`.

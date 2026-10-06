@@ -1,51 +1,10 @@
-# NGO Core Upgrade — explicit workflow state machine.
-# This is the authority for workflow progression. Prompts do not track progress;
-# runs/<client>/<run-id>/state.json does.
+sharedLifecycle: ../../../engine/tools/lib/lifecycle.js
+checkpointCompatibility: ../../../engine/tools/lib/checkpoint-compatibility.js
+ownership: backend-domain-task-index
 schemaVersion: 1
 id: core-upgrade
 version: 1.0.0
 lastReviewedAt: 2026-08-13
-
-# Per-step machine-readable status (exactly one must be emitted per attempt).
-stepStatusEnum:
-  - SUCCEEDED
-  - RETRYABLE_FAILURE
-  - BLOCKED_NEEDS_CONTEXT
-  - BLOCKED_NEEDS_DEVELOPER
-  - BLOCKED_NEEDS_APPROVAL
-  - FAILED_POLICY
-  - FAILED_BUDGET
-  - CANCELLED
-
-states:
-  - DISCOVERY
-  - TOOL_BOOTSTRAP
-  - BASELINE
-  - PLAN
-  - UPGRADE
-  - BUILD_AND_FIX
-  - TEST
-  - DOCUMENT
-  - HANDOVER
-  - COMPLETE
-
-# Allowed transitions. Backward transitions permitted only where listed.
-transitions:
-  DISCOVERY:     [TOOL_BOOTSTRAP, HANDOVER]
-  TOOL_BOOTSTRAP: [BASELINE, HANDOVER]      # research tooling must be AVAILABLE before analysis
-  BASELINE:      [PLAN, HANDOVER]
-  PLAN:          [UPGRADE, HANDOVER]
-  UPGRADE:       [BUILD_AND_FIX, HANDOVER]
-  BUILD_AND_FIX: [TEST, UPGRADE, HANDOVER]        # back to UPGRADE if package choice was wrong
-  TEST:          [DOCUMENT, BUILD_AND_FIX, HANDOVER] # back to BUILD_AND_FIX if a fix regressed tests
-  DOCUMENT:      [HANDOVER, COMPLETE]
-  HANDOVER:      [COMPLETE, DOCUMENT]              # DOCUMENTATION_PENDING resolves via DOCUMENT
-  COMPLETE:      []
-
-# Any BLOCKED_NEEDS_* / FAILED_* status routes the run to HANDOVER, which must
-# emit a developer escalation and a safeResumeInstruction. No other exit exists.
-terminalStates: [COMPLETE]
-blockedStatuses: [BLOCKED, DOCUMENTATION_PENDING]
 
 phases:
   - id: "01-discovery"
@@ -107,12 +66,4 @@ capabilityGates:
       - anyRequiredToolValidationFailed
       - requiredCredentialUnavailable
 
-exceptionHandling:
-  onUnexpectedException:
-    - capture-exception-and-evidence
-    - update-durable-state
-    - write-checkpoint
-    - generate-safe-resume-instruction
-    - retry-only-if-policy-permits
-    - else-create-developer-escalation
-    - never-leave-run-active-without-next-action
+exceptionHandlingOwner: engine

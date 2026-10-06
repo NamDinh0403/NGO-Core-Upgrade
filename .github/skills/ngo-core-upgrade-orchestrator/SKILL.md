@@ -7,9 +7,9 @@ description: Runs a full NGO Core upgrade engagement spanning backend and/or fro
 
 Use the existing shared-run coordinator, not another upgrade implementation.
 Read [AGENTS.md](../../../AGENTS.md) for routing and
-[orchestrator/AGENTS.md](../../../orchestrator/AGENTS.md) for the procedure.
+[engine/AGENTS.md](../../../engine/AGENTS.md) for the procedure.
 Resolve links against the installed agent root when registered at user level.
 Load track contracts only when delegating to those tracks. The public agent is
 `ngo-core-upgrade`; this skill retains its existing discovery identity.
-The shared lifecycle is [orchestrator/skills/lifecycle/SKILL.md](../../../orchestrator/skills/lifecycle/SKILL.md).
+The shared lifecycle is [engine/skills/lifecycle/SKILL.md](../../../engine/skills/lifecycle/SKILL.md).
 Pass one isolated track context per delegation, not the complete shared run.

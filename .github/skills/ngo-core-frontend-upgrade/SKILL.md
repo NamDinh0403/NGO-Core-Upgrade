@@ -5,9 +5,10 @@ description: Upgrades a client's Angular/NgRx front-end to match a target NGO Co
 
 # NGO Core Frontend Upgrade
 
-This skill wraps the existing single-session, dual-repository front-end upgrade agent in
+This skill dispatches the specialized front-end executor in
 [frontend/](../../../frontend/AGENTS.md). Do not re-derive the process —
-drive the existing state machine, skills and CLI instead of improvising.
+the [shared engine](../../../engine/AGENTS.md) owns lifecycle, safety, memory,
+generic skills and reporting. Frontend owns Angular/TypeScript/NgRx work only.
 
 ## When to use
 - Upgrading a client Angular SPA to align with a target NGO Core version.

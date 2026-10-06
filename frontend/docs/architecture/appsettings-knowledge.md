@@ -6,7 +6,7 @@ real configuration surface - without ever committing a secret.
 
 ## Canonical requirements
 
-`knowledge/canonical/appsettings/backend-appsettings.yaml`
+`../ingest/knowledge/canonical/appsettings/backend-appsettings.yaml`
 (`schemas/appsettings-requirement.schema.json`). Each setting carries: `key`, `section`,
 `owningProcess` (API / WEBJOB / TOOL / DEPLOYMENT / ALL), `azureKey`, `dataType`,
 `defaultValue`, `preserveClientValue`, `sensitive`, `timing`, `automation`, `validation`,

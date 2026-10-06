@@ -51,12 +51,12 @@ missing-steps, and deployment checklists. See
 | [derived/install-procedure.md](derived/install-procedure.md) | Clean → purge → install → verify |
 | [derived/build-pipeline-changes.md](derived/build-pipeline-changes.md) | CI/CD YAML changes |
 | [derived/breaking-changes-by-version.md](derived/breaking-changes-by-version.md) | Per-release breaking changes |
-| [canonical/versions/version-manifest.json](canonical/versions/version-manifest.json) | ngo-core ↔ Angular ↔ TS ↔ ES mapping |
+| [canonical/versions/version-manifest.json](../../ingest/knowledge/canonical/versions/version-manifest.json) | ngo-core ↔ Angular ↔ TS ↔ ES mapping |
 
 Anything not covered is a genuine unknown → the agent marks it `HUMAN_REQUIRED` and continues.
 
 ## When to update
 
-- Vendor ships a new version → add `knowledge/canonical/releases/<version>/` records and update `canonical/versions/version-manifest.json`; regenerate `derived/breaking-changes-by-version.md`
+- Vendor ships a new version → add `../ingest/knowledge/canonical/releases/<version>/` records and update `canonical/versions/version-manifest.json`; regenerate `derived/breaking-changes-by-version.md`
 - New Angular major → extend `canonical/migrations/` and update `derived/config-files-reference.md`
 - New pattern discovered during a client migration → write a **candidate** under `candidates/` (single-client patterns are not promoted to canonical until reviewed and shown to recur)

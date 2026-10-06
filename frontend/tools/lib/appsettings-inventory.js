@@ -7,4 +7,4 @@
  * prevents secret leakage, and assigns manual deployment ownership.
  * Dependency-free, Node 14+.
  */
-module.exports = require('../../../orchestrator/tools/lib/executors').capability('backend', 'configuration');
+module.exports = require('../../../engine/tools/lib/executors').capability('backend', 'configuration');

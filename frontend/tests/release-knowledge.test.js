@@ -128,7 +128,7 @@ ok('18-missing-key-detected', mapMissing.missing.some((m) => m.key === 'Core:Csp
 // 19 - secret value rejected
 const mapSecret = appset.mapRequirements(inv, [byId('APPSET-IATI-SUBSCRIPTIONKEY')]);
 ok('19-secret-value-rejected', mapSecret.secretRejections.length > 0 && mapSecret.secretRejections[0].id === 'APPSET-IATI-SUBSCRIPTIONKEY');
-const configuration = require('../../orchestrator/tools/lib/executors').capability('backend', 'configuration');
+const configuration = require('../../engine/tools/lib/executors').capability('backend', 'configuration');
 ok('37-configuration-owner-is-backend-adapter', configuration === appset);
 const planSource = fs.readFileSync(core.P('tools/lib/planning-release.js'), 'utf8');
 ok('38-frontend-planning-does-not-inventory-backend', !planSource.includes('appset.discover') && !planSource.includes('store.appSettings'));

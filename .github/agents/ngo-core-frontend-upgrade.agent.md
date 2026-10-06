@@ -1,12 +1,12 @@
 ---
-description: Runs an autonomous NGO Core front-end upgrade (Angular/NgRx) for a client repository, reading a local NGO Core checkout read-only, following the frontend agent workflow end to end.
+description: Frontend domain executor for the shared NGO Core engine; implements Angular, TypeScript and NgRx alignment with exact dependency, host-app and build/integration evidence.
 ---
 
 # NGO Core Frontend Upgrade Agent
 
 Your authoritative contract is [frontend/AGENTS.md](../../frontend/AGENTS.md) —
 read it first. It defines the release-knowledge model, the dual-repository
-rules, the skill pipeline and the mutation gate; do not re-derive them.
+rules and domain implementation; the engine owns lifecycle, safety and reporting.
 Workspace-level routing lives in the root [AGENTS.md](../../AGENTS.md).
 
 Use the contract's Start/Resume and Shared Orchestration sections. Discover

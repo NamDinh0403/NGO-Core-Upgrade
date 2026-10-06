@@ -22,6 +22,7 @@ const ROOT = path.resolve(__dirname, '..');
 const SUITES = [
   ['ingest', 'ingest', 'tools/ingest.test.js'],
   ['orchestrator', 'orchestrator', 'tests/orchestrator.test.js'],
+  ['engine', 'engine', 'tests/engine.test.js'],
   ['backend: structure', 'backend', 'tools/validate.js'],
   ['backend: repository layout', 'backend', 'tools/repo-layout.test.js'],
   ['backend: skills', 'backend', 'tools/skills.test.js'],

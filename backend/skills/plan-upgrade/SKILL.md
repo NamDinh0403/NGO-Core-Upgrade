@@ -38,16 +38,11 @@ any client mutation. This skill is the mandatory first step of every run.
 See `schemas/input.schema.json` — objective, client id, source/target version, run directory.
 
 # Procedure
-1. Inspect the repository read-only; detect backend/front-end technologies, projects, package managers, lockfiles, bootstrap style. Write `repository-inventory.json`.
-2. Identify source and target Core versions.
-3. Inspect approved knowledge (`knowledge/canonical/versions/{target}.json` + routes). Note known vs missing version knowledge.
-4. When resuming, read current run `state.json`.
-5. Classify every planning fact as KNOWN / ASSUMED / UNCERTAIN / CONTRADICTORY / NOT_APPLICABLE. KNOWN facts cite evidence.
-6. Populate `uncertainty-register.yaml` and `assumptions.yaml` (see `docs/operations/uncertainty.md`).
-7. Decide whether `research-version` is required (missing/contradictory/insufficient knowledge, or HIGH/CRITICAL uncertainty). If `knowledge/canonical/versions/{target}.json` does not exist at all **and** `coreRepoPath` is configured (`config/core-repository.yaml`), this is exactly the condition `research-version` rung 10.5 (`ingest-core-release`) exists for — route to `research-version` rather than escalating straight to a developer for missing version data.
-8. Compute **only** the capabilities the plan actually needs (lazy activation). Defer Level 2/3 tools until proven necessary.
-9. Produce a verification strategy and a rollback strategy.
-10. Write `plan.yaml` and `planning-report.md`. Emit an exact next action.
+Follow the engine's shared planning procedure first; this skill supplies backend behavior only.
+1. Inspect .NET solution/projects, SDK, NuGet dependency graph and installed NGO.Core assemblies/public API. Write backend inventory and surface evidence.
+2. Interpret the backend slice and approved .NET version/symbol/error knowledge; request isolated package/API research only for unresolved compatibility. Missing Core release evidence returns to the shared owner, never independent ingestion.
+3. Map backend source, EF/migration and all startup-required appsettings changes to exact API/WebJob/Deployment files, preserving client values and secret-provider use.
+4. Produce backend changes, restore/build/test/config/migration validation and rollback facts. Register the implementation plan with the engine; do not assign global lifecycle status locally.
 
 # Evidence requirements
 Every KNOWN fact references a file/route/tool artifact. Assumptions state validation method, impact, and whether they block mutation.

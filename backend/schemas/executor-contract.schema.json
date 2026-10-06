@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "backend/schemas/executor-contract.schema.json",
+  "title": "Backend Executor Contracts",
+  "type": "object",
+  "definitions": {
+    "BackendContext": { "$ref": "../../engine/schemas/execution-context.schema.json#/definitions/BackendContext" },
+    "BackendPlan": { "$ref": "../../engine/schemas/executor-contract.schema.json#/definitions/Plan" },
+    "BackendEvidence": { "$ref": "../../engine/schemas/executor-contract.schema.json#/definitions/Evidence" },
+    "BackendResult": { "allOf": [{ "$ref": "../../engine/schemas/executor-contract.schema.json#/definitions/TrackResult" }, { "properties": { "track": { "const": "backend" } } }] }
+  }
+}

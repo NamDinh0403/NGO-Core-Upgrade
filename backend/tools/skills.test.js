@@ -12,7 +12,7 @@ const yaml = require('./bootstrap/lib/yaml');
 const readJson = (rel) => JSON.parse(fs.readFileSync(e.P(rel), 'utf8'));
 const sampleOut = (id) => readJson(`skills/${id}/evals/sample-output.json`);
 const ALL_SKILLS = e.skills().map((s) => s.id);
-const escalationPolicy = yaml.parse(fs.readFileSync(e.P('config/escalation-policy.yaml'), 'utf8'));
+const escalationPolicy = require('../../engine/config/execution-policy.json');
 const toolPolicy = yaml.parse(fs.readFileSync(e.P('config/tool-installation-policy.yaml'), 'utf8'));
 
 const results = [];

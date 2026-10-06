@@ -39,4 +39,4 @@ feed credential for source X".}
 
 ## Attachments
 - Logs / diffs: `runs/{ClientId}/{RunId}/`
-- Episode: `memory/episodes/{episodeId}.json`
+- Episode: `../engine/memory/episodes/backend/{episodeId}.json`

@@ -74,7 +74,7 @@ add_stamp() {
   note="$STAMP_HEADER
 > **Installed agent location:** \`$AGENT_ROOT\`
 > This file was registered at the user level by \`install.sh\`. The relative links below
-> may not resolve from here — resolve root \`AGENTS.md\` and every \`ingest/\`, \`orchestrator/\`, \`backend/\` and \`frontend/\`
+> may not resolve from here — resolve root \`AGENTS.md\` and every \`ingest/\`, \`engine/\`, \`orchestrator/\`, \`backend/\` and \`frontend/\`
 > reference against the installed agent location above.
 "
   local tmp; tmp="$(mktemp)"

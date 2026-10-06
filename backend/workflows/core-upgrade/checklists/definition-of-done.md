@@ -26,5 +26,5 @@ never `COMPLETE`.
 - [ ] `documentation-status.json` all-true.
 
 ## Closure
-- [ ] Episode produced under `memory/episodes/` (success or blocked).
+- [ ] Episode produced under `../engine/memory/episodes/backend/` (success or blocked).
 - [ ] `state.json` carries exactly one terminal/blocked status and a non-empty `safeResumeInstruction`.

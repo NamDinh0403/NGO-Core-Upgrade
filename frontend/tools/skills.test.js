@@ -76,7 +76,15 @@ for (const s of SKILLS) {
     // SKILL.md exists with frontmatter + required sections.
     const md = fs.readFileSync(e.P(`${dir}/SKILL.md`), 'utf8');
     assert(/^---[\s\S]*?---/.test(md), `${s.id}: missing YAML frontmatter`);
-    for (const sec of REQUIRED_SECTIONS) {
+    const shared = md.match(/\]\((\.\.\/\.\.\/\.\.\/engine\/skills\/[a-z-]+\/SKILL\.md)\)/);
+    if (shared) {
+      const implementation = path.resolve(path.dirname(e.P(`${dir}/SKILL.md`)), shared[1]);
+      assert(core.exists(implementation), `${s.id}: shared implementation missing`);
+      const contract = fs.readFileSync(implementation, 'utf8');
+      assert(/^---[\s\S]*?---/.test(contract), `${s.id}: shared implementation lacks frontmatter`);
+      assert(/# Procedure|# Shared Lifecycle/.test(contract), `${s.id}: shared implementation lacks procedure`);
+      assert(!md.includes('# Procedure'), `${s.id}: compatibility adapter must not duplicate the shared procedure`);
+    } else for (const sec of REQUIRED_SECTIONS) {
       assert(md.indexOf(`# ${sec}`) !== -1, `${s.id}: missing section '${sec}'`);
     }
     // Input + output schemas parse and are draft-07 objects.

@@ -101,5 +101,5 @@ Exit codes: restore={n}, build={n}, ef={n}
 
 ## Promote to an episode?
 
-- [ ] Yes — a structured episode is written under `memory/episodes/` (retrievable by error/symbol/version), and any reusable lesson is proposed as a `memory/candidates/` pattern.
+- [ ] Yes — a structured episode is written under `../engine/memory/episodes/backend/` (retrievable by error/symbol/version), and any reusable lesson is proposed as a `../engine/memory/candidates/backend/` pattern.
 - [ ] No — routine run, keep at solution root only.

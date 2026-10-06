@@ -23,7 +23,7 @@ function test(id, fn) { try { fn(); results.push({ id, pass: true }); } catch (e
 function assert(c, m) { if (!c) throw new Error(m || 'assertion failed'); }
 
 const TEST_CLIENT = `orchestrator-test-${process.pid}`;
-const TEMPLATES_DIR = path.resolve(__dirname, '..', 'templates');
+const TEMPLATES_DIR = path.resolve(__dirname, '..', '..', 'engine', 'templates');
 
 // --- lib/yaml.js ---------------------------------------------------------
 test('01-yaml-roundtrip', () => {
@@ -161,6 +161,11 @@ test('08-e2e-create-run', () => {
 });
 
 test('09-e2e-compose-results', () => {
+  const historicalFile = path.join(runLib.runDir(TEST_CLIENT, e2eRunId), 'state.json');
+  const historical = runLib.readJson(historicalFile);
+  assert(historical.executionContract === 'ENGINE', 'new runs require engine validation');
+  delete historical.executionContract;
+  runLib.writeJson(historicalFile, historical);
   fs.writeFileSync(path.join(e2eBackendRun, 'state.json'), JSON.stringify({ status: 'SUCCEEDED', currentPhase: 'HANDOVER', pendingSteps: [], unresolvedIssues: [], targetVersion: '9.2.1' }));
   fs.writeFileSync(path.join(e2eFrontendRun, 'state.json'), JSON.stringify({ status: 'COMPLETE', targetVersion: '9.2.1' }));
   fs.writeFileSync(path.join(e2eFrontendRun, 'requirement-coverage.yaml'), yaml.stringify({ requirements: [] }));

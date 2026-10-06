@@ -5,10 +5,10 @@
  * this is the ONE place "run git safely against an external repo path" is
  * implemented, instead of each track keeping its own copy.
  *
- * SAFETY: read-only verbs only. No checkout/reset/switch/branch/commit/push in
- * the Core repository. A ref other than the current checkout must be inspected
- * via `git show`/`git diff <ref>..<ref>` (no working-tree checkout needed for
- * those), never by switching the repository's HEAD in place.
+ * SAFETY: no checkout/reset/switch/branch/commit/push in the Core repository.
+ * Fetch may refresh remote-tracking release refs, but source content, HEAD and
+ * the working tree are never changed. Other refs are inspected via
+ * `git show`/`git diff <ref>..<ref>`, never by switching HEAD in place.
  */
 const cp = require('child_process');
 const fs = require('fs');
@@ -18,7 +18,7 @@ const crypto = require('crypto');
 function git(repoPath, argv, opts) {
   const safety = ['-c', 'core.fsmonitor=false', '-c', 'core.useBuiltinFSMonitor=false'];
   const args = ['-C', repoPath].concat(safety, argv);
-  const res = cp.spawnSync('git', args, { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024, timeout: (opts && opts.timeout) || 60000, windowsHide: true });
+  const res = cp.spawnSync('git', args, { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, timeout: (opts && opts.timeout) || 60000, windowsHide: true });
   return { code: res.status, stdout: res.stdout || '', stderr: res.stderr || '', error: res.error ? String(res.error.message || res.error) : null };
 }
 
@@ -80,6 +80,28 @@ function listTags(repoPath) {
   return { ok: true, error: null, tags: r.stdout.split(/\r?\n/).map((s) => s.trim()).filter(Boolean) };
 }
 
+/** Refresh only origin's release refs; never changes HEAD or the working tree. */
+function fetchReleaseBranches(repoPath) {
+  const r = git(repoPath, [
+    'fetch', '--prune', 'origin',
+    '+refs/heads/releases/*:refs/remotes/origin/releases/*',
+  ], { timeout: 180000 });
+  return r.code === 0
+    ? { ok: true, error: null }
+    : { ok: false, error: (r.stderr || r.error || 'git fetch failed').trim() };
+}
+
+/** List fetched origin release branches without changing the Core checkout. */
+function listReleaseBranches(repoPath) {
+  const r = git(repoPath, ['for-each-ref', '--format=%(refname:short)', 'refs/remotes/origin/releases/*']);
+  if (r.code !== 0) return { ok: false, error: (r.stderr || r.error || 'git branch listing failed').trim(), branches: [] };
+  const branches = Array.from(new Set(r.stdout.split(/\r?\n/)
+    .map((s) => s.trim())
+    .filter((s) => /(?:^|\/)releases\/[^/]+$/.test(s))
+    .map((s) => s.replace(/^origin\//, ''))));
+  return { ok: true, error: null, branches };
+}
+
 /** Name-status diff between two refs, no working-tree checkout of either. */
 function diffNameStatus(repoPath, refA, refB) {
   const from = resolveRef(repoPath, refA);
@@ -111,4 +133,32 @@ function showFile(repoPath, commit, file) {
   return result.stdout;
 }
 
-module.exports = { git, isGitRepo, headCommit, statusPorcelain, fingerprint, diffFingerprints, listTags, diffNameStatus, resolveRef, showFile };
+function commitLog(repoPath, refA, refB) {
+  const from = resolveRef(repoPath, refA);
+  const to = resolveRef(repoPath, refB);
+  if (!from || !to) return { ok: false, error: 'release boundary does not resolve to commits', commits: [] };
+  const r = git(repoPath, ['log', '--format=%H%x00%s%x00', `${from}..${to}`, '--']);
+  if (r.code !== 0) return { ok: false, error: (r.stderr || r.error || 'git log failed').trim(), commits: [] };
+  const fields = r.stdout.split('\0');
+  const commits = [];
+  for (let i = 0; i + 1 < fields.length; i += 2) {
+    const sha = fields[i].trim();
+    if (sha) commits.push({ sha, subject: fields[i + 1] || '' });
+  }
+  return { ok: true, error: null, commits };
+}
+
+function diffPatch(repoPath, refA, refB) {
+  const from = resolveRef(repoPath, refA);
+  const to = resolveRef(repoPath, refB);
+  if (!from || !to) return { ok: false, error: 'release boundary does not resolve to commits', patch: '' };
+  const r = git(repoPath, ['diff', '--find-renames', '--unified=0', from, to, '--']);
+  return r.code === 0
+    ? { ok: true, error: null, patch: r.stdout }
+    : { ok: false, error: (r.stderr || r.error || 'git diff failed').trim(), patch: '' };
+}
+
+module.exports = {
+  git, isGitRepo, headCommit, statusPorcelain, fingerprint, diffFingerprints,
+  listTags, fetchReleaseBranches, listReleaseBranches, diffNameStatus, commitLog, diffPatch, resolveRef, showFile,
+};

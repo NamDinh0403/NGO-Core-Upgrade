@@ -1,0 +1,606 @@
+{
+  "schemaVersion": 4,
+  "evidenceSchemaVersion": 4,
+  "analyzerVersion": "release-branches-2",
+  "version": "5.15.0",
+  "previousVersion": "5.14.0",
+  "status": "CANDIDATE",
+  "ingestedAt": "2026-10-06T06:57:28.178Z",
+  "sourceFingerprint": {
+    "normalizedVersion": "5.15.0",
+    "previousNormalizedVersion": "5.14.0",
+    "currentSourceBranch": "releases/5.15",
+    "previousSourceBranch": "releases/5.14",
+    "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+    "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+    "evidenceSchemaVersion": 4,
+    "analyzerVersion": "release-branches-2"
+  },
+  "sources": {
+    "coreRepoPath": "D:\\NGO Client\\ngo-online-core",
+    "sourceBranch": "releases/5.15",
+    "previousSourceBranch": "releases/5.14",
+    "sourceCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+    "previousSourceCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+    "comparisonRange": "e3462d12ba7a0c83f34317992d6460e56fdc86a9...790664f231a5c246388d66f00d3c4cbd82365c1d",
+    "tagRange": {
+      "from": "releases/5.14",
+      "to": "releases/5.15"
+    }
+  },
+  "changedFileCount": 6,
+  "commitsAnalyzed": [
+    {
+      "sha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "subject": "Merged PR 35505: 5.15.2"
+    },
+    {
+      "sha": "498d318d65e4da93e68043b8d8076a6e3c876444",
+      "subject": "Merged PR 35461: [Changes tab] - Can not save the form if some entity fields contain strange c..."
+    },
+    {
+      "sha": "bc836bc9ef13703f76c971aed01c9ab4fbfa9831",
+      "subject": "Merged PR 35082: 5.15.1"
+    },
+    {
+      "sha": "2a4c3103afd26c77827f58d4da6d174759ba24f9",
+      "subject": "Updated build agent pool"
+    },
+    {
+      "sha": "aaac428a36b838de2a2f9abd79e029a2d4a87d98",
+      "subject": "Merged PR 34840: Sanitizie some more HTML before saving to the database"
+    },
+    {
+      "sha": "5380331a2ee4e612a4d88c158021309dd54424bd",
+      "subject": "Updated build agent pool"
+    },
+    {
+      "sha": "5a71c7d42a2f1649bce7e86ab311d75d4109cae6",
+      "subject": "Merged PR 34596: Sanitizie some HTML before saving to the database"
+    },
+    {
+      "sha": "180cee68ef8003bac8cb318caa47141055428a60",
+      "subject": "Ignore angular temp files"
+    },
+    {
+      "sha": "38cb1e074f2f16d37c303dd2794ffcb1e80b30fa",
+      "subject": "Merged PR 30309: 5.15"
+    },
+    {
+      "sha": "e72240bfc2d671de5f0189c6456718e7eddda20c",
+      "subject": "Merged PR 30307: Apply compression to CoreCacheItems"
+    },
+    {
+      "sha": "854f1aa2464c14276afeb48ddbe7ee9d28d88bea",
+      "subject": "Merged PR 30306: Apply compression to CoreCacheItems"
+    }
+  ],
+  "technicalSummary": "6 files changed across 11 commits from releases/5.14 to releases/5.15.",
+  "highRiskChanges": [
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "removed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "currentSourcePath": null,
+      "description": "removed ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "impact": "Manual compatibility review required.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json"
+      ],
+      "verificationStatus": "source-diff-observed"
+    }
+  ],
+  "searchableSymbolChanges": [
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "removed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "currentSourcePath": null,
+      "description": "removed ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "impact": "Manual compatibility review required.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json"
+      ],
+      "verificationStatus": "source-diff-observed"
+    }
+  ],
+  "packageAndFrameworkChanges": [],
+  "configurationChanges": [],
+  "databaseChanges": [],
+  "apiChanges": [
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "changed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "description": "changed ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "impact": "Review affected integration before upgrade.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs"
+      ],
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "currentVersion": "5.15.0",
+      "previousVersion": "5.14.0",
+      "currentBranch": "releases/5.15",
+      "previousBranch": "releases/5.14",
+      "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+      "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+      "changeType": "removed",
+      "exactSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "oldSignature": null,
+      "newSignature": null,
+      "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "currentSourcePath": null,
+      "description": "removed ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "impact": "Manual compatibility review required.",
+      "lookupTerms": [
+        "5.15.0",
+        "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json"
+      ],
+      "verificationStatus": "source-diff-observed"
+    }
+  ],
+  "manualReviewItems": [
+    "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json: removed ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json"
+  ],
+  "validationResults": {
+    "sourcePathsResolved": true,
+    "coreFingerprintUnchanged": null,
+    "duplicateEvidence": false
+  },
+  "changes": [
+    {
+      "status": "M",
+      "path": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+      "oldPath": null,
+      "scope": "backend",
+      "category": "dotnet-source"
+    },
+    {
+      "status": "M",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+      "oldPath": null,
+      "scope": "backend",
+      "category": "dotnet-source"
+    },
+    {
+      "status": "M",
+      "path": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+      "oldPath": null,
+      "scope": "backend",
+      "category": "dotnet-source"
+    },
+    {
+      "status": "M",
+      "path": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+      "oldPath": null,
+      "scope": "backend",
+      "category": "dotnet-source"
+    },
+    {
+      "status": "M",
+      "path": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+      "oldPath": null,
+      "scope": "backend",
+      "category": "dotnet-source"
+    },
+    {
+      "status": "D",
+      "path": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+      "oldPath": null,
+      "scope": "shared",
+      "category": "other"
+    }
+  ],
+  "facts": [],
+  "findings": {
+    "backend": [],
+    "frontend": [],
+    "shared": [
+      {
+        "currentVersion": "5.15.0",
+        "previousVersion": "5.14.0",
+        "currentBranch": "releases/5.15",
+        "previousBranch": "releases/5.14",
+        "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+        "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+        "changeType": "changed",
+        "exactSymbol": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "oldSignature": null,
+        "newSignature": null,
+        "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "description": "changed ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+        "impact": "Review affected integration before upgrade.",
+        "lookupTerms": [
+          "5.15.0",
+          "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs",
+          "ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs"
+        ],
+        "verificationStatus": "source-diff-observed"
+      },
+      {
+        "currentVersion": "5.15.0",
+        "previousVersion": "5.14.0",
+        "currentBranch": "releases/5.15",
+        "previousBranch": "releases/5.14",
+        "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+        "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+        "changeType": "changed",
+        "exactSymbol": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "oldSignature": null,
+        "newSignature": null,
+        "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "description": "changed ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+        "impact": "Review affected integration before upgrade.",
+        "lookupTerms": [
+          "5.15.0",
+          "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+          "ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs"
+        ],
+        "verificationStatus": "source-diff-observed"
+      },
+      {
+        "currentVersion": "5.15.0",
+        "previousVersion": "5.14.0",
+        "currentBranch": "releases/5.15",
+        "previousBranch": "releases/5.14",
+        "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+        "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+        "changeType": "changed",
+        "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "oldSignature": null,
+        "newSignature": null,
+        "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "description": "changed ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+        "impact": "Review affected integration before upgrade.",
+        "lookupTerms": [
+          "5.15.0",
+          "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs",
+          "ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs"
+        ],
+        "verificationStatus": "source-diff-observed"
+      },
+      {
+        "currentVersion": "5.15.0",
+        "previousVersion": "5.14.0",
+        "currentBranch": "releases/5.15",
+        "previousBranch": "releases/5.14",
+        "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+        "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+        "changeType": "changed",
+        "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "oldSignature": null,
+        "newSignature": null,
+        "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "description": "changed ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+        "impact": "Review affected integration before upgrade.",
+        "lookupTerms": [
+          "5.15.0",
+          "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs",
+          "ngo-api-core/NGO/NGO.Core.Services/CacheService.cs"
+        ],
+        "verificationStatus": "source-diff-observed"
+      },
+      {
+        "currentVersion": "5.15.0",
+        "previousVersion": "5.14.0",
+        "currentBranch": "releases/5.15",
+        "previousBranch": "releases/5.14",
+        "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+        "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+        "changeType": "changed",
+        "exactSymbol": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "oldSignature": null,
+        "newSignature": null,
+        "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "currentSourcePath": "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "description": "changed ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+        "impact": "Review affected integration before upgrade.",
+        "lookupTerms": [
+          "5.15.0",
+          "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs",
+          "ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs"
+        ],
+        "verificationStatus": "source-diff-observed"
+      },
+      {
+        "currentVersion": "5.15.0",
+        "previousVersion": "5.14.0",
+        "currentBranch": "releases/5.15",
+        "previousBranch": "releases/5.14",
+        "currentCommitSha": "790664f231a5c246388d66f00d3c4cbd82365c1d",
+        "previousCommitSha": "e3462d12ba7a0c83f34317992d6460e56fdc86a9",
+        "changeType": "removed",
+        "exactSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "fullyQualifiedSymbol": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "oldSignature": null,
+        "newSignature": null,
+        "sourceFilePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "previousSourcePath": "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "currentSourcePath": null,
+        "description": "removed ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+        "impact": "Manual compatibility review required.",
+        "lookupTerms": [
+          "5.15.0",
+          "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+          "ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json"
+        ],
+        "verificationStatus": "source-diff-observed"
+      }
+    ]
+  },
+  "unresolvedItems": [],
+  "nextAction": "Review source evidence for 5.15.0 before promoting applicable findings into track canonical knowledge.",
+  "contentHash": "9302b02c95c17707e64f29d13740f78594b4b818b855f790faacc7650df7a76b"
+}

@@ -74,6 +74,27 @@
       "notes":      "Remove Google Analytics script from src/index.html."
     },
     {
+      "ngoCore":    "8.5.x",
+      "angular":    "15.x",
+      "typescript": "~4.9.0",
+      "esTarget":   "ES2022",
+      "notes":      "Manual enrichment required; synchronized from Core branch releases/8.5."
+    },
+    {
+      "ngoCore":    "8.7.x",
+      "angular":    "15.x",
+      "typescript": "~4.9.0",
+      "esTarget":   "ES2022",
+      "notes":      "Manual enrichment required; synchronized from Core branch releases/8.7."
+    },
+    {
+      "ngoCore":    "8.8.x",
+      "angular":    "15.x",
+      "typescript": "~4.9.0",
+      "esTarget":   "ES2022",
+      "notes":      "Manual enrichment required; synchronized from Core branch releases/8.8."
+    },
+    {
       "ngoCore":    "9.0.x",
       "angular":    "15.x",
       "typescript": "~4.9.0",
@@ -90,6 +111,30 @@
       "esTarget":   "ES2022",
       "node":       "18.20.0",
       "notes":      "Backend-led release (RelatedEntity Log fields, EF Core tooling packages, SPSignedOffAdditionalDocumentsFolderName config). No frontend-specific package changes."
+    },
+    {
+      "ngoCore":    "9.2.x",
+      "angular":    "15.x",
+      "typescript": "~4.9.0",
+      "esTarget":   "ES2022",
+      "node":       "18.20.0",
+      "notes":      "Manual enrichment required; synchronized from Core branch releases/9.2."
+    },
+    {
+      "ngoCore":    "9.3.x",
+      "angular":    "15.x",
+      "typescript": "~4.9.0",
+      "esTarget":   "ES2022",
+      "node":       "18.20.0",
+      "notes":      "Manual enrichment required; synchronized from Core branch releases/9.3."
+    },
+    {
+      "ngoCore":    "9.4.x",
+      "angular":    "15.x",
+      "typescript": "~4.9.0",
+      "esTarget":   "ES2022",
+      "node":       "18.20.0",
+      "notes":      "Manual enrichment required; synchronized from Core branch releases/9.4."
     }
   ],
 

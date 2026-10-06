@@ -16,6 +16,7 @@ const requirementsLib = require('../tools/lib/requirements');
 const coverageLib = require('../tools/lib/coverage');
 const handoverLib = require('../tools/lib/handover');
 const orchestrator = require('../tools/orchestrator');
+const contextLib = require('../tools/lib/context');
 
 const results = [];
 function test(id, fn) { try { fn(); results.push({ id, pass: true }); } catch (e) { results.push({ id, pass: false, error: e.stack || e.message }); } }
@@ -330,7 +331,140 @@ test('21-malformed-handover-blocks-previously-complete-run', () => {
   }
 });
 
-test('22-cleanup', () => {
+test('22-track-context-isolation-and-drift', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  const state = runLib.readJson(path.join(base, 'state.json'));
+  const frontend = contextLib.consumeTrackContext(state.trackContextRefs.frontend, 'frontend');
+  assert(contextLib.consumeTrackContext(state.trackContextRefs.frontend, 'frontend', { sourceVersion: '9.2' }), 'version shorthand must match equivalent resolved versions');
+  assert(frontend.track === 'frontend' && !JSON.stringify(frontend).includes('backendClientPath'), 'frontend must not receive backend client metadata');
+  assert(!JSON.stringify(frontend).includes('package.json'), 'shared context must not inline package implementation');
+  let rejected = false;
+  try { contextLib.consumeTrackContext(state.trackContextRefs.frontend, 'backend'); } catch (_) { rejected = true; }
+  assert(rejected, 'opposite executor context must be rejected');
+  const file = state.trackContextRefs.frontend;
+  const original = fs.readFileSync(file, 'utf8');
+  try {
+    const altered = JSON.parse(original);
+    altered.requirements.push({ scope: 'backend', statement: 'backend-only sentinel' });
+    fs.writeFileSync(file, JSON.stringify(altered));
+    assert(orchestrator.cmdContext({ run: `${TEST_CLIENT}/${e2eRunId}`, track: 'frontend' }) === 1, 'tampered context must block without invoking ingest');
+  } finally { fs.writeFileSync(file, original); }
+  assert(contextLib.trackStatus({ status: 'BLOCKED_NEEDS_CONTEXT' }) === 'BLOCKED' && contextLib.trackStatus({ status: 'COMPLETE' }) === 'PASSED', 'local statuses must project without rewriting track state');
+});
+
+test('23-shared-owner-reuses-supplied-context-and-run', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  const state = runLib.readJson(path.join(base, 'state.json'));
+  const execution = require('../tools/lib/execution');
+  execution.attach(e2eBackendRun, 'backend', { contextRef: state.trackContextRefs.backend, runId: e2eRunId });
+  assert(fs.existsSync(path.join(e2eBackendRun, 'shared-context-ref.json')) && execution.guard(e2eBackendRun, 'backend', { runId: e2eRunId }), 'execution must durably bind the existing context');
+  assert(orchestrator.cmdCreateRun({ client: TEST_CLIENT, tracks: 'backend', 'run-id': e2eRunId, 'source-version': '9.2.0', 'target-version': '9.2.1' }) === 0, 'same run must consume context without invoking ingest');
+  assert(orchestrator.cmdCreateRun({ client: TEST_CLIENT, tracks: 'backend', 'run-id': e2eRunId, 'source-version': '9.1.0', 'target-version': '9.2.1' }) === 1, 'conflicting source must not overwrite shared run');
+  assert(orchestrator.cmdCreateRun({ client: TEST_CLIENT, tracks: 'backend', 'run-id': e2eRunId, 'source-version': '9.2.0', 'target-version': '9.2.1', 'backend-client-path': 'other-client' }) === 1, 'conflicting explicitly supplied paths must not reuse old evidence');
+  assert(execution.guard(tmpFrontendRun, 'frontend') === null, 'legacy runs must remain readable');
+});
+
+test('24-backend-configuration-evidence-isolated-and-required', () => {
+  const configuration = require('../tools/lib/executors').capability('backend', 'configuration');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchestrator-config-'));
+  try {
+    fs.writeFileSync(path.join(root, 'appsettings.json'), JSON.stringify({ Core: { Secret: 'PRIVATE-SENTINEL' } }));
+    const evidence = configuration.inspect(root, [{ id: 'secret', key: 'Secret', section: 'Core', owningProcess: 'ALL', sensitive: true }]);
+    assert(!JSON.stringify(evidence).includes('PRIVATE-SENTINEL') && evidence.secretRejections.length === 1, 'backend adapter must reject a concrete secret without persisting values');
+    const file = path.join(root, 'evidence.json');
+    fs.writeFileSync(file, JSON.stringify(evidence));
+    const result = coverageLib.verifyCoverage({ runId: 'isolated', domainEvidenceRefs: [file] });
+    assert(result.coverage.summary.outstanding === 1 && result.missingSteps.items[0].status === 'BLOCKED', 'moved configuration check must remain a shared completion gate');
+    const split = requirementsLib.splitRequirements({ records: [], version: '9.2.0', runId: 'isolated' });
+    requirementsLib.appendCanonical(split, '8.3.0', '9.2.0');
+    assert(split.backend.requirements.some((finding) => finding.id.includes('DATABASE')) && split.frontend.requirements.every((finding) => ['frontend', 'shared'].includes(finding.scope)), 'formerly mixed canonical requirements must route to their owner');
+  } finally { fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('25-scoped-discovery-and-lifecycle-projection', () => {
+  const discovery = require('../tools/lib/discovery');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchestrator-discovery-'));
+  try {
+    fs.writeFileSync(path.join(root, 'client.sln'), 'fixture');
+    fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({ dependencies: { '@angular/core': '15.2.0', private: 'git+https://PRIVATE-SENTINEL@example.test/repository' } }));
+    const backend = discovery.inspect(root, 'backend');
+    assert(backend.present && !JSON.stringify(backend).includes('FRONTEND-SENTINEL'), 'backend discovery must not parse frontend package details');
+    const frontend = discovery.inspect(root, 'frontend');
+    assert(frontend.package.dependencies['@angular/core'] === '15.2.0' && !JSON.stringify(frontend).includes('PRIVATE-SENTINEL') && frontend.package.dependencies.private === '<RESOLVE_LOCALLY>', 'credential-bearing dependency declarations must not enter persisted context');
+    const evidence = discovery.backendEvidence(root);
+    assert(!evidence.frontendPresent && evidence.dotnetClientPresent, 'backend discovery must not activate frontend toolchains');
+    const lifecycle = require('../tools/lib/lifecycle');
+    assert(lifecycle.phase({ status: 'REQUIREMENTS_READY' }) === 'PLAN' && lifecycle.phase({ status: 'RESULTS_COMPOSED', executorStatus: { backend: 'RUNNING' } }) === 'EXECUTE', 'shared lifecycle must be a projection, not a second execution engine');
+  } finally { fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('26-re-signed-context-and-missing-binding-still-block', () => {
+  const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+  const state = runLib.readJson(path.join(base, 'state.json'));
+  const file = state.trackContextRefs.backend;
+  const original = fs.readFileSync(file, 'utf8');
+  try {
+    const changed = JSON.parse(original);
+    changed.client.path = 'different-client';
+    delete changed.fingerprint;
+    changed.fingerprint = contextLib.digest(changed);
+    fs.writeFileSync(file, JSON.stringify(changed));
+    assert(orchestrator.cmdContext({ run: `${TEST_CLIENT}/${e2eRunId}`, track: 'backend' }) === 1, 're-signing cannot replace shared run provenance');
+  } finally { fs.writeFileSync(file, original); }
+  assert(orchestrator.cmdCreateRun({ client: TEST_CLIENT, 'run-id': '../escape', 'source-version': '9.2.0', 'target-version': '9.2.1' }) === 2, 'unsafe run id must be rejected before writes');
+});
+
+test('27-backend-validation-refresh-and-scoped-evidence', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchestrator-refresh-'));
+  try {
+    const file = path.join(root, 'appsettings.json');
+    const requirements = [{ id: 'required', key: 'Enabled', section: 'Core', owningProcess: 'ALL', sensitive: false, automation: 'AUTO_AFTER_MAPPING' }];
+    fs.writeFileSync(file, '{}');
+    const configuration = require('../tools/lib/executors').capability('backend', 'configuration');
+    const evidenceFile = path.join(root, 'backend-evidence.json');
+    runLib.writeJson(evidenceFile, Object.assign(configuration.inspect(root, requirements), { input: { root, requirements } }));
+    const upgradeContextRef = path.join(root, 'upgrade.json');
+    runLib.writeJson(upgradeContextRef, { integration: {} });
+    fs.writeFileSync(file, JSON.stringify({ Core: { Enabled: true } }));
+    contextLib.refreshDomainEvidence({ domainEvidenceRefs: [evidenceFile], upgradeContextRef });
+    const result = coverageLib.verifyCoverage({ runId: 'refresh', domainEvidenceRefs: [evidenceFile] });
+    assert(result.coverage.summary.outstanding === 0, 'successful backend changes must refresh initially missing coverage');
+    const base = runLib.runDir(TEST_CLIENT, e2eRunId);
+    const state = runLib.readJson(path.join(base, 'state.json'));
+    const packet = contextLib.consumeTrackContext(state.trackContextRefs.frontend, 'frontend');
+    const selected = contextLib.readTrackEvidence(packet, '9.2.1');
+    assert(Array.isArray(selected.facts) && !('backend' in selected), 'lazy retrieval must expose only the executor slice');
+  } finally { fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('28-detached-context-is-not-an-owner', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchestrator-detached-'));
+  try {
+    const state = runLib.readJson(path.join(runLib.runDir(TEST_CLIENT, e2eRunId), 'state.json'));
+    fs.mkdirSync(path.join(root, 'contexts'));
+    const file = path.join(root, 'contexts', 'backend.json');
+    fs.copyFileSync(state.trackContextRefs.backend, file);
+    let blocked = false;
+    try { contextLib.consumeTrackContext(file, 'backend'); } catch (_) { blocked = true; }
+    assert(blocked, 'a valid digest alone must not authorize a detached shared context');
+  } finally { fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('29-shared-requirements-appear-once-per-packet', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'orchestrator-compact-'));
+  try {
+    const original = runLib.readJson(path.join(runLib.runDir(TEST_CLIENT, e2eRunId), 'core-change-set.json'));
+    const shared = { id: 'SHARED-SENTINEL', scope: 'shared' };
+    const split = { shared: { requirements: [shared] }, backend: { requirements: [shared], excluded: [] }, frontend: { requirements: [shared], excluded: [] } };
+    const refs = contextLib.persistContexts(root, { clientId: 'compact', tracks: ['backend', 'frontend'], sourceVersion: '9.2.0', targetVersion: '9.2.1' }, 'compact', original, split);
+    for (const file of Object.values(refs.trackContextRefs)) {
+      const packet = runLib.readJson(file);
+      assert(packet.requirements.length === 0 && packet.upgrade.sharedRequirements.length === 1, 'shared requirements must not be duplicated in a track packet');
+    }
+  } finally { fs.rmSync(root, { recursive: true, force: true }); }
+});
+
+test('30-cleanup', () => {
   fs.rmSync(path.join(runLib.RUNS_ROOT, runLib.sanitizeClientId(TEST_CLIENT)), { recursive: true, force: true });
   fs.rmSync(tmpIngestRoot, { recursive: true, force: true });
   fs.rmSync(tmpFrontendRun, { recursive: true, force: true });

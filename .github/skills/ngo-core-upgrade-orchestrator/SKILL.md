@@ -11,3 +11,5 @@ Read [AGENTS.md](../../../AGENTS.md) for routing and
 Resolve links against the installed agent root when registered at user level.
 Load track contracts only when delegating to those tracks. The public agent is
 `ngo-core-upgrade`; this skill retains its existing discovery identity.
+The shared lifecycle is [orchestrator/skills/lifecycle/SKILL.md](../../../orchestrator/skills/lifecycle/SKILL.md).
+Pass one isolated track context per delegation, not the complete shared run.

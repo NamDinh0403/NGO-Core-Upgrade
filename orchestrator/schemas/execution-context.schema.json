@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "orchestrator/schemas/execution-context.schema.json",
+  "title": "Shared Execution Contracts",
+  "oneOf": [
+    { "$ref": "#/definitions/CoreChangeSet" },
+    { "$ref": "#/definitions/UpgradeContext" },
+    { "$ref": "#/definitions/TrackContext" }
+  ],
+  "definitions": {
+    "BackendContext": { "allOf": [{ "$ref": "#/definitions/TrackContext" }, { "properties": { "track": { "const": "backend" } } }] },
+    "FrontendContext": { "allOf": [{ "$ref": "#/definitions/TrackContext" }, { "properties": { "track": { "const": "frontend" } } }] },
+    "CoreChangeSet": {
+      "type": "object",
+      "required": ["schemaVersion", "status", "source", "releases", "fingerprint"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "const": 1 },
+        "status": { "const": "CANDIDATE" },
+        "source": {
+          "type": "object",
+          "required": ["corePath", "fromVersion", "toVersion", "fromRevision", "toRevision"],
+          "additionalProperties": false,
+          "properties": {
+            "corePath": { "type": "string" },
+            "releaseNotesPath": { "type": ["string", "null"] },
+            "fromVersion": { "type": "string" }, "toVersion": { "type": "string" },
+            "fromRevision": { "type": ["string", "null"] }, "toRevision": { "type": ["string", "null"] }
+          }
+        },
+        "releases": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "required": ["version", "evidence", "identity", "recordHash"], "additionalProperties": false,
+            "properties": {
+              "version": { "type": "string" }, "evidence": { "type": "string" }, "recordHash": { "type": "string" },
+              "identity": { "anyOf": [{ "type": "null" }, { "$ref": "../../ingest/schemas/ingested-release.schema.json#/properties/identity" }] }
+            }
+          }
+        },
+        "fingerprint": { "type": "string" }
+      }
+    },
+    "UpgradeContext": {
+      "type": "object",
+      "required": ["schemaVersion", "run", "client", "coreChangeSet", "target", "sharedRequirements", "integration", "policies", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "const": 1 }, "run": { "type": "object" }, "client": { "type": "object" },
+        "coreChangeSet": { "type": "object", "required": ["ref", "fingerprint"], "properties": { "ref": { "type": "string" }, "fingerprint": { "type": "string" } }, "additionalProperties": false },
+        "target": { "type": "object", "required": ["sourceVersion", "targetVersion"], "properties": { "sourceVersion": { "type": "string" }, "targetVersion": { "type": "string" } }, "additionalProperties": false },
+        "sharedRequirements": { "type": "array" }, "integration": { "type": "object" }, "policies": { "type": "object" }, "evidence": { "type": "object" }
+      }
+    },
+    "TrackContext": {
+      "type": "object",
+      "required": ["schemaVersion", "track", "upgrade", "client", "requirements", "excluded", "policies", "evidence", "fingerprint"],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": { "const": 1 }, "track": { "enum": ["backend", "frontend"] },
+        "upgrade": { "$ref": "#/definitions/UpgradeContext" },
+        "client": { "type": "object", "required": ["path", "facts"], "properties": { "path": { "type": ["string", "null"] }, "facts": { "type": "object" } }, "additionalProperties": false },
+        "requirements": { "type": "array" }, "excluded": { "type": "array" },
+        "policies": { "type": "object" }, "evidence": { "type": "object" }, "fingerprint": { "type": "string" }
+      }
+    }
+  }
+}

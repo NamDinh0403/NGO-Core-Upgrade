@@ -10,6 +10,12 @@ owners:
     writes:
       - request.yaml
       - state.json
+      - core-change-set.json
+      - upgrade-context.json
+      - contexts/backend.json
+      - contexts/frontend.json
+      - client-discovery.json
+      - backend-configuration-evidence.json
       - requirements/all.yaml
       - requirements/backend.yaml
       - requirements/frontend.yaml

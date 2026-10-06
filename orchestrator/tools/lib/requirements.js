@@ -54,8 +54,9 @@ function splitRequirements({ ingestRoot, version, featureDecisionsPath, runId, r
   })), []);
 
   const backendFindings = [...tag('backend'), ...tag('shared')];
-  const frontendFindings = [...tag('frontend'), ...tag('shared')];
-  const sharedFindings = tag('shared');
+  const backendOnly = (finding) => ['sql-script', 'ef-migration', 'backend-config-key'].includes(finding.category);
+  const frontendFindings = [...tag('frontend'), ...tag('shared').filter((finding) => !backendOnly(finding))];
+  const sharedFindings = tag('shared').filter((finding) => !backendOnly(finding));
   const allFindings = [...tag('backend'), ...tag('frontend'), ...tag('shared')];
 
   return {
@@ -99,4 +100,25 @@ function writeRequirements(requirementsDir, split) {
   fs.writeFileSync(path.join(requirementsDir, 'decisions.yaml'), yaml.stringify(split.decisions));
 }
 
-module.exports = { loadCandidateRecord, loadFeatureDecisions, isExcludedByDecision, splitRequirements, writeRequirements };
+function appendCanonical(split, source, target) {
+  const store = require('./knowledge').defaultStore();
+  for (const requirement of store.allRequirements(source, target)) {
+    const scope = requirement.scope === 'FRONTEND' ? 'frontend' : requirement.scope === 'SHARED' ? 'shared' : 'backend';
+    const finding = { id: requirement.id, scope, category: requirement.category,
+      statement: requirement.title || requirement.action || requirement.id,
+      source: 'canonical', evidence: `${store.RELEASES_DIR}/${requirement.releaseVersion}/${requirement.scope.toLowerCase()}.yaml`,
+      canonicalRequirementId: requirement.id, automation: requirement.automation, timing: requirement.timing,
+      excluded: false, excludedByFeature: null };
+    const decision = isExcludedByDecision(finding, split.decisions);
+    finding.excluded = decision.excluded;
+    finding.excludedByFeature = decision.feature || null;
+    if (split.all.requirements.some((existing) => existing.id === finding.id)) continue;
+    split.all.requirements.push(finding);
+    for (const track of scope === 'shared' ? ['backend', 'frontend', 'shared'] : [scope]) {
+      split[track][finding.excluded ? 'excluded' : 'requirements'].push(finding);
+    }
+  }
+  return split;
+}
+
+module.exports = { loadCandidateRecord, loadFeatureDecisions, isExcludedByDecision, splitRequirements, writeRequirements, appendCanonical };

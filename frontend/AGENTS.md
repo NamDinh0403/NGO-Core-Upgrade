@@ -31,9 +31,9 @@ disposable `git worktree` under `runs/<client>/<run-id>/research/core-target/`.
   applicable, automatable requirement is unmapped/unplanned or any manual item lacks an
   owner; a run is not COMPLETE until every applicable requirement is verified,
   not-applicable-with-evidence, or a manual item with a full handover owner.
-- **Backend AppSettings are knowledge**: preserve existing client values, represent file key
-  and Azure key separately, keep SQL/deployment actions manual with an owner, and **reject
-  committed secret values** (use the secret provider).
+- **Backend AppSettings validation remains mandatory but backend-owned**: the shared
+  dispatcher invokes the read-only backend capability and retains coverage/handover.
+  Frontend receives status only, never settings values, EF or database implementation.
 - **Learning writes candidates only** (`knowledge/candidates/`), redacted, never
   auto-promoted and never cross-client.
 
@@ -45,6 +45,9 @@ node tools/frontend-upgrade-agent.js start \
 ```
 `start` runs the read-only pipeline through planning. Add `--execute` to continue to
 gated mutation. `--request <file.yaml>` supplies all inputs from one request file.
+Standalone exact-version runs create a single-track shared run through the owner.
+Coordinated calls pass `--context <contexts/frontend.json> --client-id <id>
+--run <sharedRunId>`. Generic lifecycle: `../orchestrator/skills/lifecycle/SKILL.md`.
 
 ## Pipeline (skills, selected deterministically by tools/lib/engine.js)
 `validate-local-repositories -> inventory-client-frontend -> inspect-local-core ->
@@ -57,8 +60,8 @@ plan-frontend-upgrade -> execute-frontend-upgrade -> investigate-frontend-failur
 An orchestrator seed at `orchestrator/runs/<client>/<runId>/requirements/frontend.yaml`
 is additional, unconfirmed read-only evidence, never a replacement for planning.
 Keep your own run state and report terminal/blocked status with exact safe-resume
-instructions. Do not write the shared run. Use the shared ingestion CLI for
-freshness checks; file existence alone does not prove a fresh release.
+instructions. Do not write the shared run or call ingest. Consume the verified
+frontend context; stale/missing evidence returns to the owner for revalidation.
 Disposition seed findings in your own `release-finding-dispositions.yaml` during
 normal planning/verification: findings with seed id, VERIFIED or
 NOT_APPLICABLE_WITH_EVIDENCE status and concrete evidence. Alternatively, link

@@ -7,6 +7,13 @@ and one frontend delegation together into one coherent engagement.
 
 ## What this module owns (see `config/artifact-ownership.yaml`)
 - One run-id and one `runs/<client>/<run-id>/` tree per engagement.
+- The only Core ensuring path: `tools/lib/context.js#ensureCoreChangeSet`.
+  Existing ingest analysis/cache remain authoritative. `core-change-set.json`
+  references verified releases, not a second analysis copy.
+- One `upgrade-context.json`, isolated `contexts/backend.json` and
+  `contexts/frontend.json`, scoped manifest discovery and evidence fingerprints.
+- Generic lifecycle: `skills/lifecycle/SKILL.md`; projected shared lifecycle and
+  executor status over the existing domain checkpoints, not a new execution engine.
 - Splitting the shared `ingest/` candidate record (plus
   `feature-decisions.yaml`, if supplied) into normalized, per-domain
   requirement seeds — **additional read-only context** each track may use
@@ -19,13 +26,13 @@ and one frontend delegation together into one coherent engagement.
 
 ## What this module does NOT own
 - Backend/frontend's own internal `runs/<client>/<run-id>/` trees, state
-  machines, skills, or policies — those remain exactly as they are (see
+  machines and domain policies remain authoritative (see
   `../docs/refactor/unified-agent-decisions.md`, DEC-1). This module reads
   their `state.json` and per-run artifacts; it never writes to them.
 - Client repository mutation of any kind.
 - Raw release-note parsing or Core git-history diffing — delegates to
-  `../ingest/tools/ingest.js`, exactly as each track's own
-  `ingest-core-release` skill already does.
+  `../ingest/tools/ingest.js`. Tracks consume contexts and never ensure releases
+  independently for an existing shared run.
 
 ## Shared-Run Loop
 
@@ -38,8 +45,11 @@ and one frontend delegation together into one coherent engagement.
   every intermediate release into per-track seeds. A BLOCKED result stops
   delegation; follow its exact safeResumeInstruction. Candidates need developer
   review before canonical promotion.
-3. Delegate to `ngo-core-backend-upgrade` / `ngo-core-frontend-upgrade` with all
-  inputs, shared runId and its requirements/<track>.yaml seed. Seeds are advisory;
+3. Delegate to `ngo-core-backend-upgrade` / `ngo-core-frontend-upgrade` with its
+  isolated contexts/<track>.json, shared runId and domain input paths only.
+  Do not pass the other context, all.yaml, full diff or opposite-domain metadata.
+  Use `context --run <client>/<runId> --track <track>` to verify/consume it.
+  Pass `--context <file>` and shared run/client IDs to track CLIs. Seeds are advisory;
   each track owns its planning, state, mutation and validation. Run in parallel
   only when client working trees do not overlap; serialize otherwise.
   During the existing planning/verification pass, each track records seed
@@ -73,6 +83,7 @@ node tools/orchestrator.js verify-coverage  --run <client>/<runId>
 node tools/orchestrator.js prepare-handover --run <client>/<runId>
 node tools/orchestrator.js final-report     --run <client>/<runId>
 node tools/orchestrator.js status           --run <client>/<runId>
+node tools/orchestrator.js context          --run <client>/<runId> --track <backend|frontend>
 ```
 
 ## Non-negotiables
@@ -86,6 +97,10 @@ node tools/orchestrator.js status           --run <client>/<runId>
   placeholder rather than silently omitting that track's contribution.
 - Every subcommand ends in exactly one status with an exact `nextAction` —
   no silent stops.
+- Configuration checks are dispatched to the backend read-only capability,
+  including frontend-only engagements. Detailed evidence stays backend-owned;
+  frontend receives only validation status. Canonical backend/database findings
+  stay in backend seeds and shared coverage, not frontend planning.
 
 ## Validate the module itself
 ```

@@ -128,6 +128,10 @@ ok('18-missing-key-detected', mapMissing.missing.some((m) => m.key === 'Core:Csp
 // 19 - secret value rejected
 const mapSecret = appset.mapRequirements(inv, [byId('APPSET-IATI-SUBSCRIPTIONKEY')]);
 ok('19-secret-value-rejected', mapSecret.secretRejections.length > 0 && mapSecret.secretRejections[0].id === 'APPSET-IATI-SUBSCRIPTIONKEY');
+const configuration = require('../../orchestrator/tools/lib/executors').capability('backend', 'configuration');
+ok('37-configuration-owner-is-backend-adapter', configuration === appset);
+const planSource = fs.readFileSync(core.P('tools/lib/planning-release.js'), 'utf8');
+ok('38-frontend-planning-does-not-inventory-backend', !planSource.includes('appset.discover') && !planSource.includes('store.appSettings'));
 
 // 20 - PM decision blocks optional feature mutation
 const pmReq = store.requirementById('REQ-9.0.0-FRONTEND-06'); // IF_PM_APPROVES
@@ -203,6 +207,11 @@ for (const f of fs.readdirSync(libDir)) {
 }
 ok('30-no-runtime-raw-release-notes', readsRaw === false);
 
+store.reset();
+const frontendOnly = store.load('8.3.0', '9.2.0', 'frontend');
+ok('35-frontend-view-excludes-backend-knowledge', frontendOnly.requirements.every((requirement) => requirement.scope === 'FRONTEND') && !('appsettings' in frontendOnly));
+const frontendRange = range.resolve('8.3.0', '9.2.0', { track: 'frontend' });
+ok('36-frontend-view-keeps-all-frontend-requirements', JSON.stringify(frontendRange.requirements) === JSON.stringify(r8392.requirements.filter((requirement) => requirement.scope === 'FRONTEND')));
 store.reset();
 const readYaml = core.readYamlAbs;
 let reads = 0;

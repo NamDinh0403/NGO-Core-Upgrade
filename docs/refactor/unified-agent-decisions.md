@@ -1,5 +1,15 @@
 # Unified agent — decisions
 
+## Current Contract Update (2026-10-06)
+
+The approved execution-contract refactor supersedes DEC-1/DEC-2 only for shared
+ensuring, generic lifecycle, knowledge-reader and context ownership. Local track
+state/checkpoints, domain policies, standalone discovery identities and canonical
+promotion remain. The single shared lifecycle lives in
+`orchestrator/skills/lifecycle/SKILL.md`; track ingestion procedures consume owner
+contexts instead of calling ingest. See
+[execution-contract-report.md](execution-contract-report.md) for the current map.
+
 Real, consequential decisions made during this refactor, with evidence and
 rationale. Not a log of routine implementation detail.
 

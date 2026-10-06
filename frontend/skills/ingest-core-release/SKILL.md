@@ -63,25 +63,15 @@ See `schemas/input.schema.json` — `corePath`, optional `releaseNotesPath`,
 optional `sinceVersion`.
 
 # Procedure
-1. **Verify freshness through the shared tool, including orchestrator seeds.**
-  Existence/path/tag spelling is not freshness. The tool checks immutable
-  boundary commits, relevant notes, analyzer version and record integrity;
-  matching identities reuse facts without re-extraction or rewriting.
-2. Invoke the shared tool (do not reimplement cache logic here):
-   ```
-   node ../ingest/tools/ingest.js ingest \
-     --core-path <corePath> \
-     --release-notes <releaseNotesPath> \
-    --since <sinceVersion> \
-     --target <version>
-   ```
-   This fingerprints the Core repository before/after, enumerates the tag
-   boundary, diffs it read-only, parses the matching `release-notes.md`
-   section, cross-checks both sources, and writes
-   `ingest/knowledge/candidates/releases/<version>.json`.
-3. **Consume only this track's slice.** Read `findings.frontend` and
-   `findings.shared` from the shared record (ignore `findings.backend` — that's
-   backend's concern). Map each finding into a DRAFT
+1. Follow the owning **Ingest And Analyze** section of
+   [shared lifecycle](../../../orchestrator/skills/lifecycle/SKILL.md).
+   With a shared run, consume `contexts/frontend.json` using orchestrator `context`.
+   Without one, request `create-run --tracks frontend` from that owner. Never call
+   ingest independently, including for freshness; stale context blocks execution.
+2. Confirm context verification succeeded and source/target/client/run match.
+3. **Consume only this track's slice.** Use frontend context requirements; request
+  lazy scoped evidence with `context --track frontend --evidence-version <v>`.
+  Never load the complete candidate record into the prompt. Map findings into a DRAFT
    `schemas/release-requirement.schema.json`-shaped record for
    `derive-release-requirements` to consume: `crossCheck:
    "CONFIRMED_BY_DIFF_AND_NOTES"` → higher confidence; `OBSERVED_IN_DIFF_...` /
@@ -112,8 +102,7 @@ verified unchanged. Status is one of the enumerated values with an exact
 `nextAction`.
 
 # Retry behavior
-Idempotent per version boundary — re-running the shared tool overwrites the
-same shared file rather than duplicating it.
+Consume the same verified context; only the owner revalidates ingestion.
 
 # Escalation behavior
 - `../../ingest/` is missing (broken install/packaging) → `BLOCKED_NEEDS_DEVELOPER`.
@@ -135,7 +124,7 @@ candidates are available for review), `developer-escalation`.
 # Prohibited behavior
 No write to `knowledge/canonical/`. No self-approval of its own candidates. No
 Core repository mutation. No re-implementing git-diff/notes-parsing locally —
-always delegate to `ingest/tools/ingest.js`. No treating a DRAFT candidate
+always use the orchestrator-owned CoreChangeSet. No treating a DRAFT candidate
 as `ACTIVE` in the same run that produced it.
 
 # Evaluations

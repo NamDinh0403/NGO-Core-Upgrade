@@ -4,6 +4,11 @@ The **single shared ingestion phase** for a new NGO Core release. Used by both
 [backend](../backend/) and [frontend](../frontend/)
 instead of each track independently re-reading the same Core git history and the
 same shared `release-notes.md`.
+For upgrade runs the [orchestrator](../orchestrator/README.md) is the only ensuring
+owner. The analyzer and per-release cache stay here unchanged; a run's CoreChangeSet
+references their verified identities and content hashes. Track executors consume
+isolated packets and request evidence lazily, never independently run this ingest
+phase. Maintenance `check`/`ingest` commands remain available.
 
 ## Why this exists
 

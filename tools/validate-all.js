@@ -14,6 +14,8 @@
  */
 const path = require('path');
 const cp = require('child_process');
+const fs = require('fs');
+const crypto = require('crypto');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -39,8 +41,20 @@ function git(args) {
   return res.status === 0 ? (res.stdout || '').trim() : null;
 }
 
+function trackedSnapshot() {
+  const files = git(['ls-files', '-z']);
+  if (files === null) return null;
+  const hash = crypto.createHash('sha256');
+  for (const file of files.split('\0').filter(Boolean).sort()) {
+    hash.update(file).update('\0');
+    try { hash.update(fs.readFileSync(path.join(ROOT, file))); } catch (_) { hash.update('<MISSING>'); }
+  }
+  return hash.digest('hex');
+}
+
 const verbose = process.argv.includes('--verbose');
 const baseline = git(['status', '--porcelain']);
+const baselineContents = trackedSnapshot();
 const failures = [];
 
 console.log('NGO Core upgrade agent - complete validation\n');
@@ -63,16 +77,18 @@ for (const [label, cwd, script] of SUITES) {
 // delete tracked files, which silently corrupted the package before it was published.
 let treeDirty = false;
 const after = git(['status', '--porcelain']);
-if (baseline === null || after === null) {
+const afterContents = trackedSnapshot();
+if (baseline === null || after === null || baselineContents === null || afterContents === null) {
   console.log('\n  SKIP  working-tree check (git unavailable)');
-} else if (after !== baseline) {
+} else if (after !== baseline || baselineContents !== afterContents) {
   treeDirty = true;
   const before = new Set(baseline.split(/\r?\n/));
   const added = after.split(/\r?\n/).filter((l) => l && !before.has(l));
   console.log('\n  FAIL  working tree changed while validating:');
   for (const l of added) console.log('        ' + l);
+  if (baselineContents !== afterContents) console.log('        tracked file contents changed (including previously dirty files)');
 } else {
-  console.log('\n  PASS  working tree unchanged');
+  console.log('\n  PASS  working tree and tracked contents unchanged');
 }
 
 const total = SUITES.length;

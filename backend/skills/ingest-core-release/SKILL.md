@@ -69,27 +69,15 @@ See `schemas/input.schema.json` — `coreRepoPath`, optional `releaseNotesPath`,
 optional `sinceVersion`/`targetVersion`.
 
 # Procedure
-1. **Verify freshness through the shared tool, including orchestrator seeds.**
-  Existence/path/tag spelling is not freshness. The tool checks immutable
-  boundary commits, relevant notes, analyzer version and record integrity;
-  matching identities reuse facts without re-extraction or rewriting.
-2. Invoke the shared tool (do not reimplement cache logic here):
-   ```
-   node ../ingest/tools/ingest.js ingest \
-     --core-path <coreRepoPath> \
-     --release-notes <releaseNotesPath> \
-    --since <sinceVersion> \
-     --target <targetVersion>
-   ```
-   This fingerprints the Core repository before/after (proving it's unchanged),
-   enumerates the tag boundary, diffs it read-only, parses the matching
-   `release-notes.md` section, cross-checks both sources, and writes
-   `ingest/knowledge/candidates/releases/<targetVersion>.json`.
-3. Confirm the tool's exit code was 0 and the written file's
-   `sources.tagRange` matches what was requested.
-4. **Consume only this track's slice.** Read `findings.backend` and
-   `findings.shared` from the shared record (ignore `findings.frontend` — that's
-   frontend's concern). Map each finding into the shape
+1. Follow the owning **Ingest And Analyze** section of
+  [shared lifecycle](../../../orchestrator/skills/lifecycle/SKILL.md).
+  With a shared run, consume `contexts/backend.json` using orchestrator `context`.
+  Without one, request `create-run --tracks backend` from that owner. Never call
+  ingest independently, including for freshness; stale context blocks execution.
+2. Confirm context verification succeeded and source/target/client/run match.
+4. **Consume only this track's slice.** Use backend context requirements; request
+  lazy scoped evidence with `context --track backend --evidence-version <v>`.
+  Never load the complete candidate record into the prompt. Map findings into the shape
    `research-version`/`plan-upgrade` expect (statement + verification level:
   `CONFIRMED_BY_DIFF_AND_NOTES` → file-change metadata confidence only,
    `OBSERVED_IN_DIFF_NOT_MENTIONED_IN_NOTES` / `NOTED_BUT_UNCONFIRMED_BY_DIFF` →
@@ -116,8 +104,7 @@ repository was unchanged. Status is one of the enumerated values with an exact
 `nextAction`.
 
 # Retry behavior
-Idempotent — re-running the shared tool for the same version boundary
-overwrites the same shared file rather than duplicating it.
+Consume the same verified context; only the owner revalidates ingestion.
 
 # Escalation behavior
 - `../../ingest/` is missing (broken install/packaging) → `BLOCKED_NEEDS_DEVELOPER`.
@@ -140,6 +127,6 @@ candidates, still labelled ASSUMED), `plan-upgrade`, `developer-escalation`.
 # Prohibited behavior
 No write to `knowledge/canonical/`. No self-approval of its own candidates. No
 Core repository mutation. No re-implementing git-diff/notes-parsing locally —
-always delegate to `ingest/tools/ingest.js`. No treating a candidate as
+always use the orchestrator-owned CoreChangeSet. No treating a candidate as
 authoritative in the same run that produced it
 (`config/knowledge-priority.yaml` rank 6.5/7.5 — always below canonical).

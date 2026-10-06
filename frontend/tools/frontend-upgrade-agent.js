@@ -140,6 +140,20 @@ function startCmd(flags) {
     return 1;
   }
 
+  let sharedContext = null;
+  try {
+    sharedContext = require('../../orchestrator/tools/lib/execution').attach(dir, 'frontend', {
+      contextRef: flags.context, clientId, runId,
+      clientPath: req.resolved.clientPath, corePath: req.resolved.corePath,
+      sourceVersion: req.upgrade.sourceVersion, targetVersion: req.upgrade.targetVersion,
+      releaseNotesPath: flags['release-notes']
+    });
+  } catch (error) {
+    runStore.updateState(dir, { status: 'BLOCKED', nextAction: `Revalidate shared context: ${error.message}`, safeResumeInstruction: 'Resume the orchestrator run before frontend planning.' });
+    err(`BLOCKED: ${error.message}`);
+    return 1;
+  }
+
   // 2) Capture Core baseline fingerprint BEFORE inspection (read-only proof).
   const coreFpBefore = git.fingerprint(req.resolved.corePath, repos.CORE_KEY_FILES);
   core.writeJson(path.join(dir, 'artifacts', 'core-fingerprint-before.json'), coreFpBefore);
@@ -196,7 +210,7 @@ function startCmd(flags) {
     targetVersion: req.upgrade.targetVersion,
     inventory: inv,
     clientPath: req.resolved.clientPath,
-    backendPath: req.resolved.backendPath || req.resolved.clientPath,
+    backendValidation: sharedContext && sharedContext.upgrade.integration && sharedContext.upgrade.integration.backendValidation,
     runId,
   });
   core.writeYaml(path.join(dir, 'release-range.yaml'), rel.releaseRange);
@@ -305,6 +319,8 @@ function loadRunState(flags) {
   const dir = runStore.runDirAbs(flags.client, flags.run);
   const st = runStore.readState(dir);
   if (!st) { err(`no run state at runs/${flags.client}/${flags.run}/state.json`); return null; }
+  try { require('../../orchestrator/tools/lib/execution').guard(dir, 'frontend', { runId: st.runId, targetVersion: st.targetVersion, clientPath: st.clientPath }); }
+  catch (error) { err(`BLOCKED: ${error.message}. Resume the shared run before execution.`); return null; }
   return { dir, st };
 }
 

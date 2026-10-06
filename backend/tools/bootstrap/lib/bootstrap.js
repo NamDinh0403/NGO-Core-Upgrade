@@ -60,9 +60,9 @@ function writeEscalation(runDirRel, manifest, result) {
   fs.writeFileSync(c.P(runDirRel, 'developer-escalation.md'), lines.join('\n') + '\n');
 }
 
-function run(mode) {
+function run(mode, suppliedEvidence) {
   const cfg = c.loadConfig();
-  const evidence = c.gatherEvidence();
+  const evidence = suppliedEvidence || c.gatherEvidence();
   const runId = newRunId();
   const runDirRel = `runs/${BOOTSTRAP_CLIENT}/${runId}`;
   const buildMode = mode === 'bootstrap' ? 'install' : 'check';

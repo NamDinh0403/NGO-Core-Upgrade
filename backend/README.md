@@ -1,5 +1,13 @@
 # NGO Core Upgrade Agent (Backend)
 
+The domain executor consumes a verified BackendContext from the
+[shared owner](../orchestrator/README.md). Standalone exact-version planning uses
+the same owner; `--context` binds coordinated runs without another ingest.
+Backend owns NuGet, installed DLL signatures, EF, appsettings and database
+requirements. Initial discovery is limited to the requested backend manifests,
+not the framework workspace or frontend packages. Existing mutation gates,
+bounded diagnosis and checkpoints remain authoritative.
+
 > **Autonomous, package-first upgrade workflow for NGO.Core NuGet packages.**
 > Drop the prompt, walk away, come back to a green build and a written report.
 

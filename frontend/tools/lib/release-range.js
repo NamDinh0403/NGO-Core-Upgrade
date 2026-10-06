@@ -33,7 +33,7 @@ function migrationTriggered(migration, sourceMajor, targetMajor) {
 
 function resolve(sourceVersion, targetVersion, opts) {
   opts = opts || {};
-  const all = store.allRequirements(sourceVersion, targetVersion);
+  const all = store.allRequirements(sourceVersion, targetVersion, opts.track);
   const selectedRaw = all.filter((r) => inRange(r.releaseVersion, sourceVersion, targetVersion));
   const idsInRange = new Set(selectedRaw.map((r) => r.id));
 

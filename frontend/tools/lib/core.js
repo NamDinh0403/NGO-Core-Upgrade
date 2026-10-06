@@ -15,7 +15,7 @@ const cp = require('child_process');
 const yaml = require('./yaml');
 
 const ROOT = path.resolve(__dirname, '..', '..'); // frontend
-const P = (...p) => path.join(ROOT, ...p);
+const P = (...parts) => require('../../../engine/tools/lib/locations').resolve(ROOT, ...parts);
 
 function readText(abs) { return fs.readFileSync(abs, 'utf8'); }
 function readYaml(rel) { return yaml.parse(fs.readFileSync(P(rel), 'utf8')); }
@@ -48,8 +48,8 @@ function appendJsonl(abs, obj) {
 
 function loadConfig() {
   return {
-    agent: exists(P('config/agent-policy.yaml')) ? readYaml('config/agent-policy.yaml') : {},
-    escalation: exists(P('config/escalation-policy.yaml')) ? readYaml('config/escalation-policy.yaml') : {},
+    agent: Object.assign({}, exists(P('config/agent-policy.yaml')) ? readYaml('config/agent-policy.yaml') : {}, { allowReadyWithAssumptions: require('../../../engine/config/execution-policy.json').allowReadyWithAssumptions }),
+    escalation: Object.assign({}, exists(P('config/escalation-policy.yaml')) ? readYaml('config/escalation-policy.yaml') : {}, { budgets: require('../../../engine/config/execution-policy.json').budgets }),
     quality: exists(P('config/quality-gates.yaml')) ? readYaml('config/quality-gates.yaml') : {},
     packageAlignment: exists(P('config/package-alignment-policy.yaml')) ? readYaml('config/package-alignment-policy.yaml') : {},
     repoSafety: exists(P('config/repository-safety-policy.yaml')) ? readYaml('config/repository-safety-policy.yaml') : {},

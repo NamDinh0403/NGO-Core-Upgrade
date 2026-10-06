@@ -67,7 +67,7 @@
       "NgoContext": "knowledge/canonical/symbols/NGO.Core.Repositories.NgoContext.json"
     },
     "config": {
-      "appsettings": "knowledge/canonical/appsettings/appsettings-by-version.json"
+      "appsettings": "../ingest/knowledge/canonical/backend-appsettings/appsettings-by-version.json"
     },
     "migrations": {
       "ef": "knowledge/canonical/migrations/ef-migration-patterns.json"

@@ -9,7 +9,7 @@
     "symbols": "knowledge/canonical/symbols/",
     "versions": "knowledge/canonical/versions/",
     "migrations": "knowledge/canonical/migrations/",
-    "appsettings": "knowledge/canonical/appsettings/",
+    "appsettings": "../ingest/knowledge/canonical/backend-appsettings/",
     "antiPatterns": "knowledge/canonical/anti-patterns/anti-patterns.json"
   },
   "derived": {
@@ -27,15 +27,15 @@
     "versionManifest": "knowledge/index/version-manifest.json"
   },
   "memory": {
-    "episodes": "memory/episodes/",
-    "candidates": "memory/candidates/",
-    "approved": "memory/approved/",
-    "rejected": "memory/rejected/"
+    "episodes": "../engine/memory/episodes/backend/",
+    "candidates": "../engine/memory/candidates/backend/",
+    "approved": "../engine/memory/approved/backend/",
+    "rejected": "../engine/memory/rejected/backend/"
   },
   "schemas": {
     "version": "schemas/version-knowledge.schema.json",
-    "episode": "schemas/episode.schema.json",
-    "fixPattern": "schemas/fix-pattern.schema.json",
-    "errorPattern": "schemas/error-pattern.schema.json"
+    "episode": "../engine/schemas/episode.schema.json",
+    "fixPattern": "../engine/schemas/fix-pattern.schema.json",
+    "errorPattern": "../engine/schemas/error-pattern.schema.json"
   }
 }

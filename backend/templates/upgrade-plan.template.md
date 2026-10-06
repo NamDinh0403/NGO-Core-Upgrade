@@ -56,7 +56,7 @@
 | {e.g. Core:Queue:GenerateIATIFileQueue} | {7.0.0} | {to-add} | {to-add} | {to-add} | {generateiatifilequeue} |
 
 ### Expected breaking changes to handle
-> From `knowledge/index/routing-table.json` routes first, then `knowledge/canonical/versions/{version}.json`, matching error/symbol JSON entries, and relevant prior runs under `memory/episodes/`.
+> From `knowledge/index/routing-table.json` routes first, then `knowledge/canonical/versions/{version}.json`, matching error/symbol JSON entries, and relevant prior runs under `../engine/memory/episodes/backend/`.
 
 | Version | Area | Expected change | Planned fix |
 |---------|------|-----------------|-------------|

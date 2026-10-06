@@ -43,8 +43,8 @@ The agent checks required tools before execution.
 | Resume | `Resume the upgrade for <client> using its saved run state.` |
 | Check releases | `Check for newer Core releases in <Core path>.` |
 
-The backend and frontend agents remain available for standalone work. For normal
-use, start with **ngo-core-upgrade** and state which track you need.
+The backend and frontend executors remain available for domain work. Single-track
+and both-track upgrades use the same engine. Start with **ngo-core-upgrade**.
 
 ## ⚙️ What Happens
 
@@ -58,14 +58,15 @@ flowchart LR
 ```
 
 Shared Core facts are cached and reused when their source commits, notes, and
-analyzer version match. Each track keeps its own plan, evidence, and validation.
+analyzer version match. The engine owns lifecycle, registered plans, safety,
+retry, memory and reporting; two specialized executors produce domain evidence.
 Unexpected failures enter bounded diagnosis; unresolved risks are escalated.
 The shared owner persists one CoreChangeSet reference manifest and one
 UpgradeContext, then supplies isolated backend/frontend contexts. Executors never
 repeat release ingestion. Additional Core evidence is retrieved by track and
 version, not passed as a full diff. Generic rules live in one
-[shared lifecycle](orchestrator/skills/lifecycle/SKILL.md).
-See the [execution contract report](docs/refactor/execution-contract-report.md)
+[shared lifecycle](engine/skills/lifecycle/SKILL.md).
+See the [shared engine report](docs/refactor/shared-engine-report.md)
 for responsibilities, compatibility and verification limits.
 
 ## 🛡️ Safety

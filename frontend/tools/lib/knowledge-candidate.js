@@ -6,19 +6,19 @@
  * client pattern), it emits a redacted CANDIDATE - never approved knowledge.
  * Dependency-free, Node 14+.
  */
-const core = require('./core');
+const memory = require('../../../engine/tools/lib/memory');
 
 function redact(v) {
   if (v == null) return v;
-  const red = core.redactor({});
   const s = typeof v === 'string' ? v : JSON.stringify(v);
-  return red(s);
+  return memory.sanitize(s);
 }
 
 function generate(discrepancy) {
   const d = discrepancy || {};
   return {
     schemaVersion: 1,
+    scope: 'frontend',
     id: `CAND-${d.requirementId || 'GENERIC'}-${Date.now()}`,
     kind: d.kind || 'RELEASE_KNOWLEDGE_CANDIDATE',
     requirementId: d.requirementId || null,

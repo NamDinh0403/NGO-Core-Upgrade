@@ -5,44 +5,8 @@ description: >
   inspects both repositories; only the client repository is mutable; the local
   NGO Core repository is a read-only source of truth.
 
-entryPoint: frontend-upgrade-agent start
-
-repositories:
-  clientMutable: true
-  coreReadOnly: true
-  # Client mutation is impossible until the plan is READY and the mutation gate passes.
-  allowClientMutationBeforeReadyPlan: false
-  allowReadyWithAssumptions: false
-
-workflow:
-  phases:
-    - REQUEST
-    - DOCTOR
-    - VALIDATE_REPOS
-    - INVENTORY_CLIENT
-    - INSPECT_CORE
-    - RESOLVE_PACKAGES
-    - DERIVE_REQUIREMENTS
-    - MAP_REQUIREMENTS
-    - PLAN
-    - CHECKPOINT
-    - EXECUTE
-    - BUILD_AND_FIX
-    - AUDIT
-    - VALIDATE
-    - REPORT
-    - LEARN
-    - COMPLETE
-  readOnlyPhases:
-    - REQUEST
-    - DOCTOR
-    - VALIDATE_REPOS
-    - INVENTORY_CLIENT
-    - INSPECT_CORE
-    - RESOLVE_PACKAGES
-    - DERIVE_REQUIREMENTS
-    - MAP_REQUIREMENTS
-    - PLAN
+sharedExecutionPolicy: ../../engine/config/execution-policy.json
+executorEntryPoint: tools/executor.js
 
 packageAcquisition:
   # Install into the client only; never install into Core.
@@ -53,10 +17,6 @@ packageAcquisition:
   allowFallbackFlagsWithEvidence: true
 
 principles:
-  - Think before acting; state findings with evidence before any change.
-  - Minimum change: every changed line traces to Core evidence or the alignment map.
   - The Core repository must be verified unchanged before and after inspection.
   - Requirements describe what is required, not where the client implements it.
   - Ambiguous requirements never produce automatic client mutations.
-  - Record assumptions and uncertainty explicitly; never hide them in prose.
-  - No private chain-of-thought is recorded in run artifacts.

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "frontend/schemas/executor-contract.schema.json",
+  "title": "Frontend Executor Contracts",
+  "type": "object",
+  "definitions": {
+    "FrontendContext": { "$ref": "../../engine/schemas/execution-context.schema.json#/definitions/FrontendContext" },
+    "FrontendPlan": { "allOf": [{ "$ref": "../../engine/schemas/executor-contract.schema.json#/definitions/Plan" }], "properties": { "domainPlan": { "$ref": "plan.schema.json" } } },
+    "FrontendEvidence": { "$ref": "../../engine/schemas/executor-contract.schema.json#/definitions/Evidence" },
+    "FrontendResult": { "allOf": [{ "$ref": "../../engine/schemas/executor-contract.schema.json#/definitions/TrackResult" }, { "properties": { "track": { "const": "frontend" } } }] }
+  }
+}

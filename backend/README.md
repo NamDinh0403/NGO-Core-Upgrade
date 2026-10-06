@@ -165,7 +165,7 @@ The **plan** declares intended changes up front; the **report** records what was
 
 ## Learning
 
-Runs produce **episodes** (`memory/episodes/`). Reusable lessons become **candidate** patterns (`memory/candidates/`), which are never applied as authoritative until they pass validation, regression replay, and developer approval to become **approved** patterns (`memory/approved/`). Rejected approaches are retained with reasons (`memory/rejected/`). Client data is scoped and redacted per [config/retention-policy.yaml](config/retention-policy.yaml).
+Runs produce **episodes** (`../engine/memory/episodes/backend/`). Reusable lessons become **candidate** patterns (`../engine/memory/candidates/backend/`), which are never applied as authoritative until they pass validation, regression replay, and developer approval to become **approved** patterns (`../engine/memory/approved/backend/`). Rejected approaches are retained with reasons (`../engine/memory/rejected/backend/`). Client data is scoped and redacted per [config/retention-policy.yaml](../engine/config/retention-policy.yaml).
 
 ## Tools & validation
 

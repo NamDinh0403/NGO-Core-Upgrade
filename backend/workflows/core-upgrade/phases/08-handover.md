@@ -13,8 +13,8 @@ Full run directory, `documentation-status.json`.
 Reached from any phase that ended in a terminal, blocked, or completed status.
 
 ## Required actions
-1. Produce an **episode** under `memory/episodes/` (native or imported) valid against `schemas/episode.schema.json` — for successful **and** blocked/failed runs.
-2. Extract reusable learning as a **candidate pattern** under `memory/candidates/` (never write directly to approved/canonical).
+1. Produce an **episode** under `../engine/memory/episodes/backend/` (native or imported) valid against `schemas/episode.schema.json` — for successful **and** blocked/failed runs.
+2. Extract reusable learning as a **candidate pattern** under `../engine/memory/candidates/backend/` (never write directly to approved/canonical).
 3. If the run is blocked/failed: generate `templates/developer-escalation.md` listing attempted fixes, why each failed, the exact decision/information required, the safest resume point, and the exact resume instruction.
 4. Verify the Definition of Done (`checklists/definition-of-done.md`). If all gates pass, set `COMPLETE`. If documentation is pending, set `DOCUMENTATION_PENDING`. Otherwise set the specific `BLOCKED_*`/`FAILED_*` status.
 5. Ensure `state.json.nextAction` and `state.json.safeResumeInstruction` are non-empty.

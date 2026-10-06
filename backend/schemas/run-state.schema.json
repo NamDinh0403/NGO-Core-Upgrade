@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "schemas/run-state.schema.json",
-  "title": "Run State",
-  "description": "Authoritative snapshot of current run progress. Lives at runs/<client>/<run-id>/state.json.",
+  "title": "Legacy backend artifact and checkpoint snapshot",
+  "description": "Compatibility snapshot at backend/runs/<client>/<run-id>/state.json. Global lifecycle authority belongs to the shared engine.",
   "type": "object",
   "required": [
     "schemaVersion", "runId", "clientId", "status", "sourceVersion", "targetVersion",

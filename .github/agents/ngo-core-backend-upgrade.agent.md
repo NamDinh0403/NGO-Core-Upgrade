@@ -1,12 +1,12 @@
 ---
-description: Runs an autonomous NGO Core backend package upgrade (NuGet, .NET, EF migrations) for a client solution, following the backend agent workflow end to end.
+description: Backend domain executor for the shared NGO Core engine; implements .NET, NuGet, EF and configuration changes with installed-assembly/API and build/test evidence.
 ---
 
 # NGO Core Backend Upgrade Agent
 
 Your authoritative contract is [backend/AGENTS.md](../../backend/AGENTS.md) —
-read it first. It defines the phase order, skills, policies and escalation
-rules; do not re-derive or duplicate them. Workspace-level routing lives in the
+read it first. It defines domain verification and implementation; the engine
+owns lifecycle, policies and escalation. Workspace-level routing lives in the
 root [AGENTS.md](../../AGENTS.md).
 
 Use the contract's Start/Resume and Shared Orchestration sections. Discover

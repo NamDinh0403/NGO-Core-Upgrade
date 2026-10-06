@@ -5,10 +5,10 @@ retained data without corrupting global, approved knowledge.
 
 ## Steps
 1. Delete the run evidence: `runs/<sanitized-client-id>/` (raw client artifacts).
-2. Delete episodes scoped to that client: any `memory/episodes/**` record with
+2. Delete episodes scoped to that client: any `../engine/memory/episodes/backend/**` record with
    `clientScope == <client>`.
 3. Detach or delete candidate patterns whose **only** evidence came from that
-   client (`memory/candidates/**` where `successfulEvidence`/`failedEvidence`
+   client (`../engine/memory/candidates/backend/**` where `successfulEvidence`/`failedEvidence`
    reference only that client's runs/episodes).
 4. Keep approved patterns **only** if their evidence was already redacted and
    re-sourced (no client identifier remains). Otherwise deprecate them.

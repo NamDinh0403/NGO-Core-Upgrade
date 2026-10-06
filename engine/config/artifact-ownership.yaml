@@ -1,12 +1,9 @@
-# Write-boundary matrix for a shared run at orchestrator/runs/<client>/<run-id>/.
-# Mirrors the artifact-ownership rules in the pasted refactor spec (Phase 4),
-# adapted to the additive architecture recorded in
-# docs/refactor/unified-agent-decisions.md (DEC-1): backend/ and frontend/
-# keep their own internal runs/ trees; this matrix governs only the shared
-# run this orchestrator module owns.
+schemaVersion: 1
+lifecycleOwner: engine
+runLocation: orchestrator/runs/<client>/<run-id>/
 
 owners:
-  orchestrator:
+  engine:
     writes:
       - request.yaml
       - state.json
@@ -27,27 +24,36 @@ owners:
       - before-deployment.md
       - after-deployment.md
       - final-report.md
+      - plans/backend.json
+      - plans/frontend.json
+      - results/backend-validation.json
+      - results/frontend-validation.json
+      - results/backend/
+      - results/frontend/
 
   backend-track:
     writes:
-      - results/backend-result.yaml   # written by `orchestrator compose-results`, sourced
-                                       # read-only from backend/runs/<client>/<run-id>/state.json
+      - artifacts/backend/
     neverWrites:
       - results/frontend-result.yaml
       - requirement-coverage.yaml
       - deployment-checklist.yaml
+      - state.json
+      - core-change-set.json
 
   frontend-track:
     writes:
-      - results/frontend-result.yaml  # written by `orchestrator compose-results`, sourced
-                                       # read-only from frontend/runs/<client>/<run-id>/state.json
+      - artifacts/frontend/
     neverWrites:
       - results/backend-result.yaml
       - requirement-coverage.yaml
       - deployment-checklist.yaml
+      - state.json
+      - core-change-set.json
 
 rules:
-  - "backend/runs/ and frontend/runs/ are never written to by this module — read-only."
-  - "A domain's own result file is derived from its own state.json; the orchestrator never re-derives domain results from raw source inspection."
+  - "Track run files are compatibility artifact/checkpoint projections, never independent lifecycle authority."
+  - "The engine registers plans, dispatches executors and publishes result envelopes only from run-bound validated evidence."
+  - "New engine runs cannot substitute unrelated historical track result paths."
   - "verify-coverage runs after both requested tracks report a terminal status."
   - "prepare-handover runs only after verify-coverage succeeds."

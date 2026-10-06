@@ -8,7 +8,7 @@ const path = require('path');
 const sm = require('./orchestration/state-machine');
 
 const ROOT = path.join(__dirname, '..');
-const P = (...p) => path.join(ROOT, ...p);
+const P = (...parts) => require('../../engine/tools/lib/locations').resolve(ROOT, ...parts);
 const exists = (rel) => fs.existsSync(P(rel));
 const readJSON = (rel) => JSON.parse(fs.readFileSync(P(rel), 'utf8'));
 const listFiles = (rel, ext) => {
@@ -33,33 +33,7 @@ function check(name, fn) {
 function assert(cond, msg) { if (!cond) throw new Error(msg); }
 
 // --- minimal JSON-schema-lite validator (required + type + enum + const) ---
-function typeOk(val, t) {
-  if (Array.isArray(t)) return t.some((x) => typeOk(val, x));
-  switch (t) {
-    case 'string': return typeof val === 'string';
-    case 'integer': return Number.isInteger(val);
-    case 'number': return typeof val === 'number';
-    case 'boolean': return typeof val === 'boolean';
-    case 'object': return val && typeof val === 'object' && !Array.isArray(val);
-    case 'array': return Array.isArray(val);
-    case 'null': return val === null;
-    default: return true;
-  }
-}
-function validate(instance, schema, where) {
-  const errs = [];
-  for (const req of schema.required || []) {
-    if (!(req in instance)) errs.push(`${where}: missing required '${req}'`);
-  }
-  for (const [key, spec] of Object.entries(schema.properties || {})) {
-    if (!(key in instance)) continue;
-    const val = instance[key];
-    if (spec.type && !typeOk(val, spec.type)) errs.push(`${where}: '${key}' wrong type (want ${spec.type})`);
-    if (spec.enum && !spec.enum.includes(val)) errs.push(`${where}: '${key}'='${val}' not in enum`);
-    if (spec.const !== undefined && val !== spec.const) errs.push(`${where}: '${key}' must equal '${spec.const}'`);
-  }
-  return errs;
-}
+const validate = require('../../engine/tools/lib/schema').validate;
 
 // 1. All JSON in knowledge/ + memory/ + config-referenced parse.
 check('all JSON files parse', () => {

@@ -9,7 +9,7 @@ const path = require('path');
 const yaml = require('./bootstrap/lib/yaml');
 
 const ROOT = path.resolve(__dirname, '..');
-const P = (...p) => path.join(ROOT, ...p);
+const P = (...parts) => require('../../engine/tools/lib/locations').resolve(ROOT, ...parts);
 const policy = yaml.parse(fs.readFileSync(P('config/repository-layout-policy.yaml'), 'utf8'));
 
 const failures = [];

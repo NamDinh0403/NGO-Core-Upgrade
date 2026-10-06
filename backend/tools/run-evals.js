@@ -11,7 +11,7 @@ const path = require('path');
 const sm = require('./orchestration/state-machine');
 
 const ROOT = path.join(__dirname, '..');
-const readJSON = (p) => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
+const readJSON = (relative) => JSON.parse(fs.readFileSync(require('../../engine/tools/lib/locations').resolve(ROOT, relative), 'utf8'));
 
 const results = [];
 function scenario(id, fn) {

@@ -3,18 +3,8 @@ schemaVersion: 1
 id: agent-policy
 lastReviewedAt: 2026-08-13
 
-workflow:
-  id: core-upgrade
-  version: 1.0.0
-  entryPoint: AGENTS.md
-
-principles:
-  - inspect-before-modifying
-  - deterministic-orchestration-over-prompt-only
-  - installed-dll-is-authoritative-for-signatures
-  - minimal-diff
-  - never-silently-stop
-  - state-lives-in-files-not-chat
+sharedExecutionPolicy: ../../engine/config/execution-policy.json
+domainAuthority: installed-dll-is-authoritative-for-signatures
 
 # How the authoritative installed DLL is obtained. The installed package in the
 # NuGet cache is the source of truth; the preferred way to get it is the client
@@ -35,54 +25,4 @@ packageAcquisition:
   escalateForCredentialsWhen: client-dotnet-restore-fails-authentication
   note: "Bumping the project file version to enable dotnet restore is the canonical way to acquire the installed DLL that is the source of truth. It does not bypass installed-DLL inspection; it is what makes that inspection possible."
 
-statusEnum:                          # exactly one per attempted step
-  - SUCCEEDED
-  - RETRYABLE_FAILURE
-  - BLOCKED_NEEDS_CONTEXT
-  - BLOCKED_NEEDS_DEVELOPER
-  - BLOCKED_NEEDS_APPROVAL
-  - FAILED_POLICY
-  - FAILED_BUDGET
-  - CANCELLED
-
-runStatusEnum:
-  - DISCOVERY
-  - BASELINE
-  - PLAN
-  - UPGRADE
-  - BUILD_AND_FIX
-  - TEST
-  - DOCUMENT
-  - HANDOVER
-  - DOCUMENTATION_PENDING
-  - BLOCKED
-  - COMPLETE
-  - CANCELLED
-
-checkpoints:
-  writeBefore:
-    - repository-mutation
-    - side-effecting-tool-call
-    - waiting-for-human
-    - phase-change
-    - termination
-  writeAfter:
-    - repository-mutation
-    - tool-result-received
-    - every-workflow-step
-
-resume:
-  rule: >
-    A resumed run continues from the most recent valid checkpoint in
-    runs/<client>/<run-id>/checkpoints/. Completed mutating actions recorded in
-    actions.jsonl with a matching idempotencyKey must not be repeated.
-
-response:
-  # No progress-only replies. The agent may return to the user only when a step
-  # ends in a terminal or blocked status with a recorded nextAction.
-  allowProgressOnlyReplies: false
-
-mutationSafety:
-  requireIdempotencyKey: true
-  requireCheckpointAroundMutations: true
-  revertUnverifiedChangesOnBlock: when-safe
+checkpointAndResumeOwner: engine

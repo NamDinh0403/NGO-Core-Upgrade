@@ -2,6 +2,7 @@
 'use strict';
 /* upgrade-agent CLI. Stable entry point for tools + skill operations. */
 const fs = require('fs');
+const path = require('path');
 const bootstrap = require('./bootstrap/lib/bootstrap');
 const core = require('./bootstrap/lib/core');
 const engine = require('./skills/lib/engine');
@@ -71,8 +72,7 @@ function ensureRun(flags) {
   const client = flags.client || '_unspecified-client';
   const run = flags.run || `${client}-${nowCompact()}`;
   const rel = runDirRel(client, run);
-  fs.mkdirSync(core.P(rel, 'checkpoints'), { recursive: true });
-  fs.mkdirSync(core.P(rel, 'artifacts'), { recursive: true });
+  require('../../engine/tools/lib/artifacts').create({ root: core.ROOT }).ensure(client, run);
   return { client, run, rel };
 }
 
@@ -84,7 +84,7 @@ function scaffoldIfMissing(rel, name, content) {
 function plan(flags) {
   const { client, run, rel } = ensureRun(flags);
   try {
-    require('../../orchestrator/tools/lib/execution').attach(core.P(rel), 'backend', {
+    require('../../engine/tools/lib/execution').attach(core.P(rel), 'backend', {
       contextRef: flags.context, clientId: client, runId: run,
       clientPath: flags['client-path'] || flags['solution-path'], corePath: flags['core-path'],
       sourceVersion: flags['source-version'], targetVersion: flags['target-version'], releaseNotesPath: flags['release-notes']
@@ -104,7 +104,7 @@ function readState(flags) {
   const p = core.P(runDirRel(flags.client, flags.run), 'state.json');
   if (!fs.existsSync(p)) { process.stderr.write(`no run state at ${p}\n`); return null; }
   const state = JSON.parse(fs.readFileSync(p, 'utf8'));
-  try { require('../../orchestrator/tools/lib/execution').guard(path.dirname(p), 'backend', { runId: state.runId, targetVersion: state.targetVersion }); }
+  try { require('../../engine/tools/lib/execution').guard(path.dirname(p), 'backend', { runId: state.runId, targetVersion: state.targetVersion }); }
   catch (error) { process.stderr.write(`BLOCKED: ${error.message}. Revalidate the shared run before resuming.\n`); return null; }
   return state;
 }
@@ -126,7 +126,15 @@ function needPlan(flags, label) {
   if (!flags.client || !flags.run) { process.stderr.write('specify --client <id> --run <id>\n'); return 1; }
   const planPath = core.P(runDirRel(flags.client, flags.run), 'plan.yaml');
   if (!fs.existsSync(planPath)) { process.stderr.write(`no plan for this run; run: upgrade-agent plan --client ${flags.client} --run ${flags.run}\n`); return 1; }
-  try { require('../../orchestrator/tools/lib/execution').guard(path.dirname(planPath), 'backend', { runId: flags.run }); }
+  try {
+    const packet = require('../../engine/tools/lib/execution').guard(path.dirname(planPath), 'backend', { runId: flags.run });
+    if (label === 'run') {
+      if (!packet) throw new Error('Execution requires a shared owner; migrate the legacy plan before mutation');
+      const result = require('../../engine/tools/lib/coordinator').dispatch(packet.upgrade.run.clientId, packet.upgrade.run.runId, 'backend', 'execute');
+      process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+      return 0;
+    }
+  }
   catch (error) { process.stderr.write(`BLOCKED: ${error.message}. Revalidate shared context before execution.\n`); return 1; }
   process.stdout.write(`${label}: a plan exists. Follow the corresponding SKILL.md. Client mutation stays gated by the mutation gate until the plan is READY.\n`);
   return 0;

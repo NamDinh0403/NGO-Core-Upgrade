@@ -3,14 +3,7 @@ schemaVersion: 1
 id: escalation-policy
 lastReviewedAt: 2026-08-13
 
-budgets:
-  maxAttemptsPerIdenticalFix: 2
-  maxDistinctFixPatternsPerIssue: 4
-  maxRepeatsOfSameErrorAfterFix: 2
-  maxBuildFixIterations: 5           # preserves legacy 5-iteration loop
-  maxTestRegressionLoops: 2          # TEST -> BUILD_AND_FIX round-trips before BLOCKED_NEEDS_DEVELOPER (see phases/06-test.md)
-  maxToolCallsPerPhase: 40
-  maxTokensPerPhase: null            # configurable per environment
+sharedExecutionPolicy: ../../engine/config/execution-policy.json
 rules:
   - no-infinite-loops
   - no-repeated-unmodified-tool-call-after-same-failure
@@ -41,7 +34,7 @@ escalateWhen:
 # to restore-in-place (config/agent-policy.yaml#packageAcquisition). Escalate for
 # credentials only when the client `dotnet restore` fails authentication.
 
-confidenceThreshold: 0.6
+confidenceThresholdSource: sharedExecutionPolicy.budgets.confidenceThreshold
 
 onEscalation:                        # ordered actions
   - save-checkpoint

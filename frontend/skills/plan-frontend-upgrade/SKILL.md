@@ -38,6 +38,9 @@ See `schemas/input.schema.json`.
 
 # Procedure
 
+Use `engine/skills/plan/SKILL.md` for common planning and registration; the
+following fields are the frontend-specific implementation plan, not a second planning engine.
+
 Assemble `plan.yaml`, `planning-report.md`, `assumptions.yaml`, and
 `uncertainty-register.yaml` containing: request summary; client and Core identity;
 source/target versions; exact target package alignment; workspace classification;

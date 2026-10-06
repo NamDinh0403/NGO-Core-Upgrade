@@ -1,5 +1,9 @@
 # Shared Execution Contract Refactor
 
+Historical report from the preceding refactor; its ownership descriptions and
+14-suite validation apply to that revision, not the current implementation.
+Superseded by [the shared engine report](shared-engine-report.md).
+
 ## Architecture
 
 Before: shared ingest supplied candidates; coordination supplied advisory seeds
@@ -84,7 +88,7 @@ Key additions: [context](../../orchestrator/tools/lib/context.js),
 [knowledge](../../orchestrator/tools/lib/knowledge.js),
 [lifecycle](../../orchestrator/tools/lib/lifecycle.js),
 [capability dispatch](../../orchestrator/tools/lib/executors.js),
-[execution schema](../../orchestrator/schemas/execution-context.schema.json),
+[execution schema](../../engine/schemas/execution-context.schema.json),
 [shared lifecycle skill](../../orchestrator/skills/lifecycle/SKILL.md), and
 [backend configuration](../../backend/tools/configuration.js).
 

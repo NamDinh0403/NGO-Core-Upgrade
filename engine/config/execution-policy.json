@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "coreReadOnly": true,
+  "readyPlanBeforeMutation": true,
+  "candidatesNeverCanonical": true,
+  "allowReadyWithAssumptions": false,
+  "requireIdempotencyKey": true,
+  "checkpoints": {
+    "before": ["repository-mutation", "side-effecting-tool-call", "waiting-for-human", "phase-change", "termination"],
+    "after": ["repository-mutation", "tool-result-received", "every-workflow-step"]
+  },
+  "resume": "Resume the most recent valid checkpoint and never repeat an applied idempotency key.",
+  "principles": ["inspect-before-modifying", "deterministic-first", "minimal-evidenced-diff", "never-silently-stop", "state-lives-in-files", "no-private-reasoning-in-artifacts"],
+  "budgets": {
+    "maxAttemptsPerIdenticalFix": 2,
+    "maxDistinctFixPatternsPerIssue": 4,
+    "maxRepeatsOfSameErrorAfterFix": 2,
+    "maxBuildFixIterations": 5,
+    "maxTestRegressionLoops": 2,
+    "maxToolCallsPerPhase": 40,
+    "confidenceThreshold": 0.6
+  },
+  "memory": {
+    "scopes": ["shared", "core", "backend", "frontend"],
+    "tiers": ["episodes", "candidates", "approved", "rejected"],
+    "crossClientCandidates": false,
+    "promotionRequiresDeveloperReview": true
+  }
+}

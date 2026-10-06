@@ -15,7 +15,7 @@ canonical structured knowledge.
 
 1. Obtain the raw notes (the workspace-root `release-notes.md`, shared with the Backend
    track). Do not point runtime code at it.
-2. For every version, create `knowledge/canonical/releases/<version>/release.yaml` plus only
+2. For every version, create `../ingest/knowledge/canonical/releases/<version>/release.yaml` plus only
    the non-empty scope files (`frontend.yaml`, `backend.yaml`, `database.yaml`,
    `deployment.yaml`, `decisions.yaml`).
 3. Split each note into **atomic** requirements
@@ -23,7 +23,7 @@ canonical structured knowledge.
 4. Set duplicate/supersession relationships explicitly (`duplicateOf`, `supersedes`,
    `supersededBy`) where a card is re-listed or replaced in a later release.
 5. Move reusable framework steps into `knowledge/canonical/migrations/` and configuration
-   changes into `knowledge/canonical/appsettings/`.
+   changes into `../ingest/knowledge/canonical/appsettings/`.
 6. **Redact secrets**: replace concrete secret values with `<FROM_SECRET_PROVIDER>` /
    `<CLIENT_SPECIFIC_VALUE>` / `<PM_APPROVAL_REQUIRED>` and mark the requirement
    `sensitive: true`. Never commit a real value.

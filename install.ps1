@@ -85,7 +85,7 @@ $stampNote = @"
 $stampHeader
 > **Installed agent location:** ``$agentRoot``
 > This file was registered at the user level by ``install.ps1``. The relative links below
-> may not resolve from here — resolve root ``AGENTS.md`` and every ``ingest/``, ``orchestrator/``, ``backend/`` and ``frontend/``
+> may not resolve from here — resolve root ``AGENTS.md`` and every ``ingest/``, ``engine/``, ``orchestrator/``, ``backend/`` and ``frontend/``
 > reference against the installed agent location above.
 "@
 

@@ -5,10 +5,10 @@ description: Upgrades a client's NGO.Core NuGet packages (.NET backend, EF migra
 
 # NGO Core Backend Upgrade
 
-This skill wraps the existing autonomous backend agent that lives in
+This skill dispatches the specialized backend executor that lives in
 [backend/](../../../backend/AGENTS.md). Do not re-derive the process —
-that folder already contains a full state machine, policies, knowledge base and a
-dependency-free Node CLI. Your job is to **drive it**, not duplicate it.
+the [shared engine](../../../engine/AGENTS.md) owns lifecycle, safety, memory,
+generic skills and reporting. Backend owns .NET/NuGet/EF implementation only.
 
 ## When to use
 - "Upgrade NGO Core packages to version X.Y.Z" for a given client solution.

@@ -8,8 +8,8 @@ prompt text:
 |---------|------|-------|
 | Procedural memory | how upgrades run | `workflows/`, `config/` |
 | Working state | the current run | `runs/<client>/<run-id>/` |
-| Episodic memory | what happened in past runs | `memory/episodes/` |
-| Semantic memory | validated facts | `knowledge/canonical/` + `memory/approved/` |
+| Episodic memory | what happened in past runs | `../engine/memory/episodes/backend/` |
+| Semantic memory | validated facts | `knowledge/canonical/` + `../engine/memory/approved/backend/` |
 
 ## Layers
 
@@ -43,7 +43,7 @@ The `FINAL_CUTOVER` physically removed the legacy layer (the former Agent,
 Case-Studies and Version-Changes directories, and the BOOT and ARCHITECTURE root
 documents). Procedural behaviour now lives only in `workflows/` + `config/`;
 canonical knowledge only in `knowledge/canonical/`; historical runs only in
-`memory/episodes/`. The blow-by-blow migration records for that cutover were
+`../engine/memory/episodes/backend/`. The blow-by-blow migration records for that cutover were
 themselves removed once complete; `config/repository-layout-policy.yaml` is what
 now prevents the legacy layout from returning.
 

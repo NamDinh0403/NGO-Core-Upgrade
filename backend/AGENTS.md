@@ -10,8 +10,13 @@ in the linked files; do not inline it here.
 4. For any concrete symbol signature, the **decompiled installed `NGO.Core.*.dll` wins over every written source** (`config/knowledge-priority.yaml`).
 
 ## Start a run
+For generic discovery/ingest/coordination rules use
+`../orchestrator/skills/lifecycle/SKILL.md`. With complete standalone inputs,
+`plan --core-path ... --source-version ... --target-version ... --client-path ...`
+creates a single-track shared run through the owner. For coordinated work pass
+`--context <contexts/backend.json> --client <id> --run <sharedRunId>`.
 1. Create `runs/<sanitized-client-id>/<run-id>/` and write `request.json` (`schemas/run-request.schema.json`).
-2. `node tools/upgrade-agent.js doctor` — confirm `READY_FOR_PLANNING` (optional tools may be absent).
+2. `node tools/upgrade-agent.js doctor --client-path <solution-or-project>` — confirm `READY_FOR_PLANNING` (optional tools may be absent). No frontend package discovery.
 3. `plan` first (read-only), then enter the workflow at `workflows/core-upgrade/phases/01-discovery.md`.
 4. Follow phases 01→08 (the phase cards under `workflows/core-upgrade/phases/`).
 
@@ -19,12 +24,15 @@ in the linked files; do not inline it here.
 An orchestrator seed at `orchestrator/runs/<client>/<runId>/requirements/backend.yaml`
 is additional, unconfirmed read-only evidence, never a replacement for planning.
 Keep your own run state and report terminal/blocked status with exact safe-resume
-instructions. Do not write the shared run. Use the shared ingestion CLI for
-freshness checks; file existence alone does not prove a fresh release.
+instructions. Do not write the shared run or call ingest. Consume the verified
+backend context; stale/missing evidence returns to the owner for revalidation.
 Disposition seed findings in your own `release-finding-dispositions.yaml` during
 normal planning/verification: findings with seed id, VERIFIED or
 NOT_APPLICABLE_WITH_EVIDENCE status and concrete evidence. Do not blindly apply
 candidate hints or promote them. Shared coverage checks these dispositions.
+Backend owns configuration inspection through `tools/configuration.js`, including
+read-only validation requested by frontend-only runs. Use shared canonical IDs
+for backend/database dispositions; do not load frontend implementation knowledge.
 
 ## Resume a run
 Read `state.json`. Continue from `state.json.nextAction`, restoring from the most

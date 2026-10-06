@@ -60,6 +60,13 @@ flowchart LR
 Shared Core facts are cached and reused when their source commits, notes, and
 analyzer version match. Each track keeps its own plan, evidence, and validation.
 Unexpected failures enter bounded diagnosis; unresolved risks are escalated.
+The shared owner persists one CoreChangeSet reference manifest and one
+UpgradeContext, then supplies isolated backend/frontend contexts. Executors never
+repeat release ingestion. Additional Core evidence is retrieved by track and
+version, not passed as a full diff. Generic rules live in one
+[shared lifecycle](orchestrator/skills/lifecycle/SKILL.md).
+See the [execution contract report](docs/refactor/execution-contract-report.md)
+for responsibilities, compatibility and verification limits.
 
 ## 🛡️ Safety
 
@@ -82,6 +89,7 @@ and the exact next action; it does not silently claim success.
 | Backend state, checkpoints, and evidence | `backend/runs/<client>/<run-id>/` |
 | Frontend state, checkpoints, and evidence | `frontend/runs/<client>/<run-id>/` |
 | Reusable Core candidate facts | `ingest/knowledge/candidates/releases/` |
+| CoreChangeSet, contexts, discovery and domain validation | Shared run's `core-change-set.json`, `upgrade-context.json`, `contexts/` and evidence |
 
 The final response links to the relevant plan, report, and saved state. Run data
 is local to the machine that performed the upgrade; keep it when handing off or
@@ -136,8 +144,8 @@ Run from this repository's root:
 node tools/validate-all.js
 ```
 
-This runs all **14 framework suites** and checks that tests did not modify tracked
-files. Add `--verbose` for individual suite output. Framework tests are not a
+This runs all **14 framework suites** and checks status and tracked content hashes,
+including already-dirty files. Add `--verbose` for individual suite output. Framework tests are not a
 substitute for a real client's build, tests, or deployment verification.
 
 <details>

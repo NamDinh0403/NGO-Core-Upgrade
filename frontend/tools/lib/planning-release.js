@@ -11,8 +11,6 @@ const range = require('./release-range');
 const applic = require('./applicability');
 const rmap = require('./requirement-map');
 const cov = require('./requirement-coverage');
-const appset = require('./appsettings-inventory');
-const store = require('./release-knowledge');
 const clientModel = require('./client-model');
 
 // Build the full read-only planning picture for a release range.
@@ -21,9 +19,7 @@ function plan(opts) {
   const targetVersion = opts.targetVersion;
   const inv = opts.inventory;
   const clientPath = opts.clientPath;
-  const backendPath = opts.backendPath || clientPath; // appsettings may live in the client or a sibling
-
-  const resolved = range.resolve(sourceVersion, targetVersion);
+  const resolved = range.resolve(sourceVersion, targetVersion, { track: 'frontend' });
   const requirements = resolved.requirements.concat(resolved.migrationRequirements);
 
   const { model, evidence } = clientModel.fromInventory(inv, clientPath);
@@ -47,11 +43,6 @@ function plan(opts) {
       ambiguous.push({ id: req.id, scope: req.scope, status: a.status, evidence: a.evidence, owner: a.owner || null });
     }
   }
-
-  // AppSettings coverage (backend config surface).
-  const appInventory = appset.discover(backendPath);
-  const appReqs = store.appSettings();
-  const appCoverage = appset.mapRequirements(appInventory, appReqs);
 
   // Requirement coverage at planning time (nothing changed/verified yet).
   const planned = new Set(applicable.filter((a) => a.mapped).map((a) => a.id));
@@ -78,11 +69,8 @@ function plan(opts) {
     missingSteps,
     deploymentChecklist,
     appsettings: {
-      inventory: appInventory,
-      coverage: appCoverage.coverage,
-      missing: appCoverage.missing,
-      azureChecklist: appCoverage.azureChecklist,
-      secretRejections: appCoverage.secretRejections,
+      inventory: { files: [] }, coverage: [], missing: [], azureChecklist: [], secretRejections: [],
+      owner: 'backend', validation: opts.backendValidation || { status: 'NOT_INSPECTED', nextAction: 'Request backend configuration validation through the shared owner.' },
     },
     planReady,
     clientModelSummary: {

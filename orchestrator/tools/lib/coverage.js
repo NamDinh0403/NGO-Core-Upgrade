@@ -85,8 +85,17 @@ function buildMissingSteps(requirements) {
   return items;
 }
 
-function verifyCoverage({ runId, frontendRunDir, backendState }) {
+function verifyCoverage({ runId, frontendRunDir, backendState, domainEvidenceRefs }) {
   const requirements = [...readFrontendCoverage(frontendRunDir), ...readBackendCoverage(backendState)];
+  for (const file of domainEvidenceRefs || []) {
+    const evidence = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const rejected = new Set((evidence.secretRejections || []).map((entry) => entry.id));
+    for (const entry of evidence.coverage || []) requirements.push({
+      id: entry.id, scope: 'BACKEND', source: 'orchestrator',
+      status: rejected.has(entry.id) ? 'BLOCKED' : entry.status,
+      owner: 'backend', evidence: `${file}: ${entry.id}; configuration values remain backend-owned`
+    });
+  }
   const verifiedOrNA = requirements.filter((r) => r.status === 'VERIFIED' || r.status === 'NOT_APPLICABLE_WITH_EVIDENCE').length;
   const coverage = {
     schemaVersion: 1,

@@ -1,5 +1,13 @@
 # Frontend Upgrade Agent
 
+The domain executor consumes a verified FrontendContext from the
+[shared owner](../orchestrator/README.md). Standalone exact-version runs use the
+same owner. Coordinated calls pass `--context`, `--client-id` and the shared
+`--run`. Frontend planning receives only frontend/shared requirements and API
+integration evidence; backend configuration values and database implementation
+remain with backend. Existing Angular/NgRx, dependency alignment, reference-host,
+mutation and audit gates are unchanged.
+
 **Single-session, dual-repository Angular / NGO Core front-end upgrade.**
 
 One process inspects **both** repositories in **one run**:

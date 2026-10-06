@@ -92,27 +92,6 @@ function meetsMinimum(rawVersion, minimum) {
 }
 
 // --- repository evidence + applicability ------------------------------------
-function walk(dir, acc, depth) {
-  if (depth > 6) return;
-  let entries;
-  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return; }
-  for (const e of entries) {
-    // Skip VCS, dependency caches, run artifacts, and the agent's own isolated tooling
-    // so agent infrastructure is never misread as client evidence. This also excludes
-    // the agent framework's own test/eval fixture directories (e.g.
-    // frontend/tests/fixtures/client-ngmodule, frontend/evals/fixtures/*), which contain
-    // synthetic package.json/angular.json/tsconfig.json/*.csproj files used by the
-    // framework's own validate.js/run-evals.js suites -- these are agent infrastructure,
-    // never real client repository evidence, and must not trigger REQUIRED_IF_APPLICABLE
-    // tool installation (see runs/_bootstrap tool-manifest.json history for the defect
-    // this fixes: a backend-only run was blocked on typescript/angular-cli because the
-    // evidence walk found these fixtures rather than the real client repository).
-    if (['node_modules', '.git', 'runs', 'frontend-runtime', 'tests', 'evals'].includes(e.name)) continue;
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) walk(full, acc, depth + 1);
-    else acc.push(full);
-  }
-}
 // Exact version a client repository declares for a tooling package, used to install a
 // compatible isolated copy (`versionSource: client-compatible`). Range prefixes are
 // stripped; an unresolvable range (e.g. "*", "latest", a git URL) yields no version so
@@ -122,45 +101,9 @@ function exactVersionFromRange(range) {
   const m = range.trim().match(/^[\^~>=<\s v]*(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)/);
   return m ? m[1] : null;
 }
-function detectClientToolVersions(files, packages) {
-  const out = {};
-  for (const file of files) {
-    if (!/[\\/]package\.json$/i.test(file)) continue;
-    let pkg;
-    try { pkg = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { continue; }
-    const deps = Object.assign({}, pkg.devDependencies, pkg.dependencies);
-    for (const name of packages) {
-      if (out[name]) continue;
-      const v = exactVersionFromRange(deps[name]);
-      if (v) out[name] = v;
-    }
-  }
-  return out;
-}
 
-function gatherEvidence() {
-  // Scan the whole workspace (parent of backend) for client tech.
-  const workspace = path.resolve(ROOT, '..');
-  const files = [];
-  walk(workspace, files, 0);
-  const has = (re) => files.some((f) => re.test(f));
-  const dotnetClient = has(/\.(sln|slnx|csproj|fsproj)$/i);
-  const packageJson = has(/[\\/]package\.json$/i);
-  const angular = has(/[\\/]angular\.json$/i);
-  const tsconfig = has(/[\\/]tsconfig(\.\w+)?\.json$/i) || has(/\.ts$/i);
-  return {
-    // The agent's declared domain is .NET Core upgrades: dotnet tooling is in-domain.
-    domainDotnet: true,
-    dotnetClientPresent: dotnetClient,
-    frontendPresent: packageJson || angular,
-    typescriptDetected: tsconfig,
-    angularDetected: angular,
-    clientToolVersions: detectClientToolVersions(files, ['typescript', '@angular/cli']),
-    // Analysis tools are applicable only when there is a client artifact to analyse.
-    managedPackageComparison: dotnetClient,
-    selectiveDecompilationApproved: dotnetClient, // still gated by policy gate below
-    containerRequested: false,
-  };
+function gatherEvidence(clientPath) {
+  return require('../../../../orchestrator/tools/lib/discovery').backendEvidence(clientPath);
 }
 
 function appliesWhen(tool, evidence) {
@@ -185,5 +128,5 @@ module.exports = {
   ROOT, P, readYaml, readJson, nowIso, ensureDir, loadConfig,
   redactor, runExec, sha256File, sha256Text,
   parseVersion, normalizeVersion, meetsMinimum,
-  gatherEvidence, appliesWhen, platform, exactVersionFromRange, detectClientToolVersions,
+  gatherEvidence, appliesWhen, platform, exactVersionFromRange,
 };

@@ -56,10 +56,20 @@ function renderList(items) {
   }).join('\n');
 }
 
-function prepareHandover({ runId, clientId, sourceVersion, targetVersion, frontendRunDir, backendState, backendRunRef, frontendRunRef, templatesDir }) {
+function prepareHandover({ runId, clientId, sourceVersion, targetVersion, frontendRunDir, backendState, backendRunRef, frontendRunRef, templatesDir, domainEvidenceRefs }) {
   const items = [...readFrontendChecklist(frontendRunDir)];
   const backendItem = backendManualReviewItem(backendState, backendRunRef);
   if (backendItem) items.push(backendItem);
+  for (const file of domainEvidenceRefs || []) {
+    const evidence = JSON.parse(fs.readFileSync(file, 'utf8'));
+    for (const entry of evidence.azureChecklist || []) items.push({
+      id: `BACKEND-CONFIG-${entry.azureKey}`, action: `Validate backend setting ${entry.azureKey}`,
+      timing: entry.timing || 'BEFORE_DEPLOYMENT', owner: entry.owner,
+      instructions: `Use the backend-owned evidence ${file}; resolve values through the client secret provider.`,
+      verification: 'Backend configuration coverage verified', status: 'MANUAL_ACTION_PENDING',
+      source: 'backend-track-manual-review'
+    });
+  }
 
   const before = items.filter((i) => i.timing === 'BEFORE_DEPLOYMENT');
   const after = items.filter((i) => i.timing !== 'BEFORE_DEPLOYMENT');

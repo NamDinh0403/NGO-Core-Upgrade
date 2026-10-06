@@ -48,9 +48,10 @@ function availableCapabilities() {
   return [...caps];
 }
 
-function doctor() {
-  bootstrap.run('doctor'); // refresh env manifest (no install, no client change)
-  const evidence = core.gatherEvidence();
+function doctor(flags) {
+  const evidenceInput = core.gatherEvidence(flags && (flags['client-path'] || flags['solution-path']));
+  const bootstrapResult = bootstrap.run('doctor', evidenceInput); // refresh env manifest (no install, no client change)
+  const evidence = bootstrapResult.evidence;
   const available = availableCapabilities();
   const readiness = engine.planningReadiness(evidence, available);
   const line = (s) => process.stdout.write(s + '\n');
@@ -82,6 +83,13 @@ function scaffoldIfMissing(rel, name, content) {
 
 function plan(flags) {
   const { client, run, rel } = ensureRun(flags);
+  try {
+    require('../../orchestrator/tools/lib/execution').attach(core.P(rel), 'backend', {
+      contextRef: flags.context, clientId: client, runId: run,
+      clientPath: flags['client-path'] || flags['solution-path'], corePath: flags['core-path'],
+      sourceVersion: flags['source-version'], targetVersion: flags['target-version'], releaseNotesPath: flags['release-notes']
+    });
+  } catch (error) { process.stderr.write(`BLOCKED: ${error.message}. Resume the shared run before planning.\n`); return 1; }
   scaffoldIfMissing(rel, 'plan.yaml', `schemaVersion: 1\nstatus: DRAFT\nclientId: ${client}\nrunId: ${run}\nobjective: null\nsourceVersion: null\ntargetVersion: null\nrequiredCapabilities: []\ndeferredCapabilities: []\nnextAction: "Run skills/plan-upgrade/SKILL.md to complete the plan."\n`);
   scaffoldIfMissing(rel, 'uncertainty-register.yaml', 'schemaVersion: 1\nuncertainties: []\n');
   scaffoldIfMissing(rel, 'assumptions.yaml', 'schemaVersion: 1\nassumptions: []\n');
@@ -95,7 +103,10 @@ function readState(flags) {
   if (!flags.client || !flags.run) { process.stderr.write('specify --client <id> --run <id>\n'); return null; }
   const p = core.P(runDirRel(flags.client, flags.run), 'state.json');
   if (!fs.existsSync(p)) { process.stderr.write(`no run state at ${p}\n`); return null; }
-  return JSON.parse(fs.readFileSync(p, 'utf8'));
+  const state = JSON.parse(fs.readFileSync(p, 'utf8'));
+  try { require('../../orchestrator/tools/lib/execution').guard(path.dirname(p), 'backend', { runId: state.runId, targetVersion: state.targetVersion }); }
+  catch (error) { process.stderr.write(`BLOCKED: ${error.message}. Revalidate the shared run before resuming.\n`); return null; }
+  return state;
 }
 
 function status(flags) {
@@ -115,6 +126,8 @@ function needPlan(flags, label) {
   if (!flags.client || !flags.run) { process.stderr.write('specify --client <id> --run <id>\n'); return 1; }
   const planPath = core.P(runDirRel(flags.client, flags.run), 'plan.yaml');
   if (!fs.existsSync(planPath)) { process.stderr.write(`no plan for this run; run: upgrade-agent plan --client ${flags.client} --run ${flags.run}\n`); return 1; }
+  try { require('../../orchestrator/tools/lib/execution').guard(path.dirname(planPath), 'backend', { runId: flags.run }); }
+  catch (error) { process.stderr.write(`BLOCKED: ${error.message}. Revalidate shared context before execution.\n`); return 1; }
   process.stdout.write(`${label}: a plan exists. Follow the corresponding SKILL.md. Client mutation stays gated by the mutation gate until the plan is READY.\n`);
   return 0;
 }
@@ -184,7 +197,7 @@ function main() {
   const cmd = argv[0];
   const flags = parseFlags(argv.slice(1));
   switch (cmd) {
-    case 'doctor': process.exit(doctor());
+    case 'doctor': process.exit(doctor(flags));
     case 'plan': process.exit(plan(flags));
     case 'research': process.exit(needPlan(flags, 'research'));
     case 'run': process.exit(needPlan(flags, 'run'));
@@ -194,9 +207,9 @@ function main() {
     case 'check-core-releases': process.exit(checkCoreReleases(flags));
     case 'tools': {
       const sub = argv[1];
-      if (sub === 'bootstrap' || sub === 'install-missing') { const o = bootstrap.run('bootstrap'); bootstrap.summarize(o); process.exit(o.result.exitCode); }
-      if (sub === 'check' || sub === 'validate') { const o = bootstrap.run('check'); bootstrap.summarize(o); process.exit(o.result.exitCode); }
-      if (sub === 'doctor') { const o = bootstrap.run('doctor'); bootstrap.summarize(o); process.exit(o.result.exitCode); }
+      if (sub === 'bootstrap' || sub === 'install-missing') { const o = bootstrap.run('bootstrap', core.gatherEvidence(flags['client-path'] || flags['solution-path'])); bootstrap.summarize(o); process.exit(o.result.exitCode); }
+      if (sub === 'check' || sub === 'validate') { const o = bootstrap.run('check', core.gatherEvidence(flags['client-path'] || flags['solution-path'])); bootstrap.summarize(o); process.exit(o.result.exitCode); }
+      if (sub === 'doctor') { const o = bootstrap.run('doctor', core.gatherEvidence(flags['client-path'] || flags['solution-path'])); bootstrap.summarize(o); process.exit(o.result.exitCode); }
       if (sub === 'manifest') {
         const p = core.P('runs', bootstrap.BOOTSTRAP_CLIENT, 'tool-manifest.json');
         if (!fs.existsSync(p)) { process.stderr.write('no manifest yet; run: upgrade-agent tools bootstrap\n'); process.exit(1); }

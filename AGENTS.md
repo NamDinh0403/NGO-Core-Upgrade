@@ -21,8 +21,8 @@ own mutation gate. `ingest/` and `orchestrator/` never mutate anything.
 | Request | Do this |
 |---|---|
 | Upgrade **both** tracks, or track not stated | Follow `orchestrator/AGENTS.md`: one shared run and validated ingest, parallel track delegation when repositories are independent, one merged handover/report. |
-| Backend only (.NET/NuGet/EF/appsettings) | Run ingest, then load **`backend/AGENTS.md`** and follow it. |
-| Frontend only (Angular/package.json) | Run ingest, then load **`frontend/AGENTS.md`** and follow it. |
+| Backend only (.NET/NuGet/EF/appsettings) | Create a shared run with `--tracks backend`, then load **`backend/AGENTS.md`** with its backend context. |
+| Frontend only (Angular/package.json) | Create a shared run with `--tracks frontend`, then load **`frontend/AGENTS.md`** with its frontend context. |
 | "Is there a newer Core release?" | `node ingest/tools/ingest.js check --core-path <path>` — nothing else needed. |
 
 ## Context And Inputs
@@ -34,6 +34,9 @@ Do not infer a requested target from the highest installed version.
 Load current run state, the owning contract and applicable knowledge only;
 historical runs, raw logs, all skills and unrelated domains are not default context.
 The shared-run loop is owned by `orchestrator/AGENTS.md`, not duplicated here.
+The generic lifecycle is `orchestrator/skills/lifecycle/SKILL.md`. If a verified
+track context was supplied, consume it; do not create another shared run or ingest
+again. Standalone track agents use the same owner without delegating to themselves.
 
 ## Non-negotiables (all three modules)
 

@@ -28,6 +28,7 @@ const runLib = require('./lib/run');
 const requirementsLib = require('./lib/requirements');
 const coverageLib = require('./lib/coverage');
 const handoverLib = require('./lib/handover');
+const contextLib = require('./lib/context');
 
 const MODULE_ROOT = path.resolve(__dirname, '..'); // orchestrator/
 const REPO_ROOT = path.resolve(MODULE_ROOT, '..');
@@ -51,6 +52,7 @@ function splitRunFlag(runFlag) {
 function loadState(base) { return runLib.readJson(path.join(base, 'state.json')); }
 function saveState(base, state) {
   state.updatedAt = new Date().toISOString();
+  state.lifecyclePhase = require('./lib/lifecycle').phase(state);
   runLib.writeJson(path.join(base, 'state.json'), state);
 }
 
@@ -58,17 +60,7 @@ function saveState(base, state) {
 // ingest-core-release skill already does: reuse if fresh, else invoke the
 // shared tool once. Never re-implements ingest's own git-diff/notes logic.
 function ensureIngested({ corePath, releaseNotesPath, sourceVersion, targetVersion, ingestRoot }) {
-  ingestRoot = ingestRoot || INGEST_ROOT;
-  try {
-    const ingest = require(path.join(ingestRoot, 'tools', 'ingest.js'));
-    const result = ingest.ensureReleases({ 'core-path': corePath, 'release-notes': releaseNotesPath,
-      since: sourceVersion, target: targetVersion, out: path.join(ingestRoot, 'knowledge', 'candidates', 'releases') });
-    const target = result.entries[result.entries.length - 1];
-    if (!target) throw new Error('no verified release candidates');
-    return { reused: result.reused, path: target.path, entries: result.entries };
-  } catch (error) {
-    return { reused: false, path: null, entries: [], failed: true, error: error.message };
-  }
+  return contextLib.ensureCoreChangeSet({ corePath, releaseNotesPath, sourceVersion, targetVersion, ingestRoot });
 }
 
 function cmdCreateRun(flags) {
@@ -84,7 +76,25 @@ function cmdCreateRun(flags) {
   // real sibling ingest/ module.
   const ingestRoot = flags['ingest-root'] || INGEST_ROOT;
 
-  const runId = runLib.newRunId(clientId);
+  const runId = flags['run-id'] || runLib.newRunId(clientId);
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(runId) || runId === '..') { process.stderr.write('Invalid run id.\n'); return 2; }
+  const previous = loadState(runLib.runDir(clientId, runId));
+  if (previous) {
+    const original = yaml.parse(fs.readFileSync(path.join(runLib.runDir(clientId, runId), 'request.yaml'), 'utf8'));
+    const paths = { 'core-path': 'corePath', 'release-notes': 'releaseNotesPath', 'feature-decisions': 'featureDecisionsPath', 'backend-client-path': 'backendClientPath', 'frontend-client-path': 'frontendClientPath' };
+    for (const flag of Object.keys(paths)) {
+      if (flags[flag] && (!original[paths[flag]] || !contextLib.samePath(flags[flag], original[paths[flag]]))) {
+        process.stderr.write(`Existing shared run has a different ${flag}; create a new run.\n`);
+        return 1;
+      }
+    }
+    if (previous.targetVersion !== targetVersion || contextLib.normalizeVersion(previous.sourceVersion) !== contextLib.normalizeVersion(String(flags['source-version'] || '')) || tracks.some((track) => !previous.tracks.includes(track))) {
+      process.stderr.write('Existing shared run has different inputs; create a new run instead of overwriting evidence.\n');
+      return 1;
+    }
+    for (const track of tracks) if (cmdContext({ run: `${clientId}/${runId}`, track }) !== 0) return 1;
+    return 0;
+  }
   const base = runLib.ensureRunLayout(clientId, runId);
 
   const request = {
@@ -110,7 +120,12 @@ function cmdCreateRun(flags) {
     ingestRoot, version: targetVersion, records: ingestResult.entries,
     featureDecisionsPath: request.featureDecisionsPath, runId
   });
-  requirementsLib.writeRequirements(path.join(base, 'requirements'), split);
+  let contexts = {};
+  try {
+    if (!ingestResult.failed) requirementsLib.appendCanonical(split, request.sourceVersion, targetVersion);
+    requirementsLib.writeRequirements(path.join(base, 'requirements'), split);
+    if (!ingestResult.failed) contexts = contextLib.persistContexts(base, request, runId, ingestResult.changeSet, split);
+  } catch (error) { ingestResult.failed = true; ingestResult.error = `Context preparation failed: ${error.message}`; }
 
   const state = {
     schemaVersion: 1, runId, clientId, tracks,
@@ -121,19 +136,24 @@ function cmdCreateRun(flags) {
     ingestCandidateRef: ingestResult.path,
     ingestCandidateRefs: ingestResult.entries.map((entry) => entry.path),
     ingestEvidenceHash: releaseSnapshot(ingestResult.entries),
+    ...contexts,
+    contextEvidenceHash: ingestResult.failed ? null : fileSnapshot(contextLib.contextFiles(contexts)),
+    contextRequired: true,
+    executorStatus: Object.fromEntries(tracks.map((track) => [track, 'READY'])),
     nextAction: ingestResult.failed
       ? `Ingestion blocked: ${ingestResult.error}. Correct Core path/release boundaries and rerun create-run; do not delegate this run.`
-      : `Delegate to ${tracks.join(' and ')}, passing run-id ${runId} and requirements/{${tracks.join(',')}}.yaml as an additional seed. Then run: orchestrator.js compose-results --run ${clientId}/${runId}`,
+      : `Delegate to ${tracks.join(' and ')}, passing run-id ${runId} and contexts/<track>.json. Consume the context; do not ingest again. Then run: orchestrator.js compose-results --run ${clientId}/${runId}`,
     startedAt: new Date().toISOString(), updatedAt: new Date().toISOString()
   };
   state.safeResumeInstruction = state.nextAction;
   saveState(base, state);
 
   process.stdout.write(JSON.stringify({
-    runId, runDir: base,
+    runId, runDir: base, lifecyclePhase: state.lifecyclePhase,
     requirementsDir: path.join(base, 'requirements'),
     ingestCandidateRef: ingestResult.path,
     ingestReused: ingestResult.reused,
+    trackContextRefs: state.trackContextRefs || {},
     nextAction: state.nextAction
   }, null, 2) + '\n');
   return ingestResult.failed ? 1 : 0;
@@ -149,14 +169,13 @@ function releaseSnapshot(entries) {
 function fileSnapshot(files) {
   if (!files.length) return null;
   try {
-    const hash = crypto.createHash('sha256');
-    for (const file of files) hash.update(file).update('\0').update(fs.readFileSync(file));
-    return hash.digest('hex');
+    return contextLib.snapshot(files);
   } catch (_) { return null; }
 }
 
 function coverageSnapshot(base, state) {
   const files = [path.join(base, 'requirements', 'all.yaml'), path.join(base, 'requirement-coverage.yaml'), path.join(base, 'missing-steps.yaml')];
+  files.push(...contextLib.contextFiles(state));
   for (const track of state.tracks) {
     const reference = state[`${track}RunRef`];
     if (!reference) return null;
@@ -210,6 +229,13 @@ function seedIssues(base, state) {
 
 function requestedTrackIssues(state, successfulOnly) {
   const issues = [];
+  if (state.contextRequired && !state.coreChangeSetRef) issues.push('shared context preparation did not succeed; recreate the shared run before delegation');
+  if (state.coreChangeSetRef) {
+    try {
+      if (fileSnapshot(contextLib.contextFiles(state)) !== state.contextEvidenceHash) throw new Error('shared context evidence changed');
+      for (const track of state.tracks) contextLib.consumeTrackContext(state.trackContextRefs[track], track, { targetVersion: state.targetVersion, runId: state.runId });
+    } catch (error) { issues.push(`${error.message}; revalidate shared context before delegation/coverage`); }
+  }
   if (!state.ingestCandidateRef) issues.push('release evidence was not verified; correct ingestion and recreate the shared run');
   let currentIngest = null;
   try {
@@ -242,6 +268,7 @@ function cmdComposeResults(flags) {
     fs.writeFileSync(path.join(base, 'results', 'backend-result.yaml'), yaml.stringify(backendState));
     state.backendRunRef = flags['backend-run'];
     state.trackStatus.backend = backendState.status || null;
+    if (state.executorStatus) state.executorStatus.backend = contextLib.trackStatus(backendState);
   }
   if (flags['frontend-run']) {
     const frontendState = runLib.readJson(path.join(flags['frontend-run'], 'state.json'));
@@ -249,6 +276,7 @@ function cmdComposeResults(flags) {
     fs.writeFileSync(path.join(base, 'results', 'frontend-result.yaml'), yaml.stringify(frontendState));
     state.frontendRunRef = flags['frontend-run'];
     state.trackStatus.frontend = frontendState.status || null;
+    if (state.executorStatus) state.executorStatus.frontend = contextLib.trackStatus(frontendState);
   }
 
   state.status = 'RESULTS_COMPOSED';
@@ -274,8 +302,18 @@ function cmdVerifyCoverage(flags) {
   }
 
   const backendState = state.backendRunRef ? runLib.readJson(path.join(state.backendRunRef, 'state.json')) : null;
+  if (state.domainEvidenceRefs && state.domainEvidenceRefs.length) {
+    try {
+      contextLib.refreshDomainEvidence(state);
+      state.contextEvidenceHash = fileSnapshot(contextLib.contextFiles(state));
+    } catch (error) {
+      state.status = 'BLOCKED'; state.nextAction = `Backend validation failed: ${error.message}`; state.safeResumeInstruction = state.nextAction;
+      saveState(base, state); process.stderr.write(state.nextAction + '\n'); return 1;
+    }
+  }
   const { coverage, missingSteps } = coverageLib.verifyCoverage({
-    runId, frontendRunDir: state.frontendRunRef, backendState
+    runId, frontendRunDir: state.frontendRunRef, backendState,
+    domainEvidenceRefs: state.domainEvidenceRefs
   });
 
   fs.writeFileSync(path.join(base, 'requirement-coverage.yaml'), yaml.stringify(coverage));
@@ -313,6 +351,7 @@ function cmdPrepareHandover(flags) {
     runId, clientId, sourceVersion: state.sourceVersion, targetVersion: state.targetVersion,
     frontendRunDir: state.frontendRunRef, backendState,
     backendRunRef: state.backendRunRef, frontendRunRef: state.frontendRunRef,
+    domainEvidenceRefs: state.domainEvidenceRefs,
     templatesDir: TEMPLATES_DIR
   });
 
@@ -382,6 +421,22 @@ function cmdStatus(flags) {
   return 0;
 }
 
+function cmdContext(flags) {
+  try {
+    const { clientId, runId } = splitRunFlag(flags.run);
+    const state = loadState(runLib.runDir(clientId, runId));
+    if (!state || !state.trackContextRefs || !state.trackContextRefs[flags.track]) throw new Error('No verified track context; create/resume the shared run first');
+    const result = flags['evidence-version']
+      ? { evidence: contextLib.readTrackEvidence(runLib.readJson(state.trackContextRefs[flags.track]), flags['evidence-version']) }
+      : { context: contextLib.consumeTrackContext(state.trackContextRefs[flags.track], flags.track, { runId }) };
+    process.stdout.write(JSON.stringify({ status: 'READY', ...result, nextAction: 'Execute domain planning; do not repeat Core ingestion.' }, null, 2) + '\n');
+    return 0;
+  } catch (error) {
+    process.stderr.write(JSON.stringify({ status: 'BLOCKED', nextAction: error.message }) + '\n');
+    return 1;
+  }
+}
+
 function main() {
   const [cmd, ...rest] = process.argv.slice(2);
   const flags = parseFlags(rest);
@@ -391,6 +446,7 @@ function main() {
     'verify-coverage': cmdVerifyCoverage,
     'prepare-handover': cmdPrepareHandover,
     'final-report': cmdFinalReport,
+    context: cmdContext,
     status: cmdStatus
   };
   if (!commands[cmd]) {
@@ -401,4 +457,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { cmdCreateRun, cmdComposeResults, cmdVerifyCoverage, cmdPrepareHandover, cmdFinalReport, cmdStatus, ensureIngested, parseFlags, splitRunFlag };
+module.exports = { cmdCreateRun, cmdComposeResults, cmdVerifyCoverage, cmdPrepareHandover, cmdFinalReport, cmdStatus, cmdContext, ensureIngested, parseFlags, splitRunFlag };

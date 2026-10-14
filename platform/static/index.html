@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGO Core Upgrade Control Center</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- PERSISTENT SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">⚡</span>
+        <div class="brand-text">
+          <h1>NGO Core</h1>
+          <span class="sub-brand">Control Center</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#dashboard" class="nav-item active" data-view="dashboard">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#new-upgrade" class="nav-item" data-view="new-upgrade">
+          <span class="nav-icon">🚀</span>
+          <span>New Upgrade</span>
+        </a>
+        <a href="#live-execution" class="nav-item" data-view="live-execution">
+          <span class="nav-icon">⚡</span>
+          <span>Live Execution</span>
+          <span id="active-job-indicator" class="nav-badge" style="display:none;">1</span>
+        </a>
+        <a href="#results-review" class="nav-item" data-view="results-review">
+          <span class="nav-icon">🔍</span>
+          <span>Results & Review</span>
+        </a>
+        <a href="#usage-analytics" class="nav-item" data-view="usage-analytics">
+          <span class="nav-icon">📈</span>
+          <span>Usage & Analytics</span>
+        </a>
+        <a href="#settings-diagnostics" class="nav-item" data-view="settings-diagnostics">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings & Diag</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="health-mini">
+          <span class="health-dot" id="system-health-dot"></span>
+          <span id="system-health-text">System Ready</span>
+        </div>
+        <small class="version-label">Localhost &bull; Node 18+ &bull; Zero External Deps</small>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEW AREA -->
+    <div class="main-content">
+      <!-- TOP HEADER -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h2 id="view-title">Dashboard</h2>
+        </div>
+        <div class="topbar-right">
+          <span id="cli-health-badge" class="badge badge-info">Checking Copilot CLI...</span>
+          <span id="connection-badge" class="badge badge-success">Online (127.0.0.1)</span>
+        </div>
+      </header>
+
+      <!-- CONTENT CONTAINER -->
+      <main class="page-container">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view-panel active">
+          <div class="dashboard-grid">
+            <div class="card stat-card">
+              <span class="stat-title">Platform Status</span>
+              <span class="stat-value text-success" id="dash-platform-status">HEALTHY</span>
+              <small class="text-muted" id="dash-platform-uptime">Checking system health...</small>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-title">Copilot CLI Diagnostic</span>
+              <span class="stat-value text-info" id="dash-cli-status">Checking</span>
+              <small class="text-muted" id="dash-cli-account">Identity: Unknown</small>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-title">Total Upgrades Run</span>
+              <span class="stat-value" id="dash-total-jobs">0</span>
+              <small class="text-muted" id="dash-success-jobs">0 succeeded</small>
+            </div>
+            <div class="card stat-card">
+              <span class="stat-title">Deterministic Checks</span>
+              <span class="stat-value text-accent" id="dash-total-checks">0</span>
+              <small class="text-muted">Zero LLM calls required</small>
+            </div>
+          </div>
+
+          <div class="card mt-4" id="active-upgrade-banner" style="display:none;">
+            <div class="card-header flex-between">
+              <div>
+                <span class="badge badge-warning">Active Upgrade in Progress</span>
+                <strong id="active-banner-client" class="ml-2">--</strong>
+              </div>
+              <button class="btn btn-primary btn-sm" id="btn-view-active">Switch to Live Execution</button>
+            </div>
+          </div>
+
+          <div class="card mt-4">
+            <div class="card-header flex-between">
+              <h3>Recent Upgrade Jobs</h3>
+              <button class="btn btn-secondary btn-sm" id="btn-refresh-history">Refresh</button>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Job / Client</th>
+                      <th>Target</th>
+                      <th>Tracks</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="history-table-body">
+                    <tr><td colspan="6" class="text-center text-muted">No upgrade runs recorded yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. NEW UPGRADE VIEW (GUIDED 4-STEP WORKFLOW) -->
+        <section id="view-new-upgrade" class="view-panel">
+          <!-- WIZARD STEP INDICATOR -->
+          <div class="wizard-stepper mb-4">
+            <button class="wizard-step active" data-step="1" id="wizard-nav-1">
+              <span class="wizard-step-num">1</span>
+              <div class="wizard-step-info">
+                <span class="wizard-step-title">Workspace</span>
+                <span class="wizard-step-desc">Target & Tracks</span>
+              </div>
+            </button>
+            <div class="wizard-step-connector"></div>
+            <button class="wizard-step" data-step="2" id="wizard-nav-2">
+              <span class="wizard-step-num">2</span>
+              <div class="wizard-step-info">
+                <span class="wizard-step-title">Preflight & Evidence</span>
+                <span class="wizard-step-desc">Inspector & Plan</span>
+              </div>
+            </button>
+            <div class="wizard-step-connector"></div>
+            <button class="wizard-step" data-step="3" id="wizard-nav-3">
+              <span class="wizard-step-num">3</span>
+              <div class="wizard-step-info">
+                <span class="wizard-step-title">Safety Gates</span>
+                <span class="wizard-step-desc">Gates & Blockers</span>
+              </div>
+            </button>
+            <div class="wizard-step-connector"></div>
+            <button class="wizard-step" data-step="4" id="wizard-nav-4">
+              <span class="wizard-step-num">4</span>
+              <div class="wizard-step-info">
+                <span class="wizard-step-title">Confirm & Launch</span>
+                <span class="wizard-step-desc">Dispatch Job</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- STEP 1: WORKSPACE & TARGET SELECTION -->
+          <div class="wizard-pane active" id="wizard-pane-1">
+            <div class="card">
+              <div class="card-header flex-between">
+                <h3>Step 1: Workspace Selection & Upgrade Parameters</h3>
+                <span class="badge badge-secondary">Configuration</span>
+              </div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="project-select">Client Repository:</label>
+                    <select id="project-select">
+                      <option value="">Loading client repositories...</option>
+                    </select>
+                    <small id="client-path-hint" class="hint-text"></small>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Current Installed Core Version:</label>
+                    <div id="current-version-display" class="version-pill">Select a project</div>
+                    <small class="hint-text">Detected from client project files and dependencies.</small>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="target-version-select">Target Core Version:</label>
+                    <select id="target-version-select">
+                      <option value="">Select target version...</option>
+                    </select>
+                    <small class="hint-text">Discovered from Core package metadata, manifests, and Git tags.</small>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Execution Tracks:</label>
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" id="track-backend" checked> Backend (.NET & NuGet packages)</label>
+                      <label><input type="checkbox" id="track-frontend" checked> Frontend (Angular & npm packages)</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="copilot-model-select">Copilot Reasoning Model:</label>
+                    <select id="copilot-model-select">
+                      <option value="gpt-4o">GPT-4o (Default &bull; High Reasoning & Speed)</option>
+                      <option value="claude-3.5-sonnet">Claude 3.5 Sonnet (Deep Refactoring & Build Repair)</option>
+                      <option value="o1-preview">o1-preview (Advanced Architectural Reasoning)</option>
+                      <option value="o1-mini">o1-mini (Fast Advanced Reasoning)</option>
+                      <option value="gpt-4o-mini">GPT-4o mini (Fast &bull; Routine Updates)</option>
+                      <option value="custom">Custom Model ID...</option>
+                    </select>
+                    <div id="custom-model-container" class="mt-2" style="display:none;">
+                      <input type="text" id="custom-copilot-model" class="input-full" placeholder="Enter custom model identifier (e.g. claude-3-7-sonnet)">
+                    </div>
+                    <small id="copilot-model-desc" class="hint-text">Used for semantic code analysis, configuration adjustments, and automated repair.</small>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="flex-between">
+                      <label for="upgrade-mode-select">Upgrade Mode & Pipeline Optimization:</label>
+                      <span id="upgrade-mode-badge" class="badge badge-success">⚡ Auto: Fast Patch</span>
+                    </div>
+                    <select id="upgrade-mode-select">
+                      <option value="AUTO">Auto-detect (Fast Patch for patch bumps &bull; Full Semantic for minor/major)</option>
+                      <option value="FAST_PATCH">⚡ Fast Patch Mode (Direct package bump & build restore &bull; skips LLM unless build errors occur)</option>
+                      <option value="FULL_SEMANTIC">🔍 Full Semantic Upgrade (Full Core analysis, Copilot semantic reasoning & bounded repair)</option>
+                    </select>
+                    <small id="upgrade-mode-desc" class="hint-text">Patch version bump: direct version replacement + deterministic restore & build. Copilot reasoning skipped unless errors occur.</small>
+                  </div>
+                </div>
+
+                <div class="auth-identity-banner mb-3 p-3" id="step1-auth-banner">
+                  <div class="flex-between align-center">
+                    <div>
+                      <span class="text-sm font-semibold">Active Authentication & Environment:</span>
+                      <div class="text-xs text-muted mt-1" id="step1-auth-details">Loading active accounts...</div>
+                    </div>
+                    <div>
+                      <button type="button" id="btn-open-nuget-auth-step1" class="btn btn-secondary btn-sm">🔑 Manage NuGet & Azure Login</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-options">
+                  <label class="toggle-label">
+                    <input type="checkbox" id="simulate-copilot">
+                    <span>Simulation Mode (Run deterministic pipeline without Copilot CLI child process &bull; fast test)</span>
+                  </label>
+                </div>
+
+                <div class="action-bar flex-between">
+                  <span class="text-sm text-muted">Step 1 of 4 &bull; Select project and target version to run preflight</span>
+                  <button id="btn-preflight" class="btn btn-primary">Run Preflight & Continue &rarr;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: PREFLIGHT & EVIDENCE INSPECTOR -->
+          <div class="wizard-pane" id="wizard-pane-2">
+            <div class="card" id="preflight-plan-card">
+              <div class="card-header flex-between">
+                <div>
+                  <h3>Step 2: Preflight Impact Preview & Resolved Evidence</h3>
+                  <small class="text-muted">4-Layer Verification & Deterministic Checks</small>
+                </div>
+                <div class="flex-center gap-2">
+                  <span id="upgrade-mode-step2-badge" class="badge badge-success">⚡ Fast Patch Mode</span>
+                  <span id="selected-model-pill-step2" class="badge badge-secondary">Model: GPT-4o</span>
+                  <span id="resolution-mode-badge" class="badge badge-info">MODE</span>
+                  <button class="btn btn-secondary btn-sm" id="btn-rerun-preflight">Re-run Preflight</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <!-- Authentication Alert Banner (Shown if 401 unauthenticated) -->
+                <div id="preflight-auth-alert" class="alert alert-warning mb-3" style="display:none;">
+                  <div class="flex-between align-center">
+                    <div>
+                      <strong>⚠️ Private NuGet Feed Authentication Required:</strong>
+                      <div class="text-sm mt-1" id="preflight-auth-msg">Valid credentials required to verify package availability on NGO Online feed.</div>
+                      <div class="text-xs text-muted mt-1" id="preflight-auth-identity">Detected: Loading active accounts...</div>
+                    </div>
+                    <div class="flex-center gap-2">
+                      <button type="button" id="btn-quick-connect-azure" class="btn btn-primary btn-sm">🔗 Connect with Azure CLI</button>
+                      <button type="button" id="btn-open-nuget-modal-step2" class="btn btn-secondary btn-sm">🔑 Enter PAT...</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4 Metrics Summary Grid -->
+                <div class="evidence-grid">
+                  <div class="evidence-item">
+                    <span class="evidence-label">Package Published</span>
+                    <span id="ev-package" class="evidence-val">--</span>
+                  </div>
+                  <div class="evidence-item">
+                    <span class="evidence-label">Source Diff Available</span>
+                    <span id="ev-diff" class="evidence-val">--</span>
+                  </div>
+                  <div class="evidence-item">
+                    <span class="evidence-label">Evidence Completeness</span>
+                    <span id="ev-compat" class="evidence-val">--</span>
+                  </div>
+                  <div class="evidence-item">
+                    <span class="evidence-label">Working Tree Clean</span>
+                    <span id="ev-git" class="evidence-val">--</span>
+                  </div>
+                </div>
+
+                <!-- Sub-tabs Navigation -->
+                <div class="sub-tab-bar mt-4">
+                  <button class="sub-tab-btn active" data-subtab="inspector">Evidence Inspector (<span id="evidence-inspector-count-tab">0</span>)</button>
+                  <button class="sub-tab-btn" data-subtab="working-tree">Working Tree & Conflicts</button>
+                  <button class="sub-tab-btn" data-subtab="plan">Traceable Upgrade Plan</button>
+                </div>
+
+                <!-- Subtab 1: Evidence Inspector Table -->
+                <div class="sub-tab-content active" id="subtab-inspector">
+                  <div class="flex-between mt-3 mb-2">
+                    <span class="text-sm text-muted">Deterministic validation checks with reproducible commands and observations:</span>
+                    <span id="evidence-inspector-count" class="badge badge-secondary">0 Checks Evaluated</span>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="data-table" id="evidence-inspector-table">
+                      <thead>
+                        <tr>
+                          <th>Check ID & Name</th>
+                          <th>Status</th>
+                          <th>Source / Operation</th>
+                          <th>Observed Output / Reason</th>
+                          <th>Remediation Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="evidence-inspector-tbody">
+                        <tr><td colspan="5" class="text-center text-muted">Run preflight to inspect evidence checks.</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Subtab 2: Working Tree & Conflicts Explorer -->
+                <div class="sub-tab-content" id="subtab-working-tree">
+                  <div id="evidence-breakdown-box" class="mt-3"></div>
+                  <div id="working-tree-details-box" class="mt-3"></div>
+                </div>
+
+                <!-- Subtab 3: Traceable Plan Preview -->
+                <div class="sub-tab-content" id="subtab-plan">
+                  <div class="flex-between mt-3 mb-2">
+                    <span class="text-sm text-muted">Target tasks derived strictly from inspected client files:</span>
+                    <span id="plan-derivation-badge" class="badge badge-primary">DERIVED FROM EVIDENCE</span>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="data-table">
+                      <thead>
+                        <tr>
+                          <th>Task / Track</th>
+                          <th>Target File</th>
+                          <th>Observed &rarr; Target</th>
+                          <th>Verification Step</th>
+                        </tr>
+                      </thead>
+                      <tbody id="plan-tasks-tbody">
+                        <tr><td colspan="4" class="text-center text-muted">No plan tasks generated yet.</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="action-bar flex-between mt-4">
+                  <button class="btn btn-secondary" id="btn-step2-back">&larr; Back to Workspace</button>
+                  <button class="btn btn-primary" id="btn-step2-next">Review Safety Gates &rarr;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: SAFETY GATES & REMEDIATION -->
+          <div class="wizard-pane" id="wizard-pane-3">
+            <div class="card">
+              <div class="card-header flex-between">
+                <div>
+                  <h3>Step 3: Safety Gates & Mutation Policy</h3>
+                  <small class="text-muted">Multi-Layer Safety Verification Before Client Mutation</small>
+                </div>
+                <span id="safety-decision-badge" class="badge badge-secondary">PENDING EVALUATION</span>
+              </div>
+              <div class="card-body">
+                <!-- Safety Decision Alerts -->
+                <div id="preflight-alerts" class="mb-3"></div>
+
+                <!-- 4-Layer Gate Breakdown Cards -->
+                <div class="dashboard-grid mb-4">
+                  <div class="card stat-card">
+                    <span class="stat-title">Layer 1: Execution</span>
+                    <span class="stat-value" id="gate-layer-execution">--</span>
+                    <small class="text-muted">Check commands exit code 0</small>
+                  </div>
+                  <div class="card stat-card">
+                    <span class="stat-title">Layer 2: Evidence</span>
+                    <span class="stat-value" id="gate-layer-evidence">--</span>
+                    <small class="text-muted">Artifacts and cache presence</small>
+                  </div>
+                  <div class="card stat-card">
+                    <span class="stat-title">Layer 3: Validation</span>
+                    <span class="stat-value" id="gate-layer-validation">--</span>
+                    <small class="text-muted">SemVer rules & boundaries</small>
+                  </div>
+                  <div class="card stat-card">
+                    <span class="stat-title">Layer 4: Safety Decision</span>
+                    <span class="stat-value" id="gate-layer-decision">--</span>
+                    <small class="text-muted">Authorization to mutate</small>
+                  </div>
+                </div>
+
+                <!-- Detailed Blockers and Remediation Advice -->
+                <div id="safety-blockers-container" class="mb-3"></div>
+                <div id="safety-warnings-container" class="mb-3"></div>
+
+                <div class="action-bar flex-between mt-4">
+                  <button class="btn btn-secondary" id="btn-step3-back">&larr; Back to Evidence</button>
+                  <button class="btn btn-primary" id="btn-step3-next">Proceed to Confirmation &rarr;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: CONFIRMATION & LAUNCH -->
+          <div class="wizard-pane" id="wizard-pane-4">
+            <div class="card">
+              <div class="card-header flex-between">
+                <div>
+                  <h3>Step 4: Launch Confirmation & Execution Dispatch</h3>
+                  <small class="text-muted">Final Review of Parameters and Safety Invariants</small>
+                </div>
+                <span id="launch-ready-badge" class="badge badge-success">READY</span>
+              </div>
+              <div class="card-body">
+                <!-- Summary Parameters Grid -->
+                <div class="confirm-summary-grid mb-4">
+                  <div class="summary-card">
+                    <span class="summary-label">Client Repository</span>
+                    <span class="summary-value" id="confirm-client-name">--</span>
+                    <small class="text-muted" id="confirm-client-path">--</small>
+                  </div>
+                  <div class="summary-card">
+                    <span class="summary-label">Version Upgrade Path</span>
+                    <span class="summary-value" id="confirm-version-path">--</span>
+                    <small class="text-muted" id="confirm-resolution-mode">Package-first mode</small>
+                  </div>
+                  <div class="summary-card">
+                    <span class="summary-label">Active Tracks</span>
+                    <span class="summary-value" id="confirm-tracks">--</span>
+                    <small class="text-muted" id="confirm-tracks-detail">Backend &bull; Frontend</small>
+                  </div>
+                  <div class="summary-card">
+                    <span class="summary-label">Copilot Model</span>
+                    <span class="summary-value" id="confirm-copilot-model">GPT-4o</span>
+                    <small class="text-muted" id="confirm-engine-mode">Copilot CLI Active</small>
+                  </div>
+                  <div class="summary-card">
+                    <span class="summary-label">Upgrade Mode</span>
+                    <span class="summary-value" id="confirm-upgrade-mode">⚡ Fast Patch Mode</span>
+                    <small class="text-muted" id="confirm-upgrade-desc">Direct package bump & restore</small>
+                  </div>
+                  <div class="summary-card">
+                    <span class="summary-label">Safety Status</span>
+                    <span class="summary-value" id="confirm-safety-status">--</span>
+                    <small class="text-muted" id="confirm-blockers-count">0 Blockers Detected</small>
+                  </div>
+                </div>
+
+                <!-- Invariants Checklist -->
+                <div class="checklist-card mb-4">
+                  <h4>Pre-Launch Safety Invariants:</h4>
+                  <ul class="checklist">
+                    <li><span class="check-icon text-success">✔</span> Workspace root is explicitly approved in platform settings</li>
+                    <li><span class="check-icon text-success">✔</span> Target Core package exists in local NuGet cache or official feed</li>
+                    <li><span class="check-icon text-success">✔</span> Working tree target files are verified safe from overwrite</li>
+                    <li><span class="check-icon text-success">✔</span> Traceable plan tasks are derived and validated</li>
+                  </ul>
+                </div>
+
+                <div class="start-gate-bar">
+                  <div id="start-disabled-reason" class="alert alert-warning text-sm mb-2" style="display:none;"></div>
+                  <div class="flex-between align-center">
+                    <button class="btn btn-secondary" id="btn-step4-back">&larr; Back to Safety Gates</button>
+                    <button id="btn-start" class="btn btn-primary" disabled>Start Upgrade</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. LIVE EXECUTION VIEW (IDE-STYLE SPLIT PANEL) -->
+        <section id="view-live-execution" class="view-panel">
+          <div class="split-view-container">
+            <!-- Left Column: Pipeline Stepper & Job Controls -->
+            <div class="split-col-left">
+              <div class="card">
+                <div class="card-header flex-between">
+                  <div>
+                    <h3 id="exec-job-title">Upgrade Execution</h3>
+                    <small class="text-muted" id="exec-job-id">No active job selected</small>
+                  </div>
+                  <span id="job-status-badge" class="badge badge-secondary">IDLE</span>
+                </div>
+                <div class="card-body">
+                  <!-- Stepper -->
+                  <div class="stepper-vertical" id="stage-stepper">
+                    <div class="step" data-stage="PREFLIGHT">
+                      <div class="circle">1</div>
+                      <div class="step-details">
+                        <span class="step-label">Preflight</span>
+                        <small class="step-time" id="time-PREFLIGHT">--</small>
+                      </div>
+                    </div>
+                    <div class="step" data-stage="CORE_INGEST">
+                      <div class="circle">2</div>
+                      <div class="step-details">
+                        <span class="step-label">Core Ingest</span>
+                        <small class="step-time" id="time-CORE_INGEST">--</small>
+                      </div>
+                    </div>
+                    <div class="step" data-stage="PLAN">
+                      <div class="circle">3</div>
+                      <div class="step-details">
+                        <span class="step-label">Plan</span>
+                        <small class="step-time" id="time-PLAN">--</small>
+                      </div>
+                    </div>
+                    <div class="step" data-stage="IMPLEMENT">
+                      <div class="circle">4</div>
+                      <div class="step-details">
+                        <span class="step-label">Implement</span>
+                        <small class="step-time" id="time-IMPLEMENT">--</small>
+                      </div>
+                    </div>
+                    <div class="step" data-stage="VERIFY">
+                      <div class="circle">5</div>
+                      <div class="step-details">
+                        <span class="step-label">Verify</span>
+                        <small class="step-time" id="time-VERIFY">--</small>
+                      </div>
+                    </div>
+                    <div class="step" data-stage="REVIEW">
+                      <div class="circle">6</div>
+                      <div class="step-details">
+                        <span class="step-label">Review</span>
+                        <small class="step-time" id="time-REVIEW">--</small>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Track States Bar -->
+                  <div class="track-status-bar mt-3 mb-3">
+                    <span class="track-pill" id="track-backend-pill">Backend: PENDING</span>
+                    <span class="track-pill" id="track-frontend-pill">Frontend: PENDING</span>
+                    <span class="track-pill" id="upgrade-mode-pill">Mode: Fast Patch</span>
+                    <span class="track-pill" id="copilot-model-pill">Model: gpt-4o</span>
+                    <span class="track-pill" id="repair-iterations-pill">Repairs: 0/2</span>
+                  </div>
+
+                  <!-- Job Action Controls -->
+                  <div class="job-actions-bar mt-3">
+                    <button id="btn-cancel" class="btn btn-danger btn-sm" style="display:none;">Cancel Job</button>
+                    <button id="btn-resume" class="btn btn-secondary btn-sm" style="display:none;">Resume Job</button>
+                    <button id="btn-refresh-job" class="btn btn-secondary btn-sm">Refresh</button>
+                    <button id="btn-view-results-shortcut" class="btn btn-primary btn-sm mt-2" style="display:none; width:100%;">View Verification & Diff &rarr;</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Filterable Terminal & Live Logs -->
+            <div class="split-col-right">
+              <div class="card terminal-card">
+                <div class="card-header terminal-header">
+                  <div class="terminal-filters">
+                    <span class="filter-label">Filter:</span>
+                    <button class="pill-filter active" data-level="ALL">ALL</button>
+                    <button class="pill-filter" data-level="INFO">INFO</button>
+                    <button class="pill-filter" data-level="WARN">WARN</button>
+                    <button class="pill-filter" data-level="ERROR">ERROR</button>
+                    <button class="pill-filter" data-level="STAGE">STAGE</button>
+                    <input type="text" id="log-search-input" placeholder="Search logs..." class="terminal-search">
+                  </div>
+                  <div class="terminal-controls">
+                    <label class="autoscroll-toggle">
+                      <input type="checkbox" id="autoscroll-check" checked> Auto-scroll
+                    </label>
+                    <button id="btn-copy-log" class="btn btn-secondary btn-sm" title="Copy raw log to clipboard">Copy</button>
+                    <button id="btn-download-log" class="btn btn-secondary btn-sm" title="Download log file">Download</button>
+                    <button id="btn-clear-log" class="btn-text ml-2">Clear</button>
+                  </div>
+                </div>
+                <div class="card-body terminal-body-container">
+                  <pre id="terminal-output" class="terminal-body"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. RESULTS & REVIEW VIEW (SPLIT REVIEW LAYOUT) -->
+        <section id="view-results-review" class="view-panel">
+          <div class="split-view-container">
+            <!-- Left Column: Verification Matrix & Semantic Review -->
+            <div class="split-col-left">
+              <div class="card">
+                <div class="card-header flex-between">
+                  <div>
+                    <h3>Deterministic Verification Results</h3>
+                    <small class="text-muted">Automated compiler, build, and test assertions</small>
+                  </div>
+                  <span id="verification-summary-badge" class="badge">Awaiting Execution</span>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="data-table">
+                      <thead>
+                        <tr>
+                          <th>Check</th>
+                          <th>Category</th>
+                          <th>Assertion</th>
+                          <th>Status</th>
+                          <th>Duration</th>
+                          <th>Diagnostic Details</th>
+                        </tr>
+                      </thead>
+                      <tbody id="checks-table-body">
+                        <tr><td colspan="6" class="text-center text-muted">No verification checks run yet.</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card mt-4">
+                <div class="card-header">
+                  <h3>Copilot Semantic Review & Risk Findings</h3>
+                </div>
+                <div class="card-body">
+                  <div class="review-box">
+                    <p id="copilot-review-text" class="review-text">Review pending completion of verification.</p>
+                  </div>
+                  <div id="review-risks-box" class="mt-2" style="display:none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Git Diff Explorer & Local Commit Gate -->
+            <div class="split-col-right">
+              <div class="card">
+                <div class="card-header flex-between">
+                  <div>
+                    <h3>Working Tree Git Diff</h3>
+                    <small id="diff-stats-label" class="text-muted">--</small>
+                  </div>
+                  <button id="btn-copy-diff" class="btn btn-secondary btn-sm" title="Copy raw git diff to clipboard">Copy Diff</button>
+                </div>
+                <div class="card-body">
+                  <pre id="diff-output" class="diff-body">No changes to display.</pre>
+
+                  <div class="commit-gating-box mt-4">
+                    <h4>Commit Approval Gate</h4>
+                    <p class="text-sm text-muted">Explicit developer confirmation is required. Changes are committed locally only; never pushed to any remote repository.</p>
+                    <div class="form-group mt-2">
+                      <label for="commit-message">Commit Message:</label>
+                      <input type="text" id="commit-message" class="input-full" placeholder="Upgrade NGO Core to v...">
+                    </div>
+                    <div class="flex-between align-center mt-3">
+                      <label class="toggle-label">
+                        <input type="checkbox" id="confirm-commit-check">
+                        <strong>I verify the staged changes and approve creating a local commit.</strong>
+                      </label>
+                      <button id="btn-approve-commit" class="btn btn-success" disabled>Approve & Commit Locally</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. USAGE & ANALYTICS VIEW -->
+        <section id="view-usage-analytics" class="view-panel">
+          <div class="card">
+            <div class="card-header flex-between">
+              <h3>Honest Usage & Telemetry Ledger</h3>
+              <span class="badge badge-info">Observed Runtime Metrics</span>
+            </div>
+            <div class="card-body">
+              <div class="disclosure-banner mb-3">
+                <div class="banner-title">📋 Telemetry Boundary Disclosure:</div>
+                <p>The metrics below represent <strong>strictly observed runtime data</strong>. Token counts, monetary costs, and credit savings are <strong>marked UNAVAILABLE</strong> because GitHub Copilot CLI does not emit token-level telemetry in local subprocess streams. We never fabricate estimates.</p>
+              </div>
+
+              <div class="dashboard-grid mb-4">
+                <div class="card stat-card">
+                  <span class="stat-title">Copilot Invocations</span>
+                  <span class="stat-value" id="telem-copilot-calls">0</span>
+                  <small class="text-muted" id="telem-copilot-time">0 ms total duration</small>
+                </div>
+                <div class="card stat-card">
+                  <span class="stat-title">Deterministic Work</span>
+                  <span class="stat-value text-accent" id="telem-deterministic-checks">0</span>
+                  <small class="text-muted">Local checks completed</small>
+                </div>
+                <div class="card stat-card">
+                  <span class="stat-title">Files Updated</span>
+                  <span class="stat-value" id="telem-files-updated">0</span>
+                  <small class="text-muted">Package references aligned</small>
+                </div>
+                <div class="card stat-card">
+                  <span class="stat-title">Token Counts</span>
+                  <span class="stat-value text-muted">UNAVAILABLE</span>
+                  <small class="text-muted">Not exposed by CLI stream</small>
+                </div>
+              </div>
+
+              <h4>Upgrade Telemetry History</h4>
+              <div class="table-responsive mt-2">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Job ID</th>
+                      <th>Client</th>
+                      <th>Target</th>
+                      <th>Copilot Calls</th>
+                      <th>Checks Run</th>
+                      <th>Repairs</th>
+                      <th>Tokens</th>
+                      <th>Recorded At</th>
+                    </tr>
+                  </thead>
+                  <tbody id="telemetry-table-body">
+                    <tr><td colspan="8" class="text-center text-muted">No telemetry recorded yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. SETTINGS & DIAGNOSTICS VIEW -->
+        <section id="view-settings-diagnostics" class="view-panel">
+          <div class="card">
+            <div class="card-header flex-between">
+              <h3>Copilot CLI Diagnostics</h3>
+              <button class="btn btn-secondary btn-sm" id="btn-retest-cli">Re-test CLI Health</button>
+            </div>
+            <div class="card-body">
+              <div class="diag-grid">
+                <div class="diag-item">
+                  <span class="diag-label">Executable Status:</span>
+                  <span id="diag-cli-status" class="diag-value">--</span>
+                </div>
+                <div class="diag-item">
+                  <span class="diag-label">Executable Path:</span>
+                  <span id="diag-cli-path" class="diag-value">--</span>
+                </div>
+                <div class="diag-item">
+                  <span class="diag-label">CLI Version:</span>
+                  <span id="diag-cli-version" class="diag-value">--</span>
+                </div>
+                <div class="diag-item">
+                  <span class="diag-label">Account Identity:</span>
+                  <span id="diag-cli-account" class="diag-value">--</span>
+                </div>
+                <div class="diag-item">
+                  <span class="diag-label">Credential Source:</span>
+                  <span id="diag-cli-cred-source" class="diag-value">--</span>
+                </div>
+                <div class="diag-item">
+                  <span class="diag-label">Configured Model:</span>
+                  <span id="diag-cli-model" class="diag-value">--</span>
+                </div>
+                <div class="diag-item">
+                  <span class="diag-label">Non-Interactive Mode:</span>
+                  <span id="diag-cli-noninteractive" class="diag-value">--</span>
+                </div>
+                <div class="diag-item">
+                  <span class="diag-label">Last Health Check:</span>
+                  <span id="diag-cli-timestamp" class="diag-value">--</span>
+                </div>
+              </div>
+              <div id="diag-cli-remediation" class="mt-3" style="display:none;"></div>
+            </div>
+          </div>
+
+          <div class="card mt-4">
+            <div class="card-header">
+              <h3>Environment Toolchain Diagnostics</h3>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Tool</th>
+                      <th>Installed</th>
+                      <th>Version</th>
+                      <th>Requirement</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="env-tools-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- NuGet Package Sources & Authentication Diagnostics -->
+          <div class="card mt-4" id="card-nuget-sources">
+            <div class="card-header flex-between">
+              <div>
+                <h3>NuGet Package Sources & Authentication</h3>
+                <small class="text-muted">Private feed authentication, credential-provider diagnostics, and package availability</small>
+              </div>
+              <div class="flex-center gap-2">
+                <button class="btn btn-secondary btn-sm" id="btn-test-all-feeds">Test All Feeds</button>
+                <button class="btn btn-secondary btn-sm" id="btn-refresh-feed-cache" title="Clear in-memory auth and metadata cache">Clear Cache</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="nuget-alert-box" class="mb-3" style="display:none;"></div>
+              
+              <div class="table-responsive">
+                <table class="data-table" id="nuget-sources-table">
+                  <thead>
+                    <tr>
+                      <th>Source Name & Endpoint</th>
+                      <th>Type</th>
+                      <th>Connection</th>
+                      <th>Auth Status</th>
+                      <th>Account Identity</th>
+                      <th>Last Tested</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="nuget-sources-tbody">
+                    <tr><td colspan="7" class="text-center text-muted">Loading package sources...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Collapsible Diagnostic / Remediation Details Drawer -->
+              <div id="nuget-diag-drawer" class="mt-3 p-3 bg-subtle border rounded" style="display:none;">
+                <div class="flex-between align-center mb-2">
+                  <h4 class="m-0" id="nuget-drawer-title">Feed Diagnostics</h4>
+                  <button class="btn btn-sm btn-secondary" id="btn-close-nuget-drawer">&times; Close</button>
+                </div>
+                <div id="nuget-drawer-content" class="text-sm"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-4">
+            <div class="card-header flex-between">
+              <h3>Platform Runtime Settings</h3>
+              <button class="btn btn-primary btn-sm" id="btn-save-settings">Save & Validate Settings</button>
+            </div>
+            <div class="card-body">
+              <div id="settings-save-alert" class="mb-3" style="display:none;"></div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="setting-workspace-roots">Approved Workspace Roots (one per line):</label>
+                  <textarea id="setting-workspace-roots" class="input-full" rows="3"></textarea>
+                  <small class="hint-text">Workspaces outside these roots are blocked from mutation.</small>
+                </div>
+                <div class="form-group">
+                  <label for="setting-core-path">NGO Core Repository Path:</label>
+                  <input type="text" id="setting-core-path" class="input-full">
+                  <small class="hint-text">Read-only reference Core repository checkout.</small>
+                </div>
+                <div class="form-group">
+                  <label for="setting-timeout">Execution Timeout (ms):</label>
+                  <input type="number" id="setting-timeout" class="input-full" min="5000" max="900000">
+                </div>
+                <div class="form-group">
+                  <label for="setting-concurrency">Concurrency Limit:</label>
+                  <input type="number" id="setting-concurrency" class="input-full" min="1" max="4">
+                </div>
+                <div class="form-group">
+                  <label for="setting-copilot-model">Default Copilot Model:</label>
+                  <select id="setting-copilot-model">
+                    <option value="gpt-4o">GPT-4o (Default &bull; High Reasoning & Speed)</option>
+                    <option value="claude-3.5-sonnet">Claude 3.5 Sonnet (Deep Refactoring & Build Repair)</option>
+                    <option value="o1-preview">o1-preview (Advanced Architectural Reasoning)</option>
+                    <option value="o1-mini">o1-mini (Fast Advanced Reasoning)</option>
+                    <option value="gpt-4o-mini">GPT-4o mini (Fast &bull; Routine Updates)</option>
+                    <option value="custom">Custom Model ID...</option>
+                  </select>
+                  <div id="setting-custom-model-container" class="mt-2" style="display:none;">
+                    <input type="text" id="setting-custom-copilot-model" class="input-full" placeholder="Enter custom model identifier">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="setting-default-upgrade-mode">Default Upgrade Mode:</label>
+                  <select id="setting-default-upgrade-mode">
+                    <option value="AUTO">Auto-detect (Recommended &bull; Fast Patch for patch bumps)</option>
+                    <option value="FAST_PATCH">⚡ Fast Patch Mode (Always attempt direct bump & restore first)</option>
+                    <option value="FULL_SEMANTIC">🔍 Full Semantic Upgrade (Always execute full Copilot reasoning)</option>
+                  </select>
+                  <small class="hint-text">Default pipeline behavior for newly configured upgrades.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <!-- Dedicated Card: Azure DevOps & NuGet Authentication -->
+            <div class="card mt-4">
+              <div class="card-header flex-between">
+                <div>
+                  <h3>🔑 Azure DevOps & NuGet Package Sources Authentication</h3>
+                  <small class="text-muted">Private feed access (NGO Online / Azure Artifacts) and account diagnostics</small>
+                </div>
+                <span id="settings-nuget-auth-badge" class="badge badge-secondary">Detecting...</span>
+              </div>
+              <div class="card-body">
+                <div class="auth-identity-banner p-3 mb-3">
+                  <div class="flex-between align-center">
+                    <div>
+                      <div class="font-semibold text-sm">Active Account Identities:</div>
+                      <div class="text-xs text-muted mt-1" id="settings-auth-identity-details">
+                        Detecting Azure CLI, Personal Access Tokens, and Git credentials...
+                      </div>
+                    </div>
+                    <div class="flex-center gap-2">
+                      <button type="button" id="btn-settings-connect-azure" class="btn btn-primary btn-sm">🔗 Connect via Azure CLI</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="setting-azure-pat">Azure DevOps Personal Access Token (PAT):</label>
+                    <input type="password" id="setting-azure-pat" class="input-full" placeholder="Enter Azure DevOps PAT (needs Packaging Read permission)">
+                    <small class="hint-text">Used if Azure CLI is not installed or when running in CI/headless environments.</small>
+                  </div>
+                  <div class="form-group flex align-center gap-2" style="padding-top: 24px;">
+                    <button type="button" id="btn-save-azure-pat" class="btn btn-secondary btn-sm">💾 Save & Test PAT</button>
+                    <button type="button" id="btn-clear-azure-pat" class="btn btn-danger btn-sm">Clear Saved PAT</button>
+                    <button type="button" id="btn-test-nuget-feeds" class="btn btn-secondary btn-sm">🔍 Test Feeds</button>
+                  </div>
+                </div>
+
+                <div id="settings-nuget-feedback" class="mt-3" style="display:none;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- NuGet & Azure Feed Authentication Modal -->
+  <div class="modal-overlay" id="nuget-auth-modal" style="display:none;">
+    <div class="modal-container">
+      <div class="modal-header flex-between">
+        <h3>🔑 NuGet Feed & Azure DevOps Authentication</h3>
+        <button type="button" class="btn-close" id="btn-close-nuget-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm text-muted mb-3">
+          To verify package availability and download metadata from the private Azure Artifacts feed (<code>NGO_Online_feed</code>), authenticate using your active Azure account or a Personal Access Token (PAT).
+        </p>
+
+        <div class="card p-3 mb-3 bg-darker">
+          <h4 class="text-sm font-semibold mb-2">Detected System Identity:</h4>
+          <div id="modal-detected-identity" class="text-sm">
+            <div><strong>Azure Account:</strong> <span id="modal-azure-cli-user">Detecting...</span></div>
+            <div><strong>Git Identity:</strong> <span id="modal-git-user">Detecting...</span></div>
+            <div><strong>Feed Status:</strong> <span id="modal-auth-status-pill" class="badge badge-warning">Unauthenticated</span></div>
+          </div>
+          <div class="mt-3">
+            <button type="button" id="btn-modal-connect-azure" class="btn btn-primary btn-sm">
+              🔗 Authenticate Using Azure CLI Account
+            </button>
+          </div>
+        </div>
+
+        <div class="card p-3 mb-3 bg-darker">
+          <h4 class="text-sm font-semibold mb-2">Or Use Azure DevOps Personal Access Token (PAT):</h4>
+          <div class="form-group mb-2">
+            <input type="password" id="modal-pat-input" class="input-full" placeholder="Enter Azure DevOps PAT (needs Packaging Read permission)">
+          </div>
+          <div class="flex-between">
+            <button type="button" id="btn-modal-save-pat" class="btn btn-secondary btn-sm">💾 Save & Test PAT</button>
+            <button type="button" id="btn-modal-clear-pat" class="btn btn-danger btn-sm">Clear Saved PAT</button>
+          </div>
+        </div>
+
+        <div id="modal-auth-feedback" class="mt-2" style="display:none;"></div>
+      </div>
+      <div class="modal-footer flex-between">
+        <span class="text-xs text-muted">Credentials are saved locally to platform settings and never leaked.</span>
+        <button type="button" class="btn btn-secondary" id="btn-cancel-nuget-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

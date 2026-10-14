@@ -91,9 +91,9 @@ function fetchReleaseBranches(repoPath) {
     : { ok: false, error: (r.stderr || r.error || 'git fetch failed').trim() };
 }
 
-/** List fetched origin release branches without changing the Core checkout. */
+/** List fetched origin or local release branches without changing the Core checkout. */
 function listReleaseBranches(repoPath) {
-  const r = git(repoPath, ['for-each-ref', '--format=%(refname:short)', 'refs/remotes/origin/releases/*']);
+  const r = git(repoPath, ['for-each-ref', '--format=%(refname:short)', 'refs/remotes/origin/releases/*', 'refs/heads/releases/*']);
   if (r.code !== 0) return { ok: false, error: (r.stderr || r.error || 'git branch listing failed').trim(), branches: [] };
   const branches = Array.from(new Set(r.stdout.split(/\r?\n/)
     .map((s) => s.trim())

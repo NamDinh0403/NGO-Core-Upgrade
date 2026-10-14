@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "episodeId": "ngo-core-9-4-source-compat-blocked-20261013",
+  "runId": "ngo-core-9-4-run-20261013-001",
+  "clientScope": "cbmi",
+  "sourceVersion": "9.3.0",
+  "targetVersion": "9.4.0",
+  "phase": "BUILD_AND_FIX",
+  "triggeringProblem": "After a package upgrade and one approved override-signature replan, the next Release build exposed additional installed-public-API incompatibilities in a derived service constructor and a renamed model property.",
+  "actionsAttempted": [
+    {
+      "order": 1,
+      "action": "Authenticated restore and selective installed-assembly inspection",
+      "outcome": "blocked"
+    }
+  ],
+  "finalOutcome": "blocked",
+  "buildResult": "blocked by installed-public-API incompatibilities",
+  "testResult": "not reached",
+  "documentationResult": "blocked pending developer approval",
+  "reusability": "candidate-global",
+  "confidence": 0.85,
+  "redactionStatus": "redacted",
+  "createdAt": "2026-10-13T02:00:00Z",
+  "outcome": "BLOCKED_NEEDS_APPROVAL",
+  "summary": "After a package upgrade and one approved override-signature replan, the next Release build exposed additional installed-public-API incompatibilities in a derived service constructor and a renamed model property.",
+  "verified": [
+    "Authenticated restore succeeded.",
+    "Installed package assembly versions matched the target.",
+    "Selective installed-assembly inspection identified the exact required constructor tail and replacement model property."
+  ],
+  "limitations": [
+    "No further client source mutation was permitted because the newly discovered files and changes were outside the explicit developer approval."
+  ],
+  "scope": "backend",
+  "tier": "episodes",
+  "approvalStatus": "UNAPPROVED",
+  "redactionReview": {
+    "reviewer": "Agent",
+    "personalDataRemoved": true,
+    "clientBusinessRulesRemoved": true,
+    "sourceBodiesRemoved": true,
+    "evidence": "Record contains only generic upgrade workflow outcomes and no client identifiers, secrets, business rules, or source bodies."
+  }
+}

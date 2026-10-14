@@ -35,7 +35,9 @@ function capture(scope, record, options) {
   const id = options.id || crypto.createHash('sha256').update(JSON.stringify(clean)).digest('hex').slice(0, 20);
   const tier = options.candidate ? 'candidates' : 'episodes';
   const file = location(tier, scope, id, options.root);
-  const output = Object.assign({}, clean, { schemaVersion: 1, scope, tier, redactionStatus: 'REVIEWED_REDACTED', approvalStatus: 'UNAPPROVED',
+  const output = Object.assign({}, clean, { schemaVersion: 1, scope, tier,
+    redactionStatus: (clean && ['redacted', 'not-required', 'pending'].includes(clean.redactionStatus)) ? clean.redactionStatus : 'redacted',
+    approvalStatus: 'UNAPPROVED',
     redactionReview: sanitize({ reviewer: review.reviewer, personalDataRemoved: true, clientBusinessRulesRemoved: true, sourceBodiesRemoved: true, evidence: review.evidence }) });
   if (tier === 'candidates' && (!Array.isArray(output.evidence) || !output.evidence.length)) throw new Error('Candidate memory requires redacted evidence');
   fs.mkdirSync(path.dirname(file), { recursive: true });

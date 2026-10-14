@@ -13,3 +13,9 @@ Resolve links against the installed agent root when running from a user profile.
 Load only the requested track's contract and current applicable evidence.
 Delegate only its verified track context and domain inputs. Core ensuring and
 generic lifecycle belong to the shared owner; executors do not repeat ingestion.
+
+Release discovery follows the evidence-based hierarchy: package artifacts, release
+tags/revisions, release notes, and commits. The existence of a `releases` branch is
+an optional discovery hint, never a release prerequisite. Urgent package-first releases
+proceed using published package evidence. Report resolved evidence and any partial
+sources clearly without repeatedly requesting missing optional branches.

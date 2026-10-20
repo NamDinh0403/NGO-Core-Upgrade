@@ -24,17 +24,17 @@ When running on any developer machine (especially outside the primary workstatio
    If not explicitly provided in the user's prompt or workspace, ask the user to confirm/paste:
    - Local path to `ngo-online-core` repository.
    - Local path to the client project / solution to upgrade.
-   - Desired target version (e.g. `9.4.0`).
+   - Desired target version or branch (e.g. `9.4` or `9.4.1`). When a branch/minor like "9.4" or "last 9.4" is requested, the framework resolves it to the latest verified release on that branch (e.g. `9.4.1`); NEVER assume or default to `9.4.0`.
    Never assume or guess hardcoded paths.
 2. **Deterministic Preflight Verification**:
    Run `node tools/check-environment.js --core-path <core> --client-path <client> --target <target>` to verify:
    - **Git Author Identity**: Verify coworker's `git config user.name` and `git config user.email`. All commits must use the coworker's authenticated identity.
    - **Client Git Status**: Confirm clean working tree or safe baseline.
-   - **Core Repository**: Confirm valid git repo and check that git tags exist (`v<source>`, `v<target>`). If tags are missing, run `cd "<core>" && git fetch --all --tags`. Remind that Core is strictly READ-ONLY (no checkout, no branch changes).
+   - **Core Repository**: Confirm valid git repo and verify release evidence (git tags `v<source>`, `v<target>` or release branches `releases/*`). If refs are missing, run `cd "<core>" && git fetch --all --tags`. Remind that Core is strictly READ-ONLY (no checkout, no branch changes).
    - **NuGet & npm Runtimes**: Verify .NET SDK, authenticated NuGet package sources, and Node/npm.
 3. **Anti-Looping & Agent Integrity Rules (STRICT)**:
    - **NEVER edit the upgrade agent code**: Under no circumstances should an agent modify files in `NGO Core Upgrade/` (engine, backend, frontend, ingest, or tools). If a command fails, report the error with remediation steps; never attempt to "fix" the upgrade agent scripts.
-   - **NEVER hunt for or checkout Git branches**: NGO Core releases follow the release hierarchy (tags or packages). Do not search for a `releases` branch or switch branches in Core.
+   - **NEVER checkout or switch Git branches in Core**: Core is strictly READ-ONLY. Do not run `git checkout` or switch branches in Core; release discovery reads branch metadata non-destructively.
    - **No infinite retry loops**: Run engine commands deterministically. If blocked, report the blocker and pause for user input.
 4. **Restore, Build & Completion Gate**:
    - Backend: run `dotnet restore` and `dotnet build` on the client solution; verify 0 errors.

@@ -20,7 +20,7 @@ generic lifecycle belong to the shared owner; executors do not repeat ingestion.
 If not explicitly provided in the user's initial prompt, prompt the user to provide:
 - **Local NGO Core path** (e.g. `C:\repos\ngo-online-core`).
 - **Client project / solution path** (e.g. `C:\repos\DemoSite\DemoSite.sln` or directory).
-- **Target version** (e.g. `9.4.0`).
+- **Target version or branch** (e.g. `9.4` or `9.4.1`). When a branch/minor like "9.4" or "last 9.4" is requested, resolve it to the latest verified release on that branch (e.g. `9.4.1`); NEVER assume or default to `9.4.0`.
 *Never guess or fallback to hardcoded paths from other machines.*
 
 ### 2. Environment & Git Authentication Verification
@@ -35,7 +35,7 @@ node tools/check-environment.js --core-path "<corePath>" --client-path "<clientP
 
 ### 3. Strict Safety & Anti-Looping Rules
 - **NEVER mutate any files in `NGO Core Upgrade/`**: The agent must NEVER edit engine, backend, frontend, ingest, or tools scripts. If a command fails, report the error to the user immediately. Do not attempt to fix or rewrite the upgrade tools.
-- **NEVER search for or checkout Git branches**: Follow the release hierarchy (tags like `v9.4.0` or package artifacts). Never look for a `releases` branch or switch branches in Core.
+- **NEVER checkout or switch Git branches in Core**: Core is strictly READ-ONLY. Do not run `git checkout` or switch branches in Core; release discovery reads tags, branch refs, and package evidence non-destructively.
 - **No infinite retry loops**: Run engine CLI commands sequentially. If a command exits with an error, pause and present the error and recommended fix to the user.
 
 ### 4. Restore, Build, and Verification Gate
@@ -46,7 +46,7 @@ After executing the upgrade modifications:
 
 ### 5. Completion Notification
 When complete, notify the user with:
-- Client name & target version reached (e.g. upgraded to 9.4.0).
+- Client name & target version reached (e.g. upgraded to 9.4.1).
 - Summary of updated files (.csproj, packages, appsettings).
 - Verification results: Backend build PASSED (0 errors), Frontend build PASSED (0 errors).
 - Git commit status.

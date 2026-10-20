@@ -291,7 +291,7 @@ Usage:
 Options:
   --core-path <path>     Path to local ngo-online-core repository
   --client-path <path>   Path to client project / solution
-  --target <version>     Desired target version (e.g. 9.4.0)
+  --target <version>     Desired target version or branch (e.g. 9.4, 9.4.1, releases/9.4)
   --json                 Output raw JSON result
 `);
     process.exit(flags.help ? 0 : 1);
@@ -330,7 +330,7 @@ Options:
   } else {
     const core = flags['core-path'] || flags.core;
     const client = flags['client-path'] || flags.client;
-    const target = flags.target || '9.4.0';
+    const target = result.inputs.targetVersion || flags.target || '9.4.1';
     console.log('Ready to proceed! Run the deterministic upgrade command:');
     console.log('\nnode engine/tools/upgrade-engine.js create-run \\');
     console.log(`  --client demo-client \\`);

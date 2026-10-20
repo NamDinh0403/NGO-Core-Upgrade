@@ -25,13 +25,15 @@ const hash = (value) => crypto.createHash('sha256').update(typeof value === 'str
 const parseVer = (v) => {
   const clean = String(v || '')
     .trim()
+    .replace(/^the\s+/i, '')
     .replace(/^refs\/remotes\/origin\//i, '')
     .replace(/^refs\/heads\//i, '')
     .replace(/^origin\//i, '')
     .replace(/^releases\//i, '')
     .replace(/^release\//i, '')
+    .replace(/^(?:last|latest)[-_ ]*(?:release|version)?\s*(?:of\s+)?/i, '')
     .replace(/^v/i, '')
-    .replace(/^(?:last|latest)[-_ ]+/i, '')
+    .replace(/\s*(?:version|release)$/i, '')
     .trim();
   const m = clean.match(/^(\d+)\.(\d+)(?:\.(\d+))?(?:-([^\s]+))?$/);
   return m ? [+m[1], +m[2], +(m[3] || 0), m[4] || null] : null;
@@ -67,17 +69,20 @@ function resolveLatestBranchVersion(input, corePath, options) {
 
   const raw = String(input).trim();
   const clean = raw
+    .replace(/^the\s+/i, '')
     .replace(/^refs\/remotes\/origin\//i, '')
     .replace(/^refs\/heads\//i, '')
     .replace(/^origin\//i, '')
     .replace(/^releases\//i, '')
     .replace(/^release\//i, '')
+    .replace(/^(?:last|latest)[-_ ]*(?:release|version)?\s*(?:of\s+)?/i, '')
     .replace(/^v/i, '')
-    .replace(/^(?:last|latest)[-_ ]+/i, '')
+    .replace(/\s*(?:version|release)$/i, '')
     .trim();
 
+  const isLatestOrLast = /\b(?:last|latest)\b/i.test(raw);
   const fullSemverMatch = clean.match(/^(\d+)\.(\d+)\.(\d+)(?:-([^\s]+))?$/);
-  if (fullSemverMatch && !options.preferLatestOnBranch && !/^(?:last|latest)[-_ ]+/i.test(raw)) {
+  if (fullSemverMatch && !options.preferLatestOnBranch && !isLatestOrLast) {
     return normalizeVersion(clean);
   }
 

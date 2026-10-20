@@ -13,3 +13,10 @@ Load track contracts only when delegating to those tracks. The public agent is
 `ngo-core-upgrade`; this skill retains its existing discovery identity.
 The shared lifecycle is [engine/skills/lifecycle/SKILL.md](../../../engine/skills/lifecycle/SKILL.md).
 Pass one isolated track context per delegation, not the complete shared run.
+
+## Workflow Execution Steps
+1. **Prompt for Inputs**: Prompt the user to provide local `ngo-online-core` path, client project path, and target version if not given. Never guess paths.
+2. **Preflight**: Execute `node tools/check-environment.js --core-path "<corePath>" --client-path "<clientPath>" --target "<targetVersion>"`. Verify git author identity, core git tags, and build tools.
+3. **Engine Run**: Run `node engine/tools/upgrade-engine.js create-run ...` deterministically. Never mutate upgrade agent scripts. Never search for git branches.
+4. **Restore & Build**: Execute `dotnet restore` and `dotnet build` (backend) and `npm install` and `npm run build` (frontend). Verify 0 errors.
+5. **Report**: Notify the user with a structured completion summary when done.

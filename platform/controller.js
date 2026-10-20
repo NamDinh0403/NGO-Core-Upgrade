@@ -73,12 +73,24 @@ function createJob(options) {
     throw new Error(`An upgrade job is already running for client at ${clientPath}. Cancel or wait for it to finish.`);
   }
 
+  // Clean previous run logs and directories for this client so every upgrade starts clean
+  const clientRunsDir = path.join(RUNS_ROOT, clientId);
+  if (fs.existsSync(clientRunsDir)) {
+    try {
+      for (const entry of fs.readdirSync(clientRunsDir, { withFileTypes: true })) {
+        if (entry.isDirectory()) {
+          fs.rmSync(path.join(clientRunsDir, entry.name), { recursive: true, force: true });
+        }
+      }
+    } catch (_) {}
+  }
+
   const runId = runLib.newRunId(clientId);
   const jobDir = getJobDir(clientId, runId);
   const jobFile = path.join(jobDir, 'job.json');
 
   const selectedTracks = tracks || ['backend', 'frontend'];
-  const selectedModel = copilotModel || options.model || (settingsLib.loadSettings().copilotModel || 'gpt-4o');
+  const selectedModel = copilotModel || options.model || (settingsLib.loadSettings().copilotModel || 'auto');
   const selectedMode = options.upgradeMode || (settingsLib.loadSettings().defaultUpgradeMode || 'AUTO');
   const job = {
     id: `${clientId}/${runId}`,
@@ -131,7 +143,7 @@ function spawnWorker(jobFile, clientPath, jobId) {
     cwd: REPO_ROOT,
     detached: false,
     windowsHide: true,
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: ['ignore', 'ignore', 'ignore'],
   });
 
   activeProcesses.set(jobId, child);
@@ -200,6 +212,7 @@ function getJobLogs(jobId, options) {
   const parts = String(jobId).split('/');
   if (parts.length !== 2) {
     const empty = [];
+    empty.lines = [];
     empty.logs = [];
     empty.totalLines = 0;
     return empty;
@@ -209,6 +222,7 @@ function getJobLogs(jobId, options) {
 
   if (!fs.existsSync(logFile)) {
     const empty = [];
+    empty.lines = [];
     empty.logs = [];
     empty.totalLines = 0;
     return empty;
@@ -229,11 +243,13 @@ function getJobLogs(jobId, options) {
       lines = lines.filter((l) => l.toLowerCase().includes(search));
     }
 
+    lines.lines = lines;
     lines.logs = lines;
     lines.totalLines = totalLines;
     return lines;
   } catch (_) {
     const empty = [];
+    empty.lines = [];
     empty.logs = [];
     empty.totalLines = 0;
     return empty;

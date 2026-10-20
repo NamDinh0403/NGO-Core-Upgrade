@@ -9,4 +9,16 @@
 
 const server = require('./server');
 const port = parseInt(process.argv[2] || process.env.PORT || '3800', 10);
-server.startServer(port);
+
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('[UNHANDLED REJECTION]', reason);
+});
+
+server.startServer(port).catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});

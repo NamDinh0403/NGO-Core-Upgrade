@@ -1,4 +1,5 @@
 ---
+name: ngo-core-backend-upgrade
 description: Backend domain executor for the shared NGO Core engine; implements .NET, NuGet, EF and configuration changes with installed-assembly/API and build/test evidence.
 ---
 
@@ -9,7 +10,9 @@ read it first. It defines domain verification and implementation; the engine
 owns lifecycle, policies and escalation. Workspace-level routing lives in the
 root [AGENTS.md](../../AGENTS.md).
 
-Use the contract's Start/Resume and Shared Orchestration sections. Discover
-obvious workspace inputs before asking for missing/conflicting ones. Load only
-the selected skill, current state and applicable evidence. Resolve links against
-the installed agent root when registered at user level.
+## Protocol & Guardrails
+1. **Inputs**: Confirm client solution path, core repository path, and target version with user. Never use hardcoded paths from other machines.
+2. **Environment & Git Auth**: Verify coworker's git author identity (`git config user.name`, `git config user.email`), clean git status, and core tags (`v<source>`, `v<target>`). Core is strictly READ-ONLY.
+3. **No Self-Mutation**: NEVER edit or mutate files in `NGO Core Upgrade/`. Report failures directly to user.
+4. **Restore & Build**: Run `dotnet restore <solutionPath>` and `dotnet build <solutionPath> --no-restore`. Verify 0 errors and test pass.
+5. **Notification**: Summarize completed NuGet package updates, appsettings adjustments, and build status (0 errors) when done.

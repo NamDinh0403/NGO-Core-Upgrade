@@ -62,6 +62,11 @@ const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'platform-test-'));
 const tmpClient = path.join(tmpRoot, 'ngo-online-sample');
 const tmpCore = path.join(tmpRoot, 'ngo-online-core');
 
+const settingsPath = path.join(__dirname, '..', 'config', 'settings.json');
+const ledgerPath = path.join(__dirname, '..', 'config', 'telemetry-ledger.jsonl');
+const origSettings = fs.existsSync(settingsPath) ? fs.readFileSync(settingsPath, 'utf8') : null;
+const origLedger = fs.existsSync(ledgerPath) ? fs.readFileSync(ledgerPath, 'utf8') : null;
+
 function sh(cmd, cwd) { cp.execSync(cmd, { cwd, stdio: 'pipe' }); }
 
 async function runAllTests() {
@@ -534,14 +539,108 @@ async function runAllTests() {
         assert.strictEqual(analyticsGet.status, 200);
         assert.strictEqual(analyticsGet.data.ok, true);
         assert.strictEqual(analyticsGet.data.summary.tokenCounts.status, 'UNAVAILABLE');
+
+        // 4. Copilot CLI auth endpoints
+        const copilotAuthGet = await fetchJson('/api/copilot/auth-status');
+        assert.strictEqual(copilotAuthGet.status, 200);
+        assert.strictEqual(copilotAuthGet.data.ok, true);
+
+        const copilotAuthPost = await postJson('/api/copilot/auth', { action: 'status' });
+        assert.strictEqual(copilotAuthPost.status, 200);
+        assert.strictEqual(copilotAuthPost.data.ok, true);
+
+        const copilotSetToken = await postJson('/api/copilot/auth', { action: 'set-token', token: 'test-pat-token-999' });
+        assert.strictEqual(copilotSetToken.status, 200);
+        assert.strictEqual(copilotSetToken.data.ok, true);
+        assert.strictEqual(copilotSetToken.data.storedTokenConfigured, true);
+
+        const copilotClearToken = await postJson('/api/copilot/auth', { action: 'clear' });
+        assert.strictEqual(copilotClearToken.status, 200);
+        assert.strictEqual(copilotClearToken.data.ok, true);
       } finally {
         server.close();
       }
     });
 
+    // 16. Mandatory Regression Test Execution Policy & Cache Invalidation
+    test('16-mandatory-test-policy-fingerprinting-and-cache-invalidation', () => {
+      const testPolicy = require('../test-policy');
+
+      // 1. Scope selection
+      const patchScope = testPolicy.resolveTestScope({ isPatch: true, upgradeMode: 'FAST_PATCH', breakingChangesCount: 0 });
+      assert.strictEqual(patchScope.level, testPolicy.TEST_LEVELS.TARGETED);
+      assert.strictEqual(patchScope.justificationRequired, false);
+
+      const majorScope = testPolicy.resolveTestScope({ isPatch: false, breakingChangesCount: 5 });
+      assert.strictEqual(majorScope.level, testPolicy.TEST_LEVELS.REGRESSION);
+      assert.strictEqual(majorScope.justificationRequired, true);
+
+      // 2. Input fingerprinting
+      const fp1 = testPolicy.computeInputFingerprint(tmpClient, { scope: 'test' });
+      assert.ok(fp1, 'Fingerprint must be non-empty string');
+      assert.strictEqual(fp1.length, 64, 'SHA256 hex must be 64 characters');
+
+      const fp2 = testPolicy.computeInputFingerprint(tmpClient, { scope: 'test' });
+      assert.strictEqual(fp1, fp2, 'Identical inputs must yield identical fingerprint');
+
+      // 3. Cache recording & retrieval
+      testPolicy.recordCachedResult({
+        clientPath: tmpClient,
+        scopeName: 'test-sample',
+        fingerprint: fp1,
+        level: 'Targeted',
+        passed: true,
+        summary: 'All 3 unit tests passed',
+      });
+
+      const cached = testPolicy.getCachedResult({
+        clientPath: tmpClient,
+        scopeName: 'test-sample',
+        fingerprint: fp1,
+      });
+      assert.ok(cached, 'Cached result must be retrieved on identical fingerprint');
+      assert.strictEqual(cached.passed, true);
+      assert.strictEqual(cached.cacheHit, true);
+      assert.strictEqual(cached.durationMs, 0);
+
+      // 4. Invalidation on input change
+      const dummyFile = path.join(tmpClient, 'Tests', 'NewTest.cs');
+      fs.mkdirSync(path.dirname(dummyFile), { recursive: true });
+      fs.writeFileSync(dummyFile, '// modified test file', 'utf8');
+
+      const fp3 = testPolicy.computeInputFingerprint(tmpClient, { scope: 'test' });
+      assert.notStrictEqual(fp1, fp3, 'Mutated source/test file must produce a different fingerprint');
+
+      const invalidated = testPolicy.getCachedResult({
+        clientPath: tmpClient,
+        scopeName: 'test-sample',
+        fingerprint: fp3,
+      });
+      assert.strictEqual(invalidated, null, 'Cache must miss when fingerprint changes');
+
+      // Clean up dummy file
+      fs.unlinkSync(dummyFile);
+    });
+
   } finally {
+    // Restore config files so tests leave tracked working tree unchanged
+    try {
+      if (origSettings !== null) fs.writeFileSync(settingsPath, origSettings, 'utf8');
+      if (origLedger !== null) {
+        fs.writeFileSync(ledgerPath, origLedger, 'utf8');
+      } else if (fs.existsSync(ledgerPath)) {
+        fs.unlinkSync(ledgerPath);
+      }
+      const tokenPath = path.join(path.resolve(__dirname, '..'), 'config', 'platform-copilot-token.json');
+      if (fs.existsSync(tokenPath)) {
+        try { fs.unlinkSync(tokenPath); } catch (_) {}
+      }
+    } catch (_) {}
+
     // Clean up temporary fixtures
-    fs.rmSync(tmpRoot, { recursive: true, force: true });
+    try {
+      fs.rmSync(tmpRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+    } catch (_) {}
     try {
       fs.rmSync(path.join(path.resolve(__dirname, '..', '..'), 'orchestrator', 'runs', 'ngo-online-sample'), { recursive: true, force: true });
     } catch (_) {}

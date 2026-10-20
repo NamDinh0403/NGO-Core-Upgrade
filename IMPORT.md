@@ -108,6 +108,19 @@ Copy-Item ".\.github\skills\*" "$env:USERPROFILE\.copilot\skills\" -Recurse -For
 
 ---
 
+## Preflight & Environment Verification (for another computer)
+Before running your first upgrade on a new machine, verify your local Core checkout, git tags, git identity, and build runtimes:
+```powershell
+node tools/check-environment.js --core-path "<path-to-ngo-online-core>" --client-path "<path-to-client-solution>" --target 9.4.0
+```
+> **Important setup notes for coworkers:**
+> - **Fetch Core Git Tags:** Ensure git tags exist locally in `ngo-online-core`: run `git fetch --all --tags` inside your Core clone.
+> - **Git Identity:** Confirm `git config user.name` and `git config user.email` are configured with your real name and email.
+> - **Core is Read-Only:** Never switch branches or checkout commits in `ngo-online-core`.
+> - **Zero Self-Mutation:** The agent must never edit files in `NGO Core Upgrade/`. If a command fails, inspect the error output directly.
+
+---
+
 ## Verify it worked (on the target computer)
 1. Open Copilot Chat → agent mode → confirm **ngo-core-upgrade**, **NGO Core
    Backend Upgrade Agent**, and **NGO Core Frontend Upgrade Agent** all appear in the

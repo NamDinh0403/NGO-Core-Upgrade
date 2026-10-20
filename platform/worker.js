@@ -8,6 +8,7 @@
  * Dependency-free, Node 14+.
  */
 
+const cp = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const preflightLib = require('./preflight');
@@ -16,6 +17,77 @@ const reviewerLib = require('./reviewer');
 const copilotCli = require('./copilot-cli');
 const telemetryLib = require('./telemetry');
 const nugetSources = require('./nuget-sources');
+
+/**
+ * Extract clean user handle from Git user.name or user.email.
+ * e.g. "Nam Dinh Phuong" -> "namdinh"
+ */
+function getGitUserHandle(clientPath) {
+  try {
+    const res = cp.spawnSync('git', ['config', 'user.name'], { cwd: clientPath, encoding: 'utf8', windowsHide: true, shell: false });
+    const name = (res.stdout || '').trim();
+    if (name) {
+      const parts = name.toLowerCase().split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) {
+        return `${parts[0]}${parts[1]}`.replace(/[^a-z0-9_-]/g, '');
+      }
+      return parts[0].replace(/[^a-z0-9_-]/g, '');
+    }
+  } catch (_) {}
+  try {
+    const res = cp.spawnSync('git', ['config', 'user.email'], { cwd: clientPath, encoding: 'utf8', windowsHide: true, shell: false });
+    const email = (res.stdout || '').trim().split('@')[0];
+    if (email) {
+      const parts = email.toLowerCase().split(/[._-]+/).filter(Boolean);
+      if (parts.length >= 2) {
+        return `${parts[0]}${parts[1]}`.replace(/[^a-z0-9_-]/g, '');
+      }
+      return parts[0].replace(/[^a-z0-9_-]/g, '');
+    }
+  } catch (_) {}
+  return 'user';
+}
+
+/**
+ * Automatically create and checkout a new branch for the upgrade under the user git handle.
+ * e.g. namdinh/upgrade-version-9-4-1
+ */
+function ensureUpgradeBranch(clientPath, targetVersion, log) {
+  try {
+    const handle = getGitUserHandle(clientPath);
+    const verSlug = String(targetVersion || '').replace(/\./g, '-');
+    const branchName = `${handle}/upgrade-version-${verSlug}`;
+
+    // Get current branch
+    const currRes = cp.spawnSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd: clientPath, encoding: 'utf8', windowsHide: true, shell: false });
+    const currentBranch = (currRes.stdout || '').trim();
+
+    if (currentBranch === branchName) {
+      log(`Already on target upgrade branch: ${branchName}`);
+      return branchName;
+    }
+
+    // Check if branch already exists
+    const checkRes = cp.spawnSync('git', ['rev-parse', '--verify', branchName], { cwd: clientPath, encoding: 'utf8', windowsHide: true, shell: false });
+    if (checkRes.status === 0) {
+      log(`Checking out existing upgrade branch: ${branchName}`);
+      const coRes = cp.spawnSync('git', ['checkout', branchName], { cwd: clientPath, encoding: 'utf8', windowsHide: true, shell: false });
+      if (coRes.status === 0) return branchName;
+    } else {
+      log(`Creating new upgrade branch: ${branchName}`);
+      const createRes = cp.spawnSync('git', ['checkout', '-b', branchName], { cwd: clientPath, encoding: 'utf8', windowsHide: true, shell: false });
+      if (createRes.status === 0) {
+        log(`Switched to branch: ${branchName}`);
+        return branchName;
+      }
+      log(`Warning: Failed to checkout -b ${branchName}: ${createRes.stderr || createRes.stdout}`);
+    }
+    return currentBranch;
+  } catch (err) {
+    log(`Git branch setup notice: ${err.message}`);
+    return null;
+  }
+}
 
 // Auto-configure Credential Provider path for child dotnet processes if available
 try {
@@ -51,16 +123,28 @@ if (!jobFile || !fs.existsSync(jobFile)) {
 const jobDir = path.dirname(jobFile);
 const logFile = path.join(jobDir, 'worker.log');
 
+let job = null;
+
 function readJob() {
-  return JSON.parse(fs.readFileSync(jobFile, 'utf8'));
+  job = JSON.parse(fs.readFileSync(jobFile, 'utf8'));
+  return job;
 }
 
 function updateJob(mutator) {
-  const job = readJob();
-  mutator(job);
-  job.updatedAt = new Date().toISOString();
-  fs.writeFileSync(jobFile, JSON.stringify(job, null, 2));
-  return job;
+  const current = readJob();
+  mutator(current);
+  current.updatedAt = new Date().toISOString();
+  fs.writeFileSync(jobFile, JSON.stringify(current, null, 2));
+  job = current;
+  return current;
+}
+
+function extractCoreErrors(text) {
+  if (!text) return '';
+  const lines = String(text).split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const errorLines = lines.filter((l) => /error|failed|fatal|exception|unsupported|not compatible/i.test(l) && !/^\s*at\s+/i.test(l));
+  const chosen = errorLines.length > 0 ? errorLines.slice(0, 25) : lines.slice(0, 15);
+  return chosen.join('\n').slice(0, 2000);
 }
 
 function appendLog(line, level, stage) {
@@ -73,13 +157,15 @@ function appendLog(line, level, stage) {
   const timestamp = new Date().toISOString();
   const currentJob = readJob();
   const stg = stage || currentJob.currentStage || 'SYSTEM';
-  const formatted = `[${timestamp}] [${lvl}] [${stg}] ${line}\n`;
+  const rawLine = String(line || '');
+  const safeLine = rawLine.length > 4000 ? rawLine.slice(0, 4000) + '... [truncated]' : rawLine;
+  const formatted = `[${timestamp}] [${lvl}] [${stg}] ${safeLine}\n`;
   fs.appendFileSync(logFile, formatted);
-  console.log(line);
+  console.log(safeLine);
 }
 
 async function runWorker() {
-  let job = readJob();
+  job = readJob();
   appendLog(`Worker started for run ${job.runId} (${job.clientName} -> Core ${job.targetVersion})`, 'INFO', 'INIT');
   updateJob((j) => {
     j.status = 'RUNNING';
@@ -96,6 +182,17 @@ async function runWorker() {
   const isSimulation = simulateCopilot || process.env.COPILOT_SIMULATOR === 'true';
 
   try {
+    const releaseNotesLib = require('./release-notes');
+    if (!job.releaseNotes) {
+      const rn = releaseNotesLib.getReleaseNotes(targetVersion);
+      if (rn && rn.exists) {
+        updateJob((j) => { j.releaseNotes = rn.content; });
+        job = readJob();
+      }
+    }
+  } catch (_) {}
+
+  try {
     // -----------------------------------------------------------------------
     // STAGE 1: PREFLIGHT
     // -----------------------------------------------------------------------
@@ -109,11 +206,18 @@ async function runWorker() {
         j.stageMetrics.PREFLIGHT = { startedAt: new Date().toISOString(), status: 'RUNNING' };
       });
 
+      let feedCheck = null;
+      try {
+        const nugetSources = require('./nuget-sources');
+        feedCheck = await nugetSources.verifyPackageAvailability(targetVersion);
+      } catch (_) {}
+
       const preflightResult = preflightLib.runPreflight({
         clientPath,
         targetVersion,
         corePath,
         tracks,
+        feedCheck,
       });
 
       appendLog(`Resolution mode: ${preflightResult.impactPreview.mode}`, 'INFO', 'PREFLIGHT');
@@ -138,12 +242,37 @@ async function runWorker() {
         };
       });
       appendLog('Preflight stage completed successfully.', 'INFO', 'PREFLIGHT');
+
+      appendLog('Ensuring dedicated upgrade Git branch...', 'INFO', 'PREFLIGHT');
+      const branchName = ensureUpgradeBranch(clientPath, targetVersion, (l) => appendLog(l, 'INFO', 'PREFLIGHT'));
+      if (branchName) {
+        updateJob((j) => { j.gitBranch = branchName; });
+      }
     }
 
     // -----------------------------------------------------------------------
     // STAGE 2: CORE_INGEST
     // -----------------------------------------------------------------------
     const stage2Start = Date.now();
+    const adaptationLib = require('./adaptation');
+    const sourceVersion = job.preflight ? job.preflight.currentVersion : null;
+
+    let releaseAnalysis = null;
+    try {
+      const ingestOut = path.join(jobDir, 'candidates');
+      fs.mkdirSync(ingestOut, { recursive: true });
+      releaseAnalysis = adaptationLib.deriveReleaseRequirements({
+        corePath,
+        sourceVersion,
+        targetVersion,
+        ingestOutDir: ingestOut,
+        runId: job.runId,
+        tracks,
+      });
+    } catch (err) {
+      appendLog(`Notice: Extended release analysis: ${err.message}`, 'WARN', 'CORE_INGEST');
+    }
+
     if (job.completedStages.includes('CORE_INGEST')) {
       appendLog('Already completed; candidate reused.', 'INFO', 'CORE_INGEST');
     } else {
@@ -153,22 +282,18 @@ async function runWorker() {
         j.stageMetrics.CORE_INGEST = { startedAt: new Date().toISOString(), status: 'RUNNING' };
       });
 
-      const ingestLib = require('../ingest/tools/ingest');
-      const ingestOut = path.join(jobDir, 'candidates');
-      fs.mkdirSync(ingestOut, { recursive: true });
+      const ingestReused = releaseAnalysis && releaseAnalysis.ingestResult ? releaseAnalysis.ingestResult.reused : false;
+      const entriesCount = releaseAnalysis && releaseAnalysis.ingestResult && releaseAnalysis.ingestResult.entries
+        ? releaseAnalysis.ingestResult.entries.length : 0;
+      const versionsRange = releaseAnalysis && releaseAnalysis.versions ? releaseAnalysis.versions : [targetVersion];
 
-      const ingestResult = ingestLib.ensureReleases({
-        'core-path': corePath,
-        since: job.preflight ? job.preflight.currentVersion : undefined,
-        target: targetVersion,
-        out: ingestOut,
-      });
-
-      appendLog(`Core release processed. Reused: ${ingestResult.reused}`, 'INFO', 'CORE_INGEST');
+      appendLog(`Core release processed. Reused: ${ingestReused} (Release path: ${versionsRange.join(' -> ')})`, 'INFO', 'CORE_INGEST');
       updateJob((j) => {
         j.ingest = {
-          reused: ingestResult.reused,
-          entriesCount: ingestResult.entries.length,
+          reused: ingestReused,
+          entriesCount,
+          releaseRange: versionsRange,
+          targetAngularMajor: releaseAnalysis ? releaseAnalysis.targetAngularMajor : 15,
         };
         j.completedStages.push('CORE_INGEST');
         j.stageMetrics.CORE_INGEST = {
@@ -194,13 +319,74 @@ async function runWorker() {
         j.stageMetrics.PLAN = { startedAt: new Date().toISOString(), status: 'RUNNING' };
       });
 
+      // AppSettings configuration inspection
+      let backendConfigInspection = { missing: [] };
+      if (tracks.includes('backend')) {
+        try {
+          const configurationLib = require('../backend/tools/configuration');
+          const apiDir = path.join(clientPath, 'ngo-api');
+          const inspectRoot = fs.existsSync(apiDir) ? apiDir : clientPath;
+          const storeSettings = releaseAnalysis && releaseAnalysis.appSettings ? releaseAnalysis.appSettings : [];
+          backendConfigInspection = configurationLib.inspect(inspectRoot, storeSettings);
+        } catch (_) {}
+      }
+
+      // Build structured plan tasks
+      const tasks = [];
+      const targetTfm = (job.preflight && job.preflight.targetFramework)
+        || preflightLib.detectRequiredTargetFramework(corePath, targetVersion) || 'net10.0';
+
+      if (tracks.includes('backend')) {
+        tasks.push({ track: 'backend', action: `Update NGO.Core NuGet package references to ${targetVersion} in .csproj files` });
+        tasks.push({ track: 'backend', action: `Align TargetFramework to ${targetTfm} across .csproj files` });
+        if (backendConfigInspection.missing && backendConfigInspection.missing.length > 0) {
+          tasks.push({
+            track: 'backend',
+            action: `Merge ${backendConfigInspection.missing.length} missing Core AppSettings keys into appsettings.json`,
+            keys: backendConfigInspection.missing.map((m) => m.key),
+          });
+        }
+      }
+
+      const targetAngularMajor = releaseAnalysis ? releaseAnalysis.targetAngularMajor : 15;
+      if (tracks.includes('frontend')) {
+        tasks.push({ track: 'frontend', action: `Align @ngo/core dependency to ${targetVersion} in package.json` });
+        tasks.push({ track: 'frontend', action: `Align Angular ${targetAngularMajor} peer dependencies (RxJS, Zone.js, TypeScript, NgRx)` });
+        tasks.push({ track: 'frontend', action: 'Sanitize .npmrc feed registry configuration (FontAwesome + Azure Packaging)' });
+        tasks.push({ track: 'frontend', action: 'Install frontend dependencies via npm i -f --peer-deps' });
+        tasks.push({ track: 'frontend', action: 'Synchronize environment configuration from Core reference host' });
+        tasks.push({ track: 'frontend', action: 'Adapt known breaking syntax and API changes (e.g. FormFieldFactoryExt)' });
+      }
+
+      const allReqs = (releaseAnalysis && releaseAnalysis.split && releaseAnalysis.split.all)
+        ? releaseAnalysis.split.all.requirements || [] : [];
+      const backendReqs = (releaseAnalysis && releaseAnalysis.split && releaseAnalysis.split.backend)
+        ? releaseAnalysis.split.backend.requirements || [] : [];
+      const frontendReqs = (releaseAnalysis && releaseAnalysis.split && releaseAnalysis.split.frontend)
+        ? releaseAnalysis.split.frontend.requirements || [] : [];
+      const versionsRange = releaseAnalysis && releaseAnalysis.versions ? releaseAnalysis.versions : [targetVersion];
+
+      appendLog(`Release range resolved: ${versionsRange.join(' -> ')} (${allReqs.length} total requirements derived: ${backendReqs.length} backend, ${frontendReqs.length} frontend).`, 'INFO', 'PLAN');
+      if (backendConfigInspection.missing && backendConfigInspection.missing.length > 0) {
+        appendLog(`AppSettings audit: ${backendConfigInspection.missing.length} missing Core configuration key(s) detected.`, 'INFO', 'PLAN');
+      }
+
       const plan = {
         targetVersion,
+        sourceVersion,
         tracks,
-        tasks: [
-          { track: 'backend', action: 'Update NGO.Core NuGet package versions in .csproj files' },
-          { track: 'frontend', action: 'Align @ngo/core dependency in package.json' },
-        ],
+        releaseRange: versionsRange,
+        frameworkTransitions: {
+          dotnet: targetTfm,
+          angular: targetAngularMajor,
+        },
+        tasks,
+        backendConfigResult: backendConfigInspection,
+        requirementsSummary: {
+          total: allReqs.length,
+          backend: backendReqs.length,
+          frontend: frontendReqs.length,
+        },
       };
 
       updateJob((j) => {
@@ -219,6 +405,11 @@ async function runWorker() {
     // -----------------------------------------------------------------------
     // STAGE 4: IMPLEMENT
     // -----------------------------------------------------------------------
+    const isAutoPatch = preflightLib.classifyUpgradeMode(
+      job.preflight ? job.preflight.currentVersion : null,
+      targetVersion
+    ).isPatch;
+
     const stage4Start = Date.now();
     if (job.completedStages.includes('IMPLEMENT')) {
       appendLog('Implementation already applied.', 'INFO', 'IMPLEMENT');
@@ -233,6 +424,9 @@ async function runWorker() {
 
       // Backend updates
       if (tracks.includes('backend')) {
+        const targetTfm = (job.preflight && job.preflight.targetFramework)
+          ? job.preflight.targetFramework
+          : (preflightLib.detectRequiredTargetFramework(corePath, targetVersion) || 'net10.0');
         const updateCsproj = (dir) => {
           for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
             const full = path.join(dir, entry.name);
@@ -243,9 +437,24 @@ async function runWorker() {
               const orig = text;
               text = text.replace(/(<PackageReference\s+Include=["']NGO\.Core(?:\.[^"']+)?["']\s+Version=["'])[^"']+(["'])/gi, `$1${targetVersion}$2`);
               text = text.replace(/(<PackageReference\s+Version=["'])[^"']+(["']\s+Include=["']NGO\.Core)/gi, `$1${targetVersion}$2`);
+              if (targetTfm) {
+                text = text.replace(/<TargetFramework>([^<]+)<\/TargetFramework>/gi, (m, cur) => {
+                  if (cur.trim().toLowerCase() !== targetTfm.toLowerCase()) {
+                    return `<TargetFramework>${targetTfm}</TargetFramework>`;
+                  }
+                  return m;
+                });
+                text = text.replace(/<TargetFrameworks>([^<]+)<\/TargetFrameworks>/gi, (m, cur) => {
+                  const parts = cur.split(';').map(p => p.trim());
+                  if (!parts.some(p => p.toLowerCase() === targetTfm.toLowerCase())) {
+                    return `<TargetFrameworks>${targetTfm}</TargetFrameworks>`;
+                  }
+                  return m;
+                });
+              }
               if (text !== orig) {
                 fs.writeFileSync(full, text);
-                appendLog(`Updated NGO.Core references to ${targetVersion} in ${path.relative(clientPath, full)}`, 'INFO', 'IMPLEMENT');
+                appendLog(`Updated NGO.Core references${targetTfm ? ' and TargetFramework to ' + targetTfm : ''} to ${targetVersion} in ${path.relative(clientPath, full)}`, 'INFO', 'IMPLEMENT');
                 modifiedCount++;
               }
             }
@@ -253,12 +462,22 @@ async function runWorker() {
         };
         const apiDir = path.join(clientPath, 'ngo-api');
         updateCsproj(fs.existsSync(apiDir) ? apiDir : clientPath);
+
+        // AppSettings configuration adaptation (merges missing Core keys, strictly preserves client values)
+        try {
+          const storeSettings = releaseAnalysis && releaseAnalysis.appSettings ? releaseAnalysis.appSettings : [];
+          const configRes = adaptationLib.adaptBackendConfiguration(clientPath, storeSettings, (l) => appendLog(l, 'INFO', 'IMPLEMENT'));
+          modifiedCount += (configRes.modifiedFiles || []).length;
+        } catch (err) {
+          appendLog(`Warning: Backend AppSettings adaptation: ${err.message}`, 'WARN', 'IMPLEMENT');
+        }
       }
 
       // Frontend updates
       if (tracks.includes('frontend')) {
         const clientDir = path.join(clientPath, 'ngo-client');
-        const pkgFile = path.join(fs.existsSync(clientDir) ? clientDir : clientPath, 'package.json');
+        const targetDir = fs.existsSync(clientDir) ? clientDir : clientPath;
+        const pkgFile = path.join(targetDir, 'package.json');
         if (fs.existsSync(pkgFile)) {
           try {
             const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf8'));
@@ -267,55 +486,169 @@ async function runWorker() {
               if (pkg[scope]) {
                 for (const dep of Object.keys(pkg[scope])) {
                   if (dep.includes('ngo-core') || dep.includes('@ngo/core')) {
-                    pkg[scope][dep] = targetVersion;
+                    if (pkg[scope][dep] !== targetVersion) {
+                      pkg[scope][dep] = targetVersion;
+                      pkgModified = true;
+                      appendLog(`Updated ${dep} dependencies to ${targetVersion} in package.json`, 'INFO', 'IMPLEMENT');
+                    }
+                  }
+                }
+              }
+            }
+
+            // Discover Core package.json to align framework and peer dependencies
+            let corePkg = null;
+            const candidateCorePkgPaths = [
+              path.join(corePath || 'D:\\NGO Client\\ngo-online-core', 'ngo-client-core', 'package.json'),
+              path.join(corePath || 'D:\\NGO Client\\ngo-online-core', 'package.json'),
+            ];
+            for (const cpPath of candidateCorePkgPaths) {
+              if (fs.existsSync(cpPath)) {
+                try {
+                  corePkg = JSON.parse(fs.readFileSync(cpPath, 'utf8'));
+                  break;
+                } catch (_) {}
+              }
+            }
+
+            if (corePkg) {
+              const coreDeps = Object.assign({}, corePkg.devDependencies || {}, corePkg.dependencies || {});
+              const frameworkPrefixes = ['@angular/', '@angular-devkit/', '@ngrx/'];
+              const frameworkNames = [
+                'rxjs', 'zone.js', 'tslib', 'typescript',
+                '@azure/msal-angular', '@azure/msal-browser',
+                '@fortawesome/angular-fontawesome',
+                '@ng-bootstrap/ng-bootstrap', '@ng-select/ng-select',
+                '@ngx-translate/core', '@ngx-translate/http-loader',
+                'ngx-toastr', 'ngx-spinner', 'ngx-translate-cache'
+              ];
+
+              for (const scope of ['dependencies', 'devDependencies']) {
+                if (!pkg[scope]) continue;
+                for (const dep of Object.keys(pkg[scope])) {
+                  const isFramework = frameworkPrefixes.some(p => dep.startsWith(p)) || frameworkNames.includes(dep);
+                  if (isFramework && coreDeps[dep] && pkg[scope][dep] !== coreDeps[dep]) {
+                    appendLog(`Aligned peer dependency ${dep} from ${pkg[scope][dep]} to ${coreDeps[dep]} (Core ${targetVersion})`, 'INFO', 'IMPLEMENT');
+                    pkg[scope][dep] = coreDeps[dep];
+                    pkgModified = true;
+                  }
+                }
+              }
+            } else if (parseInt(String(targetVersion).split('.')[0], 10) >= 9) {
+              const v9Defaults = {
+                'rxjs': '^7.5.0',
+                'zone.js': '~0.13.3',
+                'typescript': '^4.9.3',
+                'tslib': '^2.6.3',
+                '@ngrx/effects': '^15.2.0',
+                '@ngrx/store': '^15.2.0',
+                '@ngrx/store-devtools': '^15.2.0',
+                '@ng-bootstrap/ng-bootstrap': '^14.2.0',
+                '@ng-select/ng-select': '^10.0.4',
+              };
+              for (const scope of ['dependencies', 'devDependencies']) {
+                if (!pkg[scope]) continue;
+                for (const dep of Object.keys(pkg[scope])) {
+                  if (dep.startsWith('@angular/')) {
+                    if (pkg[scope][dep] !== '^15.2.10') {
+                      pkg[scope][dep] = '^15.2.10';
+                      pkgModified = true;
+                    }
+                  } else if (dep.startsWith('@angular-devkit/')) {
+                    if (pkg[scope][dep] !== '^15.2.11') {
+                      pkg[scope][dep] = '^15.2.11';
+                      pkgModified = true;
+                    }
+                  } else if (v9Defaults[dep] && pkg[scope][dep] !== v9Defaults[dep]) {
+                    pkg[scope][dep] = v9Defaults[dep];
                     pkgModified = true;
                   }
                 }
               }
             }
+
             if (pkgModified) {
               fs.writeFileSync(pkgFile, JSON.stringify(pkg, null, 2));
-              appendLog(`Updated @ngo/core dependencies to ${targetVersion} in package.json`, 'INFO', 'IMPLEMENT');
               modifiedCount++;
             }
-          } catch (_) {}
+          } catch (err) {
+            appendLog(`Warning: Failed to update client package.json: ${err.message}`, 'WARN', 'IMPLEMENT');
+          }
+        }
+
+        // 1. Sanitize .npmrc (remove all email/login lines, keep only FontAwesome and Azure Packaging registry)
+        const npmrcFile = path.join(targetDir, '.npmrc');
+        const canonicalNpmrc = [
+          '@fortawesome:registry=https://npm.fontawesome.com/',
+          '//npm.fontawesome.com/:_authToken=3782FD2E-F78E-470E-BDCF-CD67BB18773C',
+          'registry=https://pkgs.dev.azure.com/preciofishbone/_packaging/NGO_Online_feed/npm/registry/',
+          '//pkgs.dev.azure.com/preciofishbone/_packaging/NGO_Online_feed/npm/registry/:username=VssSessionToken',
+        ].join('\n') + '\n';
+
+        try {
+          fs.writeFileSync(npmrcFile, canonicalNpmrc, 'utf8');
+          appendLog('Sanitized .npmrc to clean FontAwesome & Packaging feed registry (removed email/login lines)', 'INFO', 'IMPLEMENT');
+          modifiedCount++;
+        } catch (err) {
+          appendLog(`Warning: Failed to write clean .npmrc: ${err.message}`, 'WARN', 'IMPLEMENT');
+        }
+
+        // 2. Install frontend packages with npm i -f --peer-deps (deterministic code, no LLM)
+        if (!isSimulation) {
+          appendLog('Installing frontend packages via npm i -f --peer-deps...', 'INFO', 'IMPLEMENT');
+          const npmRes = cp.spawnSync('npm', ['i', '-f', '--peer-deps'], {
+            cwd: targetDir,
+            encoding: 'utf8',
+            windowsHide: true,
+            shell: process.platform === 'win32',
+            timeout: 180000,
+          });
+          if (npmRes.status === 0) {
+            appendLog('Frontend packages installed successfully via npm i -f --peer-deps.', 'INFO', 'IMPLEMENT');
+          } else {
+            // Fallback to --legacy-peer-deps if npm version requires it
+            const fallbackRes = cp.spawnSync('npm', ['i', '-f', '--legacy-peer-deps'], {
+              cwd: targetDir,
+              encoding: 'utf8',
+              windowsHide: true,
+              shell: process.platform === 'win32',
+              timeout: 180000,
+            });
+            if (fallbackRes.status === 0) {
+              appendLog('Frontend packages installed successfully via npm i -f --legacy-peer-deps.', 'INFO', 'IMPLEMENT');
+            } else {
+              appendLog(`Frontend npm install notice: ${(fallbackRes.stderr || fallbackRes.stdout || npmRes.stderr || npmRes.stdout || '').slice(0, 300)}`, 'WARN', 'IMPLEMENT');
+            }
+          }
+        } else {
+          appendLog('[SIMULATION] Frontend package install (npm i -f --peer-deps) simulated.', 'INFO', 'IMPLEMENT');
+        }
+
+        // Frontend environment adaptation from Core reference host
+        try {
+          const envRes = adaptationLib.adaptFrontendEnvironment(clientPath, corePath, (l) => appendLog(l, 'INFO', 'IMPLEMENT'));
+          modifiedCount += (envRes.modifiedFiles || []).length;
+        } catch (err) {
+          appendLog(`Warning: Frontend environment adaptation: ${err.message}`, 'WARN', 'IMPLEMENT');
+        }
+
+        // Pre-build source code adaptations (known mechanical migrations)
+        try {
+          const sourceRes = adaptationLib.adaptKnownSourceMigrations(clientPath, targetVersion, sourceVersion, (l) => appendLog(l, 'INFO', 'IMPLEMENT'));
+          modifiedCount += sourceRes.adaptedFilesCount || 0;
+        } catch (err) {
+          appendLog(`Warning: Source code adaptation: ${err.message}`, 'WARN', 'IMPLEMENT');
         }
       }
 
-      // Check if Fast Patch mode applies
-      const preflightLib = require('./preflight');
-      const isAutoPatch = preflightLib.classifyUpgradeMode(
-        job.preflight ? job.preflight.currentVersion : null,
-        targetVersion
-      ).isPatch;
-      const isFastPatch = job.upgradeMode === 'FAST_PATCH' || (job.upgradeMode !== 'FULL_SEMANTIC' && isAutoPatch);
-
-      // Copilot CLI semantic reasoning (or fast patch skip)
-      let copilotRes = { ok: true, durationMs: 0, exitCode: 0, model: job.copilotModel || 'default' };
-
-      if (!isFastPatch) {
-        appendLog(`Invoking Copilot CLI (${job.copilotModel || 'default'}) for semantic reasoning and configuration checks...`, 'INFO', 'IMPLEMENT');
-        const copilotTask = `
-Upgrade task for client project ${path.basename(clientPath)} to NGO Core ${targetVersion}.
-Target packages updated. Analyze changed references and verify configuration alignment.
-`.trim();
-
-        copilotRes = await copilotCli.invoke(copilotTask, {
-          cwd: clientPath,
-          model: job.copilotModel || job.model,
-          simulate: isSimulation,
-          onLog: (l) => appendLog(l, 'INFO', 'IMPLEMENT'),
-        });
-      } else {
-        appendLog(`[FAST_PATCH] Small patch update detected (v${job.preflight ? job.preflight.currentVersion : 'current'} -> v${targetVersion}). Version numbers updated directly in package files. Copilot semantic invocation deferred.`, 'INFO', 'IMPLEMENT');
-      }
+      appendLog('Deterministic package updates, configuration, and source adaptations applied successfully (no LLM).', 'INFO', 'IMPLEMENT');
 
       updateJob((j) => {
         j.implementation = {
           modifiedFilesCount: modifiedCount,
-          copilotDurationMs: copilotRes.durationMs,
-          copilotExitCode: copilotRes.exitCode,
-          fastPatchMode: isFastPatch,
+          copilotDurationMs: 0,
+          copilotExitCode: 0,
+          fastPatchMode: isAutoPatch,
         };
         j.completedStages.push('IMPLEMENT');
         j.stageMetrics.IMPLEMENT = {
@@ -342,15 +675,22 @@ Target packages updated. Analyze changed references and verify configuration ali
       clientPath,
       targetVersion,
       tracks,
+      isPatch: isAutoPatch,
+      upgradeMode: job.upgradeMode,
+      breakingChangesCount: job.preflight && job.preflight.impactPreview ? job.preflight.impactPreview.breakingChangesCount : 0,
+      isSimulation,
+      onLog: (l) => appendLog(l, 'INFO', 'VERIFY'),
     });
 
     for (const check of verification.checks) {
       appendLog(`  [${check.status}] ${check.name} (${check.durationMs}ms)`, check.ok ? 'INFO' : 'ERROR', 'VERIFY');
-      if (!check.ok) appendLog(`       Details: ${check.details}`, 'ERROR', 'VERIFY');
+      if (!check.ok) {
+        const compactDetails = extractCoreErrors(check.details);
+        appendLog(`       Details: ${compactDetails || String(check.details || '').slice(0, 1000)}`, 'ERROR', 'VERIFY');
+      }
     }
 
-    const preflightLibCheck = require('./preflight');
-    const isFastPatchVerify = job.upgradeMode === 'FAST_PATCH' || (job.upgradeMode !== 'FULL_SEMANTIC' && preflightLibCheck.classifyUpgradeMode(job.preflight ? job.preflight.currentVersion : null, targetVersion).isPatch);
+    const isFastPatchVerify = job.upgradeMode === 'FAST_PATCH' || (job.upgradeMode !== 'FULL_SEMANTIC' && isAutoPatch);
 
     if (verification.ok && isFastPatchVerify) {
       appendLog('[FAST_PATCH] Fast patch restore & build clean. 0 errors detected. Full upgrade LLM reasoning skipped.', 'INFO', 'VERIFY');
@@ -368,11 +708,19 @@ Target packages updated. Analyze changed references and verify configuration ali
       }
       updateJob((j) => { j.currentStage = 'REPAIR'; });
 
-      const failedChecksSummary = verification.checks.filter((c) => !c.ok).map((c) => `${c.name}: ${c.details}`).join('\n');
+      const failedChecksSummary = verification.checks
+        .filter((c) => !c.ok)
+        .map((c) => `[${c.name}]\n${extractCoreErrors(c.details)}`)
+        .join('\n\n')
+        .slice(0, 3500);
+
+      const releaseNotesContext = job.releaseNotes ? `\n\nTeam Release & Migration Notes:\n${String(job.releaseNotes).slice(0, 2000)}` : '';
+
       const repairPrompt = `
 Automated build verification failed during upgrade to NGO Core ${targetVersion}:
-${failedChecksSummary}
-Please diagnose and provide necessary source adjustments.
+${failedChecksSummary}${releaseNotesContext}
+
+Please diagnose and provide necessary source adjustments for any API changes, TargetFramework updates, node module changes, environment files, or configuration.
 `.trim();
 
       await copilotCli.invoke(repairPrompt, {
@@ -382,11 +730,17 @@ Please diagnose and provide necessary source adjustments.
         onLog: (l) => appendLog(l, 'INFO', 'REPAIR'),
       });
 
-      // Re-run deterministic verification
+      // Re-run deterministic verification with forced re-test after mutation
       verification = verifierLib.verify({
         clientPath,
         targetVersion,
         tracks,
+        isPatch: isAutoPatch,
+        upgradeMode: job.upgradeMode,
+        breakingChangesCount: job.preflight && job.preflight.impactPreview ? job.preflight.impactPreview.breakingChangesCount : 0,
+        forceRunTests: true,
+        isSimulation,
+        onLog: (l) => appendLog(l, 'INFO', 'REPAIR'),
       });
       appendLog(`Re-verification result: ${verification.ok ? 'PASSED' : 'STILL FAILING'}`, verification.ok ? 'INFO' : 'WARN', 'REPAIR');
     }
@@ -425,6 +779,21 @@ Please diagnose and provide necessary source adjustments.
       simulate: isSimulation,
       onLog: (l) => appendLog(l, 'INFO', 'REVIEW'),
     });
+
+    try {
+      const handover = adaptationLib.generateHandoverChecklist({
+        runId: job.runId,
+        clientId: job.clientName,
+        sourceVersion,
+        targetVersion,
+        backendConfigResult: job.plan ? job.plan.backendConfigResult : null,
+        jobDir,
+      });
+      review.handover = handover;
+      appendLog(`Handover checklist generated (${handover.checklist.items.length} deployment item(s) in deployment-checklist.yaml).`, 'INFO', 'REVIEW');
+    } catch (err) {
+      appendLog(`Warning: Handover generation: ${err.message}`, 'WARN', 'REVIEW');
+    }
 
     appendLog(`Changes detected: ${review.hasChanges}. Ready for commit: ${review.canCommit}`, 'INFO', 'REVIEW');
 

@@ -46,6 +46,21 @@ function redactSecrets(text) {
 }
 
 /**
+ * Remove sensitive query parameters (e.g. SAS signatures, tokens) from package source URLs.
+ */
+function sanitizeFeedUrl(feedUrl) {
+  if (!feedUrl || typeof feedUrl !== 'string') return '';
+  const clean = feedUrl.trim();
+  try {
+    const parsed = new url.URL(clean);
+    parsed.search = '';
+    return parsed.toString();
+  } catch (_) {
+    return clean.split('?')[0];
+  }
+}
+
+/**
  * Classify the source type based on URL and endpoint patterns.
  */
 function classifySourceType(sourceUrl) {
@@ -321,12 +336,23 @@ function getAzureArtifactsCredentials(feedUrl, options) {
   }
 
   try {
-    const cmd = `& "${credExe}" -Uri "${feedUrl}" -NonInteractive -OutputFormat Json`;
-    const res = cp.spawnSync('powershell', ['-NoProfile', '-Command', cmd], {
-      encoding: 'utf8',
-      windowsHide: true,
-      timeout: 15000,
-    });
+    let res = null;
+    try {
+      res = cp.spawnSync(credExe, ['-Uri', feedUrl, '-NonInteractive', '-OutputFormat', 'Json'], {
+        encoding: 'utf8',
+        windowsHide: true,
+        timeout: 10000,
+      });
+    } catch (_) {}
+
+    if (!res || res.status !== 0 || !res.stdout || !res.stdout.includes('{')) {
+      const cmd = `& "${credExe}" -Uri "${feedUrl}" -NonInteractive -OutputFormat Json`;
+      res = cp.spawnSync('powershell', ['-NoProfile', '-Command', cmd], {
+        encoding: 'utf8',
+        windowsHide: true,
+        timeout: 15000,
+      });
+    }
 
     if (res.status === 0 && res.stdout) {
       const lines = res.stdout.split(/\r?\n/).map((s) => s.trim());
@@ -418,7 +444,9 @@ async function testFeedConnection(source, options) {
 
   const diag = {
     name,
-    url: feedUrl,
+    url: sanitizeFeedUrl(feedUrl),
+    rawUrl: feedUrl,
+    sanitizedUrl: sanitizeFeedUrl(feedUrl),
     type,
     connectionStatus: 'UNKNOWN',
     authStatus: 'UNKNOWN',
@@ -543,7 +571,7 @@ async function queryPackageVersions(packageId, options) {
   const sourceResults = [];
   const authFailures = [];
 
-  for (const src of sources) {
+  await Promise.all(sources.map(async (src) => {
     if (src.type === 'LOCAL_DIRECTORY') {
       const dirPath = src.url.replace(/^file:\/\//i, '');
       const pkgVerDir = path.join(dirPath, normPkgId);
@@ -556,7 +584,13 @@ async function queryPackageVersions(packageId, options) {
           sourceResults.push({ source: src.name, available: true, versionsCount: files.length });
         } catch (_) {}
       }
-      continue;
+      return;
+    }
+
+    // If querying an NGO-specific private package from public nuget.org, skip it
+    if (normPkgId.startsWith('ngo.') && src.url.includes('api.nuget.org')) {
+      sourceResults.push({ source: src.name, available: true, count: 0, skipped: true });
+      return;
     }
 
     // Connect and resolve index
@@ -569,15 +603,15 @@ async function queryPackageVersions(packageId, options) {
         error: testRes.lastError,
       });
       sourceResults.push({ source: src.name, available: false, error: testRes.lastError, authFailed: true });
-      continue;
+      return;
     }
 
     if (testRes.connectionStatus !== 'CONNECTED') {
       sourceResults.push({ source: src.name, available: false, error: testRes.lastError });
-      continue;
+      return;
     }
 
-    // Query package via search query service endpoint
+    // Query package via PackageBaseAddress (fast flat index) or SearchQueryService
     try {
       const reqHeaders = {};
       if (src.type === 'AZURE_ARTIFACTS') {
@@ -587,28 +621,50 @@ async function queryPackageVersions(packageId, options) {
 
       const indexResp = await fetchHttp(src.url, reqHeaders, 6000);
       const indexJson = JSON.parse(indexResp.body);
-      const searchEndpoint = (indexJson.resources || []).find((r) => r['@type'] && r['@type'].includes('SearchQueryService'))?.['@id'];
 
-      if (searchEndpoint) {
-        const queryUrl = `${searchEndpoint}?q=${encodeURIComponent(normPkgId)}&take=20&prerelease=true`;
-        const qResp = await fetchHttp(queryUrl, reqHeaders, 8000);
-        if (qResp.statusCode === 200) {
-          const qJson = JSON.parse(qResp.body);
-          const matched = (qJson.data || []).find((d) => d.id?.toLowerCase() === normPkgId);
-          if (matched && Array.isArray(matched.versions)) {
-            for (const v of matched.versions) {
-              if (v.version) allVersions.add(v.version);
+      // 1. Try PackageBaseAddress (flat index) first for full, unpaginated version lists
+      const flatEndpoint = (indexJson.resources || []).find((r) => r['@type'] && r['@type'].includes('PackageBaseAddress'))?.['@id'];
+      let gotFlatVersions = false;
+      if (flatEndpoint) {
+        try {
+          const flatUrl = flatEndpoint.endsWith('/') ? `${flatEndpoint}${normPkgId}/index.json` : `${flatEndpoint}/${normPkgId}/index.json`;
+          const flatResp = await fetchHttp(flatUrl, reqHeaders, 8000);
+          if (flatResp.statusCode === 200) {
+            const flatJson = JSON.parse(flatResp.body);
+            if (Array.isArray(flatJson.versions)) {
+              for (const v of flatJson.versions) allVersions.add(v);
+              sourceResults.push({ source: src.name, available: true, count: flatJson.versions.length, method: 'PackageBaseAddress' });
+              gotFlatVersions = true;
             }
-            sourceResults.push({ source: src.name, available: true, count: matched.versions.length });
+          }
+        } catch (_) {}
+      }
+
+      // 2. Fallback to SearchQueryService if flat index was not available or empty
+      if (!gotFlatVersions) {
+        const searchEndpoint = (indexJson.resources || []).find((r) => r['@type'] && r['@type'].includes('SearchQueryService'))?.['@id'];
+        if (searchEndpoint) {
+          const queryUrl = `${searchEndpoint}?q=${encodeURIComponent(normPkgId)}&take=1000&prerelease=true`;
+          const qResp = await fetchHttp(queryUrl, reqHeaders, 8000);
+          if (qResp.statusCode === 200) {
+            const qJson = JSON.parse(qResp.body);
+            const matched = (qJson.data || []).find((d) => d.id?.toLowerCase() === normPkgId);
+            if (matched && Array.isArray(matched.versions)) {
+              for (const v of matched.versions) {
+                if (v.version) allVersions.add(v.version);
+              }
+              sourceResults.push({ source: src.name, available: true, count: matched.versions.length, method: 'SearchQueryService' });
+            }
           }
         }
       }
     } catch (err) {
       sourceResults.push({ source: src.name, available: false, error: err.message });
     }
-  }
+  }));
 
   const result = {
+    ok: true,
     packageId,
     versions: Array.from(allVersions).sort((a, b) => {
       // Sort semver descending
@@ -744,19 +800,30 @@ async function reauthenticateSource(sourceUrl, options) {
   }
 }
 
+let cachedActiveIdentity = null;
+let cachedActiveIdentityExpiresAt = 0;
+const IDENTITY_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
 /**
- * Clear in-memory token and metadata caches.
+ * Clear in-memory token, metadata, and identity caches.
  */
 function refreshPackageMetadataCache() {
   tokenCache.clear();
   metadataCache.clear();
+  cachedActiveIdentity = null;
+  cachedActiveIdentityExpiresAt = 0;
   return { ok: true, clearedAt: new Date().toISOString() };
 }
 
 /**
  * Detect active identities for Azure Artifacts feed and Git across CLI, PAT, and environment.
  */
-function detectActiveIdentity() {
+function detectActiveIdentity(options) {
+  options = options || {};
+  if (!options.bypassCache && cachedActiveIdentity && Date.now() < cachedActiveIdentityExpiresAt) {
+    return Object.assign({}, cachedActiveIdentity);
+  }
+
   const info = {
     azureAccount: null,
     azureAuthSource: 'none',
@@ -788,6 +855,8 @@ function detectActiveIdentity() {
     info.azureAuthSource = 'personal_access_token';
     info.isAuthenticated = true;
     info.credentialDetails = 'Personal Access Token (PAT) configured in platform settings';
+    cachedActiveIdentity = Object.assign({}, info);
+    cachedActiveIdentityExpiresAt = Date.now() + IDENTITY_CACHE_TTL_MS;
     return info;
   }
 
@@ -804,11 +873,203 @@ function detectActiveIdentity() {
       info.azureAuthSource = 'azure_cli';
       info.isAuthenticated = true;
       info.credentialDetails = `Azure CLI active login (${azRes.stdout.trim()})`;
+      cachedActiveIdentity = Object.assign({}, info);
+      cachedActiveIdentityExpiresAt = Date.now() + IDENTITY_CACHE_TTL_MS;
       return info;
     }
   } catch (_) {}
 
+  cachedActiveIdentity = Object.assign({}, info);
+  cachedActiveIdentityExpiresAt = Date.now() + 30000; // cache unauthenticated for 30s
   return info;
+}
+
+let cachedComprehensiveAuth = null;
+let lastComprehensiveAuthTime = 0;
+const COMPREHENSIVE_AUTH_TTL_MS = 60000;
+
+/**
+ * Return detailed 7-dimension diagnostics separating CLI, Login, Org access,
+ * Feed reachability, Credential Provider, Feed Auth, and Package Read permissions.
+ */
+async function getComprehensiveAuthDiagnostics(options) {
+  options = options || {};
+  if (!options.bypassCache && !options.refresh && cachedComprehensiveAuth && (Date.now() - lastComprehensiveAuthTime < COMPREHENSIVE_AUTH_TTL_MS)) {
+    return cachedComprehensiveAuth;
+  }
+  const feedUrl = options.feedUrl || 'https://pkgs.dev.azure.com/preciofishbone/_packaging/NGO_Online_feed/nuget/v3/index.json';
+  const now = new Date().toISOString();
+
+  // 1. Azure CLI installation
+  let azInstalled = false;
+  let azVersion = null;
+  try {
+    const azVerRes = cp.spawnSync('az', ['--version'], { encoding: 'utf8', windowsHide: true, timeout: 5000, shell: true });
+    if (azVerRes.status === 0 && azVerRes.stdout) {
+      azInstalled = true;
+      const m = azVerRes.stdout.match(/azure-cli\s+([0-9\.]+)/i);
+      azVersion = m ? m[1] : 'Installed';
+    }
+  } catch (_) {}
+
+  // 2. Azure CLI login
+  let azLoggedIn = false;
+  let azAccountName = null;
+  if (azInstalled) {
+    try {
+      const azShowRes = cp.spawnSync('az', ['account', 'show', '--query', '{user:user.name, tenant:tenantId}', '-o', 'json'], {
+        encoding: 'utf8',
+        windowsHide: true,
+        timeout: 5000,
+        shell: true,
+      });
+      if (azShowRes.status === 0 && azShowRes.stdout) {
+        const parsed = JSON.parse(azShowRes.stdout);
+        if (parsed.user) {
+          azLoggedIn = true;
+          azAccountName = parsed.user;
+        }
+      }
+    } catch (_) {}
+  }
+
+  // 3. Azure DevOps Account / Org access
+  const orgName = 'preciofishbone';
+  const feedName = 'NGO_Online_feed';
+
+  // 4. Credential Provider executable
+  const credExe = findAzureArtifactsCredentialProvider();
+  const hasCredProvider = Boolean(credExe);
+
+  // 5. Credential discovery (PAT vs Azure CLI vs Credential Provider)
+  const creds = getAzureArtifactsCredentials(feedUrl, { bypassCache: options.bypassCache });
+
+  // 6. Feed reachability & Effective Feed Authentication
+  const feedTest = await testFeedConnection({
+    name: 'NGO Online',
+    url: feedUrl,
+    type: 'AZURE_ARTIFACTS',
+  }, { bypassCache: options.bypassCache });
+
+  // 7. Package Read Permission (probe NGO.Core.API)
+  let packageRead = {
+    checked: false,
+    canRead: false,
+    versionCount: 0,
+    latestVersion: null,
+    status: 'UNTESTED',
+    error: null,
+  };
+
+  if (feedTest.connectionStatus === 'CONNECTED' && feedTest.authStatus === 'AUTHENTICATED') {
+    try {
+      const pkgCheck = await queryPackageVersions('NGO.Core.API', { bypassCache: options.bypassCache });
+      packageRead.checked = true;
+      if (pkgCheck && Array.isArray(pkgCheck.versions) && pkgCheck.versions.length > 0) {
+        packageRead.canRead = true;
+        packageRead.versionCount = pkgCheck.versions.length;
+        packageRead.latestVersion = pkgCheck.versions[0];
+        packageRead.status = 'VERIFIED_READ';
+      } else {
+        packageRead.status = 'PACKAGE_NOT_FOUND_OR_EMPTY';
+      }
+    } catch (err) {
+      packageRead.checked = true;
+      packageRead.error = err.message;
+      packageRead.status = 'READ_ERROR';
+    }
+  }
+
+  const settingsLib = require('./settings');
+
+  let overallStatus = 'UNAUTHENTICATED';
+  if (feedTest.authStatus === 'AUTHENTICATED') {
+    overallStatus = 'AUTHENTICATED';
+  } else if (feedTest.connectionStatus === 'UNAUTHENTICATED' || !azLoggedIn) {
+    overallStatus = 'SIGN_IN_REQUIRED';
+  } else if (feedTest.connectionStatus === 'FORBIDDEN') {
+    overallStatus = 'FORBIDDEN';
+  } else if (feedTest.connectionStatus === 'NETWORK_ERROR' || feedTest.connectionStatus === 'ERROR') {
+    overallStatus = 'ERROR';
+  }
+
+  const activeAccount = feedTest.accountIdentity || (azLoggedIn ? azAccountName : null);
+
+  return {
+    ok: true,
+    overallStatus,
+    activeAccount,
+    hasStoredPat: settingsLib.hasStoredAzurePat(),
+    checkedAt: now,
+    lastTested: now,
+    feedUrl: sanitizeFeedUrl(feedUrl),
+    rawFeedUrl: feedUrl,
+    organization: orgName,
+    feedName,
+    facets: {
+      azureCli: {
+        title: 'Azure CLI Installation',
+        installed: azInstalled,
+        version: azVersion,
+        status: azInstalled ? 'READY' : 'NOT_INSTALLED',
+        detail: azInstalled ? `Azure CLI v${azVersion} is installed.` : 'Azure CLI is not found in system PATH.',
+      },
+      azureCliLogin: {
+        title: 'Azure CLI Login State',
+        loggedIn: azLoggedIn,
+        account: azAccountName,
+        status: azLoggedIn ? 'LOGGED_IN' : (azInstalled ? 'NOT_LOGGED_IN' : 'NOT_APPLICABLE'),
+        detail: azLoggedIn ? `Active Azure login: ${azAccountName}` : (azInstalled ? 'Azure CLI installed but not signed in. Run "az login".' : 'Install Azure CLI to enable interactive Microsoft login.'),
+      },
+      azureDevOpsOrg: {
+        title: 'Target Organization & Feed',
+        organization: orgName,
+        feedName,
+        status: 'CONFIGURED',
+        detail: `Organization: ${orgName} • Feed: ${feedName}`,
+      },
+      feedReachability: {
+        title: 'Feed Reachability',
+        reachable: feedTest.connectionStatus !== 'NETWORK_ERROR',
+        statusCode: feedTest.statusCode,
+        status: feedTest.connectionStatus !== 'NETWORK_ERROR' ? 'REACHABLE' : 'UNREACHABLE',
+        detail: feedTest.connectionStatus !== 'NETWORK_ERROR' ? `HTTP service endpoint responding (Status ${feedTest.statusCode || 200})` : `Cannot reach feed endpoint: ${feedTest.lastError}`,
+      },
+      credentialProvider: {
+        title: 'NuGet Credential Provider',
+        installed: hasCredProvider,
+        path: credExe,
+        status: hasCredProvider ? 'READY' : 'OPTIONAL_MISSING',
+        detail: hasCredProvider ? `CredentialProvider.Microsoft active at ${credExe}` : 'Azure Artifacts Credential Provider not installed in VS or plugins.',
+      },
+      feedAuthentication: {
+        title: 'Effective Package Feed Authentication',
+        authenticated: feedTest.authStatus === 'AUTHENTICATED',
+        authStatus: feedTest.authStatus,
+        connectionStatus: feedTest.connectionStatus,
+        identity: feedTest.accountIdentity,
+        authMechanism: creds.source || feedTest.authMechanism || 'none',
+        status: feedTest.authStatus === 'AUTHENTICATED' ? 'AUTHENTICATED' : (feedTest.connectionStatus === 'UNAUTHENTICATED' ? 'AUTH_REQUIRED' : (feedTest.connectionStatus === 'FORBIDDEN' ? 'FORBIDDEN' : 'UNAUTHENTICATED')),
+        detail: feedTest.diagnosticOutput || feedTest.lastError || (feedTest.authStatus === 'AUTHENTICATED' ? 'Authenticated successfully against Azure Artifacts.' : 'Authentication required.'),
+        remediation: feedTest.remediation,
+      },
+      packageReadPermission: {
+        title: 'Package Read Permission',
+        canRead: packageRead.canRead,
+        testedPackage: 'NGO.Core.API',
+        versionCount: packageRead.versionCount,
+        latestVersion: packageRead.latestVersion,
+        status: packageRead.status,
+        detail: packageRead.canRead ? `Confirmed read permission: ${packageRead.versionCount} versions of NGO.Core.API accessible.` : (feedTest.authStatus === 'AUTHENTICATED' ? 'Authenticated, but package read check did not return packages.' : 'Requires feed authentication to verify package read permissions.'),
+      },
+    },
+    sources: discoverPackageSources(options),
+    hasPatConfigured: settingsLib.hasStoredAzurePat(),
+  };
+
+  cachedComprehensiveAuth = result;
+  lastComprehensiveAuthTime = Date.now();
+  return result;
 }
 
 /**
@@ -816,13 +1077,14 @@ function detectActiveIdentity() {
  */
 function setAzureDevOpsPat(pat) {
   const settingsLib = require('./settings');
-  const current = settingsLib.loadSettings();
   const cleanPat = (pat && typeof pat === 'string') ? pat.trim() : null;
-  const updated = settingsLib.saveSettings(Object.assign({}, current, {
-    azureDevOpsPat: cleanPat,
-  }));
+  settingsLib.setStoredAzurePat(cleanPat);
+  cachedActiveIdentity = null;
+  cachedActiveIdentityExpiresAt = 0;
+  cachedComprehensiveAuth = null;
+  lastComprehensiveAuthTime = 0;
   refreshPackageMetadataCache();
-  return updated;
+  return settingsLib.loadSettings();
 }
 
 module.exports = {
@@ -837,7 +1099,9 @@ module.exports = {
   refreshPackageMetadataCache,
   detectActiveIdentity,
   setAzureDevOpsPat,
+  getComprehensiveAuthDiagnostics,
   redactSecrets,
   extractJwtIdentity,
+  sanitizeFeedUrl,
 };
 

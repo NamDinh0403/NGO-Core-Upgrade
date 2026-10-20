@@ -4,6 +4,10 @@
  *
  * Persists and validates configuration for workspace roots, Core path, CLI binary,
  * timeouts, verification policies, and Git safety gates.
+ *
+ * Security: Personal Access Tokens and secrets are isolated from general settings,
+ * protected on disk, and never transmitted to the frontend client.
+ *
  * Dependency-free, Node 14+.
  */
 
@@ -12,6 +16,7 @@ const path = require('path');
 
 const CONFIG_DIR = path.join(__dirname, 'config');
 const SETTINGS_FILE = path.join(CONFIG_DIR, 'settings.json');
+const CREDENTIALS_FILE = path.join(CONFIG_DIR, '.credentials.json');
 const REPO_ROOT = path.resolve(__dirname, '..');
 const DEFAULT_CLIENTS_DIR = path.resolve(REPO_ROOT, '..');
 const DEFAULT_CORE_DIR = path.join(DEFAULT_CLIENTS_DIR, 'ngo-online-core');
@@ -23,7 +28,7 @@ const DEFAULT_SETTINGS = {
   ],
   corePath: DEFAULT_CORE_DIR,
   copilotCliPath: null,
-  copilotModel: 'gpt-4o',
+  copilotModel: 'auto',
   azureDevOpsPat: null,
   defaultUpgradeMode: 'AUTO',
   executionTimeoutMs: 180000,
@@ -46,13 +51,108 @@ const DEFAULT_SETTINGS = {
 };
 
 /**
+ * Load credentials from protected store.
+ */
+function loadCredentials() {
+  try {
+    if (fs.existsSync(CREDENTIALS_FILE)) {
+      const data = JSON.parse(fs.readFileSync(CREDENTIALS_FILE, 'utf8'));
+      return data || {};
+    }
+  } catch (_) {}
+  return {};
+}
+
+/**
+ * Save credentials to protected store with restricted mode (0o600).
+ */
+function saveCredentials(creds) {
+  try {
+    fs.mkdirSync(CONFIG_DIR, { recursive: true });
+    fs.writeFileSync(CREDENTIALS_FILE, JSON.stringify(creds, null, 2), { mode: 0o600 });
+  } catch (_) {}
+}
+
+/**
+ * Retrieve stored Azure DevOps PAT.
+ * Checks .credentials.json first, falls back to legacy settings.json and migrates it.
+ */
+function getStoredAzurePat() {
+  const creds = loadCredentials();
+  if (creds.azureDevOpsPat && typeof creds.azureDevOpsPat === 'string' && creds.azureDevOpsPat.trim()) {
+    return creds.azureDevOpsPat.trim();
+  }
+
+  // Check legacy settings.json and migrate
+  try {
+    if (fs.existsSync(SETTINGS_FILE)) {
+      const parsed = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+      if (parsed.azureDevOpsPat && typeof parsed.azureDevOpsPat === 'string' && parsed.azureDevOpsPat.trim()) {
+        const pat = parsed.azureDevOpsPat.trim();
+        creds.azureDevOpsPat = pat;
+        creds.migratedAt = new Date().toISOString();
+        saveCredentials(creds);
+
+        // Remove plaintext secret from settings.json
+        delete parsed.azureDevOpsPat;
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(parsed, null, 2));
+        return pat;
+      }
+    }
+  } catch (_) {}
+
+  return process.env.AZURE_DEVOPS_EXT_PAT || process.env.VSS_NUGET_ACCESSTOKEN || null;
+}
+
+/**
+ * Persist or update Azure DevOps PAT in protected credentials store.
+ */
+function setStoredAzurePat(pat) {
+  const creds = loadCredentials();
+  if (pat && typeof pat === 'string' && pat.trim()) {
+    creds.azureDevOpsPat = pat.trim();
+    creds.updatedAt = new Date().toISOString();
+  } else {
+    delete creds.azureDevOpsPat;
+    creds.updatedAt = new Date().toISOString();
+  }
+  saveCredentials(creds);
+}
+
+/**
+ * Clear stored Azure DevOps PAT.
+ */
+function clearStoredAzurePat() {
+  setStoredAzurePat(null);
+}
+
+/**
+ * Return whether an Azure DevOps PAT is currently stored.
+ */
+function hasStoredAzurePat() {
+  return Boolean(getStoredAzurePat());
+}
+
+/**
+ * Sanitize settings object before returning to client (strip secrets).
+ */
+function sanitizeSettingsForClient(rawSettings) {
+  const safe = Object.assign({}, rawSettings);
+  safe.hasAzureDevOpsPat = hasStoredAzurePat();
+  safe.azureDevOpsPatConfigured = safe.hasAzureDevOpsPat;
+  // NEVER return raw PAT or authorization headers to frontend
+  delete safe.azureDevOpsPat;
+  return safe;
+}
+
+/**
  * Validate proposed settings against schema and safety constraints.
  */
 function validateSettings(settings) {
   const errors = [];
 
   if (!settings || typeof settings !== 'object') {
-    return { ok: false, errors: ['Settings must be an object'] };
+    return { ok: false, valid: false, errors: ['Settings must be an object'] };
   }
 
   // 1. Approved Workspace Roots
@@ -145,10 +245,12 @@ function validateSettings(settings) {
  * Load settings, falling back to defaults if not present or corrupt.
  */
 function loadSettings() {
+  let loaded = Object.assign({}, DEFAULT_SETTINGS);
+
   try {
     if (fs.existsSync(SETTINGS_FILE)) {
       const parsed = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
-      return Object.assign({}, DEFAULT_SETTINGS, parsed, {
+      loaded = Object.assign({}, DEFAULT_SETTINGS, parsed, {
         gitSafety: Object.assign({}, DEFAULT_SETTINGS.gitSafety, parsed.gitSafety || {}),
         verification: Object.assign({}, DEFAULT_SETTINGS.verification, parsed.verification || {}),
         logging: Object.assign({}, DEFAULT_SETTINGS.logging, parsed.logging || {}),
@@ -156,7 +258,9 @@ function loadSettings() {
     }
   } catch (_) {}
 
-  return Object.assign({}, DEFAULT_SETTINGS);
+  // Attach stored PAT in memory for backend operations
+  loaded.azureDevOpsPat = getStoredAzurePat();
+  return loaded;
 }
 
 /**
@@ -164,6 +268,16 @@ function loadSettings() {
  */
 function saveSettings(newSettings) {
   const current = loadSettings();
+
+  // If newSettings explicitly provides a PAT, update protected storage
+  if (newSettings && newSettings.azureDevOpsPat !== undefined) {
+    if (newSettings.azureDevOpsPat === null || newSettings.azureDevOpsPat === '') {
+      clearStoredAzurePat();
+    } else if (typeof newSettings.azureDevOpsPat === 'string' && newSettings.azureDevOpsPat.trim()) {
+      setStoredAzurePat(newSettings.azureDevOpsPat.trim());
+    }
+  }
+
   const merged = Object.assign({}, current, newSettings, {
     gitSafety: Object.assign({}, current.gitSafety, newSettings.gitSafety || {}),
     verification: Object.assign({}, current.verification, newSettings.verification || {}),
@@ -175,9 +289,14 @@ function saveSettings(newSettings) {
     throw new Error(`Settings validation failed: ${val.errors.join('; ')}`);
   }
 
+  // Never write secrets into public settings.json
+  const fileToSave = Object.assign({}, merged);
+  delete fileToSave.azureDevOpsPat;
+
   fs.mkdirSync(CONFIG_DIR, { recursive: true });
-  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(merged, null, 2));
-  return merged;
+  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(fileToSave, null, 2));
+
+  return loadSettings();
 }
 
 /**
@@ -186,10 +305,12 @@ function saveSettings(newSettings) {
 function isWorkspaceApproved(clientPath, approvedRoots) {
   if (!clientPath) return false;
   const roots = approvedRoots || (loadSettings().approvedWorkspaceRoots || []);
-  const normalized = path.resolve(clientPath);
+  const isWindows = process.platform === 'win32';
+  const normalized = isWindows ? path.resolve(clientPath).toLowerCase() : path.resolve(clientPath);
   for (const root of roots) {
-    const normRoot = path.resolve(root);
-    if (normalized === normRoot || normalized.startsWith(normRoot + path.sep)) {
+    const normRoot = isWindows ? path.resolve(root).toLowerCase() : path.resolve(root);
+    const sep = isWindows ? '\\' : path.sep;
+    if (normalized === normRoot || normalized.startsWith(normRoot + sep)) {
       return true;
     }
   }
@@ -201,5 +322,10 @@ module.exports = {
   saveSettings,
   validateSettings,
   isWorkspaceApproved,
+  getStoredAzurePat,
+  setStoredAzurePat,
+  clearStoredAzurePat,
+  hasStoredAzurePat,
+  sanitizeSettingsForClient,
   DEFAULT_SETTINGS,
 };

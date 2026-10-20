@@ -23,7 +23,17 @@ const ANALYZER_VERSION = 'release-resolver-1';
 const hash = (value) => crypto.createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
 
 const parseVer = (v) => {
-  const m = String(v || '').trim().match(/^(\d+)\.(\d+)(?:\.(\d+))?(?:-([^\s]+))?$/);
+  const clean = String(v || '')
+    .trim()
+    .replace(/^refs\/remotes\/origin\//i, '')
+    .replace(/^refs\/heads\//i, '')
+    .replace(/^origin\//i, '')
+    .replace(/^releases\//i, '')
+    .replace(/^release\//i, '')
+    .replace(/^v/i, '')
+    .replace(/^(?:last|latest)[-_ ]+/i, '')
+    .trim();
+  const m = clean.match(/^(\d+)\.(\d+)(?:\.(\d+))?(?:-([^\s]+))?$/);
   return m ? [+m[1], +m[2], +(m[3] || 0), m[4] || null] : null;
 };
 
@@ -47,6 +57,77 @@ const cmpVer = (a, b) => {
 };
 
 const gtVer = (a, b) => cmpVer(a, b) > 0;
+
+/**
+ * Resolves a branch name or version input to the latest verified release version of that branch.
+ */
+function resolveLatestBranchVersion(input, corePath, options) {
+  options = options || {};
+  if (!input) return null;
+
+  const raw = String(input).trim();
+  const clean = raw
+    .replace(/^refs\/remotes\/origin\//i, '')
+    .replace(/^refs\/heads\//i, '')
+    .replace(/^origin\//i, '')
+    .replace(/^releases\//i, '')
+    .replace(/^release\//i, '')
+    .replace(/^v/i, '')
+    .replace(/^(?:last|latest)[-_ ]+/i, '')
+    .trim();
+
+  const fullSemverMatch = clean.match(/^(\d+)\.(\d+)\.(\d+)(?:-([^\s]+))?$/);
+  if (fullSemverMatch && !options.preferLatestOnBranch && !/^(?:last|latest)[-_ ]+/i.test(raw)) {
+    return normalizeVersion(clean);
+  }
+
+  const parts = clean.match(/^(\d+)\.(\d+)/);
+  if (!parts) {
+    return normalizeVersion(clean);
+  }
+
+  const major = parts[1];
+  const minor = parts[2];
+  const sub = `${major}.${minor}`;
+  const candidates = new Set();
+  const cPath = corePath || options.corePath;
+
+  if (cPath && git.isGitRepo(cPath)) {
+    try {
+      const discovered = discoverCoreBranchReleases(cPath, options);
+      if (discovered && discovered.ok) {
+        const subMeta = discovered.branchMetadata && discovered.branchMetadata[sub];
+        if (subMeta) {
+          if (Array.isArray(subMeta.discoveredPatches)) {
+            for (const p of subMeta.discoveredPatches) candidates.add(p);
+          }
+          if (subMeta.explicitPatch !== null) {
+            candidates.add(`${sub}.${subMeta.explicitPatch}`);
+          }
+        }
+        for (const v of discovered.versions || []) {
+          if (v.startsWith(`${sub}.`) && !v.includes('beta')) {
+            candidates.add(v);
+          }
+        }
+      }
+    } catch (_) {}
+
+    try {
+      const tagRes = git.listTags(cPath);
+      if (tagRes.ok && Array.isArray(tagRes.tags)) {
+        for (const t of tagRes.tags) {
+          const norm = normalizeVersion(t.replace(/^v/, ''));
+          if (norm && norm.startsWith(`${sub}.`)) candidates.add(norm);
+        }
+      }
+    } catch (_) {}
+  }
+
+  candidates.add(`${sub}.0`);
+  const sorted = Array.from(candidates).sort((a, b) => cmpVer(b, a));
+  return sorted[0] || `${sub}.0`;
+}
 
 /**
  * Check approved release ref mappings (e.g. from ingest/config/approved-release-ref-mappings.json).
@@ -478,7 +559,7 @@ function detectConflicts(corePath, targetVersion, pkgEvidence, srcEvidence) {
  */
 function resolveRelease(targetVersion, options) {
   options = options || {};
-  const normTarget = normalizeVersion(targetVersion);
+  const normTarget = resolveLatestBranchVersion(targetVersion, options.corePath, options) || normalizeVersion(targetVersion);
 
   // Scenario E (part 1): Invalid target version
   if (!normTarget) {
@@ -918,6 +999,7 @@ function discoverCoreBranchReleases(corePath, options) {
 
 module.exports = {
   resolveRelease,
+  resolveLatestBranchVersion,
   discoverPackageEvidence,
   discoverSourceEvidence,
   discoverCoreBranchReleases,

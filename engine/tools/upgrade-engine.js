@@ -70,9 +70,10 @@ function cmdCreateRun(flags) {
   const tracks = String(flags.tracks || 'backend,frontend').split(',').map((t) => t.trim()).filter(Boolean);
   if (!tracks.length || tracks.some((track) => !['backend', 'frontend'].includes(track)) || new Set(tracks).size !== tracks.length) return 2;
   const rawTarget = String(flags['target-version'] || '');
-  const targetVersion = /^\d+\.\d+$/.test(rawTarget) ? `${rawTarget}.0` : rawTarget;
-  if (!targetVersion) { process.stderr.write('specify --target-version <x.y.z>\n'); return 2; }
   const corePath = flags['core-path'];
+  const resolver = require(path.join(INGEST_ROOT, 'tools', 'lib', 'release-resolver'));
+  const targetVersion = resolver.resolveLatestBranchVersion(rawTarget, corePath) || (/^\d+\.\d+$/.test(rawTarget) ? `${rawTarget}.0` : rawTarget);
+  if (!targetVersion) { process.stderr.write('specify --target-version <x.y.z>\n'); return 2; }
   // Test seam only — production callers never set this; defaults to the
   // real sibling ingest/ module.
   const ingestRoot = flags['ingest-root'] || INGEST_ROOT;

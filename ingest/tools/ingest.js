@@ -379,7 +379,7 @@ function ensureReleases(flags) {
   const before = git.fingerprint(corePath);
   if (!before.valid) throw new Error('cannot verify Core baseline');
   const since = flags.since ? normalizeVersion(flags.since) : null;
-  const target = flags.target ? normalizeVersion(flags.target) : null;
+  const target = flags.target ? (resolver.resolveLatestBranchVersion(flags.target, corePath) || normalizeVersion(flags.target)) : null;
   if ((since && !parseVer(since)) || (target && !parseVer(target))) throw new Error('versions must be x.y or x.y.z');
   if (since && target && cmpVer(parseVer(since), parseVer(target)) >= 0) throw new Error('source must precede target');
   const tagPrefix = flags['tag-prefix'] || 'v';
@@ -454,7 +454,11 @@ function ensureReleases(flags) {
     throw new Error(`target release tag missing: ${tagPrefix}${target}`);
   }
   const source = since || (target ? all[all.indexOf(target) - 1] : null);
-  if (source && !git.resolveRef(corePath, `${tagPrefix}${source}`)) throw new Error(`source release tag missing: ${tagPrefix}${source}`);
+  if (source && !git.resolveRef(corePath, `${tagPrefix}${source}`)) {
+    const sub = source.split('.').slice(0, 2).join('.');
+    const hasBranch = git.resolveRef(corePath, `origin/releases/${sub}`) || git.resolveRef(corePath, `releases/${sub}`);
+    if (!hasBranch) throw new Error(`source release tag missing: ${tagPrefix}${source}`);
+  }
   const versions = all.filter((version) => (!source || gtVer(version, source)) && (!target || !gtVer(version, target)));
   const text = flags['release-notes'] && fs.existsSync(flags['release-notes']) ? fs.readFileSync(flags['release-notes'], 'utf8') : null;
   const outDir = flags.out || DEFAULT_OUT;

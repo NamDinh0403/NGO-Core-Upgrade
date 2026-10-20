@@ -493,7 +493,7 @@ function runPreflight(options) {
   // -------------------------------------------------------------------------
   // CHECK 1: Target Version Semver Format
   // -------------------------------------------------------------------------
-  const normTarget = resolver.normalizeVersion(targetVersion);
+  const normTarget = resolver.resolveLatestBranchVersion(targetVersion, cPath, options) || resolver.normalizeVersion(targetVersion);
   if (!normTarget) {
     addCheck({
       id: 'CHK-SEMVER-FORMAT',

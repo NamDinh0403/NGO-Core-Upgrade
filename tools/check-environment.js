@@ -115,7 +115,8 @@ function checkEnvironment(flags) {
   const corePath = flags['core-path'] || flags.core;
   const clientPath = flags['client-path'] || flags.client;
   const rawTarget = flags.target || flags['target-version'];
-  const targetVersion = normalizeVersion(rawTarget);
+  const resolver = require('../ingest/tools/lib/release-resolver');
+  const targetVersion = resolver.resolveLatestBranchVersion(rawTarget, corePath) || normalizeVersion(rawTarget);
 
   const report = {
     timestamp: new Date().toISOString(),
@@ -210,25 +211,37 @@ function checkEnvironment(flags) {
         if (sourceVer) {
           const normSource = normalizeVersion(sourceVer);
           const hasSourceTag = tagList.some((t) => t === `v${normSource}` || t === normSource);
+          const sub = normSource.split('.').slice(0, 2).join('.');
+          const branchCheck = runCmd('git', ['rev-parse', '--verify', `origin/releases/${sub}`], corePath);
+          const localBranchCheck = runCmd('git', ['rev-parse', '--verify', `releases/${sub}`], corePath);
+          const hasBranch = (branchCheck.status === 0 && branchCheck.stdout) || (localBranchCheck.status === 0 && localBranchCheck.stdout);
+          const canonicalFile = path.resolve(__dirname, '..', 'ingest', 'knowledge', 'canonical', 'releases', normSource, 'release.yaml');
+          const candidateFile = path.resolve(__dirname, '..', 'ingest', 'knowledge', 'candidates', 'releases', `${normSource}.json`);
+
           if (hasSourceTag) {
-            addCheck('Source Release Tag', 'PASS', `Found tag for source v${normSource} in Core repository.`);
+            addCheck('Source Release Evidence', 'PASS', `Found tag for source v${normSource} in Core repository.`);
+          } else if (hasBranch) {
+            addCheck('Source Release Evidence', 'PASS', `Found branch releases/${sub} for source v${normSource} in Core repository.`);
+          } else if (fs.existsSync(canonicalFile) || fs.existsSync(candidateFile)) {
+            addCheck('Source Release Evidence', 'PASS', `Source v${normSource} resolved via pre-ingested release knowledge.`);
           } else {
-            // Check if pre-ingested canonical knowledge exists
-            const canonicalFile = path.resolve(__dirname, '..', 'ingest', 'knowledge', 'canonical', 'releases', normSource, 'release.yaml');
-            if (fs.existsSync(canonicalFile)) {
-              addCheck('Source Release Tag', 'PASS', `Tag v${normSource} resolved via pre-ingested canonical knowledge.`);
-            } else {
-              addCheck('Source Release Tag', 'BLOCKED', `Tag v${normSource} NOT found in Core repo!`, `cd "${corePath}" && git fetch --all --tags`);
-            }
+            addCheck('Source Release Evidence', 'BLOCKED', `Neither tag v${normSource} nor branch releases/${sub} found in Core repo!`, `cd "${corePath}" && git fetch --all --tags`);
           }
         }
 
         if (targetVersion) {
           const hasTargetTag = tagList.some((t) => t === `v${targetVersion}` || t === targetVersion);
+          const sub = targetVersion.split('.').slice(0, 2).join('.');
+          const branchCheck = runCmd('git', ['rev-parse', '--verify', `origin/releases/${sub}`], corePath);
+          const localBranchCheck = runCmd('git', ['rev-parse', '--verify', `releases/${sub}`], corePath);
+          const hasBranch = (branchCheck.status === 0 && branchCheck.stdout) || (localBranchCheck.status === 0 && localBranchCheck.stdout);
+
           if (hasTargetTag) {
-            addCheck('Target Release Tag', 'PASS', `Found tag for target v${targetVersion} in Core repository.`);
+            addCheck('Target Release Evidence', 'PASS', `Found tag for target v${targetVersion} in Core repository.`);
+          } else if (hasBranch) {
+            addCheck('Target Release Evidence', 'PASS', `Found branch releases/${sub} for target v${targetVersion} in Core repository.`);
           } else {
-            addCheck('Target Release Tag', 'WARN', `Tag v${targetVersion} not found in local Core git tags. (Will attempt package-first or canonical knowledge resolution). If tags are remote, run: cd "${corePath}" && git fetch --all --tags`);
+            addCheck('Target Release Evidence', 'WARN', `Neither tag v${targetVersion} nor branch releases/${sub} found in Core repo (attempting package-first resolution). If branch is remote, run: cd "${corePath}" && git fetch --all --tags`);
           }
         }
       }

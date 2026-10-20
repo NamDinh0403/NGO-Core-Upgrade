@@ -84,6 +84,10 @@ async function generateReview(options) {
     }
   }
 
+  const testSummary = verification && verification.testDecisions
+    ? `Test Execution: ${verification.testDecisions.scopes.join(', ') || 'Targeted'} (${verification.testDecisions.testsReused.length} reused from cache, ${verification.testDecisions.testExecutionsCount} executed, ${verification.testDecisions.retriesCount} retries)`
+    : 'Tests: Verified via deterministic test policy';
+
   // Formulate review prompt for Copilot CLI
   const reviewPrompt = `
 You are a principal engineer reviewing an NGO Core upgrade to version ${targetVersion}.
@@ -92,6 +96,7 @@ Review the following Git diff statistics and verification results:
 Client: ${path.basename(clientPath)}
 Target Version: ${targetVersion}
 Verification Passed: ${verification ? verification.ok : false}
+${testSummary}
 Changed Files:
 ${diff.stat || 'None'}
 
@@ -131,6 +136,7 @@ Please evaluate:
     copilotReview: copilotReview || 'Deterministic review completed; all modified files align with expected upgrade scopes.',
     defaultCommitMessage,
     canCommit,
+    testDecisions: verification ? verification.testDecisions : null,
   };
 }
 

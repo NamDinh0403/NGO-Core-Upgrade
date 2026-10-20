@@ -20,6 +20,7 @@ const diagnostics = require('./diagnostics');
 const settings = require('./settings');
 const telemetry = require('./telemetry');
 const nugetSources = require('./nuget-sources');
+const discovery = require('./discovery');
 
 const PORT = parseInt(process.env.PORT || '3800', 10);
 const HOST = process.env.HOST || '127.0.0.1';
@@ -41,6 +42,19 @@ function sendJson(res, statusCode, data) {
     'Access-Control-Allow-Origin': `http://${HOST}:${PORT}`,
   });
   res.end(JSON.stringify(data));
+}
+
+let cachedProjects = null;
+let cachedProjectsTime = 0;
+const PROJECTS_CACHE_TTL = 60000; // 60s
+
+let cachedVersions = null;
+let cachedVersionsTime = 0;
+const VERSIONS_CACHE_TTL = 300000; // 5 minutes
+
+function invalidateCaches() {
+  cachedVersions = null;
+  cachedProjects = null;
 }
 
 function parseJsonBody(req) {
@@ -102,24 +116,199 @@ async function handleRequest(req, res) {
     // REST API ROUTES
     // -----------------------------------------------------------------------
 
+    // GET /api/workspace/discover
+    if (method === 'GET' && pathname === '/api/workspace/discover') {
+      const refresh = parsedUrl.query.refresh === 'true';
+      const result = discovery.discoverWorkspaceProjects({ refresh });
+      return sendJson(res, 200, result);
+    }
+
+    // POST /api/workspace/validate-path
+    if (method === 'POST' && pathname === '/api/workspace/validate-path') {
+      const body = await parseJsonBody(req);
+      const result = discovery.validateClientPath(body.path);
+      return sendJson(res, result.ok ? 200 : 400, { ok: result.ok, validation: result, ...result });
+    }
+
     // GET /api/projects
     if (method === 'GET' && pathname === '/api/projects') {
       const searchDir = parsedUrl.query.dir || undefined;
+      const forceRefresh = parsedUrl.query.refresh === 'true';
+      if (!forceRefresh && !searchDir && cachedProjects && (Date.now() - cachedProjectsTime < PROJECTS_CACHE_TTL)) {
+        return sendJson(res, 200, { ok: true, projects: cachedProjects });
+      }
       const projects = preflight.discoverProjects(searchDir);
+      if (!searchDir && projects.length > 0) {
+        cachedProjects = projects;
+        cachedProjectsTime = Date.now();
+      }
       return sendJson(res, 200, { ok: true, projects });
     }
 
     // GET /api/versions
     if (method === 'GET' && pathname === '/api/versions') {
       const corePath = parsedUrl.query.corePath || undefined;
-      const versions = preflight.getAvailableVersions(corePath);
+      const forceRefresh = parsedUrl.query.refresh === 'true';
+      if (!forceRefresh && !corePath && cachedVersions && (Date.now() - cachedVersionsTime < VERSIONS_CACHE_TTL)) {
+        return sendJson(res, 200, { ok: true, versions: cachedVersions });
+      }
+
+      let versions = preflight.getAvailableVersions(corePath);
+      try {
+        const pkgPromise = nugetSources.queryPackageVersions('NGO.Core.API', { bypassCache: forceRefresh });
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+        const pkgRes = await Promise.race([pkgPromise, timeoutPromise]);
+        if (pkgRes && Array.isArray(pkgRes.versions) && pkgRes.versions.length > 0) {
+          const merged = new Set(versions);
+          for (const v of pkgRes.versions) {
+            merged.add(v);
+          }
+          versions = Array.from(merged).sort((a, b) => preflight.cmpVer(b, a));
+        }
+      } catch (_) {}
+
+      if (!corePath && versions.length > 0) {
+        cachedVersions = versions;
+        cachedVersionsTime = Date.now();
+      }
       return sendJson(res, 200, { ok: true, versions });
     }
 
-    // GET /api/copilot-status
-    if (method === 'GET' && pathname === '/api/copilot-status') {
+    // GET /api/copilot-status & /api/copilot/auth-status
+    if (method === 'GET' && (pathname === '/api/copilot-status' || pathname === '/api/copilot/auth-status')) {
       const status = copilotCli.checkCliAvailability();
-      return sendJson(res, 200, { ok: true, status });
+      return sendJson(res, 200, { ok: true, status, authenticated: status.authenticated });
+    }
+
+    // POST /api/copilot/auth
+    if (method === 'POST' && pathname === '/api/copilot/auth') {
+      const body = await parseJsonBody(req);
+      const action = body.action || (body.token ? 'set-token' : 'status');
+
+      if (action === 'status') {
+        const status = copilotCli.checkCliAvailability();
+        return sendJson(res, 200, { ok: true, status, authenticated: status.authenticated });
+      }
+
+      if (action === 'clear' || action === 'logout') {
+        copilotCli.clearAuthToken();
+        const status = copilotCli.checkCliAvailability();
+        return sendJson(res, 200, { ok: true, message: 'Copilot credentials cleared', status, authenticated: false });
+      }
+
+      if (action === 'set-token') {
+        if (!body.token || typeof body.token !== 'string') {
+          return sendJson(res, 400, { ok: false, error: 'GitHub token string is required' });
+        }
+        copilotCli.setAuthToken(body.token);
+        const status = copilotCli.checkCliAvailability();
+        return sendJson(res, 200, {
+          ok: true,
+          message: 'GitHub Copilot token saved and active',
+          status,
+          authenticated: status.authenticated,
+          storedTokenConfigured: Boolean(status.storedTokenConfigured),
+        });
+      }
+
+      if (action === 'login-web') {
+        const session = copilotCli.startWebFlowLogin();
+        // Wait up to 3 seconds for the auth URL to be captured from child process output
+        for (let i = 0; i < 30; i++) {
+          if (session.authUrl || session.status === 'FAILED') break;
+          await new Promise((r) => setTimeout(r, 100));
+        }
+        return sendJson(res, 200, {
+          ok: session.status !== 'FAILED',
+          loginId: session.id,
+          authUrl: session.authUrl,
+          status: session.status,
+          error: session.error,
+          message: session.authUrl
+            ? 'Browser login initiated. Please complete authorization in your browser.'
+            : (session.error || 'Initiating browser login...'),
+        });
+      }
+
+      if (action === 'web-poll') {
+        const poll = copilotCli.getWebFlowLoginStatus(body.loginId);
+        const cliStatus = copilotCli.checkCliAvailability();
+        if (poll.status === 'SUCCESS' || cliStatus.authenticated) {
+          return sendJson(res, 200, {
+            ok: true,
+            status: 'completed',
+            authenticated: true,
+            identity: cliStatus.accountIdentity,
+          });
+        }
+        if (poll.status === 'FAILED') {
+          return sendJson(res, 200, {
+            ok: false,
+            status: 'failed',
+            error: poll.error || 'Web authorization ended or failed',
+          });
+        }
+        return sendJson(res, 200, {
+          ok: true,
+          status: 'pending',
+          authUrl: poll.authUrl,
+        });
+      }
+
+      if (action === 'web-cancel') {
+        copilotCli.cancelWebFlowLogin(body.loginId);
+        return sendJson(res, 200, { ok: true, message: 'Web login cancelled' });
+      }
+
+      if (action === 'login-device') {
+        const session = copilotCli.startDeviceCodeLogin();
+        // Wait up to 3 seconds for subprocess to emit the device code
+        for (let i = 0; i < 30; i++) {
+          if (session.userCode || session.status === 'FAILED') break;
+          await new Promise((r) => setTimeout(r, 100));
+        }
+        return sendJson(res, 200, {
+          ok: session.status !== 'FAILED',
+          loginId: session.id,
+          userCode: session.userCode,
+          verificationUri: session.verificationUri,
+          status: session.status,
+          error: session.error,
+        });
+      }
+
+      if (action === 'device-poll') {
+        const poll = copilotCli.getDeviceCodeLoginStatus(body.loginId);
+        const cliStatus = copilotCli.checkCliAvailability();
+        if (poll.status === 'SUCCESS' || cliStatus.authenticated) {
+          return sendJson(res, 200, {
+            ok: true,
+            status: 'completed',
+            authenticated: true,
+            identity: cliStatus.accountIdentity,
+          });
+        }
+        if (poll.status === 'FAILED') {
+          return sendJson(res, 200, {
+            ok: false,
+            status: 'failed',
+            error: poll.error || 'Device authorization ended',
+          });
+        }
+        return sendJson(res, 200, {
+          ok: true,
+          status: 'pending',
+          userCode: poll.userCode,
+          verificationUri: poll.verificationUri,
+        });
+      }
+
+      if (action === 'device-cancel') {
+        copilotCli.cancelDeviceCodeLogin(body.loginId);
+        return sendJson(res, 200, { ok: true, message: 'Device login cancelled' });
+      }
+
+      return sendJson(res, 400, { ok: false, error: `Unknown action "${action}"` });
     }
 
     // GET /api/copilot/models
@@ -128,7 +317,7 @@ async function handleRequest(req, res) {
       return sendJson(res, 200, {
         ok: true,
         models: copilotCli.AVAILABLE_MODELS,
-        defaultModel: currentSettings.copilotModel || 'gpt-4o',
+        defaultModel: currentSettings.copilotModel || 'auto',
       });
     }
 
@@ -153,14 +342,16 @@ async function handleRequest(req, res) {
     // GET /api/settings
     if (method === 'GET' && pathname === '/api/settings') {
       const currentSettings = settings.loadSettings();
-      return sendJson(res, 200, { ok: true, settings: currentSettings });
+      const safe = settings.sanitizeSettingsForClient(currentSettings);
+      return sendJson(res, 200, { ok: true, settings: safe });
     }
 
     // POST /api/settings
     if (method === 'POST' && pathname === '/api/settings') {
       const body = await parseJsonBody(req);
       const saved = settings.saveSettings(body);
-      return sendJson(res, 200, { ok: true, settings: saved });
+      const safe = settings.sanitizeSettingsForClient(saved);
+      return sendJson(res, 200, { ok: true, settings: safe });
     }
 
     // GET /api/analytics
@@ -219,6 +410,7 @@ async function handleRequest(req, res) {
 
     // POST /api/nuget/refresh-metadata
     if (method === 'POST' && pathname === '/api/nuget/refresh-metadata') {
+      invalidateCaches();
       const refreshRes = nugetSources.refreshPackageMetadataCache();
       return sendJson(res, 200, { ok: true, ...refreshRes });
     }
@@ -247,6 +439,13 @@ async function handleRequest(req, res) {
       });
     }
 
+    // GET /api/nuget/auth-status
+    if (method === 'GET' && pathname === '/api/nuget/auth-status') {
+      const bypassCache = parsedUrl.query.refresh === 'true';
+      const authDiag = await nugetSources.getComprehensiveAuthDiagnostics({ bypassCache });
+      return sendJson(res, 200, authDiag);
+    }
+
     // GET /api/nuget/identity
     if (method === 'GET' && pathname === '/api/nuget/identity') {
       const identity = nugetSources.detectActiveIdentity();
@@ -259,6 +458,7 @@ async function handleRequest(req, res) {
       const action = body.action || (body.pat ? 'set-pat' : 'detect');
 
       if (action === 'clear' || action === 'logout') {
+        invalidateCaches();
         nugetSources.setAzureDevOpsPat(null);
         return sendJson(res, 200, { ok: true, message: 'Saved authentication cleared', identity: nugetSources.detectActiveIdentity() });
       }
@@ -267,6 +467,7 @@ async function handleRequest(req, res) {
         nugetSources.setAzureDevOpsPat(null);
         const credRes = nugetSources.getAzureArtifactsCredentials('https://pkgs.dev.azure.com/preciofishbone/_packaging/NGO_Online_feed/nuget/v3/index.json', { bypassCache: true });
         if (credRes.ok && credRes.source === 'azure_cli') {
+          invalidateCaches();
           return sendJson(res, 200, { ok: true, message: 'Connected using Azure CLI', identity: credRes.accountIdentity, source: 'azure_cli' });
         }
         return sendJson(res, 400, { ok: false, error: 'Azure CLI is not logged in or cannot acquire an Azure DevOps token. Please run "az login" in terminal or provide a PAT.' });
@@ -280,6 +481,7 @@ async function handleRequest(req, res) {
         }, { pat: body.pat, bypassCache: true });
 
         if (testRes.connectionStatus === 'CONNECTED' || testRes.statusCode === 200) {
+          invalidateCaches();
           nugetSources.setAzureDevOpsPat(body.pat);
           return sendJson(res, 200, {
             ok: true,
@@ -296,6 +498,29 @@ async function handleRequest(req, res) {
       }
 
       return sendJson(res, 400, { ok: false, error: 'Either pat or action is required' });
+    }
+
+    // GET /api/release-notes
+    if (method === 'GET' && pathname === '/api/release-notes') {
+      const releaseNotesLib = require('./release-notes');
+      const version = parsedUrl.query.version;
+      if (version) {
+        const notes = releaseNotesLib.getReleaseNotes(version);
+        return sendJson(res, 200, { ok: true, ...notes });
+      }
+      const list = releaseNotesLib.listReleaseNotes();
+      return sendJson(res, 200, { ok: true, releases: list });
+    }
+
+    // POST /api/release-notes
+    if (method === 'POST' && pathname === '/api/release-notes') {
+      const releaseNotesLib = require('./release-notes');
+      const body = await parseJsonBody(req);
+      if (!body.version || !body.content) {
+        return sendJson(res, 400, { ok: false, error: 'version and content are required' });
+      }
+      const saved = releaseNotesLib.saveReleaseNotes(body.version, body.content, body.metadata);
+      return sendJson(res, 200, { ok: true, ...saved });
     }
 
     // POST /api/preflight
@@ -331,6 +556,13 @@ async function handleRequest(req, res) {
       if (!body.clientPath || !body.targetVersion) {
         return sendJson(res, 400, { ok: false, error: 'clientPath and targetVersion are required' });
       }
+      if (!body.releaseNotes) {
+        try {
+          const releaseNotesLib = require('./release-notes');
+          const rn = releaseNotesLib.getReleaseNotes(body.targetVersion);
+          if (rn && rn.exists) body.releaseNotes = rn.content;
+        } catch (_) {}
+      }
       const job = controller.createJob(body);
       return sendJson(res, 201, { ok: true, job });
     }
@@ -354,7 +586,13 @@ async function handleRequest(req, res) {
         const level = parsedUrl.query.level || null;
         const search = parsedUrl.query.search || null;
         const result = controller.getJobLogs(jobId, { sinceLine, level, search });
-        return sendJson(res, 200, { ok: true, ...result });
+        const logLines = Array.isArray(result) ? Array.from(result) : (result.lines || result.logs || []);
+        return sendJson(res, 200, {
+          ok: true,
+          lines: logLines,
+          logs: logLines,
+          totalLines: result.totalLines !== undefined ? result.totalLines : logLines.length,
+        });
       }
 
       // POST /api/jobs/:id/cancel
@@ -374,7 +612,16 @@ async function handleRequest(req, res) {
         const job = controller.getJob(jobId);
         if (!job) return sendJson(res, 404, { ok: false, error: 'Job not found' });
         const diff = reviewer.getGitDiff(job.clientPath);
-        return sendJson(res, 200, { ok: true, diff });
+        return sendJson(res, 200, {
+          ok: true,
+          diff,
+          checks: (job.verification && job.verification.checks) || [],
+          review: job.review || null,
+          testDecisions: (job.verification && job.verification.testDecisions) || null,
+          testFingerprint: (job.verification && job.verification.testFingerprint) || null,
+          testLevel: (job.verification && job.verification.testLevel) || 'Targeted',
+          cacheHit: (job.verification && job.verification.cacheHit) || false,
+        });
       }
 
       // POST /api/jobs/:id/commit

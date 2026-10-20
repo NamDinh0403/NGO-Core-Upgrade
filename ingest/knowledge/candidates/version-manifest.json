@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-12T02:31:50.590Z",
+  "generatedAt": "2026-10-19T02:45:40.639Z",
   "minimumProcessedVersion": "5.0.0",
   "latestCoreVersion": "9.4.0",
   "baseline": {
@@ -141,7 +141,7 @@
       "previousVersion": "5.11.0",
       "branch": "releases/5.12",
       "previousBranch": "releases/5.11",
-      "commit": "dee64c45f54075095b5be0b4ef964d9f3702bbfb",
+      "commit": "cf212b334f56b652af2262815630ac326b9a38b0",
       "previousCommit": "f36dea1d43231e14f8e3fa68f2dd50a22a077fb6",
       "candidatePath": "ingest/knowledge/candidates/releases/5.12.0.json",
       "sourceFingerprintCurrent": true
@@ -152,7 +152,7 @@
       "branch": "releases/5.13",
       "previousBranch": "releases/5.12",
       "commit": "b9a080ec76af7877764f557d02a16ebcca3c69f8",
-      "previousCommit": "dee64c45f54075095b5be0b4ef964d9f3702bbfb",
+      "previousCommit": "cf212b334f56b652af2262815630ac326b9a38b0",
       "candidatePath": "ingest/knowledge/candidates/releases/5.13.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -201,7 +201,7 @@
       "previousVersion": "5.17.0",
       "branch": "releases/6.0",
       "previousBranch": "releases/5.17",
-      "commit": "fbeef32a5939a44a6018f6ffb917e4623044d289",
+      "commit": "b39853dca2585506072a5ea5a81eefeae75e3ec7",
       "previousCommit": "b647ebe5e839c7bfb2e657f648bba78df0155a03",
       "candidatePath": "ingest/knowledge/candidates/releases/6.0.0.json",
       "sourceFingerprintCurrent": true
@@ -211,8 +211,8 @@
       "previousVersion": "6.0.0",
       "branch": "releases/6.1",
       "previousBranch": "releases/6.0",
-      "commit": "f00c0623df9412c5fe22c2d289614b975d65aed0",
-      "previousCommit": "fbeef32a5939a44a6018f6ffb917e4623044d289",
+      "commit": "b91156eb8f8fa5ef4fd48745d3166cca86ac0f6e",
+      "previousCommit": "b39853dca2585506072a5ea5a81eefeae75e3ec7",
       "candidatePath": "ingest/knowledge/candidates/releases/6.1.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -221,8 +221,8 @@
       "previousVersion": "6.1.0",
       "branch": "releases/6.2",
       "previousBranch": "releases/6.1",
-      "commit": "042c0452263f39a931c85f06621a439781bf961a",
-      "previousCommit": "f00c0623df9412c5fe22c2d289614b975d65aed0",
+      "commit": "e59726ece5b95d1b04401ca0c5fcc1e684c6316e",
+      "previousCommit": "b91156eb8f8fa5ef4fd48745d3166cca86ac0f6e",
       "candidatePath": "ingest/knowledge/candidates/releases/6.2.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -231,8 +231,8 @@
       "previousVersion": "6.2.0",
       "branch": "releases/6.3",
       "previousBranch": "releases/6.2",
-      "commit": "e83667166030845de0d67cf6a9338d62af999ba5",
-      "previousCommit": "042c0452263f39a931c85f06621a439781bf961a",
+      "commit": "3ecef744acd65555e67893a20b239b81ac51f236",
+      "previousCommit": "e59726ece5b95d1b04401ca0c5fcc1e684c6316e",
       "candidatePath": "ingest/knowledge/candidates/releases/6.3.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -241,8 +241,8 @@
       "previousVersion": "6.3.0",
       "branch": "releases/6.4",
       "previousBranch": "releases/6.3",
-      "commit": "9c6843ea1c5d5697dc84b014f9d4192b0889f3ba",
-      "previousCommit": "e83667166030845de0d67cf6a9338d62af999ba5",
+      "commit": "76413543e0c1a012f7554af447be0221fde3a66b",
+      "previousCommit": "3ecef744acd65555e67893a20b239b81ac51f236",
       "candidatePath": "ingest/knowledge/candidates/releases/6.4.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -251,8 +251,8 @@
       "previousVersion": "6.4.0",
       "branch": "releases/6.5",
       "previousBranch": "releases/6.4",
-      "commit": "1b00855d7e2516b6389a6caa994ffca724a2c6b0",
-      "previousCommit": "9c6843ea1c5d5697dc84b014f9d4192b0889f3ba",
+      "commit": "111eb7e62effe9a2d4fe2758d7a29e5ebb93a806",
+      "previousCommit": "76413543e0c1a012f7554af447be0221fde3a66b",
       "candidatePath": "ingest/knowledge/candidates/releases/6.5.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -261,8 +261,8 @@
       "previousVersion": "6.5.0",
       "branch": "releases/6.6",
       "previousBranch": "releases/6.5",
-      "commit": "aa7aac10af2dcaef7648e6ff2948c8820962a3ca",
-      "previousCommit": "1b00855d7e2516b6389a6caa994ffca724a2c6b0",
+      "commit": "d7f98a05daecd8fd6b8c0db2afce27b49f3dce20",
+      "previousCommit": "111eb7e62effe9a2d4fe2758d7a29e5ebb93a806",
       "candidatePath": "ingest/knowledge/candidates/releases/6.6.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -272,7 +272,7 @@
       "branch": "releases/6.7",
       "previousBranch": "releases/6.6",
       "commit": "cc56ee4573c38efc9d294b6525118a260e8d21d3",
-      "previousCommit": "aa7aac10af2dcaef7648e6ff2948c8820962a3ca",
+      "previousCommit": "d7f98a05daecd8fd6b8c0db2afce27b49f3dce20",
       "candidatePath": "ingest/knowledge/candidates/releases/6.7.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -301,7 +301,7 @@
       "previousVersion": "6.9.0",
       "branch": "releases/6.10",
       "previousBranch": "releases/6.9",
-      "commit": "b3254bf4d5be543a1f352ea4dce982a975907de1",
+      "commit": "e6a362d35bffffbfa2891ad0e93454e2fd196ded",
       "previousCommit": "51b625656044a5b5b4f4c7b19b396e6bfcdd569c",
       "candidatePath": "ingest/knowledge/candidates/releases/6.10.0.json",
       "sourceFingerprintCurrent": true
@@ -312,7 +312,7 @@
       "branch": "releases/7.0",
       "previousBranch": "releases/6.10",
       "commit": "f540e799a77f64f2a5f16478e72af9c70d2c153c",
-      "previousCommit": "b3254bf4d5be543a1f352ea4dce982a975907de1",
+      "previousCommit": "e6a362d35bffffbfa2891ad0e93454e2fd196ded",
       "candidatePath": "ingest/knowledge/candidates/releases/7.0.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -361,7 +361,7 @@
       "previousVersion": "7.4.0",
       "branch": "releases/7.5",
       "previousBranch": "releases/7.4",
-      "commit": "af904ffa1e89fc3ca88270adca428f3b637bd755",
+      "commit": "45a6c9a49dbb1f796e02cbf6dbbbdf0334f00637",
       "previousCommit": "7aa2532dd725f7ede06af7c1aa92554a88721176",
       "candidatePath": "ingest/knowledge/candidates/releases/7.5.0.json",
       "sourceFingerprintCurrent": true
@@ -371,8 +371,8 @@
       "previousVersion": "7.5.0",
       "branch": "releases/7.6",
       "previousBranch": "releases/7.5",
-      "commit": "7331caab7ea033eaa87b5c71ef84866a4d5d9bd6",
-      "previousCommit": "af904ffa1e89fc3ca88270adca428f3b637bd755",
+      "commit": "22912f71339c89d5dbebd22fa57ab43be78f7f48",
+      "previousCommit": "45a6c9a49dbb1f796e02cbf6dbbbdf0334f00637",
       "candidatePath": "ingest/knowledge/candidates/releases/7.6.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -381,8 +381,8 @@
       "previousVersion": "7.6.0",
       "branch": "releases/7.7",
       "previousBranch": "releases/7.6",
-      "commit": "76d9b44717a6078aeb7f4ea953d7f1f9d8080777",
-      "previousCommit": "7331caab7ea033eaa87b5c71ef84866a4d5d9bd6",
+      "commit": "ecefeedb25578a53d6d007771955754b8358d36c",
+      "previousCommit": "22912f71339c89d5dbebd22fa57ab43be78f7f48",
       "candidatePath": "ingest/knowledge/candidates/releases/7.7.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -391,8 +391,8 @@
       "previousVersion": "7.7.0",
       "branch": "releases/7.8",
       "previousBranch": "releases/7.7",
-      "commit": "d30bda9ef2e1e72b75aa9a49e287afc252add8d9",
-      "previousCommit": "76d9b44717a6078aeb7f4ea953d7f1f9d8080777",
+      "commit": "5cc9231dda175ab2367e1647353c5fd342ffe4ef",
+      "previousCommit": "ecefeedb25578a53d6d007771955754b8358d36c",
       "candidatePath": "ingest/knowledge/candidates/releases/7.8.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -402,7 +402,7 @@
       "branch": "releases/8.0",
       "previousBranch": "releases/7.8",
       "commit": "f07f7984f76f3e78791a827fc5d622a703e19b5e",
-      "previousCommit": "d30bda9ef2e1e72b75aa9a49e287afc252add8d9",
+      "previousCommit": "5cc9231dda175ab2367e1647353c5fd342ffe4ef",
       "candidatePath": "ingest/knowledge/candidates/releases/8.0.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -421,7 +421,7 @@
       "previousVersion": "8.1.0",
       "branch": "releases/8.2",
       "previousBranch": "releases/8.1",
-      "commit": "a96e93f81a4ffae93242efcc15ed1ee11180cf5a",
+      "commit": "63e94d1a01e5780aae564a09ac19efb207f1ea11",
       "previousCommit": "4097bb24fec748719d388633eb7851fbe10a6d5f",
       "candidatePath": "ingest/knowledge/candidates/releases/8.2.0.json",
       "sourceFingerprintCurrent": true
@@ -431,8 +431,8 @@
       "previousVersion": "8.2.0",
       "branch": "releases/8.3",
       "previousBranch": "releases/8.2",
-      "commit": "0ee1d076d853c7a4e932accf93159ef1e05e7cf2",
-      "previousCommit": "a96e93f81a4ffae93242efcc15ed1ee11180cf5a",
+      "commit": "b3e617aafd4428cfd3e4c58fbc12453cc405b2af",
+      "previousCommit": "63e94d1a01e5780aae564a09ac19efb207f1ea11",
       "candidatePath": "ingest/knowledge/candidates/releases/8.3.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -441,8 +441,8 @@
       "previousVersion": "8.3.0",
       "branch": "releases/8.4",
       "previousBranch": "releases/8.3",
-      "commit": "0921ca2bed8157ecb72599af0944f17ebaaa76d5",
-      "previousCommit": "0ee1d076d853c7a4e932accf93159ef1e05e7cf2",
+      "commit": "5a63b25f73dcfc4457fd4d8edd5440b871c6a19b",
+      "previousCommit": "b3e617aafd4428cfd3e4c58fbc12453cc405b2af",
       "candidatePath": "ingest/knowledge/candidates/releases/8.4.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -451,8 +451,8 @@
       "previousVersion": "8.4.0",
       "branch": "releases/8.5",
       "previousBranch": "releases/8.4",
-      "commit": "ca63b586c195eaf3cde919838595578cf4ea505b",
-      "previousCommit": "0921ca2bed8157ecb72599af0944f17ebaaa76d5",
+      "commit": "e1d632a9e680c71cc07fa1f8cac9e1b288fd6fc1",
+      "previousCommit": "5a63b25f73dcfc4457fd4d8edd5440b871c6a19b",
       "candidatePath": "ingest/knowledge/candidates/releases/8.5.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -461,8 +461,8 @@
       "previousVersion": "8.5.0",
       "branch": "releases/8.6",
       "previousBranch": "releases/8.5",
-      "commit": "1ba0d99f046f0650ff3210cdfe865d87b47c6bc9",
-      "previousCommit": "ca63b586c195eaf3cde919838595578cf4ea505b",
+      "commit": "2fb8529a47f071974cbe3a36acf3b94ec9ac91f5",
+      "previousCommit": "e1d632a9e680c71cc07fa1f8cac9e1b288fd6fc1",
       "candidatePath": "ingest/knowledge/candidates/releases/8.6.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -472,7 +472,7 @@
       "branch": "releases/8.7",
       "previousBranch": "releases/8.6",
       "commit": "47302270ed1d95d9165087657f4667429f07a0d6",
-      "previousCommit": "1ba0d99f046f0650ff3210cdfe865d87b47c6bc9",
+      "previousCommit": "2fb8529a47f071974cbe3a36acf3b94ec9ac91f5",
       "candidatePath": "ingest/knowledge/candidates/releases/8.7.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -501,7 +501,7 @@
       "previousVersion": "8.9.0",
       "branch": "releases/9.0",
       "previousBranch": "releases/8.9",
-      "commit": "0a16a7612d6f64d4c7cdd692fac1c3d8f209d43e",
+      "commit": "a2b58fb65bec64f293993d10848ac838e779718c",
       "previousCommit": "06f3161c61251420eee8f9fc027e6906b8053ace",
       "candidatePath": "ingest/knowledge/candidates/releases/9.0.0.json",
       "sourceFingerprintCurrent": true
@@ -511,8 +511,8 @@
       "previousVersion": "9.0.0",
       "branch": "releases/9.1",
       "previousBranch": "releases/9.0",
-      "commit": "dc570a2806b4e7feeaac9ae83d1e98a56071518b",
-      "previousCommit": "0a16a7612d6f64d4c7cdd692fac1c3d8f209d43e",
+      "commit": "e374b7cff463ddebcda9e308de472632a02a9112",
+      "previousCommit": "a2b58fb65bec64f293993d10848ac838e779718c",
       "candidatePath": "ingest/knowledge/candidates/releases/9.1.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -521,8 +521,8 @@
       "previousVersion": "9.1.0",
       "branch": "releases/9.2",
       "previousBranch": "releases/9.1",
-      "commit": "d4b53d2737d62fa108643483636679cfd1c4e2b2",
-      "previousCommit": "dc570a2806b4e7feeaac9ae83d1e98a56071518b",
+      "commit": "742edc15bd0428bc63f2a917c8eaa546a3f0bc68",
+      "previousCommit": "e374b7cff463ddebcda9e308de472632a02a9112",
       "candidatePath": "ingest/knowledge/candidates/releases/9.2.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -531,8 +531,8 @@
       "previousVersion": "9.2.0",
       "branch": "releases/9.3",
       "previousBranch": "releases/9.2",
-      "commit": "6ba321df62749dc6847155e2badff436f3096fb7",
-      "previousCommit": "d4b53d2737d62fa108643483636679cfd1c4e2b2",
+      "commit": "ea3a750ddf16b68ee0284d355caf5fe4e022a9ea",
+      "previousCommit": "742edc15bd0428bc63f2a917c8eaa546a3f0bc68",
       "candidatePath": "ingest/knowledge/candidates/releases/9.3.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -541,8 +541,8 @@
       "previousVersion": "9.3.0",
       "branch": "releases/9.4",
       "previousBranch": "releases/9.3",
-      "commit": "0407beec7774628e60ec75a8de51ace8c5acecf7",
-      "previousCommit": "6ba321df62749dc6847155e2badff436f3096fb7",
+      "commit": "36351d43ae707fe4054349b8e666c4d7a7ba8217",
+      "previousCommit": "ea3a750ddf16b68ee0284d355caf5fe4e022a9ea",
       "candidatePath": "ingest/knowledge/candidates/releases/9.4.0.json",
       "sourceFingerprintCurrent": true
     }

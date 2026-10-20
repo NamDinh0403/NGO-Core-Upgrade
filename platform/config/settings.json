@@ -1,11 +1,10 @@
 {
   "approvedWorkspaceRoots": [
-    "C:\\Users\\naph\\AppData\\Local\\Temp\\platform-test-zZfY8x"
+    "D:\\NGO Client"
   ],
-  "corePath": "C:\\Users\\naph\\AppData\\Local\\Temp\\platform-test-zZfY8x\\ngo-online-core",
+  "corePath": "D:\\NGO Client\\ngo-online-core",
   "copilotCliPath": null,
-  "copilotModel": "gpt-4o",
-  "azureDevOpsPat": null,
+  "copilotModel": "auto",
   "defaultUpgradeMode": "AUTO",
   "executionTimeoutMs": 180000,
   "concurrencyLimit": 2,

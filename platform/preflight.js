@@ -20,46 +20,19 @@ const DEFAULT_CORE_DIR = path.join(DEFAULT_CLIENTS_DIR, 'ngo-online-core');
 
 const UPGRADE_TARGET_FILE_PATTERN = /(\.csproj|\.sln|package\.json|package-lock\.json|appsettings.*\.json|packages\.config|Directory\.Build\.props)$/i;
 
+const discovery = require('./discovery');
+
 /**
  * Scan a directory for candidate NGO Client repositories.
  */
 function discoverProjects(searchDir) {
   const dir = searchDir || DEFAULT_CLIENTS_DIR;
-  const projects = [];
-
-  if (!fs.existsSync(dir)) return projects;
-
   try {
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      if (entry.name === 'NGO Core Upgrade' || entry.name.endsWith('.worktrees')) continue;
-
-      const fullPath = path.join(dir, entry.name);
-      const isClient =
-        entry.name.startsWith('ngo-online-') ||
-        fs.existsSync(path.join(fullPath, 'ngo-api')) ||
-        fs.existsSync(path.join(fullPath, 'ngo-client')) ||
-        fs.existsSync(path.join(fullPath, 'package.json'));
-
-      if (isClient) {
-        const detected = detectCurrentVersion(fullPath);
-        projects.push({
-          id: entry.name,
-          name: entry.name.replace(/^ngo-online-/, '').replace(/-/g, ' ').toUpperCase(),
-          path: fullPath,
-          hasBackend: fs.existsSync(path.join(fullPath, 'ngo-api')) || detected.backendPath !== null,
-          hasFrontend: fs.existsSync(path.join(fullPath, 'ngo-client')) || detected.frontendPath !== null,
-          currentVersion: detected.version || 'Unknown',
-          backendVersion: detected.backendVersion,
-          frontendVersion: detected.frontendVersion,
-          hasVersionMismatch: detected.hasVersionMismatch,
-        });
-      }
-    }
-  } catch (_) {}
-
-  return projects;
+    const res = discovery.discoverWorkspaceProjects({ roots: [dir], refresh: true });
+    return res.projects;
+  } catch (_) {
+    return [];
+  }
 }
 
 /**
@@ -70,6 +43,7 @@ function detectCurrentVersion(clientPath) {
   let frontendVersion = null;
   let backendPath = null;
   let frontendPath = null;
+  let backendTargetFramework = null;
 
   // 1. Inspect Backend (.csproj or packages.config)
   const apiDir = path.join(clientPath, 'ngo-api');
@@ -87,6 +61,10 @@ function detectCurrentVersion(clientPath) {
           const m = content.match(/<PackageReference\s+Include=["']NGO\.Core(?:\.[^"']+)?["']\s+Version=["']([^"']+)["']/i) ||
                     content.match(/<PackageReference\s+Version=["']([^"']+)["']\s+Include=["']NGO\.Core/i);
           if (m && !backendVersion) backendVersion = m[1];
+
+          const tfm = content.match(/<TargetFramework>([^<]+)<\/TargetFramework>/i) ||
+                      content.match(/<TargetFrameworks>([^<]+)<\/TargetFrameworks>/i);
+          if (tfm && !backendTargetFramework) backendTargetFramework = tfm[1].trim().toLowerCase();
         }
       }
     };
@@ -118,10 +96,66 @@ function detectCurrentVersion(clientPath) {
     version: primaryVersion,
     backendVersion,
     frontendVersion,
+    backendTargetFramework,
     backendPath,
     frontendPath,
     hasVersionMismatch,
   };
+}
+
+/**
+ * Detect required .NET TargetFramework for a target NGO.Core version.
+ */
+function detectRequiredTargetFramework(corePath, targetVersion) {
+  // 1. Check local nuget cache
+  const homeDir = process.env.USERPROFILE || process.env.HOME || '';
+  if (homeDir && targetVersion) {
+    const candidateDirs = [
+      path.join(homeDir, '.nuget', 'packages', 'ngo.core.model', targetVersion, 'lib'),
+      path.join(homeDir, '.nuget', 'packages', 'ngo.core', targetVersion, 'lib'),
+    ];
+    for (const cDir of candidateDirs) {
+      try {
+        if (fs.existsSync(cDir)) {
+          const entries = fs.readdirSync(cDir);
+          for (const e of entries) {
+            if (/^net\d+\.\d+$/i.test(e)) return e.toLowerCase();
+          }
+        }
+      } catch (_) {}
+    }
+  }
+
+  // 2. Check Core repository csproj files
+  const cPath = corePath || DEFAULT_CORE_DIR;
+  if (fs.existsSync(cPath)) {
+    try {
+      const scanTfm = (dir) => {
+        for (const f of fs.readdirSync(dir, { withFileTypes: true })) {
+          const full = path.join(dir, f.name);
+          if (f.isDirectory() && !['bin', 'obj', '.vs', 'node_modules'].includes(f.name)) {
+            const found = scanTfm(full);
+            if (found) return found;
+          } else if (f.name.endsWith('.csproj') && f.name.includes('NGO.Core.Model')) {
+            const txt = fs.readFileSync(full, 'utf8');
+            const m = txt.match(/<TargetFramework>([^<]+)<\/TargetFramework>/i);
+            if (m) return m[1].trim().toLowerCase();
+          }
+        }
+        return null;
+      };
+      const found = scanTfm(path.join(cPath, 'ngo-api-core'));
+      if (found) return found;
+    } catch (_) {}
+  }
+
+  // 3. Known authoritative mapping rule for NGO.Core
+  const major = parseInt(String(targetVersion || '').split('.')[0], 10);
+  if (major >= 9) return 'net10.0';
+  if (major >= 7) return 'net9.0';
+  if (major >= 5) return 'net8.0';
+
+  return 'net8.0';
 }
 
 /**
@@ -459,7 +493,7 @@ function runPreflight(options) {
   // -------------------------------------------------------------------------
   // CHECK 1: Target Version Semver Format
   // -------------------------------------------------------------------------
-  const normTarget = resolver.normalizeVersion(targetVersion);
+  const normTarget = resolver.resolveLatestBranchVersion(targetVersion, cPath, options) || resolver.normalizeVersion(targetVersion);
   if (!normTarget) {
     addCheck({
       id: 'CHK-SEMVER-FORMAT',
@@ -642,11 +676,15 @@ function runPreflight(options) {
         remediation = 'Verify internet connection, proxy settings, and package registry availability.';
       }
 
+      const isSourceAvailable = Boolean(resolution.sources?.source?.sourceRevisionAvailable);
+      const checkStatus = isSourceAvailable ? 'WARNING' : 'BLOCKED';
+      const checkSeverity = isSourceAvailable ? 'WARNING' : 'CRITICAL';
+
       addCheck({
         id: 'CHK-PACKAGE-AVAILABILITY',
         name: 'Target Package Publication Verification',
-        status: 'BLOCKED',
-        severity: 'CRITICAL',
+        status: checkStatus,
+        severity: checkSeverity,
         durationMs: resolutionDuration,
         sourceOrCommand: `discoverPackageEvidence('${normTarget}')`,
         sanitizedOutput: pkg.reason || 'Package binary not found in NuGet cache, npm, or artifacts',
@@ -797,8 +835,44 @@ function runPreflight(options) {
   // -------------------------------------------------------------------------
   // Compute Evidence Completeness & Traceable Plan
   // -------------------------------------------------------------------------
-  const completeness = calculateEvidenceCompleteness(resolution, workingTree);
   const selectedTracks = tracks || ['backend', 'frontend'];
+  const requiredTargetFramework = detectRequiredTargetFramework(cPath, normTarget);
+  const currentTargetFramework = (detected && detected.backendTargetFramework) ? detected.backendTargetFramework : 'net8.0';
+  const requiresFrameworkUpgrade = Boolean(
+    requiredTargetFramework &&
+    currentTargetFramework &&
+    requiredTargetFramework.toLowerCase() !== currentTargetFramework.toLowerCase()
+  );
+
+  if (requiresFrameworkUpgrade && selectedTracks.includes('backend')) {
+    addCheck({
+      id: 'CHK-TARGET-FRAMEWORK-COMPATIBILITY',
+      name: '.NET TargetFramework Compatibility Check',
+      status: 'PASS',
+      severity: 'INFO',
+      durationMs: 1,
+      sourceOrCommand: `detectRequiredTargetFramework('${normTarget}')`,
+      sanitizedOutput: `Requires ${requiredTargetFramework} (client currently targets ${currentTargetFramework})`,
+      evidenceReferences: `${normTarget} -> ${requiredTargetFramework}`,
+      failureReason: null,
+      remediation: null,
+      fromCache: false,
+      freshness: new Date().toISOString(),
+      details: `Target Core ${normTarget} requires ${requiredTargetFramework} (client currently targets ${currentTargetFramework}). Framework will be updated during implementation.`,
+    });
+  }
+
+  // Load team release notes if present
+  let teamReleaseNotes = null;
+  try {
+    const releaseNotesLib = require('./release-notes');
+    const notesData = releaseNotesLib.getReleaseNotes(normTarget);
+    if (notesData && notesData.exists) {
+      teamReleaseNotes = notesData.content;
+    }
+  } catch (_) {}
+
+  const completeness = calculateEvidenceCompleteness(resolution, workingTree);
   const tasks = generateTraceablePlan(detected, normTarget, resolution, selectedTracks);
 
   const canProceed = blockers.length === 0;
@@ -826,6 +900,10 @@ function runPreflight(options) {
     clientPath,
     currentVersion,
     targetVersion: normTarget,
+    targetFramework: requiredTargetFramework,
+    currentFramework: currentTargetFramework,
+    requiresFrameworkUpgrade,
+    releaseNotes: teamReleaseNotes,
     tracks: selectedTracks,
     resolution,
     isClean: workingTree.isClean,
@@ -922,6 +1000,8 @@ module.exports = {
   parseGitWorkingTreeStatus,
   calculateEvidenceCompleteness,
   classifyUpgradeMode,
+  cmpVer: resolver.cmpVer,
+  normalizeVersion: resolver.normalizeVersion,
   DEFAULT_CLIENTS_DIR,
   DEFAULT_CORE_DIR,
 };

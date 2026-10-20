@@ -12,3 +12,9 @@ npm-debug.log*
 # OS / editor junk
 .DS_Store
 Thumbs.db
+
+# Secrets & Credentials (never commit credentials, PAT tokens, or API keys)
+.credentials.json
+platform/config/.credentials.json
+*.pat
+*.token

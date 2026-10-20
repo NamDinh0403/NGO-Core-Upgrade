@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ngo-core-upgrade": {
+      "command": "node",
+      "args": ["platform/mcp-server.js"]
+    }
+  }
+}

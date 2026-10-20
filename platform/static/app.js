@@ -65,6 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const upgradeModeBadge = document.getElementById('upgrade-mode-badge');
   const upgradeModeDesc = document.getElementById('upgrade-mode-desc');
   const step1AuthDetails = document.getElementById('step1-auth-details');
+  const step1AuthBanner = document.getElementById('step1-auth-banner');
+  const step1AuthBadge = document.getElementById('step1-auth-badge');
+  const step1FeedUrl = document.getElementById('step1-feed-url');
+  const step1FeedScope = document.getElementById('step1-feed-scope');
+  const step1AccountIdentity = document.getElementById('step1-account-identity');
+  const step1CredProvider = document.getElementById('step1-cred-provider');
+  const step1CredStatus = document.getElementById('step1-cred-status');
+  const step1AuthAlert = document.getElementById('step1-auth-alert');
+  const step1AuthTestedTime = document.getElementById('step1-auth-tested-time');
+  const btnTestAuthStep1 = document.getElementById('btn-test-auth-step1');
+  const btnConnectAzureStep1 = document.getElementById('btn-connect-azure-step1');
+  const btnRefreshAuthStep1 = document.getElementById('btn-refresh-auth-step1');
   const btnOpenNugetAuthStep1 = document.getElementById('btn-open-nuget-auth-step1');
   const btnPreflight = document.getElementById('btn-preflight');
 
@@ -212,6 +224,70 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsNugetFeedback = document.getElementById('settings-nuget-feedback');
   const settingDefaultUpgradeMode = document.getElementById('setting-default-upgrade-mode');
 
+  // Admin Console Tab Navigation & Header Quick Strip
+  const adminTabBtns = document.querySelectorAll('.admin-tab-btn');
+  const adminTabPanes = document.querySelectorAll('.admin-tab-pane');
+  const btnAdminRefreshAll = document.getElementById('btn-admin-refresh-all');
+  const qpDotWorkspace = document.getElementById('qp-dot-workspace');
+  const qpValWorkspace = document.getElementById('qp-val-workspace');
+  const qpDotProjects = document.getElementById('qp-dot-projects');
+  const qpValProjects = document.getElementById('qp-val-projects');
+  const qpDotCopilot = document.getElementById('qp-dot-copilot');
+  const qpValCopilot = document.getElementById('qp-val-copilot');
+  const qpDotNuget = document.getElementById('qp-dot-nuget');
+  const qpValNuget = document.getElementById('qp-val-nuget');
+  const qpDotTools = document.getElementById('qp-dot-tools');
+  const qpValTools = document.getElementById('qp-val-tools');
+
+  // Workspace Discovery & Boundaries elements
+  const inputAddRoot = document.getElementById('input-add-root');
+  const btnValidateAddRoot = document.getElementById('btn-validate-add-root');
+  const addRootFeedback = document.getElementById('add-root-feedback');
+  const corePathStatusBadge = document.getElementById('core-path-status-badge');
+  const discoveryStatusBadge = document.getElementById('discovery-status-badge');
+  const discoverySummaryText = document.getElementById('discovery-summary-text');
+  const discoveryLastScanned = document.getElementById('discovery-last-scanned');
+  const btnRescanDiscovery = document.getElementById('btn-rescan-discovery');
+  const discoverySearchInput = document.getElementById('discovery-search-input');
+  const discoveryStatusFilter = document.getElementById('discovery-status-filter');
+  const discoveryProjectsTbody = document.getElementById('discovery-projects-tbody');
+  const btnToggleSkipped = document.getElementById('btn-toggle-skipped');
+  const skippedFoldersTitle = document.getElementById('skipped-folders-title');
+  const discoverySkippedContainer = document.getElementById('discovery-skipped-container');
+  const discoverySkippedTbody = document.getElementById('discovery-skipped-tbody');
+  const btnToggleAdvancedPath = document.getElementById('btn-toggle-advanced-path');
+  const advancedPathContainer = document.getElementById('advanced-path-container');
+  const inputAdvancedClientPath = document.getElementById('input-advanced-client-path');
+  const btnTestAdvancedPath = document.getElementById('btn-test-advanced-path');
+  const advancedPathFeedback = document.getElementById('advanced-path-feedback');
+
+  // Copilot CLI Console elements
+  const heroStatusCircle = document.getElementById('hero-status-circle');
+  const diagHeroStatusPill = document.getElementById('diag-hero-status-pill');
+  const btnToggleSimulation = document.getElementById('btn-toggle-simulation');
+  const diagCliAuthStatus = document.getElementById('diag-cli-auth-status');
+  const settingSimulationMode = document.getElementById('setting-simulation-mode');
+
+  // Azure DevOps Matrix elements
+  const btnRefreshNugetMatrix = document.getElementById('btn-refresh-nuget-matrix');
+  const authFacetsContainer = document.getElementById('auth-facets-container');
+  const patStatusIndicator = document.getElementById('pat-status-indicator');
+
+  // Toolchain Environment elements
+  const envSysPlatform = document.getElementById('env-sys-platform');
+  const envSysArch = document.getElementById('env-sys-arch');
+  const envSysNode = document.getElementById('env-sys-node');
+  const envSysMemory = document.getElementById('env-sys-memory');
+  const envSysFreemem = document.getElementById('env-sys-freemem');
+  const envSysUptime = document.getElementById('env-sys-uptime');
+  const btnRefreshToolchain = document.getElementById('btn-refresh-toolchain');
+
+  // Execution & Verification elements
+  const settingVerifyBuild = document.getElementById('setting-verify-build');
+  const settingVerifyTests = document.getElementById('setting-verify-tests');
+  const settingVerifyApi = document.getElementById('setting-verify-api');
+  const btnSaveSettingsBottom = document.getElementById('btn-save-settings-bottom');
+
   // State variables
   let projects = [];
   let availableVersions = [];
@@ -266,17 +342,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (viewId === 'dashboard') {
       loadSystemSummary();
       loadJobsList();
+      loadProjects(true);
+    } else if (viewId === 'new-upgrade') {
+      loadProjects();
+      loadAvailableVersions();
+      loadAccountIdentity();
     } else if (viewId === 'usage-analytics') {
       loadAnalytics();
     } else if (viewId === 'settings-diagnostics') {
+      loadWorkspaceDiscovery();
       loadDiagnostics();
       loadSettings();
-      loadAccountIdentity();
+      loadNuGetAuthStatus();
       loadNuGetSources();
     } else if (viewId === 'results-review' && activeJobId) {
       loadResultsAndDiff(activeJobId);
     }
   }
+  window.switchView = switchView;
 
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
@@ -326,16 +409,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update wizard steps header
     wizardSteps.forEach(btn => {
       const step = parseInt(btn.getAttribute('data-step'), 10);
+      const stepNumEl = btn.querySelector('.wizard-step-num');
       btn.classList.remove('active');
       if (step === stepNum) {
         btn.classList.add('active');
       }
-      if (step < stepNum && preflightResult) {
+      if (step < stepNum) {
         btn.classList.add('completed');
+        if (stepNumEl) stepNumEl.textContent = '✓';
       } else {
         btn.classList.remove('completed');
+        if (stepNumEl) stepNumEl.textContent = String(step);
       }
     });
+
+    // Update wizard step connectors
+    for (let c = 1; c <= 3; c++) {
+      const connEl = document.getElementById(`wizard-conn-${c}`);
+      if (connEl) {
+        if (stepNum > c) {
+          connEl.classList.add('completed');
+        } else {
+          connEl.classList.remove('completed');
+        }
+      }
+    }
 
     // Toggle panes
     wizardPanes.forEach(pane => {
@@ -416,11 +514,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  async function loadProjects() {
+  async function loadProjects(preserveSelection = true) {
+    const prevSelected = (preserveSelection && projectSelect) ? projectSelect.value : null;
     try {
-      const res = await fetch('/api/projects');
-      const data = await res.json();
+      projectSelect.innerHTML = '<option value="">Loading client workspaces...</option>';
+      const data = await safeFetchJson('/api/projects', {}, 25000);
+      if (data && data.ok === false) {
+        projectSelect.innerHTML = `<option value="">Failed to load workspaces: ${escapeHtml(data.error || 'Network error')}</option>`;
+        return;
+      }
       projects = data.projects || [];
+
+      if (!projects.length) {
+        projectSelect.innerHTML = '<option value="">No approved client workspaces found</option>';
+        return;
+      }
 
       projectSelect.innerHTML = '<option value="">-- Choose an Approved Client Project --</option>';
       for (const p of projects) {
@@ -429,17 +537,167 @@ document.addEventListener('DOMContentLoaded', () => {
         opt.textContent = `${p.id} (Current: v${p.currentVersion})`;
         projectSelect.appendChild(opt);
       }
-    } catch (_) {
-      projectSelect.innerHTML = '<option value="">Failed to load client projects</option>';
+      if (prevSelected && projects.some(p => p.id === prevSelected)) {
+        projectSelect.value = prevSelected;
+        selectedProject = projects.find(p => p.id === prevSelected) || null;
+      }
+      renderDashboardProjects();
+    } catch (err) {
+      projectSelect.innerHTML = `<option value="">Failed to load client projects: ${escapeHtml(err.message)}</option>`;
+      renderDashboardProjects();
     }
   }
 
-  async function loadAvailableVersions() {
+  const dashProjectsTbody = document.getElementById('dashboard-projects-tbody');
+  const dashProjectSearch = document.getElementById('dashboard-project-search');
+  const btnRefreshDashProjects = document.getElementById('btn-refresh-dash-projects');
+
+  function renderDashboardProjects() {
+    if (!dashProjectsTbody) return;
+    const filter = (dashProjectSearch && dashProjectSearch.value.trim().toLowerCase()) || '';
+    const filtered = projects.filter(p => {
+      if (!filter) return true;
+      return (p.id && p.id.toLowerCase().includes(filter)) ||
+             (p.path && p.path.toLowerCase().includes(filter)) ||
+             (p.currentVersion && p.currentVersion.toLowerCase().includes(filter));
+    });
+
+    if (!filtered.length) {
+      dashProjectsTbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">${projects.length ? 'No client projects match filter.' : 'No approved client workspaces found.'}</td></tr>`;
+      return;
+    }
+
+    dashProjectsTbody.innerHTML = filtered.map(p => `
+      <tr>
+        <td>
+          <strong>${escapeHtml(p.id)}</strong>
+        </td>
+        <td>
+          <span class="badge badge-secondary font-mono">v${escapeHtml(p.currentVersion)}</span>
+        </td>
+        <td>
+          <code class="text-xs text-muted" title="${escapeHtml(p.path)}">${escapeHtml(p.path)}</code>
+        </td>
+        <td class="text-right">
+          <button type="button" class="btn btn-primary btn-xs" onclick="window.startUpgradeForProject('${escapeHtml(p.id)}')">
+            Upgrade &rarr;
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function resetUpgradeLiveUI() {
+    rawLogLines = [];
+    terminalOutput.textContent = '';
+    currentLogLevelFilter = 'ALL';
+    currentLogSearch = '';
+    if (logSearchInput) logSearchInput.value = '';
+    pillFilters.forEach(p => p.classList.remove('active'));
+    const allPill = document.querySelector('.pill-filter[data-level="ALL"]');
+    if (allPill) allPill.classList.add('active');
+
+    if (checksTableBody) {
+      checksTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Awaiting verification execution...</td></tr>';
+    }
+    if (verificationSummaryBadge) {
+      verificationSummaryBadge.textContent = 'Awaiting Execution';
+      verificationSummaryBadge.className = 'badge badge-secondary';
+    }
+    if (copilotReviewText) copilotReviewText.textContent = 'Review pending completion of verification.';
+    if (reviewRisksBox) reviewRisksBox.style.display = 'none';
+    if (diffOutput) diffOutput.innerHTML = '<div class="p-3 text-muted">Awaiting execution...</div>';
+    if (diffStatsLabel) diffStatsLabel.textContent = '0 files modified (0+, 0-)';
+    if (activeJobIndicator) activeJobIndicator.style.display = 'inline-block';
+  }
+
+  window.startUpgradeForProject = async function(projectId) {
+    const proj = (allProjects || []).find(p => p.id === projectId);
+    if (!proj) {
+      switchView('new-upgrade');
+      return;
+    }
+
+    selectedProject = proj;
+    if (projectSelect) projectSelect.value = projectId;
+
+    // Pick target version: either currently chosen or latest available version
+    let targetVer = targetVersionSelect ? targetVersionSelect.value : null;
+    if (!targetVer && targetVersionSelect && targetVersionSelect.options.length > 1) {
+      for (let i = 1; i < targetVersionSelect.options.length; i++) {
+        const val = targetVersionSelect.options[i].value;
+        if (val && !val.includes('Failed') && !val.includes('Loading')) {
+          targetVer = val;
+          targetVersionSelect.value = val;
+          break;
+        }
+      }
+    }
+    if (!targetVer && Array.isArray(allVersions) && allVersions.length > 0) {
+      targetVer = allVersions[0].version || allVersions[0];
+    }
+    if (!targetVer) {
+      switchView('new-upgrade');
+      goToWizardStep(1);
+      return;
+    }
+
+    // Reset all previous logs and monitor state every upgrade
+    resetUpgradeLiveUI();
+    switchView('live-execution');
+
     try {
-      const res = await fetch('/api/versions');
+      const res = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientPath: proj.path,
+          targetVersion: targetVer,
+          tracks: ['backend', 'frontend'],
+          copilotModel: getSelectedCopilotModel(),
+          upgradeMode: upgradeModeSelect ? upgradeModeSelect.value : 'AUTO',
+          simulateCopilot: simulateCopilot ? simulateCopilot.checked : false,
+          releaseNotes: (document.getElementById('step1-release-notes-text')?.value || '').trim() || undefined,
+        })
+      });
+
       const data = await res.json();
+      if (data.ok && data.job) {
+        activeJobId = data.job.id;
+        startJobPolling(activeJobId);
+      } else {
+        alert('Failed to start upgrade: ' + (data.error || 'Unknown error'));
+        switchView('dashboard');
+      }
+    } catch (err) {
+      alert('Error launching upgrade: ' + err.message);
+      switchView('dashboard');
+    }
+  };
+
+  if (dashProjectSearch) {
+    dashProjectSearch.addEventListener('input', renderDashboardProjects);
+  }
+  if (btnRefreshDashProjects) {
+    btnRefreshDashProjects.addEventListener('click', () => loadProjects(true));
+  }
+
+  async function loadAvailableVersions(forceRefresh = false, preserveSelection = true) {
+    const prevSelected = (preserveSelection && targetVersionSelect) ? targetVersionSelect.value : null;
+    try {
+      targetVersionSelect.innerHTML = '<option value="">Loading versions from Azure Artifacts & Core...</option>';
+      const url = forceRefresh ? '/api/versions?refresh=true' : '/api/versions';
+      const data = await safeFetchJson(url, {}, 25000);
+      if (data && data.ok === false) {
+        targetVersionSelect.innerHTML = `<option value="">Failed to load versions: ${escapeHtml(data.error || 'Network error')}</option>`;
+        return;
+      }
       availableVersions = data.versions || [];
 
+      if (!availableVersions.length) {
+        targetVersionSelect.innerHTML = '<option value="">No versions available</option>';
+        return;
+      }
       targetVersionSelect.innerHTML = '<option value="">-- Select Target NGO Core Version --</option>';
       for (const v of availableVersions) {
         const opt = document.createElement('option');
@@ -447,19 +705,22 @@ document.addEventListener('DOMContentLoaded', () => {
         opt.textContent = `NGO Core v${v}`;
         targetVersionSelect.appendChild(opt);
       }
-    } catch (_) {
-      targetVersionSelect.innerHTML = '<option value="">Failed to load Core versions</option>';
+      if (prevSelected && availableVersions.includes(prevSelected)) {
+        targetVersionSelect.value = prevSelected;
+      }
+    } catch (err) {
+      targetVersionSelect.innerHTML = `<option value="">Failed to load Core versions: ${escapeHtml(err.message)}</option>`;
     }
   }
 
   let copilotModelsList = [];
 
   function getSelectedCopilotModel() {
-    if (!copilotModelSelect) return 'gpt-4o';
+    if (!copilotModelSelect) return 'auto';
     if (copilotModelSelect.value === 'custom') {
-      return (customCopilotModel && customCopilotModel.value.trim()) || 'gpt-4o';
+      return (customCopilotModel && customCopilotModel.value.trim()) || 'auto';
     }
-    return copilotModelSelect.value || 'gpt-4o';
+    return copilotModelSelect.value || 'auto';
   }
 
   async function loadCopilotModels() {
@@ -473,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!selectEl) return;
           const currentVal = selectEl.value || defaultVal;
           selectEl.innerHTML = data.models.map(m =>
-            `<option value="${escapeHtml(m.id)}">${escapeHtml(m.name)} &bull; ${escapeHtml(m.description)}</option>`
+            `<option value="${escapeHtml(m.id)}">${escapeHtml(m.name)}</option>`
           ).join('') + '<option value="custom">Custom Model ID...</option>';
 
           const hasCurrent = data.models.some(m => m.id === currentVal);
@@ -482,7 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else if (currentVal === 'custom') {
             selectEl.value = 'custom';
           } else {
-            selectEl.value = defaultVal || 'gpt-4o';
+            selectEl.value = defaultVal || 'auto';
           }
         };
 
@@ -494,15 +755,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateModelDescription() {
-    if (!copilotModelSelect || !copilotModelDesc) return;
+    if (!copilotModelSelect) return;
     const val = copilotModelSelect.value;
     if (val === 'custom') {
       if (customModelContainer) customModelContainer.style.display = 'block';
-      copilotModelDesc.textContent = 'Enter any model identifier supported by your GitHub Copilot subscription or CLI wrapper.';
+      if (copilotModelDesc) copilotModelDesc.textContent = 'Enter any model identifier supported by your GitHub Copilot subscription or CLI wrapper.';
     } else {
       if (customModelContainer) customModelContainer.style.display = 'none';
       const m = copilotModelsList.find(x => x.id === val);
-      copilotModelDesc.textContent = m ? m.description : 'Used for semantic code analysis, configuration adjustments, and automated repair.';
+      if (copilotModelDesc) copilotModelDesc.textContent = m ? m.description : 'Used for semantic code analysis, configuration adjustments, and automated repair.';
     }
   }
 
@@ -523,26 +784,68 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------------------------------------------------------------------
   let activeIdentity = null;
 
-  async function safeFetchJson(url, options = {}) {
-    const res = await fetch(url, options);
-    const contentType = res.headers.get('content-type') || '';
-    if (contentType.includes('application/json')) {
-      return await res.json();
-    }
-    const text = await res.text();
-    if (!res.ok) {
-      return { ok: false, error: `Server returned HTTP ${res.status}: ${text || res.statusText}` };
-    }
+  async function safeFetchJson(url, options = {}, timeoutMs = 20000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      return JSON.parse(text);
-    } catch (_) {
-      return { ok: false, error: text || `HTTP ${res.status}` };
+      const res = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(timeoutId);
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        return await res.json();
+      }
+      const text = await res.text();
+      if (!res.ok) {
+        return { ok: false, error: `Server returned HTTP ${res.status}: ${text || res.statusText}` };
+      }
+      try {
+        return JSON.parse(text);
+      } catch (_) {
+        return { ok: false, error: text || `HTTP ${res.status}` };
+      }
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        return { ok: false, timeout: true, error: `Request timed out after ${timeoutMs / 1000}s` };
+      }
+      return { ok: false, error: err.message || 'Network request failed' };
     }
   }
 
   async function loadAccountIdentity() {
+    if (step1AuthBadge) {
+      step1AuthBadge.className = 'badge badge-secondary';
+      step1AuthBadge.innerHTML = '<span class="loading-spinner-sm"></span> Detecting...';
+    }
+    if (step1AccountIdentity) {
+      step1AccountIdentity.innerHTML = '<span class="loading-spinner-sm"></span> Checking active accounts...';
+    }
+
     try {
-      const data = await safeFetchJson('/api/nuget/identity');
+      const data = await safeFetchJson('/api/nuget/identity', {}, 8000);
+      if (data.timeout) {
+        if (step1AuthBadge) {
+          step1AuthBadge.className = 'badge badge-warning';
+          step1AuthBadge.textContent = 'TIMEOUT';
+        }
+        if (step1AccountIdentity) {
+          step1AccountIdentity.innerHTML = '<span class="text-warning">Identity check timed out</span>';
+        }
+        if (step1AuthAlert) {
+          step1AuthAlert.style.display = 'block';
+          step1AuthAlert.className = 'alert alert-warning mt-3';
+          step1AuthAlert.innerHTML = '<strong>Connection Timeout:</strong> The background credential discovery process took longer than 8 seconds. Click <strong>Test Connection</strong> or <strong>Refresh</strong> to retry.';
+        }
+        if (settingsNugetAuthBadge) {
+          settingsNugetAuthBadge.textContent = 'TIMEOUT';
+          settingsNugetAuthBadge.className = 'badge badge-warning';
+        }
+        if (settingsAuthIdentityDetails) {
+          settingsAuthIdentityDetails.innerHTML = '<span class="text-warning">Identity discovery timed out. Click "Retest All Facets" or "Connect via Azure CLI".</span>';
+        }
+        return;
+      }
+
       if (data && data.ok) {
         activeIdentity = data;
         const azureDisplay = data.azureAccount
@@ -550,9 +853,44 @@ document.addEventListener('DOMContentLoaded', () => {
           : 'Unauthenticated (No credentials detected)';
         const gitDisplay = data.gitUser ? `${data.gitUser} <${data.gitEmail || ''}>` : 'Git author not configured';
 
-        if (step1AuthDetails) {
-          step1AuthDetails.innerHTML = `<strong>Azure / NuGet:</strong> ${escapeHtml(azureDisplay)} &bull; <strong>Git Identity:</strong> ${escapeHtml(gitDisplay)}`;
+        if (data.isAuthenticated && data.azureAccount) {
+          if (step1AuthBadge) {
+            step1AuthBadge.className = 'badge badge-success';
+            step1AuthBadge.textContent = 'CONNECTED';
+          }
+          if (step1AccountIdentity) {
+            const srcLabel = data.azureAuthSource === 'azure_cli' ? 'Azure CLI' : (data.azureAuthSource === 'pat' ? 'Personal Access Token' : 'Credential Provider');
+            step1AccountIdentity.innerHTML = `<span class="badge badge-success mr-1">✔</span> <strong>${escapeHtml(data.azureAccount)}</strong> <span class="text-muted">(${escapeHtml(srcLabel)})</span>`;
+          }
+          if (step1AuthDetails) {
+            step1AuthDetails.textContent = `Ready for private package restore & build. Git: ${data.gitUser || 'configured'}`;
+          }
+          if (step1AuthAlert) {
+            step1AuthAlert.style.display = 'none';
+          }
+        } else {
+          if (step1AuthBadge) {
+            step1AuthBadge.className = 'badge badge-warning';
+            step1AuthBadge.textContent = 'SIGN-IN REQUIRED';
+          }
+          if (step1AccountIdentity) {
+            step1AccountIdentity.innerHTML = '<span class="text-warning">Unauthenticated</span> &bull; No active Azure account detected';
+          }
+          if (step1AuthDetails) {
+            step1AuthDetails.textContent = 'Click "Connect via Azure CLI" or "Enter PAT..." to authenticate against private feed.';
+          }
+          if (step1AuthAlert) {
+            step1AuthAlert.style.display = 'block';
+            step1AuthAlert.className = 'alert alert-warning mt-3';
+            step1AuthAlert.innerHTML = '<strong>Authentication Required:</strong> Private package feed (NGO_Online_feed) requires Azure credentials. Click <strong>Connect via Azure CLI</strong> (if logged in via <code>az login</code>) or <strong>Enter PAT...</strong>.';
+          }
         }
+
+        if (step1CredProvider && data.credentialProviderFound) {
+          step1CredProvider.textContent = 'CredentialProvider.Microsoft.exe';
+          if (step1CredStatus) step1CredStatus.textContent = 'Installed (Visual Studio / MSAL plugin)';
+        }
+
         if (preflightAuthIdentity) {
           preflightAuthIdentity.textContent = `Detected Azure Account: ${azureDisplay}`;
         }
@@ -570,11 +908,115 @@ document.addEventListener('DOMContentLoaded', () => {
           settingsAuthIdentityDetails.innerHTML = `<strong>Azure Account:</strong> ${escapeHtml(azureDisplay)}<br><strong>Git Author:</strong> ${escapeHtml(gitDisplay)}`;
         }
         if (settingsNugetAuthBadge) {
-          settingsNugetAuthBadge.textContent = data.isAuthenticated ? 'Connected' : 'Unauthenticated';
+          settingsNugetAuthBadge.textContent = data.isAuthenticated ? 'Connected' : 'Sign-In Required';
           settingsNugetAuthBadge.className = data.isAuthenticated ? 'badge badge-success' : 'badge badge-warning';
         }
+      } else {
+        if (step1AuthBadge) {
+          step1AuthBadge.className = 'badge badge-danger';
+          step1AuthBadge.textContent = 'ERROR';
+        }
+        if (step1AccountIdentity) {
+          step1AccountIdentity.innerHTML = `<span class="text-danger">Detection Failed</span>`;
+        }
+        if (step1AuthAlert) {
+          step1AuthAlert.style.display = 'block';
+          step1AuthAlert.className = 'alert alert-danger mt-3';
+          step1AuthAlert.innerHTML = `<strong>Error:</strong> ${escapeHtml(data?.error || 'Failed to detect authentication status')}. Click <strong>Refresh</strong> to retry.`;
+        }
+        if (settingsNugetAuthBadge) {
+          settingsNugetAuthBadge.textContent = 'AUTH ERROR';
+          settingsNugetAuthBadge.className = 'badge badge-danger';
+        }
+        if (settingsAuthIdentityDetails) {
+          settingsAuthIdentityDetails.innerHTML = `<span class="text-danger">Detection error: ${escapeHtml(data?.error || 'Unknown error')}</span>`;
+        }
       }
-    } catch (_) {}
+    } catch (err) {
+      if (step1AuthBadge) {
+        step1AuthBadge.className = 'badge badge-danger';
+        step1AuthBadge.textContent = 'ERROR';
+      }
+      if (step1AccountIdentity) {
+        step1AccountIdentity.innerHTML = `<span class="text-danger">Failed to load</span>`;
+      }
+      if (step1AuthAlert) {
+        step1AuthAlert.style.display = 'block';
+        step1AuthAlert.className = 'alert alert-danger mt-3';
+        step1AuthAlert.innerHTML = `<strong>Error:</strong> ${escapeHtml(err.message)}. Click <strong>Refresh</strong> to retry.`;
+      }
+      if (settingsNugetAuthBadge) {
+        settingsNugetAuthBadge.textContent = 'NETWORK ERROR';
+        settingsNugetAuthBadge.className = 'badge badge-danger';
+      }
+      if (settingsAuthIdentityDetails) {
+        settingsAuthIdentityDetails.innerHTML = `<span class="text-danger">Failed to load: ${escapeHtml(err.message)}</span>`;
+      }
+    }
+  }
+
+  async function testAuthConnectionStep1() {
+    if (btnTestAuthStep1) {
+      btnTestAuthStep1.disabled = true;
+      btnTestAuthStep1.innerHTML = '<span class="loading-spinner-sm"></span> Testing...';
+    }
+    if (step1AuthBadge) {
+      step1AuthBadge.className = 'badge badge-secondary';
+      step1AuthBadge.innerHTML = '<span class="loading-spinner-sm"></span> Probing feed...';
+    }
+    try {
+      const res = await safeFetchJson('/api/nuget/test-connection', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sourceUrl: 'https://pkgs.dev.azure.com/preciofishbone/_packaging/NGO_Online_feed/nuget/v3/index.json'
+        }),
+      }, 12000);
+
+      const result = res.result || res;
+      const now = new Date().toLocaleTimeString();
+      if (step1AuthTestedTime) {
+        step1AuthTestedTime.textContent = `Last test: ${now} (${result.latencyMs || 0}ms)`;
+      }
+
+      if (result.connectionStatus === 'CONNECTED' || (res.ok && result.statusCode === 200)) {
+        if (step1AuthBadge) {
+          step1AuthBadge.className = 'badge badge-success';
+          step1AuthBadge.textContent = 'CONNECTED';
+        }
+        if (step1AuthAlert) {
+          step1AuthAlert.style.display = 'block';
+          step1AuthAlert.className = 'alert alert-success mt-3';
+          step1AuthAlert.innerHTML = `<strong>Feed connection verified:</strong> HTTP ${result.statusCode || 200} OK from Azure Artifacts (${result.latencyMs || 0}ms). Authenticated as <strong>${escapeHtml(result.accountIdentity || activeIdentity?.azureAccount || 'authorized user')}</strong>.`;
+        }
+      } else {
+        const statusText = result.connectionStatus || (result.statusCode === 401 ? 'SIGN-IN REQUIRED' : (result.statusCode === 403 ? 'FORBIDDEN' : 'ERROR'));
+        if (step1AuthBadge) {
+          step1AuthBadge.className = (statusText === 'SIGN-IN REQUIRED' || statusText === 'FORBIDDEN') ? 'badge badge-warning' : 'badge badge-danger';
+          step1AuthBadge.textContent = statusText;
+        }
+        if (step1AuthAlert) {
+          step1AuthAlert.style.display = 'block';
+          step1AuthAlert.className = (statusText === 'SIGN-IN REQUIRED' || statusText === 'FORBIDDEN') ? 'alert alert-warning mt-3' : 'alert alert-danger mt-3';
+          step1AuthAlert.innerHTML = `<strong>Feed Status (${statusText}):</strong> ${escapeHtml(result.error || `HTTP ${result.statusCode}`)}<br><small class="mt-1 d-block">${escapeHtml(result.remediation || 'Run "az login" in terminal or click Enter PAT...')}</small>`;
+        }
+      }
+    } catch (err) {
+      if (step1AuthBadge) {
+        step1AuthBadge.className = 'badge badge-danger';
+        step1AuthBadge.textContent = 'NETWORK ERROR';
+      }
+      if (step1AuthAlert) {
+        step1AuthAlert.style.display = 'block';
+        step1AuthAlert.className = 'alert alert-danger mt-3';
+        step1AuthAlert.textContent = `Connection test failed: ${err.message}`;
+      }
+    } finally {
+      if (btnTestAuthStep1) {
+        btnTestAuthStep1.disabled = false;
+        btnTestAuthStep1.textContent = 'Test Connection';
+      }
+    }
   }
 
   function openNugetAuthModal() {
@@ -611,7 +1053,12 @@ document.addEventListener('DOMContentLoaded', () => {
           feedbackEl.className = 'alert alert-success mt-2';
           feedbackEl.textContent = `Connected! Active identity: ${data.identity}. Re-running package checks...`;
         }
-        await loadAccountIdentity();
+        await Promise.all([
+          loadProjects(true),
+          loadAvailableVersions(true, true),
+          loadAccountIdentity(),
+          loadNuGetAuthStatus(true),
+        ]);
         if (selectedProject && targetVersionSelect.value) {
           await runPreflight();
         }
@@ -657,7 +1104,12 @@ document.addEventListener('DOMContentLoaded', () => {
           feedbackEl.className = 'alert alert-success mt-2';
           feedbackEl.textContent = `PAT verified & saved! Identity: ${data.identity}. Re-running package checks...`;
         }
-        await loadAccountIdentity();
+        await Promise.all([
+          loadProjects(true),
+          loadAvailableVersions(true, true),
+          loadAccountIdentity(),
+          loadNuGetAuthStatus(true),
+        ]);
         if (selectedProject && targetVersionSelect.value) {
           await runPreflight();
         }
@@ -692,7 +1144,12 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackEl.className = 'alert alert-info mt-2';
         feedbackEl.textContent = 'Saved PAT cleared. Defaulting to Azure CLI or credential provider.';
       }
-      await loadAccountIdentity();
+      await Promise.all([
+        loadAccountIdentity(),
+        loadNuGetAuthStatus(true),
+        loadProjects(true),
+        loadAvailableVersions(true, true),
+      ]);
     } catch (_) {}
   }
 
@@ -705,6 +1162,27 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnModalConnectAzure) btnModalConnectAzure.addEventListener('click', () => handleConnectAzureCli(modalAuthFeedback));
   if (btnModalSavePat) btnModalSavePat.addEventListener('click', () => handleSavePat(modalPatInput ? modalPatInput.value.trim() : '', modalAuthFeedback));
   if (btnModalClearPat) btnModalClearPat.addEventListener('click', () => handleClearPat(modalAuthFeedback));
+
+  // Step 1 Active Auth listeners
+  if (btnTestAuthStep1) btnTestAuthStep1.addEventListener('click', testAuthConnectionStep1);
+  if (btnConnectAzureStep1) btnConnectAzureStep1.addEventListener('click', () => handleConnectAzureCli(step1AuthAlert));
+  if (btnRefreshAuthStep1) {
+    btnRefreshAuthStep1.addEventListener('click', async () => {
+      btnRefreshAuthStep1.disabled = true;
+      btnRefreshAuthStep1.textContent = 'Refreshing...';
+      try {
+        await safeFetchJson('/api/nuget/refresh-metadata', { method: 'POST' });
+        await Promise.all([
+          loadAccountIdentity(),
+          loadAvailableVersions(true, true),
+          loadProjects(true),
+        ]);
+      } finally {
+        btnRefreshAuthStep1.disabled = false;
+        btnRefreshAuthStep1.textContent = 'Refresh';
+      }
+    });
+  }
 
   // Settings NuGet Auth listeners
   if (btnSettingsConnectAzure) btnSettingsConnectAzure.addEventListener('click', () => handleConnectAzureCli(settingsNugetFeedback));
@@ -753,7 +1231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mode === 'AUTO') {
       if (isPatch) {
         if (upgradeModeBadge) {
-          upgradeModeBadge.textContent = '⚡ Auto: Fast Patch';
+          upgradeModeBadge.textContent = 'Auto: Fast Patch';
           upgradeModeBadge.className = 'badge badge-success';
         }
         if (upgradeModeDesc) {
@@ -761,7 +1239,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } else {
         if (upgradeModeBadge) {
-          upgradeModeBadge.textContent = '🔍 Auto: Full Semantic';
+          upgradeModeBadge.textContent = 'Auto: Full Semantic';
           upgradeModeBadge.className = 'badge badge-primary';
         }
         if (upgradeModeDesc) {
@@ -770,7 +1248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else if (mode === 'FAST_PATCH') {
       if (upgradeModeBadge) {
-        upgradeModeBadge.textContent = '⚡ Fast Patch Mode';
+        upgradeModeBadge.textContent = 'Fast Patch Mode';
         upgradeModeBadge.className = 'badge badge-success';
       }
       if (upgradeModeDesc) {
@@ -778,7 +1256,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       if (upgradeModeBadge) {
-        upgradeModeBadge.textContent = '🔍 Full Semantic';
+        upgradeModeBadge.textContent = 'Full Semantic';
         upgradeModeBadge.className = 'badge badge-primary';
       }
       if (upgradeModeDesc) {
@@ -806,10 +1284,73 @@ document.addEventListener('DOMContentLoaded', () => {
     validateStartPrerequisites();
   });
 
+  const notesTextarea = document.getElementById('step1-release-notes-text');
+  const notesBadge = document.getElementById('step1-notes-badge');
+  const btnSaveNotes = document.getElementById('btn-save-release-notes-step1');
+
+  async function loadReleaseNotesForTarget(version) {
+    if (!version || !notesTextarea) return;
+    try {
+      const res = await fetch(`/api/release-notes?version=${encodeURIComponent(version)}`);
+      const data = await res.json();
+      if (data && data.exists && data.content) {
+        notesTextarea.value = data.content;
+        if (notesBadge) {
+          notesBadge.className = 'badge badge-success';
+          notesBadge.textContent = 'Loaded (' + (data.source || 'Team Notes') + ')';
+        }
+      } else {
+        if (!notesTextarea.value) {
+          if (notesBadge) {
+            notesBadge.className = 'badge badge-secondary';
+            notesBadge.textContent = 'Optional';
+          }
+        }
+      }
+    } catch (_) {}
+  }
+
+  if (notesTextarea && btnSaveNotes) {
+    notesTextarea.addEventListener('input', () => {
+      btnSaveNotes.style.display = notesTextarea.value.trim() ? 'inline-block' : 'none';
+    });
+    btnSaveNotes.addEventListener('click', async () => {
+      const ver = targetVersionSelect ? targetVersionSelect.value : null;
+      if (!ver) {
+        alert('Please select a target version first.');
+        return;
+      }
+      try {
+        btnSaveNotes.disabled = true;
+        btnSaveNotes.textContent = 'Saving...';
+        const res = await fetch('/api/release-notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ version: ver, content: notesTextarea.value.trim() }),
+        });
+        const d = await res.json();
+        if (d && d.ok) {
+          if (notesBadge) {
+            notesBadge.className = 'badge badge-success';
+            notesBadge.textContent = 'Saved';
+          }
+          const notesStatus = document.getElementById('step1-notes-status');
+          if (notesStatus) notesStatus.textContent = `Saved ${d.contentLength} chars for v${ver}. Notes will be provided to Copilot CLI.`;
+        }
+      } catch (err) {
+        alert('Failed to save release notes: ' + err.message);
+      } finally {
+        btnSaveNotes.disabled = false;
+        btnSaveNotes.textContent = 'Save Notes';
+      }
+    });
+  }
+
   targetVersionSelect.addEventListener('change', () => {
     updateUpgradeModePreview();
     preflightResult = null;
     validateStartPrerequisites();
+    loadReleaseNotesForTarget(targetVersionSelect.value);
   });
   trackBackend.addEventListener('change', validateStartPrerequisites);
   trackFrontend.addEventListener('change', validateStartPrerequisites);
@@ -943,7 +1484,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isAuthBlocked = c.id === 'CHK-PACKAGE-AVAILABILITY' && c.status === 'BLOCKED' &&
           (String(c.failureReason || '').includes('authentication') || String(c.sanitizedOutput || '').includes('401') || String(c.sanitizedOutput || '').includes('UNAUTHENTICATED'));
         const authActionBtn = isAuthBlocked
-          ? `<br><button type="button" class="btn btn-warning btn-xs mt-1" onclick="window.openNugetAuthModal(event)">🔑 Authenticate Feed...</button>`
+          ? `<br><button type="button" class="btn btn-warning btn-xs mt-1" onclick="window.openNugetAuthModal(event)">Authenticate Feed</button>`
           : '';
 
         return `
@@ -1152,7 +1693,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mode = upgradeModeSelect ? upgradeModeSelect.value : 'AUTO';
     const isFastPatch = mode === 'FAST_PATCH' || (mode === 'AUTO' && preflightResult.upgradeMode?.isPatch);
     if (confirmUpgradeMode) {
-      confirmUpgradeMode.textContent = isFastPatch ? '⚡ Fast Patch Mode' : '🔍 Full Semantic Mode';
+      confirmUpgradeMode.textContent = isFastPatch ? 'Fast Patch Mode' : 'Full Semantic Mode';
       confirmUpgradeMode.className = isFastPatch ? 'summary-value text-success' : 'summary-value text-primary';
     }
     if (confirmUpgradeDesc) {
@@ -1217,15 +1758,15 @@ document.addEventListener('DOMContentLoaded', () => {
           tracks,
           copilotModel: getSelectedCopilotModel(),
           upgradeMode: upgradeModeSelect ? upgradeModeSelect.value : 'AUTO',
-          simulateCopilot: simulateCopilot.checked
+          simulateCopilot: simulateCopilot.checked,
+          releaseNotes: (document.getElementById('step1-release-notes-text')?.value || '').trim() || undefined,
         })
       });
 
       const data = await res.json();
       if (data.ok && data.job) {
         activeJobId = data.job.id;
-        rawLogLines = [];
-        terminalOutput.textContent = '';
+        resetUpgradeLiveUI();
         switchView('live-execution');
         startJobPolling(activeJobId);
       } else {
@@ -1296,15 +1837,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (upgradeModePill) {
         const isFast = job.implementation?.fastPatchMode || job.upgradeMode === 'FAST_PATCH' || (job.upgradeMode === 'AUTO' && job.implementation?.fastPatchMode);
-        upgradeModePill.textContent = 'Mode: ' + (isFast ? '⚡ Fast Patch' : '🔍 Full Semantic');
-        upgradeModePill.className = 'pill ' + (isFast ? 'badge-success' : 'badge-primary');
+        upgradeModePill.textContent = 'Mode: ' + (isFast ? 'Fast Patch' : 'Full Semantic');
+        upgradeModePill.className = 'track-pill';
       }
       if (copilotModelPill && job.copilotModel) {
         copilotModelPill.textContent = `Model: ${job.copilotModel}`;
       }
       repairIterationsPill.textContent = `Repairs: ${job.repairIterations || 0}/2`;
 
-      fetchLogs(jobId);
+      await fetchLogs(jobId);
 
       if (['COMPLETE', 'AWAITING_APPROVAL', 'FAILED', 'CANCELLED'].includes(job.status)) {
         if (jobPollTimer) {
@@ -1332,9 +1873,11 @@ document.addEventListener('DOMContentLoaded', () => {
         timeEl.textContent = `${ms}ms`;
       }
 
-      stepEl.classList.remove('active', 'completed');
+      stepEl.classList.remove('active', 'completed', 'failed');
       if (job.status === 'COMPLETE' || job.status === 'AWAITING_APPROVAL') {
         stepEl.classList.add('completed');
+      } else if (job.status === 'FAILED' && idx === currentStageIndex) {
+        stepEl.classList.add('failed');
       } else if (idx < currentStageIndex) {
         stepEl.classList.add('completed');
       } else if (idx === currentStageIndex) {
@@ -1349,8 +1892,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`/api/jobs/${jobId}/logs?since=${since}`);
       if (!res.ok) return;
       const data = await res.json();
-      if (Array.isArray(data.lines) && data.lines.length > 0) {
-        rawLogLines = rawLogLines.concat(data.lines);
+      const newLines = Array.isArray(data.lines) ? data.lines : (Array.isArray(data.logs) ? data.logs : (Array.isArray(data) ? data : null));
+      if (Array.isArray(newLines) && newLines.length > 0) {
+        rawLogLines = rawLogLines.concat(newLines);
         renderFilteredLogs();
       }
     } catch (_) {}
@@ -1451,31 +1995,99 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---------------------------------------------------------------------------
   // 8. Results, Verification Matrix & Git Diff Review
   // ---------------------------------------------------------------------------
+  let currentRawDiff = '';
+
+  function renderColorizedDiff(diffText) {
+    if (!diffText || diffText.trim() === '' || diffText === 'No changes to display.' || diffText === 'Working tree clean. No differences.') {
+      return '<div class="p-3 text-muted">Working tree clean. No differences.</div>';
+    }
+    const lines = diffText.split(/\r?\n/);
+    let html = '<div class="diff-container">';
+    lines.forEach((line, idx) => {
+      let lineClass = 'diff-line';
+      if (/^diff --git|^index |^--- |^\+\+\+ /.test(line)) {
+        lineClass += ' diff-header';
+      } else if (/^@@ /.test(line)) {
+        lineClass += ' diff-hunk';
+      } else if (line.startsWith('+') && !line.startsWith('+++')) {
+        lineClass += ' diff-add';
+      } else if (line.startsWith('-') && !line.startsWith('---')) {
+        lineClass += ' diff-del';
+      }
+      html += `<div class="${lineClass}"><span class="diff-line-num">${idx + 1}</span><span class="diff-line-content">${escapeHtml(line)}</span></div>`;
+    });
+    html += '</div>';
+    return html;
+  }
+
   async function loadResultsAndDiff(jobId) {
     try {
       const res = await fetch(`/api/jobs/${jobId}/diff`);
       if (!res.ok) return;
       const data = await res.json();
 
-      if (Array.isArray(data.checks) && data.checks.length > 0) {
-        checksTableBody.innerHTML = data.checks.map(c => `
-          <tr>
-            <td><strong>${escapeHtml(c.name)}</strong></td>
-            <td><span class="badge badge-secondary">${escapeHtml(c.category)}</span></td>
-            <td><code>${escapeHtml(c.command || c.assertion || '--')}</code></td>
-            <td><span class="badge ${c.passed ? 'badge-success' : 'badge-danger'}">${c.passed ? 'PASSED' : 'FAILED'}</span></td>
-            <td>${c.durationMs ? c.durationMs + ' ms' : '--'}</td>
-            <td><small class="text-muted">${escapeHtml(c.output || c.error || 'Verified OK')}</small></td>
-          </tr>
-        `).join('');
+      // 1. Mandatory Test Policy & Cache Performance Card
+      const testCacheBadge = document.getElementById('test-cache-badge');
+      const policyTestLevel = document.getElementById('policy-test-level');
+      const policyFingerprint = document.getElementById('policy-fingerprint');
+      const policyExecutionStrategy = document.getElementById('policy-execution-strategy');
+      const policyExecutionTime = document.getElementById('policy-execution-time');
+      const policyJustificationText = document.getElementById('policy-justification-text');
+      const reviewerAttestationText = document.getElementById('reviewer-attestation-text');
 
-        const allPassed = data.checks.every(c => c.passed);
+      const isCacheHit = Boolean(data.cacheHit);
+      const testLevel = data.testLevel || (data.testDecisions && data.testDecisions[0] && data.testDecisions[0].level) || 'Targeted';
+      const fp = data.testFingerprint || (data.testDecisions && data.testDecisions[0] && data.testDecisions[0].fingerprint);
+      const decision = data.testDecisions && data.testDecisions[0];
+
+      if (testCacheBadge) {
+        testCacheBadge.textContent = isCacheHit ? 'Cache Reused (0ms)' : 'Fresh Execution';
+        testCacheBadge.className = isCacheHit ? 'badge badge-success' : 'badge badge-info';
+      }
+      if (policyTestLevel) policyTestLevel.textContent = testLevel;
+      if (policyFingerprint) policyFingerprint.textContent = fp ? fp.slice(0, 16) + '...' : 'Recorded';
+      if (policyExecutionStrategy) {
+        policyExecutionStrategy.textContent = isCacheHit ? 'Deterministic Cache Hit' : 'Fresh Subprocess Run';
+      }
+      if (policyExecutionTime) {
+        policyExecutionTime.textContent = isCacheHit ? '0 ms test subprocess overhead' : 'Completed locally';
+      }
+      if (policyJustificationText) {
+        policyJustificationText.textContent = (decision && decision.reason) ||
+          'Mandatory Test Execution Policy: Targeted test scope evaluated first; full regression suite avoided to optimize execution budget and prevent duplication.';
+      }
+      if (reviewerAttestationText) {
+        reviewerAttestationText.textContent = 'The AI reviewer consumed pre-verified deterministic test evidence and compiler output. No test subprocesses were rerun during semantic review.';
+      }
+
+      // 2. Deterministic Checks Table
+      if (Array.isArray(data.checks) && data.checks.length > 0) {
+        checksTableBody.innerHTML = data.checks.map(c => {
+          const isPassed = Boolean(c.ok || c.passed || c.status === 'PASSED');
+          const isSkipped = c.status === 'SKIPPED';
+          const statusText = isSkipped ? 'SKIPPED' : (isPassed ? 'PASSED' : 'FAILED');
+          const badgeClass = isSkipped ? 'badge-secondary' : (isPassed ? 'badge-success' : 'badge-danger');
+          const detailsText = c.details || c.output || c.error || (isPassed ? 'Verified OK' : 'Check failed');
+          return `
+            <tr>
+              <td><strong>${escapeHtml(c.name)}</strong></td>
+              <td><span class="badge badge-secondary">${escapeHtml(c.category)}</span></td>
+              <td><code>${escapeHtml(c.command || c.assertion || '--')}</code></td>
+              <td><span class="badge ${badgeClass}">${escapeHtml(statusText)}</span></td>
+              <td>${c.durationMs ? c.durationMs + ' ms' : '--'}</td>
+              <td><small class="text-muted">${escapeHtml(detailsText)}</small></td>
+            </tr>
+          `;
+        }).join('');
+
+        const allPassed = data.checks.every(c => c.ok || c.passed || c.status === 'PASSED' || c.status === 'SKIPPED');
         verificationSummaryBadge.textContent = allPassed ? 'All Checks Passed' : 'Failures Detected';
         verificationSummaryBadge.className = allPassed ? 'badge badge-success' : 'badge badge-danger';
       } else {
         checksTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No deterministic checks recorded.</td></tr>';
       }
 
+      // 3. AI Semantic Review & Risk Findings
       if (data.review) {
         copilotReviewText.textContent = data.review.analysis || 'Deterministic checks passed with zero regressions.';
         if (Array.isArray(data.review.risks) && data.review.risks.length > 0) {
@@ -1490,9 +2102,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
+      // 4. Colorized Git Diff Explorer
       if (data.diff) {
+        currentRawDiff = data.diff.diffText || '';
         diffStatsLabel.textContent = `${data.diff.changedFilesCount || 0} files modified (${data.diff.insertions || 0}+, ${data.diff.deletions || 0}-)`;
-        diffOutput.textContent = data.diff.diffText || 'Working tree clean. No differences.';
+        diffOutput.innerHTML = renderColorizedDiff(currentRawDiff);
+      } else {
+        currentRawDiff = '';
+        diffOutput.innerHTML = '<div class="p-3 text-muted">Working tree clean. No differences.</div>';
       }
 
       confirmCommitCheck.checked = false;
@@ -1505,8 +2122,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnCopyDiff) {
     btnCopyDiff.addEventListener('click', () => {
-      const text = diffOutput.textContent;
-      if (!text || text === 'No changes to display.') return;
+      const text = currentRawDiff || diffOutput.textContent;
+      if (!text || text === 'No changes to display.' || text === 'Working tree clean. No differences.') return;
       navigator.clipboard.writeText(text).then(() => {
         const orig = btnCopyDiff.textContent;
         btnCopyDiff.textContent = 'Copied!';
@@ -1597,7 +2214,379 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ---------------------------------------------------------------------------
-  // 10. Settings & Diagnostics View
+  // 10. Platform Administration Console (Tabs, Discovery, Copilot, NuGet Matrix)
+  // ---------------------------------------------------------------------------
+
+  // Admin Console Tab Switching Controller
+  function switchAdminTab(tabKey) {
+    if (!tabKey) return;
+    adminTabBtns.forEach(btn => {
+      if (btn.getAttribute('data-admin-tab') === tabKey) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    adminTabPanes.forEach(pane => {
+      if (pane.id === `pane-admin-${tabKey}`) {
+        pane.classList.add('active');
+      } else {
+        pane.classList.remove('active');
+      }
+    });
+  }
+
+  adminTabBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tabKey = btn.getAttribute('data-admin-tab');
+      switchAdminTab(tabKey);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // 10a. Automatic Client Project Discovery
+  // ---------------------------------------------------------------------------
+  let discoveredProjects = [];
+  let discoveredSkipped = [];
+
+  async function loadWorkspaceDiscovery(force = false) {
+    if (discoveryStatusBadge) {
+      discoveryStatusBadge.className = 'badge badge-secondary';
+      discoveryStatusBadge.textContent = 'Scanning...';
+    }
+    if (qpValProjects) qpValProjects.textContent = 'Scanning...';
+    if (qpDotProjects) qpDotProjects.className = 'quick-pill-dot info';
+    if (discoveryProjectsTbody) {
+      discoveryProjectsTbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4"><span class="loading-spinner-sm mr-2"></span> Scanning approved workspace roots for candidate client projects...</td></tr>';
+    }
+
+    try {
+      const res = await fetch('/api/workspace/discover');
+      const data = await res.json();
+      if (!data.ok) {
+        if (discoveryProjectsTbody) {
+          discoveryProjectsTbody.innerHTML = `<tr><td colspan="6" class="text-danger py-3">Discovery scan failed: ${escapeHtml(data.error || 'Unknown error')}</td></tr>`;
+        }
+        if (discoveryStatusBadge) {
+          discoveryStatusBadge.className = 'badge badge-danger';
+          discoveryStatusBadge.textContent = 'Scan Error';
+        }
+        return;
+      }
+
+      discoveredProjects = data.projects || [];
+      discoveredSkipped = data.skipped || [];
+
+      // Update Header Quick Pills
+      if (qpValWorkspace && Array.isArray(data.approvedRoots)) {
+        qpValWorkspace.textContent = `${data.approvedRoots.length} Root${data.approvedRoots.length === 1 ? '' : 's'}`;
+        if (qpDotWorkspace) qpDotWorkspace.className = 'quick-pill-dot success';
+      }
+      if (qpValProjects) {
+        qpValProjects.textContent = `${data.totalDiscovered} Discovered`;
+        if (qpDotProjects) qpDotProjects.className = 'quick-pill-dot success';
+      }
+
+      // Update Discovery Status & Summary
+      if (discoveryStatusBadge) {
+        discoveryStatusBadge.className = 'badge badge-success';
+        discoveryStatusBadge.textContent = `${data.totalDiscovered} Discovered`;
+      }
+      if (discoverySummaryText) {
+        discoverySummaryText.textContent = `Found ${data.totalDiscovered} candidate projects across ${data.approvedRoots ? data.approvedRoots.length : 0} approved roots (${discoveredSkipped.length} directories skipped).`;
+      }
+      if (discoveryLastScanned) {
+        discoveryLastScanned.textContent = `Scanned ${new Date(data.timestamp || Date.now()).toLocaleTimeString()} (${data.scanDurationMs || 0}ms)`;
+      }
+
+      // Update Core Path Status Badge
+      if (corePathStatusBadge && data.corePath) {
+        corePathStatusBadge.className = 'badge badge-success text-xs';
+        corePathStatusBadge.textContent = 'Verified Root';
+      }
+
+      // Render Discovered Projects Table
+      renderDiscoveredProjectsTable(discoveredProjects);
+
+      // Render Skipped Folders
+      renderSkippedFolders(discoveredSkipped);
+
+    } catch (err) {
+      if (discoveryProjectsTbody) {
+        discoveryProjectsTbody.innerHTML = `<tr><td colspan="6" class="text-danger py-3">Network error scanning workspace: ${escapeHtml(err.message)}</td></tr>`;
+      }
+      if (discoveryStatusBadge) {
+        discoveryStatusBadge.className = 'badge badge-danger';
+        discoveryStatusBadge.textContent = 'Network Error';
+      }
+    }
+  }
+
+  function renderDiscoveredProjectsTable(projs) {
+    if (!discoveryProjectsTbody) return;
+    if (!projs || projs.length === 0) {
+      discoveryProjectsTbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No matching client projects found. Verify your approved workspace roots or add a root directory above.</td></tr>';
+      return;
+    }
+
+    discoveryProjectsTbody.innerHTML = projs.map(p => {
+      // Status badge
+      let statusBadge = '<span class="badge badge-success">READY</span>';
+      if (p.status === 'VERSION_MISMATCH') {
+        statusBadge = '<span class="badge badge-warning" title="Backend and Frontend Core versions differ">MISMATCH</span>';
+      } else if (p.status === 'DIRTY_GIT') {
+        statusBadge = '<span class="badge badge-warning" title="Uncommitted Git changes detected">DIRTY GIT</span>';
+      } else if (p.status === 'NON_GIT') {
+        statusBadge = '<span class="badge badge-secondary" title="No .git repository initialized">NON-GIT</span>';
+      } else if (p.status === 'UNIDENTIFIED') {
+        statusBadge = '<span class="badge badge-danger">UNKNOWN</span>';
+      }
+
+      // Installed version display
+      let versionDisplay = `<code>v${escapeHtml(p.installedCoreVersion || '--')}</code>`;
+      if (p.backendCoreVersion && p.frontendCoreVersion && p.backendCoreVersion !== p.frontendCoreVersion) {
+        versionDisplay = `<code>v${escapeHtml(p.installedCoreVersion)}</code> <span class="badge badge-warning text-xs">Mismatch</span><br><small class="text-muted">BE: v${escapeHtml(p.backendCoreVersion)} &bull; FE: v${escapeHtml(p.frontendCoreVersion)}</small>`;
+      }
+
+      // Git branch display
+      let gitDisplay = '<span class="text-muted">Non-Git</span>';
+      if (p.isGit) {
+        const cleanIcon = p.isClean ? '<span class="text-success ml-1" title="Clean working tree">✔</span>' : `<span class="badge badge-warning text-xs ml-1" title="Uncommitted changes">Dirty (${p.dirtyFilesCount || 0})</span>`;
+        gitDisplay = `<code>${escapeHtml(p.gitBranch || 'HEAD')}</code>${cleanIcon}`;
+      }
+
+      const escapedPath = escapeHtml(p.path).replace(/\\/g, '\\\\');
+
+      return `
+        <tr>
+          <td>${statusBadge}</td>
+          <td>
+            <strong>${escapeHtml(p.name || p.id)}</strong><br>
+            <small class="text-muted"><code>${escapeHtml(p.id)}</code></small>
+          </td>
+          <td>${versionDisplay}</td>
+          <td>${gitDisplay}</td>
+          <td><code class="text-xs text-muted" title="${escapeHtml(p.path)}">${escapeHtml(p.path)}</code></td>
+          <td style="text-align: right;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.selectDiscoveredProject('${escapedPath}')">
+              Upgrade &rarr;
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function renderSkippedFolders(skipped) {
+    if (skippedFoldersTitle) {
+      skippedFoldersTitle.textContent = `Skipped Directories & Ignored Paths (${skipped.length})`;
+    }
+    if (!discoverySkippedTbody) return;
+    if (!skipped || skipped.length === 0) {
+      discoverySkippedTbody.innerHTML = '<tr><td colspan="3" class="text-muted">No directories skipped during scan.</td></tr>';
+      return;
+    }
+    discoverySkippedTbody.innerHTML = skipped.map(s => `
+      <tr>
+        <td><strong>${escapeHtml(s.name)}</strong></td>
+        <td><code>${escapeHtml(s.path)}</code></td>
+        <td><span class="badge badge-secondary text-xs">${escapeHtml(s.reason)}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  function applyDiscoveryFilters() {
+    const query = (discoverySearchInput ? discoverySearchInput.value : '').trim().toLowerCase();
+    const filter = discoveryStatusFilter ? discoveryStatusFilter.value : 'ALL';
+
+    const filtered = discoveredProjects.filter(p => {
+      const matchStatus = (filter === 'ALL') || (p.status === filter);
+      if (!matchStatus) return false;
+
+      if (!query) return true;
+      const idMatch = (p.id || '').toLowerCase().includes(query);
+      const nameMatch = (p.name || '').toLowerCase().includes(query);
+      const pathMatch = (p.path || '').toLowerCase().includes(query);
+      const verMatch = (p.installedCoreVersion || '').toLowerCase().includes(query);
+      return idMatch || nameMatch || pathMatch || verMatch;
+    });
+
+    renderDiscoveredProjectsTable(filtered);
+  }
+
+  if (discoverySearchInput) {
+    discoverySearchInput.addEventListener('input', applyDiscoveryFilters);
+  }
+  if (discoveryStatusFilter) {
+    discoveryStatusFilter.addEventListener('change', applyDiscoveryFilters);
+  }
+  if (btnRescanDiscovery) {
+    btnRescanDiscovery.addEventListener('click', () => loadWorkspaceDiscovery(true));
+  }
+
+  // Toggle Skipped Folders Drawer
+  if (btnToggleSkipped && discoverySkippedContainer) {
+    btnToggleSkipped.addEventListener('click', () => {
+      const isHidden = discoverySkippedContainer.style.display === 'none';
+      discoverySkippedContainer.style.display = isHidden ? 'block' : 'none';
+    });
+  }
+
+  // Toggle Advanced Custom Path Drawer
+  if (btnToggleAdvancedPath && advancedPathContainer) {
+    btnToggleAdvancedPath.addEventListener('click', () => {
+      const isHidden = advancedPathContainer.style.display === 'none';
+      advancedPathContainer.style.display = isHidden ? 'block' : 'none';
+    });
+  }
+
+  // Advanced Path Validation Button
+  if (btnTestAdvancedPath && inputAdvancedClientPath) {
+    btnTestAdvancedPath.addEventListener('click', async () => {
+      const candidatePath = inputAdvancedClientPath.value.trim();
+      if (!candidatePath) {
+        if (advancedPathFeedback) {
+          advancedPathFeedback.style.display = 'block';
+          advancedPathFeedback.className = 'alert alert-warning mt-2';
+          advancedPathFeedback.textContent = 'Please enter an absolute client repository path.';
+        }
+        return;
+      }
+
+      btnTestAdvancedPath.disabled = true;
+      btnTestAdvancedPath.textContent = 'Validating...';
+      if (advancedPathFeedback) advancedPathFeedback.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/workspace/validate-path', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: candidatePath })
+        });
+        const data = await res.json();
+        if (data.ok && data.validation && data.validation.valid) {
+          const v = data.validation;
+          const escaped = v.path.replace(/\\/g, '\\\\');
+          if (advancedPathFeedback) {
+            advancedPathFeedback.style.display = 'block';
+            advancedPathFeedback.className = 'alert alert-success mt-2';
+            advancedPathFeedback.innerHTML = `
+              <strong>Valid Client Workspace:</strong> <code>${escapeHtml(v.project?.id || v.path)}</code><br>
+              <div class="mt-1 text-xs">
+                Installed Core: <strong>v${escapeHtml(v.project?.installedCoreVersion || '--')}</strong> &bull;
+                Git: ${v.project?.isGit ? escapeHtml(v.project.gitBranch) : 'Non-Git'} &bull;
+                Approved Boundary: <strong>${v.isApproved ? 'YES' : 'NO (Add root below)'}</strong>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm mt-2" onclick="window.selectDiscoveredProject('${escapeHtml(escaped)}')">
+                Select for Upgrade &rarr;
+              </button>
+            `;
+          }
+        } else {
+          const err = data.validation?.reason || data.validation?.error || data.error || 'Directory failed client validation.';
+          if (advancedPathFeedback) {
+            advancedPathFeedback.style.display = 'block';
+            advancedPathFeedback.className = 'alert alert-danger mt-2';
+            advancedPathFeedback.textContent = `Path rejected: ${err}`;
+          }
+        }
+      } catch (err) {
+        if (advancedPathFeedback) {
+          advancedPathFeedback.style.display = 'block';
+          advancedPathFeedback.className = 'alert alert-danger mt-2';
+          advancedPathFeedback.textContent = `Error: ${err.message}`;
+        }
+      } finally {
+        btnTestAdvancedPath.disabled = false;
+        btnTestAdvancedPath.textContent = 'Validate & Inspect';
+      }
+    });
+  }
+
+  // Add Root Button
+  if (btnValidateAddRoot && inputAddRoot) {
+    btnValidateAddRoot.addEventListener('click', async () => {
+      const newRoot = inputAddRoot.value.trim();
+      if (!newRoot) return;
+
+      btnValidateAddRoot.disabled = true;
+      btnValidateAddRoot.textContent = 'Adding...';
+
+      try {
+        const currentRoots = (settingWorkspaceRoots.value || '')
+          .split('\n')
+          .map(r => r.trim())
+          .filter(Boolean);
+
+        if (!currentRoots.includes(newRoot)) {
+          currentRoots.push(newRoot);
+          settingWorkspaceRoots.value = currentRoots.join('\n');
+          await saveAdminSettings();
+          inputAddRoot.value = '';
+          if (addRootFeedback) {
+            addRootFeedback.style.display = 'block';
+            addRootFeedback.className = 'alert alert-success mt-2';
+            addRootFeedback.textContent = `Approved root "${newRoot}" added and saved.`;
+          }
+          await loadWorkspaceDiscovery(true);
+        } else {
+          if (addRootFeedback) {
+            addRootFeedback.style.display = 'block';
+            addRootFeedback.className = 'alert alert-info mt-2';
+            addRootFeedback.textContent = 'This workspace root is already in the approved list.';
+          }
+        }
+      } catch (err) {
+        if (addRootFeedback) {
+          addRootFeedback.style.display = 'block';
+          addRootFeedback.className = 'alert alert-danger mt-2';
+          addRootFeedback.textContent = `Failed to add root: ${err.message}`;
+        }
+      } finally {
+        btnValidateAddRoot.disabled = false;
+        btnValidateAddRoot.textContent = 'Add Root';
+      }
+    });
+  }
+
+  // Window global function for Selecting a Discovered Project for Upgrade
+  window.selectDiscoveredProject = function(projectPath) {
+    const proj = discoveredProjects.find(p => p.path === projectPath) || {
+      id: pathBasename(projectPath),
+      name: pathBasename(projectPath),
+      path: projectPath,
+      installedCoreVersion: '0.0.0',
+    };
+
+    switchView('new-upgrade');
+
+    let opt = Array.from(projectSelect.options).find(o => o.value === proj.id || o.textContent.includes(proj.id));
+    if (!opt) {
+      opt = document.createElement('option');
+      opt.value = proj.id;
+      opt.textContent = `${proj.id} (Current: v${proj.installedCoreVersion || '0.0.0'})`;
+      projectSelect.appendChild(opt);
+    }
+    projectSelect.value = opt.value;
+    selectedProject = {
+      id: proj.id,
+      name: proj.name || proj.id,
+      path: proj.path,
+      currentVersion: proj.installedCoreVersion || '0.0.0',
+      status: proj.status,
+    };
+
+    clientPathHint.textContent = proj.path;
+    currentVersionDisplay.textContent = `v${proj.installedCoreVersion || '0.0.0'}`;
+    updateUpgradeModePreview();
+    preflightResult = null;
+    validateStartPrerequisites();
+    goToWizardStep(1);
+  };
+
+  // ---------------------------------------------------------------------------
+  // 10b. Copilot CLI & Environment Diagnostics
   // ---------------------------------------------------------------------------
   async function loadDiagnostics() {
     try {
@@ -1611,41 +2600,115 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (cliData.ok && (cliData.diagnostics || cliData.status)) {
         const c = cliData.diagnostics || cliData.status || {};
-        diagCliStatus.textContent = c.available ? 'INSTALLED & REACHABLE' : (c.status || 'OFFLINE');
-        diagCliStatus.className = c.available ? 'diag-value text-success' : 'diag-value text-danger';
-        diagCliPath.textContent = c.executablePath || 'Not found in PATH';
-        diagCliVersion.textContent = c.version || 'Unavailable';
-        diagCliAccount.textContent = c.identity || c.accountIdentity || (c.authenticated ? 'Authenticated' : 'Not Authenticated');
-        diagCliCredSource.textContent = c.credentialSource || 'None';
-        diagCliModel.textContent = c.model || c.configuredModel || 'CLI Default';
-        diagCliNoninteractive.textContent = (c.nonInteractiveSupported || c.nonInteractiveCapable) ? 'Supported (-p flag)' : 'Not Supported';
-        diagCliTimestamp.textContent = new Date(c.lastHealthCheck || c.checkedAt || Date.now()).toLocaleTimeString();
+
+        if (diagHeroStatusPill) {
+          if (c.simulatorActive) {
+            diagHeroStatusPill.className = 'badge badge-info';
+            diagHeroStatusPill.textContent = 'SIMULATOR ACTIVE';
+            if (heroStatusCircle) heroStatusCircle.style.color = 'var(--info)';
+          } else if (c.status === 'HEALTHY') {
+            diagHeroStatusPill.className = 'badge badge-success';
+            diagHeroStatusPill.textContent = `HEALTHY (v${c.version || '1.0+'})`;
+            if (heroStatusCircle) heroStatusCircle.style.color = 'var(--success)';
+          } else if (c.status === 'SIGN_IN_REQUIRED') {
+            diagHeroStatusPill.className = 'badge badge-warning';
+            diagHeroStatusPill.textContent = 'SIGN-IN REQUIRED';
+            if (heroStatusCircle) heroStatusCircle.style.color = 'var(--warning)';
+          } else {
+            diagHeroStatusPill.className = 'badge badge-danger';
+            diagHeroStatusPill.textContent = 'CLI OFFLINE';
+            if (heroStatusCircle) heroStatusCircle.style.color = 'var(--danger)';
+          }
+        }
+
+        if (qpValCopilot) {
+          qpValCopilot.textContent = c.status === 'HEALTHY'
+            ? `v${c.version || '1.0+'} Healthy`
+            : (c.status === 'SIGN_IN_REQUIRED' ? 'Sign-In Required' : (c.available ? 'Installed' : 'Not Found'));
+        }
+        if (qpDotCopilot) {
+          qpDotCopilot.className = `quick-pill-dot ${c.status === 'HEALTHY' ? 'success' : (c.status === 'SIGN_IN_REQUIRED' ? 'warning' : 'danger')}`;
+        }
+
+        if (diagCliStatus) {
+          diagCliStatus.textContent = c.available ? 'INSTALLED & REACHABLE' : (c.status || 'OFFLINE');
+          diagCliStatus.className = c.available ? 'diag-value text-success' : 'diag-value text-danger';
+        }
+        if (diagCliPath) diagCliPath.textContent = c.executablePath || 'Not found in PATH';
+        if (diagCliVersion) diagCliVersion.textContent = c.version || 'Unavailable';
+
+        if (diagCliAuthStatus) {
+          if (c.authenticated) {
+            diagCliAuthStatus.innerHTML = '<span class="badge badge-success">AUTHENTICATED</span>';
+          } else if (c.status === 'SIGN_IN_REQUIRED') {
+            diagCliAuthStatus.innerHTML = '<span class="badge badge-warning">SIGN-IN REQUIRED</span>';
+          } else {
+            diagCliAuthStatus.innerHTML = `<span class="badge badge-secondary">${escapeHtml(c.status || '--')}</span>`;
+          }
+        }
+
+        if (diagCliAccount) {
+          diagCliAccount.textContent = c.identity || c.accountIdentity || (c.authenticated ? 'Authenticated' : 'Not Authenticated');
+        }
+        if (diagCliCredSource) diagCliCredSource.textContent = c.credentialSource || 'None';
+        if (diagCliModel) diagCliModel.textContent = c.model || c.configuredModel || 'CLI Default';
+        if (diagCliNoninteractive) {
+          diagCliNoninteractive.textContent = (c.nonInteractiveSupported || c.nonInteractiveCapable) ? 'Supported (-p flag)' : 'Not Supported';
+        }
+        if (diagCliTimestamp) {
+          diagCliTimestamp.textContent = new Date(c.lastHealthCheck || c.checkedAt || Date.now()).toLocaleTimeString();
+        }
 
         const errDetail = c.error || c.diagnosticDetails;
         const remed = Array.isArray(c.remediationSteps) ? c.remediationSteps.map(r => `• ${escapeHtml(r)}`).join('<br>') : c.remediation;
-        if (errDetail || !c.available) {
-          diagCliRemediation.style.display = 'block';
-          diagCliRemediation.innerHTML = `
-            <div class="alert alert-warning">
-              <strong>Diagnostic Notice:</strong> ${escapeHtml(errDetail || 'Copilot CLI is offline or not installed in PATH.')}<br>
-              <div class="mt-2 text-sm"><strong>Remediation:</strong><br>${remed || 'Install GitHub Copilot CLI or use Simulation Mode for offline testing.'}</div>
-            </div>
-          `;
-        } else {
-          diagCliRemediation.style.display = 'none';
+        if (diagCliRemediation) {
+          if (errDetail || !c.available || c.status === 'SIGN_IN_REQUIRED') {
+            diagCliRemediation.style.display = 'block';
+            diagCliRemediation.innerHTML = `
+              <div class="alert ${c.available ? 'alert-warning' : 'alert-danger'}">
+                <strong>Diagnostic Notice:</strong> ${escapeHtml(errDetail || 'Copilot CLI is offline or not installed in PATH.')}<br>
+                <div class="mt-2 text-sm"><strong>Remediation:</strong><br>${remed || 'Install GitHub Copilot CLI or use Simulation Mode for offline testing.'}</div>
+              </div>
+            `;
+          } else {
+            diagCliRemediation.style.display = 'none';
+          }
         }
       }
 
-      if (envData.ok && Array.isArray(envData.environment?.tools)) {
-        envToolsTableBody.innerHTML = envData.environment.tools.map(t => `
-          <tr>
-            <td><strong>${escapeHtml(t.tool)}</strong></td>
-            <td><span class="badge ${t.available ? 'badge-success' : 'badge-danger'}">${t.available ? 'YES' : 'NO'}</span></td>
-            <td><code>${escapeHtml(t.version || 'Not Found')}</code></td>
-            <td><small class="text-muted">${escapeHtml(t.requirement)}</small></td>
-            <td><span class="badge ${t.status === 'OK' ? 'badge-success' : (t.status === 'OPTIONAL' ? 'badge-info' : 'badge-danger')}">${escapeHtml(t.status)}</span></td>
-          </tr>
-        `).join('');
+      if (envData && envData.ok) {
+        const sys = envData.environment?.system || envData.system || {};
+        if (envSysPlatform) envSysPlatform.textContent = sys.platform === 'win32' ? 'Windows' : (sys.platform || 'OS');
+        if (envSysArch) envSysArch.textContent = `${sys.arch || 'x64'} architecture`;
+        if (envSysNode) envSysNode.textContent = sys.nodeVersion || 'Node.js';
+        if (envSysMemory) envSysMemory.textContent = `${sys.heapUsedMb || (sys.memoryUsage ? Math.round(sys.memoryUsage.heapUsed / 1024 / 1024) : '--')} MB`;
+        if (envSysFreemem) envSysFreemem.textContent = `${sys.freeMemMb || (sys.freeMemory ? Math.round(sys.freeMemory / 1024 / 1024) : '--')} MB free`;
+        if (envSysUptime) envSysUptime.textContent = `${sys.uptimeSeconds || sys.uptimeSec || (sys.uptime ? Math.round(sys.uptime) : '0')}s`;
+
+        if (Array.isArray(envData.environment?.tools)) {
+          const tools = envData.environment.tools;
+          const readyCount = tools.filter(t => t.available).length;
+
+          if (qpValTools) qpValTools.textContent = `${readyCount}/${tools.length} Tools Ready`;
+          if (qpDotTools) qpDotTools.className = 'quick-pill-dot success';
+
+          if (envToolsTableBody) {
+            envToolsTableBody.innerHTML = tools.map(t => {
+              const isHealthy = t.status === 'HEALTHY' || t.status === 'OK';
+              const statusClass = isHealthy ? 'badge-success' : (t.status === 'OPTIONAL' ? 'badge-info' : 'badge-danger');
+              return `
+                <tr>
+                  <td><strong>${escapeHtml(t.tool)}</strong></td>
+                  <td><span class="badge ${t.available ? 'badge-success' : 'badge-danger'}">${t.available ? 'YES' : 'NO'}</span></td>
+                  <td><code>${escapeHtml(t.version || 'Not Found')}</code></td>
+                  <td><code class="text-xs text-muted">${escapeHtml(t.path || '--')}</code></td>
+                  <td><small class="text-muted">${escapeHtml(t.requirement)}</small></td>
+                  <td><span class="badge ${statusClass}">${escapeHtml(t.status)}</span></td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
       }
 
     } catch (err) {
@@ -1653,21 +2716,157 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  btnRetestCli.addEventListener('click', () => {
-    loadDiagnostics();
-    loadSystemSummary();
-  });
+  if (btnRetestCli) {
+    btnRetestCli.addEventListener('click', () => {
+      loadDiagnostics();
+      loadSystemSummary();
+    });
+  }
 
+  if (btnRefreshToolchain) {
+    btnRefreshToolchain.addEventListener('click', () => {
+      loadDiagnostics();
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 10c. Azure DevOps & NuGet Authentication Matrix
+  // ---------------------------------------------------------------------------
+  async function loadNuGetAuthStatus(force = false) {
+    if (settingsNugetAuthBadge) {
+      settingsNugetAuthBadge.className = 'badge badge-secondary';
+      settingsNugetAuthBadge.innerHTML = '<span class="loading-spinner-sm mr-1"></span> Probing...';
+    }
+    if (qpValNuget) qpValNuget.textContent = 'Probing...';
+    if (qpDotNuget) qpDotNuget.className = 'quick-pill-dot info';
+
+    try {
+      const url = force ? '/api/nuget/auth-status?refresh=true' : '/api/nuget/auth-status';
+      const res = await fetch(url);
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || 'Failed to fetch auth diagnostics');
+
+      if (settingsNugetAuthBadge) {
+        if (data.overallStatus === 'AUTHENTICATED') {
+          settingsNugetAuthBadge.className = 'badge badge-success';
+          settingsNugetAuthBadge.textContent = 'AUTHENTICATED';
+        } else if (data.overallStatus === 'SIGN_IN_REQUIRED') {
+          settingsNugetAuthBadge.className = 'badge badge-warning';
+          settingsNugetAuthBadge.textContent = 'SIGN-IN REQUIRED';
+        } else {
+          settingsNugetAuthBadge.className = 'badge badge-danger';
+          settingsNugetAuthBadge.textContent = data.overallStatus || 'AUTH ERROR';
+        }
+      }
+
+      if (qpValNuget) {
+        qpValNuget.textContent = data.overallStatus === 'AUTHENTICATED'
+          ? `Connected (${data.activeAccount || 'Ready'})`
+          : (data.overallStatus === 'SIGN_IN_REQUIRED' ? 'Sign-In Required' : 'Auth Error');
+      }
+      if (qpDotNuget) {
+        qpDotNuget.className = `quick-pill-dot ${data.overallStatus === 'AUTHENTICATED' ? 'success' : (data.overallStatus === 'SIGN_IN_REQUIRED' ? 'warning' : 'danger')}`;
+      }
+
+      if (patStatusIndicator) {
+        patStatusIndicator.innerHTML = data.hasStoredPat
+          ? '<span class="badge badge-success">Configured & Protected</span>'
+          : '<span class="badge badge-secondary">Not Configured</span>';
+      }
+
+      if (settingsAuthIdentityDetails) {
+        const actDisplay = data.activeAccount
+          ? `<strong>Active Azure Account:</strong> ${escapeHtml(data.activeAccount)}`
+          : '<span class="text-warning">No active Azure login detected</span>';
+        const patDisplay = data.hasStoredPat ? '<span class="badge badge-success text-xs">PAT Active</span>' : '<span class="text-muted text-xs">No PAT</span>';
+        settingsAuthIdentityDetails.innerHTML = `${actDisplay} &bull; Stored Credential: ${patDisplay}`;
+      }
+
+      if (authFacetsContainer && data.facets) {
+        renderAuthFacets(data.facets);
+      }
+
+    } catch (err) {
+      if (settingsNugetAuthBadge) {
+        settingsNugetAuthBadge.className = 'badge badge-danger';
+        settingsNugetAuthBadge.textContent = 'ERROR';
+      }
+      if (qpValNuget) qpValNuget.textContent = 'Check Failed';
+      if (qpDotNuget) qpDotNuget.className = 'quick-pill-dot danger';
+      if (settingsAuthIdentityDetails) {
+        settingsAuthIdentityDetails.innerHTML = `<span class="text-danger">Diagnostic failure: ${escapeHtml(err.message)}</span>`;
+      }
+    }
+  }
+
+  function renderAuthFacets(facets) {
+    if (!authFacetsContainer || !facets) return;
+
+    const facetDefinitions = [
+      { key: 'azureCli', num: 1, title: 'Azure CLI' },
+      { key: 'azureCliLogin', num: 2, title: 'Azure CLI Login' },
+      { key: 'azureDevOpsOrg', num: 3, title: 'Target Organization & Feed' },
+      { key: 'feedReachability', num: 4, title: 'Feed Reachability' },
+      { key: 'credentialProvider', num: 5, title: 'Credential Provider' },
+      { key: 'feedAuthentication', num: 6, title: 'Effective Feed Auth' },
+      { key: 'packageReadPermission', num: 7, title: 'Package Read Permission' }
+    ];
+
+    authFacetsContainer.innerHTML = facetDefinitions.map(def => {
+      const f = facets[def.key] || {};
+      const status = f.status || 'UNKNOWN';
+
+      const isPass = ['INSTALLED', 'LOGGED_IN', 'CONFIGURED', 'REACHABLE', 'READY', 'AUTHENTICATED', 'READ_PERMITTED'].includes(status);
+      const isWarn = ['OPTIONAL_MISSING', 'NOT_LOGGED_IN', 'AUTH_REQUIRED', 'SIGN_IN_REQUIRED'].includes(status);
+
+      const cardClass = isPass ? 'facet-card success' : (isWarn ? 'facet-card warning' : 'facet-card danger');
+      const badgeClass = isPass ? 'badge-success' : (isWarn ? 'badge-warning' : 'badge-danger');
+
+      let valText = f.status || '--';
+      if (def.key === 'azureCli') valText = f.installed ? (f.version || 'Installed') : 'Not Found';
+      else if (def.key === 'azureCliLogin') valText = f.account || (status === 'LOGGED_IN' ? 'Logged In' : 'Not Signed In');
+      else if (def.key === 'azureDevOpsOrg') valText = f.organization || 'preciofishbone';
+      else if (def.key === 'feedReachability') valText = f.reachable ? `HTTP ${f.statusCode || 200} OK` : 'Unreachable';
+      else if (def.key === 'credentialProvider') valText = f.installed ? 'Installed (MSAL)' : 'Not Found';
+      else if (def.key === 'feedAuthentication') valText = f.authenticated ? `via ${f.authMechanism || 'Azure CLI'}` : 'Auth Required';
+      else if (def.key === 'packageReadPermission') valText = f.canRead ? `${f.versionCount || 0} Versions` : 'No Access';
+
+      return `
+        <div class="${cardClass}" id="facet-${def.key}">
+          <div class="facet-header">
+            <span class="facet-num">${def.num}</span>
+            <span class="badge ${badgeClass} text-xs">${escapeHtml(status)}</span>
+          </div>
+          <div class="facet-title">${escapeHtml(def.title)}</div>
+          <div class="facet-value" title="${escapeHtml(valText)}">${escapeHtml(valText)}</div>
+          <div class="facet-detail" title="${escapeHtml(f.detail || '')}">${escapeHtml(f.detail || '')}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  if (btnRefreshNugetMatrix) {
+    btnRefreshNugetMatrix.addEventListener('click', () => {
+      loadNuGetAuthStatus(true);
+      loadNuGetSources(true);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 10d. Settings Persistence & Runtime Limits
+  // ---------------------------------------------------------------------------
   async function loadSettings() {
     try {
       const res = await fetch('/api/settings');
       const data = await res.json();
       if (data.ok && data.settings) {
         const s = data.settings;
-        settingWorkspaceRoots.value = Array.isArray(s.approvedWorkspaceRoots) ? s.approvedWorkspaceRoots.join('\n') : '';
-        settingCorePath.value = s.corePath || '';
-        settingTimeout.value = s.executionTimeoutMs || 300000;
-        settingConcurrency.value = s.concurrencyLimit || 1;
+        if (settingWorkspaceRoots) {
+          settingWorkspaceRoots.value = Array.isArray(s.approvedWorkspaceRoots) ? s.approvedWorkspaceRoots.join('\n') : '';
+        }
+        if (settingCorePath) settingCorePath.value = s.corePath || '';
+        if (settingTimeout) settingTimeout.value = s.executionTimeoutMs || 300000;
+        if (settingConcurrency) settingConcurrency.value = s.concurrencyLimit || 1;
         if (s.copilotModel && settingCopilotModel) {
           const known = Array.from(settingCopilotModel.options).some(o => o.value === s.copilotModel);
           if (known) {
@@ -1679,40 +2878,69 @@ document.addEventListener('DOMContentLoaded', () => {
             if (settingCustomModelContainer) settingCustomModelContainer.style.display = 'block';
           }
         }
-        if (s.azureDevOpsPat && settingAzurePat) {
-          settingAzurePat.value = s.azureDevOpsPat;
-        }
         if (s.defaultUpgradeMode && settingDefaultUpgradeMode) {
           settingDefaultUpgradeMode.value = s.defaultUpgradeMode;
+        }
+        if (patStatusIndicator) {
+          patStatusIndicator.innerHTML = s.hasAzureDevOpsPat
+            ? '<span class="badge badge-success">Configured & Protected</span>'
+            : '<span class="badge badge-secondary">Not Configured</span>';
+        }
+        if (settingVerifyBuild) {
+          settingVerifyBuild.checked = s.verification?.runBuild !== false;
+        }
+        if (settingVerifyTests) {
+          settingVerifyTests.checked = s.verification?.runTests !== false;
+        }
+        if (settingVerifyApi) {
+          settingVerifyApi.checked = s.verification?.checkApiSurface !== false;
+        }
+        if (settingSimulationMode) {
+          settingSimulationMode.checked = Boolean(s.simulationMode);
         }
       }
     } catch (_) {}
   }
 
-  btnSaveSettings.addEventListener('click', async () => {
-    btnSaveSettings.disabled = true;
-    btnSaveSettings.textContent = 'Saving...';
-    settingsSaveAlert.style.display = 'none';
+  async function saveAdminSettings() {
+    if (btnSaveSettings) {
+      btnSaveSettings.disabled = true;
+      btnSaveSettings.textContent = 'Saving...';
+    }
+    if (btnSaveSettingsBottom) {
+      btnSaveSettingsBottom.disabled = true;
+      btnSaveSettingsBottom.textContent = 'Saving...';
+    }
+    if (settingsSaveAlert) settingsSaveAlert.style.display = 'none';
 
     try {
-      const roots = settingWorkspaceRoots.value
+      const roots = (settingWorkspaceRoots.value || '')
         .split('\n')
         .map(r => r.trim())
         .filter(Boolean);
 
       const modelVal = settingCopilotModel && settingCopilotModel.value === 'custom'
-        ? (settingCustomCopilotModel ? settingCustomCopilotModel.value.trim() : 'gpt-4o')
-        : (settingCopilotModel ? settingCopilotModel.value : 'gpt-4o');
+        ? (settingCustomCopilotModel ? settingCustomCopilotModel.value.trim() : 'auto')
+        : (settingCopilotModel ? settingCopilotModel.value : 'auto');
 
       const payload = {
         approvedWorkspaceRoots: roots,
-        corePath: settingCorePath.value.trim(),
+        corePath: (settingCorePath ? settingCorePath.value : '').trim(),
         executionTimeoutMs: parseInt(settingTimeout.value, 10),
         concurrencyLimit: parseInt(settingConcurrency.value, 10),
-        copilotModel: modelVal || 'gpt-4o',
-        azureDevOpsPat: (settingAzurePat && settingAzurePat.value.trim()) ? settingAzurePat.value.trim() : null,
-        defaultUpgradeMode: (settingDefaultUpgradeMode && settingDefaultUpgradeMode.value) ? settingDefaultUpgradeMode.value : 'AUTO'
+        copilotModel: modelVal || 'auto',
+        defaultUpgradeMode: (settingDefaultUpgradeMode && settingDefaultUpgradeMode.value) ? settingDefaultUpgradeMode.value : 'AUTO',
+        verification: {
+          runBuild: settingVerifyBuild ? settingVerifyBuild.checked : true,
+          runTests: settingVerifyTests ? settingVerifyTests.checked : true,
+          checkApiSurface: settingVerifyApi ? settingVerifyApi.checked : true,
+        },
+        simulationMode: settingSimulationMode ? settingSimulationMode.checked : false,
       };
+
+      if (settingAzurePat && settingAzurePat.value.trim()) {
+        payload.azureDevOpsPat = settingAzurePat.value.trim();
+      }
 
       const res = await fetch('/api/settings', {
         method: 'POST',
@@ -1722,24 +2950,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await res.json();
       if (data.ok) {
-        settingsSaveAlert.className = 'alert alert-success';
-        settingsSaveAlert.textContent = 'Settings validated and saved successfully.';
-        settingsSaveAlert.style.display = 'block';
+        if (settingsSaveAlert) {
+          settingsSaveAlert.className = 'alert alert-success';
+          settingsSaveAlert.textContent = 'Settings validated and saved successfully.';
+          settingsSaveAlert.style.display = 'block';
+        }
+        if (settingAzurePat) settingAzurePat.value = '';
+        await loadSettings();
+        await loadWorkspaceDiscovery(true);
       } else {
         const errors = (data.errors || [data.error]).join(', ');
-        settingsSaveAlert.className = 'alert alert-danger';
-        settingsSaveAlert.textContent = 'Failed to save settings: ' + errors;
-        settingsSaveAlert.style.display = 'block';
+        if (settingsSaveAlert) {
+          settingsSaveAlert.className = 'alert alert-danger';
+          settingsSaveAlert.textContent = 'Failed to save settings: ' + errors;
+          settingsSaveAlert.style.display = 'block';
+        }
       }
     } catch (err) {
-      settingsSaveAlert.className = 'alert alert-danger';
-      settingsSaveAlert.textContent = 'Network error saving settings: ' + err.message;
-      settingsSaveAlert.style.display = 'block';
+      if (settingsSaveAlert) {
+        settingsSaveAlert.className = 'alert alert-danger';
+        settingsSaveAlert.textContent = 'Network error saving settings: ' + err.message;
+        settingsSaveAlert.style.display = 'block';
+      }
     } finally {
-      btnSaveSettings.disabled = false;
-      btnSaveSettings.textContent = 'Save & Validate Settings';
+      if (btnSaveSettings) {
+        btnSaveSettings.disabled = false;
+        btnSaveSettings.textContent = 'Save & Validate Settings';
+      }
+      if (btnSaveSettingsBottom) {
+        btnSaveSettingsBottom.disabled = false;
+        btnSaveSettingsBottom.textContent = 'Save & Validate Settings';
+      }
     }
-  });
+  }
+
+  if (btnSaveSettings) {
+    btnSaveSettings.addEventListener('click', saveAdminSettings);
+  }
+  if (btnSaveSettingsBottom) {
+    btnSaveSettingsBottom.addEventListener('click', saveAdminSettings);
+  }
+
+  if (btnToggleSimulation && settingSimulationMode) {
+    btnToggleSimulation.addEventListener('click', async () => {
+      settingSimulationMode.checked = !settingSimulationMode.checked;
+      await saveAdminSettings();
+      await loadDiagnostics();
+    });
+  }
+
+  if (btnAdminRefreshAll) {
+    btnAdminRefreshAll.addEventListener('click', async () => {
+      btnAdminRefreshAll.disabled = true;
+      btnAdminRefreshAll.innerHTML = '<span class="loading-spinner-sm mr-1"></span> Refreshing All...';
+      try {
+        await Promise.all([
+          loadWorkspaceDiscovery(true),
+          loadDiagnostics(),
+          loadNuGetAuthStatus(true),
+          loadNuGetSources(true),
+          loadSettings()
+        ]);
+      } finally {
+        btnAdminRefreshAll.disabled = false;
+        btnAdminRefreshAll.textContent = 'Refresh Diagnostics';
+      }
+    });
+  }
 
   // ---------------------------------------------------------------------------
   // 10b. NuGet Package Sources & Authentication
@@ -1967,8 +3244,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <td><small>${(j.tracks || []).join(', ')}</small></td>
             <td><span class="badge ${getStatusBadgeClass(j.status)}">${escapeHtml(j.status)}</span></td>
             <td><small>${new Date(j.createdAt).toLocaleTimeString()}</small></td>
-            <td>
-              <button class="btn btn-secondary btn-sm" onclick="window.inspectJob('${escapeHtml(j.id)}')">View</button>
+            <td class="text-right">
+              <button class="btn btn-secondary btn-xs" onclick="window.inspectJob('${escapeHtml(j.id)}')">View</button>
             </td>
           </tr>
         `).join('');
@@ -2021,22 +3298,522 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/'/g, '&#039;');
   }
 
+  // ---------------------------------------------------------------------------
+  // 10d. GitHub Copilot CLI Authentication & Login Flow
+  // ---------------------------------------------------------------------------
+  const copilotAuthModal = document.getElementById('copilot-auth-modal');
+  const btnOpenCopilotAuthModal = document.getElementById('btn-open-copilot-auth-modal');
+  const topbarCopilotLabel = document.getElementById('topbar-copilot-label');
+  const btnCloseCopilotModal = document.getElementById('btn-close-copilot-modal');
+  const btnCloseCopilotModalFooter = document.getElementById('btn-close-copilot-modal-footer');
+  const modalCopilotDot = document.getElementById('modal-copilot-dot');
+  const modalCopilotStatusText = document.getElementById('modal-copilot-status-text');
+  const modalCopilotAccountText = document.getElementById('modal-copilot-account-text');
+  const btnCopilotRetestModal = document.getElementById('btn-copilot-retest-modal');
+  const btnModalCopilotSignout = document.getElementById('btn-modal-copilot-signout');
+
+  const tabBtnCopilotWeb = document.getElementById('tab-btn-copilot-web');
+  const tabBtnCopilotDevice = document.getElementById('tab-btn-copilot-device');
+  const tabBtnCopilotToken = document.getElementById('tab-btn-copilot-token');
+  const paneCopilotWeb = document.getElementById('pane-copilot-web');
+  const paneCopilotDevice = document.getElementById('pane-copilot-device');
+  const paneCopilotToken = document.getElementById('pane-copilot-token');
+
+  const webFlowInitial = document.getElementById('web-flow-initial');
+  const webFlowActive = document.getElementById('web-flow-active');
+  const btnModalCopilotWebLogin = document.getElementById('btn-modal-copilot-web-login');
+  const linkOpenWebAuthUrl = document.getElementById('link-open-web-auth-url');
+  const btnCancelWebFlow = document.getElementById('btn-cancel-web-flow');
+  const btnCheckWebFlow = document.getElementById('btn-check-web-flow');
+  const modalCopilotWebFeedback = document.getElementById('modal-copilot-web-feedback');
+
+  const deviceFlowInitial = document.getElementById('device-flow-initial');
+  const deviceFlowActive = document.getElementById('device-flow-active');
+  const btnModalStartDeviceFlow = document.getElementById('btn-modal-start-device-flow');
+  const deviceCodeValue = document.getElementById('device-code-value');
+  const btnCopyDeviceCode = document.getElementById('btn-copy-device-code');
+  const linkOpenDevicePage = document.getElementById('link-open-device-page');
+  const devicePollMsg = document.getElementById('device-poll-msg');
+  const btnCancelDeviceFlow = document.getElementById('btn-cancel-device-flow');
+  const modalCopilotDeviceFeedback = document.getElementById('modal-copilot-device-feedback');
+
+  const modalCopilotTokenInput = document.getElementById('modal-copilot-token-input');
+  const btnToggleTokenVisibility = document.getElementById('btn-toggle-token-visibility');
+  const btnModalSaveCopilotToken = document.getElementById('btn-modal-save-copilot-token');
+  const btnModalClearCopilotToken = document.getElementById('btn-modal-clear-copilot-token');
+  const modalCopilotTokenFeedback = document.getElementById('modal-copilot-token-feedback');
+
+  const btnAdminCopilotLogin = document.getElementById('btn-admin-copilot-login');
+  const btnAdminCopilotLogout = document.getElementById('btn-admin-copilot-logout');
+  const adminCopilotAuthSummary = document.getElementById('admin-copilot-auth-summary');
+
+  let activeWebLoginId = null;
+  let copilotWebPollTimer = null;
+  let activeDeviceLoginId = null;
+  let copilotDevicePollTimer = null;
+
+  function switchCopilotAuthTab(tabName) {
+    [tabBtnCopilotWeb, tabBtnCopilotDevice, tabBtnCopilotToken].forEach(b => {
+      if (!b) return;
+      b.classList.toggle('active', b.getAttribute('data-copilot-tab') === tabName);
+    });
+    if (paneCopilotWeb) paneCopilotWeb.style.display = tabName === 'web' ? 'block' : 'none';
+    if (paneCopilotDevice) paneCopilotDevice.style.display = tabName === 'device' ? 'block' : 'none';
+    if (paneCopilotToken) paneCopilotToken.style.display = tabName === 'token' ? 'block' : 'none';
+  }
+
+  function openCopilotAuthModal() {
+    if (copilotAuthModal) {
+      copilotAuthModal.style.display = 'flex';
+      loadCopilotAuthStatus(false);
+    }
+  }
+
+  function closeCopilotAuthModal() {
+    if (copilotAuthModal) {
+      copilotAuthModal.style.display = 'none';
+    }
+    if (copilotWebPollTimer) {
+      clearInterval(copilotWebPollTimer);
+      copilotWebPollTimer = null;
+    }
+    if (copilotDevicePollTimer) {
+      clearInterval(copilotDevicePollTimer);
+      copilotDevicePollTimer = null;
+    }
+  }
+
+  async function loadCopilotAuthStatus(force = false) {
+    try {
+      const res = await fetch('/api/copilot/auth-status');
+      if (!res.ok) return;
+      const data = await res.json();
+
+      const isAuthed = Boolean(data.authenticated);
+      const identity = data.identity || (data.credentialSource ? `Using ${data.credentialSource}` : null);
+
+      // Topbar button & badge
+      if (topbarCopilotLabel) {
+        topbarCopilotLabel.textContent = isAuthed ? (identity || 'Copilot Connected') : 'Copilot Sign In';
+      }
+      if (btnOpenCopilotAuthModal) {
+        btnOpenCopilotAuthModal.className = isAuthed
+          ? 'btn btn-secondary btn-sm flex-center gap-2 border-success-subtle text-success'
+          : 'btn btn-secondary btn-sm flex-center gap-2';
+      }
+      if (cliHealthBadge) {
+        cliHealthBadge.textContent = isAuthed ? `Copilot CLI: ${identity || 'Connected'}` : (data.available ? 'Copilot CLI: Sign In Required' : 'Copilot CLI: Not in PATH');
+        cliHealthBadge.className = isAuthed ? 'badge badge-success' : (data.available ? 'badge badge-warning' : 'badge badge-secondary');
+      }
+
+      // Quick strip in Admin Console
+      if (qpValCopilot) {
+        qpValCopilot.textContent = isAuthed ? `Active (${identity || 'Authenticated'})` : (data.available ? 'Sign In Required' : 'Not Detected');
+      }
+      if (qpDotCopilot) {
+        qpDotCopilot.className = isAuthed ? 'quick-pill-dot success' : (data.available ? 'quick-pill-dot warning' : 'quick-pill-dot danger');
+      }
+
+      // Modal Status Banner
+      if (modalCopilotDot) {
+        modalCopilotDot.className = isAuthed ? 'health-dot' : (data.available ? 'health-dot warning' : 'health-dot danger');
+      }
+      if (modalCopilotStatusText) {
+        modalCopilotStatusText.textContent = isAuthed ? 'Authenticated & Ready' : (data.available ? 'Installed • Sign In Required' : 'CLI Binary Not Found in PATH');
+        modalCopilotStatusText.className = isAuthed ? 'text-success' : (data.available ? 'text-warning' : 'text-danger');
+      }
+      if (modalCopilotAccountText) {
+        modalCopilotAccountText.textContent = identity ? `Account / Identity: ${identity}` : 'No active account detected';
+      }
+      if (btnModalCopilotSignout) {
+        btnModalCopilotSignout.style.display = isAuthed ? 'inline-flex' : 'none';
+      }
+
+      // Admin Console Summary
+      if (adminCopilotAuthSummary) {
+        adminCopilotAuthSummary.textContent = isAuthed
+          ? `Connected as ${identity || 'active account'}. AI reasoning is active.`
+          : 'Not currently authenticated. Sign in to enable autonomous AI reasoning during refactoring and repairs.';
+      }
+
+      // Diagnostic card values
+      if (diagCliAuthStatus) {
+        diagCliAuthStatus.textContent = isAuthed ? 'AUTHENTICATED' : (data.available ? 'SIGN_IN_REQUIRED' : 'OFFLINE');
+        diagCliAuthStatus.className = isAuthed ? 'diag-value text-success' : 'diag-value text-warning';
+      }
+      if (diagCliAccount) {
+        diagCliAccount.textContent = identity || 'None';
+      }
+      if (diagCliCredSource) {
+        diagCliCredSource.textContent = data.credentialSource || 'None';
+      }
+
+    } catch (err) {
+      console.error('Failed to load Copilot auth status:', err);
+    }
+  }
+
+  // Web Flow
+  async function triggerCopilotWebLogin() {
+    if (modalCopilotWebFeedback) {
+      modalCopilotWebFeedback.style.display = 'none';
+      modalCopilotWebFeedback.innerHTML = '';
+    }
+    if (btnModalCopilotWebLogin) btnModalCopilotWebLogin.disabled = true;
+
+    try {
+      const res = await fetch('/api/copilot/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login-web' }),
+      });
+      const data = await res.json();
+      if (btnModalCopilotWebLogin) btnModalCopilotWebLogin.disabled = false;
+
+      if (!data.ok) {
+        if (modalCopilotWebFeedback) {
+          modalCopilotWebFeedback.style.display = 'block';
+          modalCopilotWebFeedback.innerHTML = `<span class="text-danger">${escapeHtml(data.error || 'Failed to start browser login.')}</span>`;
+        }
+        return;
+      }
+
+      activeWebLoginId = data.loginId;
+
+      if (data.authUrl) {
+        if (linkOpenWebAuthUrl) {
+          linkOpenWebAuthUrl.href = data.authUrl;
+          linkOpenWebAuthUrl.style.display = 'inline-flex';
+        }
+        try {
+          window.open(data.authUrl, '_blank');
+        } catch (_) {}
+      } else {
+        if (linkOpenWebAuthUrl) linkOpenWebAuthUrl.style.display = 'none';
+      }
+
+      if (webFlowInitial) webFlowInitial.style.display = 'none';
+      if (webFlowActive) webFlowActive.style.display = 'block';
+
+      // Start polling
+      if (copilotWebPollTimer) clearInterval(copilotWebPollTimer);
+      copilotWebPollTimer = setInterval(pollCopilotWebStatus, 2500);
+
+    } catch (err) {
+      if (btnModalCopilotWebLogin) btnModalCopilotWebLogin.disabled = false;
+      if (modalCopilotWebFeedback) {
+        modalCopilotWebFeedback.style.display = 'block';
+        modalCopilotWebFeedback.innerHTML = `<span class="text-danger">Request failed: ${escapeHtml(err.message)}</span>`;
+      }
+    }
+  }
+
+  async function pollCopilotWebStatus() {
+    if (!activeWebLoginId) return;
+    try {
+      const res = await fetch('/api/copilot/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'web-poll', loginId: activeWebLoginId }),
+      });
+      const data = await res.json();
+      if (!data.ok) return;
+
+      if (data.status === 'completed' || data.authenticated) {
+        if (copilotWebPollTimer) {
+          clearInterval(copilotWebPollTimer);
+          copilotWebPollTimer = null;
+        }
+        if (modalCopilotWebFeedback) {
+          modalCopilotWebFeedback.style.display = 'block';
+          modalCopilotWebFeedback.innerHTML = `<div class="alert alert-success p-2"><strong>Successfully authenticated!</strong> Logged in as ${escapeHtml(data.identity || 'active user')}.</div>`;
+        }
+        await loadCopilotAuthStatus(true);
+        setTimeout(() => {
+          if (webFlowInitial) webFlowInitial.style.display = 'block';
+          if (webFlowActive) webFlowActive.style.display = 'none';
+        }, 3000);
+      } else if (data.status === 'failed') {
+        if (copilotWebPollTimer) {
+          clearInterval(copilotWebPollTimer);
+          copilotWebPollTimer = null;
+        }
+        if (modalCopilotWebFeedback) {
+          modalCopilotWebFeedback.style.display = 'block';
+          modalCopilotWebFeedback.innerHTML = `<div class="alert alert-danger p-2">${escapeHtml(data.error || 'Web authentication ended.')}</div>`;
+        }
+      }
+    } catch (_) {}
+  }
+
+  async function cancelCopilotWebFlow() {
+    if (copilotWebPollTimer) {
+      clearInterval(copilotWebPollTimer);
+      copilotWebPollTimer = null;
+    }
+    if (activeWebLoginId) {
+      try {
+        await fetch('/api/copilot/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'web-cancel', loginId: activeWebLoginId }),
+        });
+      } catch (_) {}
+      activeWebLoginId = null;
+    }
+    if (webFlowInitial) webFlowInitial.style.display = 'block';
+    if (webFlowActive) webFlowActive.style.display = 'none';
+  }
+
+  // Device Code Flow
+  async function startCopilotDeviceFlow() {
+    if (modalCopilotDeviceFeedback) modalCopilotDeviceFeedback.style.display = 'none';
+    if (btnModalStartDeviceFlow) btnModalStartDeviceFlow.disabled = true;
+
+    try {
+      const res = await fetch('/api/copilot/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login-device' }),
+      });
+      const data = await res.json();
+      if (btnModalStartDeviceFlow) btnModalStartDeviceFlow.disabled = false;
+
+      if (!data.ok) {
+        if (modalCopilotDeviceFeedback) {
+          modalCopilotDeviceFeedback.style.display = 'block';
+          modalCopilotDeviceFeedback.innerHTML = `<span class="text-danger">${escapeHtml(data.error || 'Failed to start device flow')}</span>`;
+        }
+        return;
+      }
+
+      activeDeviceLoginId = data.loginId;
+      if (deviceCodeValue) deviceCodeValue.textContent = data.userCode || '---- ----';
+      if (deviceFlowInitial) deviceFlowInitial.style.display = 'none';
+      if (deviceFlowActive) deviceFlowActive.style.display = 'block';
+      if (devicePollMsg) devicePollMsg.textContent = 'Waiting for authorization on GitHub...';
+
+      // Start polling
+      if (copilotDevicePollTimer) clearInterval(copilotDevicePollTimer);
+      const pollInterval = (data.pollIntervalSec || 3) * 1000;
+      copilotDevicePollTimer = setInterval(pollCopilotDeviceStatus, pollInterval);
+
+    } catch (err) {
+      if (btnModalStartDeviceFlow) btnModalStartDeviceFlow.disabled = false;
+      if (modalCopilotDeviceFeedback) {
+        modalCopilotDeviceFeedback.style.display = 'block';
+        modalCopilotDeviceFeedback.innerHTML = `<span class="text-danger">Request error: ${escapeHtml(err.message)}</span>`;
+      }
+    }
+  }
+
+  async function pollCopilotDeviceStatus() {
+    if (!activeDeviceLoginId) return;
+    try {
+      const res = await fetch('/api/copilot/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'device-poll', loginId: activeDeviceLoginId }),
+      });
+      const data = await res.json();
+      if (!data.ok) return;
+
+      if (data.status === 'completed' || data.authenticated) {
+        if (copilotDevicePollTimer) {
+          clearInterval(copilotDevicePollTimer);
+          copilotDevicePollTimer = null;
+        }
+        if (devicePollMsg) {
+          devicePollMsg.innerHTML = '<strong class="text-success">Authorization successful! Authenticated.</strong>';
+        }
+        await loadCopilotAuthStatus(true);
+        setTimeout(() => {
+          if (deviceFlowInitial) deviceFlowInitial.style.display = 'block';
+          if (deviceFlowActive) deviceFlowActive.style.display = 'none';
+        }, 3000);
+      } else if (data.status === 'failed' || data.status === 'timeout') {
+        if (copilotDevicePollTimer) {
+          clearInterval(copilotDevicePollTimer);
+          copilotDevicePollTimer = null;
+        }
+        if (devicePollMsg) {
+          devicePollMsg.innerHTML = `<span class="text-danger">${escapeHtml(data.error || 'Device authorization ended.')}</span>`;
+        }
+      }
+    } catch (_) {}
+  }
+
+  async function cancelCopilotDeviceFlow() {
+    if (copilotDevicePollTimer) {
+      clearInterval(copilotDevicePollTimer);
+      copilotDevicePollTimer = null;
+    }
+    if (activeDeviceLoginId) {
+      try {
+        await fetch('/api/copilot/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'device-cancel', loginId: activeDeviceLoginId }),
+        });
+      } catch (_) {}
+      activeDeviceLoginId = null;
+    }
+    if (deviceFlowInitial) deviceFlowInitial.style.display = 'block';
+    if (deviceFlowActive) deviceFlowActive.style.display = 'none';
+  }
+
+  // Token Auth
+  async function saveCopilotToken() {
+    const token = modalCopilotTokenInput ? modalCopilotTokenInput.value.trim() : '';
+    if (!token) {
+      if (modalCopilotTokenFeedback) {
+        modalCopilotTokenFeedback.style.display = 'block';
+        modalCopilotTokenFeedback.innerHTML = '<span class="text-warning">Please enter a GitHub or Copilot token.</span>';
+      }
+      return;
+    }
+    if (modalCopilotTokenFeedback) {
+      modalCopilotTokenFeedback.style.display = 'block';
+      modalCopilotTokenFeedback.innerHTML = '<span class="loading-spinner-sm"></span> Verifying token...';
+    }
+    try {
+      const res = await fetch('/api/copilot/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'set-token', token }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        modalCopilotTokenFeedback.innerHTML = `<span class="text-success">Token saved and verified (${escapeHtml(data.identity || 'Authenticated')}).</span>`;
+        if (modalCopilotTokenInput) modalCopilotTokenInput.value = '';
+        await loadCopilotAuthStatus(true);
+      } else {
+        modalCopilotTokenFeedback.innerHTML = `<span class="text-danger">${escapeHtml(data.error || 'Token verification failed')}</span>`;
+      }
+    } catch (err) {
+      modalCopilotTokenFeedback.innerHTML = `<span class="text-danger">Request failed: ${escapeHtml(err.message)}</span>`;
+    }
+  }
+
+  async function clearCopilotToken() {
+    if (!confirm('Are you sure you want to sign out and clear the configured Copilot credentials?')) return;
+    try {
+      const res = await fetch('/api/copilot/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'clear' }),
+      });
+      const data = await res.json();
+      if (modalCopilotTokenFeedback) {
+        modalCopilotTokenFeedback.style.display = 'block';
+        modalCopilotTokenFeedback.innerHTML = '<span class="text-info">Credentials cleared.</span>';
+      }
+      await loadCopilotAuthStatus(true);
+    } catch (err) {
+      alert('Failed to clear token: ' + err.message);
+    }
+  }
+
+  // Event listeners for Copilot auth
+  if (btnOpenCopilotAuthModal) {
+    btnOpenCopilotAuthModal.addEventListener('click', openCopilotAuthModal);
+  }
+  if (btnCloseCopilotModal) {
+    btnCloseCopilotModal.addEventListener('click', closeCopilotAuthModal);
+  }
+  if (btnCloseCopilotModalFooter) {
+    btnCloseCopilotModalFooter.addEventListener('click', closeCopilotAuthModal);
+  }
+  if (btnCopilotRetestModal) {
+    btnCopilotRetestModal.addEventListener('click', () => loadCopilotAuthStatus(true));
+  }
+  if (btnModalCopilotSignout) {
+    btnModalCopilotSignout.addEventListener('click', clearCopilotToken);
+  }
+  if (tabBtnCopilotWeb) {
+    tabBtnCopilotWeb.addEventListener('click', () => switchCopilotAuthTab('web'));
+  }
+  if (tabBtnCopilotDevice) {
+    tabBtnCopilotDevice.addEventListener('click', () => switchCopilotAuthTab('device'));
+  }
+  if (tabBtnCopilotToken) {
+    tabBtnCopilotToken.addEventListener('click', () => switchCopilotAuthTab('token'));
+  }
+  if (btnModalCopilotWebLogin) {
+    btnModalCopilotWebLogin.addEventListener('click', triggerCopilotWebLogin);
+  }
+  if (btnCancelWebFlow) {
+    btnCancelWebFlow.addEventListener('click', cancelCopilotWebFlow);
+  }
+  if (btnCheckWebFlow) {
+    btnCheckWebFlow.addEventListener('click', async () => {
+      await pollCopilotWebStatus();
+      await loadCopilotAuthStatus(true);
+    });
+  }
+  if (btnModalStartDeviceFlow) {
+    btnModalStartDeviceFlow.addEventListener('click', startCopilotDeviceFlow);
+  }
+  if (btnCancelDeviceFlow) {
+    btnCancelDeviceFlow.addEventListener('click', cancelCopilotDeviceFlow);
+  }
+  if (btnCopyDeviceCode) {
+    btnCopyDeviceCode.addEventListener('click', () => {
+      const code = deviceCodeValue ? deviceCodeValue.textContent.trim() : '';
+      if (!code || code === '---- ----') return;
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btnCopyDeviceCode.textContent;
+        btnCopyDeviceCode.textContent = 'Copied!';
+        setTimeout(() => { btnCopyDeviceCode.textContent = orig; }, 1500);
+      });
+      // Also open device page
+      if (linkOpenDevicePage && linkOpenDevicePage.href) {
+        window.open(linkOpenDevicePage.href, '_blank');
+      }
+    });
+  }
+  if (btnToggleTokenVisibility && modalCopilotTokenInput) {
+    btnToggleTokenVisibility.addEventListener('click', () => {
+      const isPwd = modalCopilotTokenInput.type === 'password';
+      modalCopilotTokenInput.type = isPwd ? 'text' : 'password';
+      btnToggleTokenVisibility.textContent = isPwd ? 'Hide' : 'Show';
+    });
+  }
+  if (btnModalSaveCopilotToken) {
+    btnModalSaveCopilotToken.addEventListener('click', saveCopilotToken);
+  }
+  if (btnModalClearCopilotToken) {
+    btnModalClearCopilotToken.addEventListener('click', clearCopilotToken);
+  }
+  if (btnAdminCopilotLogin) {
+    btnAdminCopilotLogin.addEventListener('click', openCopilotAuthModal);
+  }
+  if (btnAdminCopilotLogout) {
+    btnAdminCopilotLogout.addEventListener('click', clearCopilotToken);
+  }
+
   // Initialize view
   async function init() {
+    const urlParams = new URLSearchParams(window.location.search);
     const initialHash = window.location.hash.replace('#', '') || 'dashboard';
-    switchView(initialHash);
+    const autoView = urlParams.get('view') || initialHash;
+
     await Promise.all([
+      loadCopilotModels(),
+      loadCopilotAuthStatus(),
+      loadAccountIdentity(),
       loadProjects(),
       loadAvailableVersions(),
-      loadCopilotModels(),
-      loadAccountIdentity(),
-      loadSystemSummary(),
-      loadJobsList()
     ]);
-    updateUpgradeModePreview();
 
-    // Query parameter support for automated test flow and direct step navigation
-    const urlParams = new URLSearchParams(window.location.search);
+    switchView(autoView);
+
+    const autoAdminTab = urlParams.get('admintab') || urlParams.get('adminTab');
+    if (autoAdminTab) {
+      switchAdminTab(autoAdminTab);
+    }
+
+    updateUpgradeModePreview();
     const autoStep = urlParams.get('step');
     const autoTab = urlParams.get('tab');
     const autoProject = urlParams.get('project');
@@ -2059,21 +3836,35 @@ document.addEventListener('DOMContentLoaded', () => {
       openNugetAuthModal();
     }
 
-    if (autoStep) {
-      const proj = autoProject ? projects.find(p => p.id === autoProject) : projects[0];
+    const autoCopilotModal = urlParams.get('copilotmodal');
+    if (autoCopilotModal) {
+      openCopilotAuthModal();
+    }
+
+    if (autoProject) {
+      const proj = projects.find(p => p.id === autoProject);
       if (proj) {
         projectSelect.value = proj.id;
         selectedProject = proj;
         clientPathHint.textContent = proj.path;
         currentVersionDisplay.textContent = `v${proj.currentVersion}`;
       }
-      const target = autoTarget || (availableVersions.length > 0 ? availableVersions[0] : null);
-      if (target) {
-        targetVersionSelect.value = target;
-      }
-      if (selectedProject && targetVersionSelect.value) {
+    }
+    if (autoTarget) {
+      targetVersionSelect.value = autoTarget;
+    }
+    updateUpgradeModePreview();
+    validateStartPrerequisites();
+
+    const autoTestAuth = urlParams.get('testauth');
+    if (autoTestAuth) {
+      await testAuthConnectionStep1();
+    }
+
+    if (autoStep) {
+      const stepNum = parseInt(autoStep, 10);
+      if (stepNum > 1 && selectedProject && targetVersionSelect.value) {
         await runPreflight();
-        const stepNum = parseInt(autoStep, 10);
         if (stepNum >= 1 && stepNum <= 4) {
           goToWizardStep(stepNum);
         }
@@ -2084,6 +3875,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (urlParams.get('expand') === '0') {
           window.toggleCheckRowDetail(0);
         }
+      } else if (stepNum === 1) {
+        goToWizardStep(1);
       }
     }
   }

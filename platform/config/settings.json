@@ -1,0 +1,30 @@
+{
+  "approvedWorkspaceRoots": [
+    "C:\\Users\\naph\\AppData\\Local\\Temp\\platform-test-zZfY8x"
+  ],
+  "corePath": "C:\\Users\\naph\\AppData\\Local\\Temp\\platform-test-zZfY8x\\ngo-online-core",
+  "copilotCliPath": null,
+  "copilotModel": "gpt-4o",
+  "azureDevOpsPat": null,
+  "defaultUpgradeMode": "AUTO",
+  "executionTimeoutMs": 180000,
+  "concurrencyLimit": 2,
+  "defaultTracks": [
+    "backend",
+    "frontend"
+  ],
+  "simulationMode": false,
+  "verification": {
+    "runBuild": true,
+    "runTests": true,
+    "checkPublicApi": true
+  },
+  "logging": {
+    "verbosity": "INFO",
+    "retentionDays": 30
+  },
+  "gitSafety": {
+    "requireCommitApproval": true,
+    "preventAutoPush": true
+  }
+}

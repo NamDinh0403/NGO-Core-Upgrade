@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "mappings": {
+    "9.4.0": {
+      "sourceBranch": "releases/9.4",
+      "ref": "origin/releases/9.4",
+      "decision": "APPROVED",
+      "reviewer": "Developer",
+      "reason": "The developer approved the Core releases/9.4 branch as the release identity for NGO Core 9.4.0 because no v9.4.0 tag exists."
+    }
+  }
+}

@@ -91,7 +91,7 @@ function startCmd(flags) {
   try {
     sharedContext = require('../../engine/tools/lib/execution').attach(dir, 'frontend', {
       contextRef: flags.context, clientId, runId,
-      clientPath: req.resolved.clientPath, corePath: req.resolved.corePath,
+      clientPath: req.resolved.clientPath, corePath: flags['shared-core-path'] || req.resolved.corePath,
       sourceVersion: req.upgrade.sourceVersion, targetVersion: req.upgrade.targetVersion,
       releaseNotesPath: flags['release-notes']
     });

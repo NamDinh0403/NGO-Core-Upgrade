@@ -18,6 +18,19 @@ and ask once for material missing/conflicting inputs including the target.
 Do not infer a target from the highest installed version. Both-track and
 single-track upgrades use the same engine. Tracks never ingest or own global state.
 
+## Release Discovery Hierarchy
+Release resolution uses an evidence-based hierarchy:
+1. Published package artifact matching the requested target version.
+2. Official release tag or immutable source revision, if available.
+3. Official release metadata and release notes.
+4. Relevant commits, pull requests, or source diffs, if available.
+5. Authoritative package metadata and compatibility information.
+
+The existence of a `releases` branch is an OPTIONAL discovery hint, never a release
+prerequisite. For urgent package-first releases where packages are published before
+branches or tags exist, proceed using package evidence and available artifacts. Missing
+optional evidence is not missing required input; never block on absent branches.
+
 ## Safety
 Never mutate a client before its engine-registered plan is READY and all safety
 gates pass. Core is strictly read-only, with no branch switching. Never expose

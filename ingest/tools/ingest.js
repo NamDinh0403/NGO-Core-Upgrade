@@ -20,11 +20,14 @@ const crypto = require('crypto');
 const git = require('./lib/git');
 const notes = require('./lib/notes');
 const classify = require('./lib/classify');
+const resolver = require('./lib/release-resolver');
 
 const ROOT = path.resolve(__dirname, '..'); // ingest/
 const BACKEND_VERSIONS_DIR = path.resolve(ROOT, '..', 'backend', 'knowledge', 'canonical', 'versions');
 const FRONTEND_RELEASES_DIR = path.resolve(ROOT, '..', 'frontend', 'knowledge', 'canonical', 'releases');
 const DEFAULT_OUT = path.join(ROOT, 'knowledge', 'candidates', 'releases');
+const APPROVED_RELEASE_REFS = path.join(ROOT, 'config', 'approved-release-ref-mappings.json');
+const BRANCH_VERSION_MANIFEST = path.join(ROOT, 'knowledge', 'candidates', 'version-manifest.json');
 const ANALYZER_VERSION = '2';
 const hash = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const normalizeVersion = (value) => /^\d+\.\d+$/.test(String(value)) ? `${value}.0` : String(value || '');
@@ -70,8 +73,51 @@ function newerTags(corePath, since, tagPrefix) {
     const v = m[1];
     if (!since || (v !== since && gtVer(v, since))) versions.push(v);
   }
+
   versions.sort((a, b) => cmpVer(parseVer(a), parseVer(b)));
   return { ok: true, error: null, versions };
+}
+
+function approvedReleaseRef(version) {
+  if (!fs.existsSync(APPROVED_RELEASE_REFS)) return null;
+  const config = JSON.parse(fs.readFileSync(APPROVED_RELEASE_REFS, 'utf8'));
+  const mapping = config && config.mappings && config.mappings[version];
+  return mapping && mapping.decision === 'APPROVED' ? mapping : null;
+}
+
+function branchEvidence(corePath, since, target, outDir) {
+  try {
+    const approved = approvedReleaseRef(target);
+    if (!approved || !fs.existsSync(BRANCH_VERSION_MANIFEST)) return null;
+    const targetCommit = git.resolveRef(corePath, approved.ref);
+    if (!targetCommit) return null;
+    const manifest = JSON.parse(fs.readFileSync(BRANCH_VERSION_MANIFEST, 'utf8'));
+    const releases = (manifest.releases || []).filter((release) =>
+      gtVer(release.version, since) && cmpVer(parseVer(release.version), parseVer(target)) <= 0);
+    const targetRelease = releases.find((release) => release.version === target);
+    if (!targetRelease || targetRelease.branch !== approved.sourceBranch || targetRelease.commit !== targetCommit) {
+      return null;
+    }
+    const entries = releases.map((release) => {
+      const file = path.join(outDir, `${release.version}.json`);
+      if (!fs.existsSync(file)) throw new Error(`approved branch evidence missing: ${file}`);
+      const record = JSON.parse(fs.readFileSync(file, 'utf8'));
+      if (record.version !== release.version || record.status !== 'CANDIDATE' ||
+          !record.sourceFingerprint || record.sourceFingerprint.currentCommitSha !== release.commit ||
+          record.sources.sourceBranch !== release.branch) {
+        throw new Error(`approved branch evidence invalid: ${file}`);
+      }
+      const live = git.resolveRef(corePath, `origin/${release.branch}`) || git.resolveRef(corePath, release.branch);
+      if (live !== release.commit) throw new Error(`approved branch evidence stale: ${release.branch}`);
+      return { path: file, reused: true, record };
+    });
+    if (!entries.length || entries[entries.length - 1].record.version !== target) {
+      return null;
+    }
+    return { entries, reused: true };
+  } catch (_) {
+    return null;
+  }
 }
 
 function cmdCheck(flags) {
@@ -254,12 +300,77 @@ function cachedRecord(file, identity) {
   try {
     const record = JSON.parse(fs.readFileSync(file, 'utf8'));
     if (record.schemaVersion !== 1 || record.status !== 'CANDIDATE' || record.version !== identity.version || !record.identity || !Object.keys(identity).every((key) => record.identity[key] === identity[key])) return null;
-    if (!record.sources || !record.sources.tagRange || typeof record.sources.tagRange.from !== 'string' || typeof record.sources.tagRange.to !== 'string' || typeof record.ingestedAt !== 'string' || typeof record.nextAction !== 'string') return null;
+    if (!record.sources || !record.sources.tagRange || !(typeof record.sources.tagRange.from === 'string' || record.sources.tagRange.from === null) || typeof record.sources.tagRange.to !== 'string' || typeof record.ingestedAt !== 'string' || typeof record.nextAction !== 'string') return null;
     if (!record.findings || !['backend', 'frontend', 'shared'].every((scope) => Array.isArray(record.findings[scope]))) return null;
     if (!Array.isArray(record.changes) || !Array.isArray(record.facts) || !Array.isArray(record.unresolvedItems)) return null;
     const integrity = hash(JSON.stringify(Object.assign({}, record, { contentHash: undefined })));
     return record.contentHash === integrity ? record : null;
   } catch (_) { return null; }
+}
+
+function ingestPackageFirstCandidate(corePath, text, version, resolution, flags) {
+  const outDir = (flags && flags.out) || DEFAULT_OUT;
+  const file = path.join(outDir, `${version}.json`);
+  const cards = text ? notes.cardsFor(text, version) : [];
+  const noteFindings = { backend: [], frontend: [], shared: [] };
+
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    const scope = guessCardScope(card);
+    noteFindings[scope].push({
+      scope,
+      category: 'release-note-card',
+      path: null,
+      statement: redact(card.split('\n')[0].slice(0, 200)),
+      source: 'release-notes',
+      crossCheck: 'NOTED_WITHOUT_SOURCE_DIFF',
+      evidence: redact(`release-notes.md#${version} card ${i + 1}`),
+    });
+  }
+
+  const unresolvedItems = [
+    `${version}: published package resolved without releases branch (${resolution.status})`,
+    `${version}: source diff unavailable — findings are package inspection and release notes only`,
+  ];
+  if (!text) unresolvedItems.push(`${version}: no release-notes.md provided — findings are package-inspection-only`);
+
+  const pkgIdentity = (resolution.sources && resolution.sources.package && resolution.sources.package.identity) || `package-${version}`;
+  const identity = {
+    analyzerVersion: ANALYZER_VERSION,
+    version,
+    packageIdentity: pkgIdentity,
+    notesHash: hash(JSON.stringify(text == null ? null : cards)),
+  };
+  identity.key = hash(JSON.stringify(identity));
+
+  const record = {
+    schemaVersion: 1,
+    version,
+    status: 'CANDIDATE',
+    identity,
+    changes: [],
+    facts: [
+      {
+        kind: 'package-publication',
+        version,
+        packageIdentity: pkgIdentity,
+        mode: resolution.mode,
+        compatibilityEvidence: resolution.evidence.compatibilityEvidence,
+      },
+    ],
+    ingestedAt: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
+    sources: {
+      coreRepoPath: corePath,
+      releaseNotesPath: text ? 'provided' : null,
+      tagRange: { from: null, to: resolution.targetCommit || `package:${version}` },
+      packageEvidence: resolution.sources ? resolution.sources.package : { available: true },
+    },
+    findings: noteFindings,
+    unresolvedItems,
+    nextAction: `Developer: inspect installed assemblies/API surface for package ${version}. Source diff is unavailable for this package-first release.`,
+  };
+  record.contentHash = hash(JSON.stringify(record));
+  return { path: file, reused: false, record };
 }
 
 function ensureReleases(flags) {
@@ -276,7 +387,72 @@ function ensureReleases(flags) {
   const listed = newerTags(corePath, null, tagPrefix);
   if (!listed.ok) throw new Error(listed.error);
   const all = listed.versions;
-  if (target && !all.includes(target)) throw new Error(`target release tag missing: ${tagPrefix}${target}`);
+  if (target && !all.includes(target)) {
+    const approved = branchEvidence(corePath, since, target, flags.out || DEFAULT_OUT);
+    if (approved) {
+      const drift = git.diffFingerprints(before, git.fingerprint(corePath));
+      if (drift.length) throw new Error(`Core changed during ingestion: ${drift.join('; ')}`);
+      return approved;
+    }
+
+    const resolution = resolver.resolveRelease(target, {
+      corePath,
+      since,
+      tagPrefix,
+      'release-notes': flags['release-notes'],
+      out: flags.out || DEFAULT_OUT,
+      manifestPath: BRANCH_VERSION_MANIFEST,
+      approvedMappingsPath: APPROVED_RELEASE_REFS,
+      packageAvailable: flags['package-available'],
+      publishedPackages: flags['published-packages'],
+      packageArtifacts: flags['package-artifacts'],
+    });
+
+    if (!resolution.ok) throw new Error(resolution.error);
+
+    // Source diff available via resolved commit boundary
+    if (resolution.evidence.sourceDiffAvailable && resolution.targetCommit && resolution.fromCommit) {
+      const text = flags['release-notes'] && fs.existsSync(flags['release-notes']) ? fs.readFileSync(flags['release-notes'], 'utf8') : null;
+      const file = path.join(flags.out || DEFAULT_OUT, `${target}.json`);
+      const identity = releaseIdentity(corePath, text, resolution.fromCommit, resolution.targetCommit, target);
+      const cached = cachedRecord(file, identity);
+      const record = cached || ingestOneVersion(corePath, text, resolution.fromCommit, resolution.targetCommit, target);
+      if (!cached) record.contentHash = hash(JSON.stringify(record));
+      const entry = { path: file, reused: !!cached, record };
+      const drift = git.diffFingerprints(before, git.fingerprint(corePath));
+      if (drift.length) throw new Error(`Core changed during ingestion: ${drift.join('; ')}`);
+      if (!cached) {
+        fs.mkdirSync(flags.out || DEFAULT_OUT, { recursive: true });
+        fs.writeFileSync(file, JSON.stringify(record, null, 2) + '\n');
+      }
+      return { entries: [entry], reused: !!cached, resolution };
+    }
+
+    // Package-first fallback (Scenario B / Scenario C: package published, no releases branch or source diff)
+    if (resolution.evidence.packageAvailable) {
+      const text = flags['release-notes'] && fs.existsSync(flags['release-notes']) ? fs.readFileSync(flags['release-notes'], 'utf8') : null;
+      const file = path.join(flags.out || DEFAULT_OUT, `${target}.json`);
+      const pkgIdentity = {
+        analyzerVersion: ANALYZER_VERSION,
+        version: target,
+        packageIdentity: (resolution.sources.package && resolution.sources.package.identity) || `package-${target}`,
+        notesHash: hash(JSON.stringify(text == null ? null : (notes.cardsFor(text, target) || []))),
+      };
+      pkgIdentity.key = hash(JSON.stringify(pkgIdentity));
+      const cached = cachedRecord(file, pkgIdentity);
+      if (cached) {
+        return { entries: [{ path: file, reused: true, record: cached }], reused: true, resolution };
+      }
+      const entry = ingestPackageFirstCandidate(corePath, text, target, resolution, flags);
+      const drift = git.diffFingerprints(before, git.fingerprint(corePath));
+      if (drift.length) throw new Error(`Core changed during ingestion: ${drift.join('; ')}`);
+      fs.mkdirSync(flags.out || DEFAULT_OUT, { recursive: true });
+      fs.writeFileSync(file, JSON.stringify(entry.record, null, 2) + '\n');
+      return { entries: [entry], reused: false, resolution };
+    }
+
+    throw new Error(`target release tag missing: ${tagPrefix}${target}`);
+  }
   const source = since || (target ? all[all.indexOf(target) - 1] : null);
   if (source && !git.resolveRef(corePath, `${tagPrefix}${source}`)) throw new Error(`source release tag missing: ${tagPrefix}${source}`);
   const versions = all.filter((version) => (!source || gtVer(version, source)) && (!target || !gtVer(version, target)));
@@ -347,4 +523,16 @@ function main() {
 
 if (require.main === module) main();
 
-module.exports = { highestKnownVersion, newerTags, ingestOneVersion, cmdCheck, cmdIngest, ensureReleases, releaseIdentity, ANALYZER_VERSION };
+module.exports = {
+  highestKnownVersion,
+  newerTags,
+  ingestOneVersion,
+  cmdCheck,
+  cmdIngest,
+  ensureReleases,
+  releaseIdentity,
+  approvedReleaseRef,
+  resolveRelease: resolver.resolveRelease,
+  ingestPackageFirstCandidate,
+  ANALYZER_VERSION,
+};

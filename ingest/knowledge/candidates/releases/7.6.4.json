@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "version": "7.6.4",
+  "status": "CANDIDATE",
+  "identity": {
+    "analyzerVersion": "2",
+    "version": "7.6.4",
+    "fromCommit": "22912f71339c89d5dbebd22fa57ab43be78f7f48",
+    "toCommit": "22912f71339c89d5dbebd22fa57ab43be78f7f48",
+    "notesHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "key": "c6778ae7876a974134c63c6b49ce693f300671d44a09c7373c4d652a92866545"
+  },
+  "changes": [],
+  "facts": [],
+  "ingestedAt": "2026-10-13T08:55:12Z",
+  "sources": {
+    "coreRepoPath": "D:\\NGO Client\\ngo-online-core",
+    "releaseNotesPath": null,
+    "tagRange": {
+      "from": "22912f71339c89d5dbebd22fa57ab43be78f7f48",
+      "to": "22912f71339c89d5dbebd22fa57ab43be78f7f48"
+    }
+  },
+  "findings": {
+    "backend": [],
+    "frontend": [],
+    "shared": []
+  },
+  "unresolvedItems": [
+    "7.6.4: no release-notes.md provided — findings are git-diff-only for this version"
+  ],
+  "nextAction": "Developer: review ingest/knowledge/candidates/releases/7.6.4.json, resolve unresolvedItems, then promote applicable findings into backend/knowledge/canonical/versions/7.6.4.json and/or frontend/knowledge/canonical/releases/7.6.4/.",
+  "contentHash": "bbd20397c5f6b81c39ae8b7219d502d539681e403cad8eefa6b49a6f1ac9081a"
+}

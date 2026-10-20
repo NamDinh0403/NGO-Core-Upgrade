@@ -55,9 +55,21 @@ function inspectRequest(flags) {
 
 function inspectDetailed(packet) {
   const changeSet = JSON.parse(fs.readFileSync(packet.upgrade.coreChangeSet.ref, 'utf8'));
+  const root = changeSet.source.corePath;
+  const frontendCorePath = fs.existsSync(path.join(root, 'ngo-client-core', 'package.json'))
+    ? path.join(root, 'ngo-client-core') : root;
+  const mappingsPath = path.resolve(__dirname, '..', '..', 'ingest', 'config', 'approved-release-ref-mappings.json');
+  let targetRef = null;
+  if (fs.existsSync(mappingsPath)) {
+    const mappings = JSON.parse(fs.readFileSync(mappingsPath, 'utf8'));
+    const approved = mappings.mappings && mappings.mappings[packet.upgrade.target.targetVersion];
+    if (approved && approved.decision === 'APPROVED') targetRef = approved.ref;
+  }
   return inspectRequest({ context: path.join(path.dirname(packet.upgrade.coreChangeSet.ref), 'contexts', 'frontend.json'),
     'client-id': packet.upgrade.run.clientId, run: packet.upgrade.run.runId,
-    'client-path': packet.client.path, 'core-path': changeSet.source.corePath,
+    'client-path': packet.client.path, 'core-path': frontendCorePath,
+    'shared-core-path': root,
+    'target-ref': targetRef,
     'source-version': packet.upgrade.target.sourceVersion, 'target-version': packet.upgrade.target.targetVersion });
 }
 

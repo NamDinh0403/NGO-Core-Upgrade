@@ -21,6 +21,14 @@ are optional; the requested target version must be explicit.
 
 > You do not need to learn the internal agents, skills, schemas, or commands.
 
+### 🌐 Local Web UI Platform
+Launch the browser-based upgrade dashboard:
+```bash
+node platform/start.js
+```
+Navigate to **`http://127.0.0.1:3800/`** to select projects, execute preflight checks, monitor background runs, review deterministic verification, and approve commits. See [platform/README.md](platform/README.md).
+
+
 ## ✅ What You Need
 
 | Requirement | Purpose |
@@ -68,6 +76,30 @@ version, not passed as a full diff. Generic rules live in one
 [shared lifecycle](engine/skills/lifecycle/SKILL.md).
 See the [shared engine report](docs/refactor/shared-engine-report.md)
 for responsibilities, compatibility and verification limits.
+
+## 🔍 Release Discovery & Source Resolution
+
+Releases are resolved using an evidence-based hierarchy:
+1. **Published package artifact:** matching the requested version (NuGet `.nupkg` / npm package).
+2. **Official release tag or immutable source revision:** if available in Git.
+3. **Official release metadata and release notes:** if provided.
+4. **Relevant commits, pull requests, or source diffs:** if available.
+5. **Authoritative package metadata:** and compatibility information.
+
+### Urgent Package-First Releases
+Package publication does not depend on a `releases` branch. When an urgent release publishes a package before a release branch or source tag is organized, the agent:
+- Discovers and resolves the published package artifact directly.
+- Operates in package-first mode without requesting a nonexistent branch.
+- Reports which source evidence was available and what remains unverified.
+- Never loops or halts due to missing optional Git branches.
+
+### Fallback Matrix & Evidence Modes
+- **Normal Release (Full Mode):** Package published and release branch/tag exists -> complete source diff and artifact verification.
+- **Urgent Package-First:** Package published, release branch missing -> proceeds using package and available commits/tags; branch is optional.
+- **Package Published, Source Diff Unavailable (Reduced-Evidence):** Package published, source revision absent -> analyzes package surface and flags source diff absence in `unresolvedItems`.
+- **Source Available, Package Unavailable:** Source branch/tag exists, package missing -> inspects source changes but flags published artifact as unverified.
+- **Invalid / Unavailable Target:** Terminated boundedly after 1 attempt with a clear error; no infinite retries.
+- **Conflicting Evidence:** Detects mismatch between package and source versions; preserves provenance without guessing.
 
 ## 🛡️ Safety
 
@@ -133,6 +165,7 @@ You only need these when maintaining or troubleshooting the framework.
 | Shared-run coordination | [orchestrator/README.md](orchestrator/README.md) |
 | Backend workflow | [backend/README.md](backend/README.md) |
 | Frontend workflow | [frontend/README.md](frontend/README.md) |
+| Local UI platform | [platform/README.md](platform/README.md) |
 | Optimization results | [docs/refactor/optimization-report.md](docs/refactor/optimization-report.md) |
 
 <a id="tests--validation"></a>
@@ -145,7 +178,7 @@ Run from this repository's root:
 node tools/validate-all.js
 ```
 
-This runs all **14 framework suites** and checks status and tracked content hashes,
+This runs all **17 framework suites** and checks status and tracked content hashes,
 including already-dirty files. Add `--verbose` for individual suite output. Framework tests are not a
 substitute for a real client's build, tests, or deployment verification.
 
@@ -160,6 +193,13 @@ node tools/ingest.test.js
 
 # orchestrator/
 node tests/orchestrator.test.js
+
+# engine/
+node tests/engine.test.js
+node tests/release-resolution-matrix.test.js
+
+# platform/
+node platform/tests/platform.test.js
 
 # backend/
 node tools/validate.js

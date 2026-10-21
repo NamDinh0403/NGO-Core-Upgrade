@@ -243,8 +243,11 @@ function validateSettings(settings) {
 
 /**
  * Load settings, falling back to defaults if not present or corrupt.
+ * Cross-machine safety: if persisted approvedWorkspaceRoots or corePath come from
+ * another machine and do not exist on disk, dynamically fall back to portable defaults
+ * and environment variables without failing workspace boundary checks.
  */
-function loadSettings() {
+function loadSettings(opts = {}) {
   let loaded = Object.assign({}, DEFAULT_SETTINGS);
 
   try {
@@ -257,6 +260,30 @@ function loadSettings() {
       });
     }
   } catch (_) {}
+
+  // Cross-machine workspace root resolution:
+  const envRoots = (process.env.NGO_WORKSPACE_ROOTS || process.env.NGO_WORKSPACE_ROOT || '')
+    .split(path.delimiter)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const configuredRoots = Array.isArray(loaded.approvedWorkspaceRoots) ? loaded.approvedWorkspaceRoots : [];
+  const existingConfiguredRoots = configuredRoots.filter((r) => {
+    try { return typeof r === 'string' && fs.existsSync(r); } catch (_) { return false; }
+  });
+  if (existingConfiguredRoots.length === 0) {
+    loaded.approvedWorkspaceRoots = Array.from(new Set([...DEFAULT_SETTINGS.approvedWorkspaceRoots, ...envRoots, ...configuredRoots]));
+  } else if (envRoots.length > 0) {
+    loaded.approvedWorkspaceRoots = Array.from(new Set([...configuredRoots, ...envRoots]));
+  }
+
+  // Cross-machine Core path resolution:
+  if (process.env.NGO_CORE_PATH && process.env.NGO_CORE_PATH.trim()) {
+    loaded.corePath = path.resolve(process.env.NGO_CORE_PATH.trim());
+  } else if (loaded.corePath && !fs.existsSync(loaded.corePath) && opts.resolveCore !== false) {
+    if (fs.existsSync(DEFAULT_CORE_DIR)) {
+      loaded.corePath = DEFAULT_CORE_DIR;
+    }
+  }
 
   // Attach stored PAT in memory for backend operations
   loaded.azureDevOpsPat = getStoredAzurePat();
@@ -328,4 +355,6 @@ module.exports = {
   hasStoredAzurePat,
   sanitizeSettingsForClient,
   DEFAULT_SETTINGS,
+  DEFAULT_CLIENTS_DIR,
+  DEFAULT_CORE_DIR,
 };

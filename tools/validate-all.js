@@ -27,6 +27,7 @@ const SUITES = [
   ['platform', 'platform', 'tests/platform.test.js'],
   ['platform: nuget sources & auth', 'platform', 'tests/nuget-sources.test.js'],
   ['platform: preflight audit', 'platform', 'tests/preflight-audit.test.js'],
+  ['platform: cross-machine portability', 'platform', 'tests/cross-machine-portability.test.js'],
   ['backend: structure', 'backend', 'tools/validate.js'],
   ['backend: repository layout', 'backend', 'tools/repo-layout.test.js'],
   ['backend: skills', 'backend', 'tools/skills.test.js'],

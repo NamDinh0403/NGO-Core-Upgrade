@@ -2,10 +2,12 @@
 /*
  * Provider-Native NuGet Feed Authentication and Package Source Diagnostics.
  *
- * Discovers configured NuGet package sources (global, project, user), resolves
- * provider-native credentials (including Azure Artifacts Credential Provider via MSAL
- * silent token acquisition and Personal Access Tokens), runs safe read-only diagnostics,
- * queries package registries, and distinguishes authentication failures from package absence.
+ * Discovers configured NuGet package sources (global, project, user), inspects
+ * hierarchical NuGet.Config / nuget.config files (including disabledPackageSources
+ * and packageSourceMapping), resolves provider-native credentials (Azure Artifacts
+ * Credential Provider, VSS_NUGET_EXTERNAL_FEED_ENDPOINTS, PAT, Azure CLI), runs
+ * 5-stage separated preflight checks, and distinguishes authentication failures
+ * from package absence.
  *
  * Dependency-free, Node 14+.
  */
@@ -72,55 +74,88 @@ function classifySourceType(sourceUrl) {
     if (norm.includes('github.com') || norm.includes('nuget.pkg.github.com')) return 'GITHUB_PACKAGES';
     return 'PRIVATE_NUGET_V3';
   }
-  if (norm.startsWith('file://') || /^[a-z]:\\|^\\\\/i.test(norm)) {
+  if (norm.startsWith('file://') || /^[a-z]:\\|^\\\\/i.test(norm) || norm.startsWith('/')) {
     return 'LOCAL_DIRECTORY';
   }
   return 'UNKNOWN';
 }
 
 /**
- * Locate the Azure Artifacts Credential Provider executable.
+ * Locate the Azure Artifacts Credential Provider executable or plugin DLL across
+ * environment overrides, user NuGet plugin folders, Visual Studio installations, and PATH.
  */
 function findAzureArtifactsCredentialProvider() {
-  // 1. Explicit environment path
-  const custom = process.env.NUGET_CREDENTIALPROVIDERS_PATH;
-  if (custom && fs.existsSync(custom)) {
-    const candidate = path.join(custom, 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.exe');
-    if (fs.existsSync(candidate)) return candidate;
-  }
-
-  // 2. Visual Studio installation paths
-  const vsYears = ['18', '2022', '17', '2019'];
-  const editions = ['Enterprise', 'Professional', 'Community'];
-  for (const yr of vsYears) {
-    for (const ed of editions) {
-      const p = path.join(
-        'C:\\Program Files\\Microsoft Visual Studio',
-        yr,
-        ed,
-        'Common7\\IDE\\CommonExtensions\\Microsoft\\NuGet\\Plugins\\CredentialProvider.Microsoft\\CredentialProvider.Microsoft.exe'
-      );
+  // 1. Explicit NUGET_PLUGIN_PATHS
+  const pluginPaths = process.env.NUGET_PLUGIN_PATHS;
+  if (pluginPaths) {
+    for (const p of pluginPaths.split(path.delimiter).map((s) => s.trim()).filter(Boolean)) {
       if (fs.existsSync(p)) return p;
     }
   }
 
-  // 3. User NuGet plugins folder
-  const home = process.env.USERPROFILE || process.env.HOME || '';
-  if (home) {
-    const userPlugin = path.join(
-      home,
-      '.nuget',
-      'plugins',
-      'netcore',
-      'CredentialProvider.Microsoft',
-      'CredentialProvider.Microsoft.exe'
-    );
-    if (fs.existsSync(userPlugin)) return userPlugin;
+  // 2. Explicit NUGET_CREDENTIALPROVIDERS_PATH
+  const custom = process.env.NUGET_CREDENTIALPROVIDERS_PATH;
+  if (custom) {
+    for (const dir of custom.split(path.delimiter).map((s) => s.trim()).filter(Boolean)) {
+      const candidates = [
+        path.join(dir, 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.exe'),
+        path.join(dir, 'CredentialProvider.Microsoft.exe'),
+        path.join(dir, 'netcore', 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.exe'),
+        path.join(dir, 'netcore', 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.dll'),
+      ];
+      for (const c of candidates) {
+        if (fs.existsSync(c)) return c;
+      }
+    }
   }
 
-  // 4. PATH lookup
+  // 3. User NuGet plugins & LocalAppData folders
+  const home = process.env.USERPROFILE || process.env.HOME || '';
+  const localAppData = process.env.LOCALAPPDATA || (home ? path.join(home, 'AppData', 'Local') : '');
+  const userCandidates = [];
+  if (home) {
+    userCandidates.push(
+      path.join(home, '.nuget', 'plugins', 'netcore', 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.exe'),
+      path.join(home, '.nuget', 'plugins', 'netfx', 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.exe'),
+      path.join(home, '.nuget', 'plugins', 'netcore', 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.dll')
+    );
+  }
+  if (localAppData) {
+    userCandidates.push(
+      path.join(localAppData, 'Microsoft', 'CredentialProvider', 'CredentialProvider.Microsoft.exe'),
+      path.join(localAppData, 'Microsoft', 'CredentialProvider', 'netcore', 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.exe')
+    );
+  }
+  for (const c of userCandidates) {
+    if (fs.existsSync(c)) return c;
+  }
+
+  // 4. Visual Studio installation paths (Program Files & Program Files (x86))
+  const progFilesRoots = [
+    process.env.ProgramFiles || 'C:\\Program Files',
+    process.env['ProgramFiles(x86)'] || 'C:\\Program Files (x86)',
+  ];
+  const vsYears = ['18', '2022', '17', '2019'];
+  const editions = ['Enterprise', 'Professional', 'Community', 'BuildTools', 'Preview'];
+  for (const pf of progFilesRoots) {
+    for (const yr of vsYears) {
+      for (const ed of editions) {
+        const p = path.join(
+          pf,
+          'Microsoft Visual Studio',
+          yr,
+          ed,
+          'Common7', 'IDE', 'CommonExtensions', 'Microsoft', 'NuGet', 'Plugins', 'CredentialProvider.Microsoft', 'CredentialProvider.Microsoft.exe'
+        );
+        if (fs.existsSync(p)) return p;
+      }
+    }
+  }
+
+  // 5. PATH lookup
   try {
-    const whereRes = cp.spawnSync('where', ['CredentialProvider.Microsoft.exe'], { encoding: 'utf8', windowsHide: true });
+    const probe = process.platform === 'win32' ? 'where' : 'which';
+    const whereRes = cp.spawnSync(probe, ['CredentialProvider.Microsoft.exe'], { encoding: 'utf8', windowsHide: true, timeout: 4000 });
     if (whereRes.status === 0 && whereRes.stdout) {
       const firstLine = whereRes.stdout.trim().split(/\r?\n/)[0];
       if (firstLine && fs.existsSync(firstLine)) return firstLine;
@@ -131,26 +166,210 @@ function findAzureArtifactsCredentialProvider() {
 }
 
 /**
- * Parse XML package sources from NuGet.Config content.
+ * Parse XML package sources, disabledPackageSources, and packageSourceMapping from NuGet.Config content.
  */
-function parseSourcesFromXml(xmlContent) {
-  const sources = [];
-  if (!xmlContent || typeof xmlContent !== 'string') return sources;
+function parseNuGetConfigXml(xmlContent) {
+  const result = {
+    sources: [],
+    disabledSources: [],
+    clearsPackageSources: false,
+    packageSourceMappings: [],
+  };
+  if (!xmlContent || typeof xmlContent !== 'string') return result;
 
-  const matches = xmlContent.match(/<add\s+[^>]*>/gi);
-  if (matches) {
-    for (const tag of matches) {
+  // Strip XML comments so commented-out sections are never treated as active
+  const cleanXml = xmlContent.replace(/<!--[\s\S]*?-->/g, '');
+
+  // 1. Parse <packageSources>
+  const pkgSourcesBlockMatch = cleanXml.match(/<packageSources\b[^>]*>([\s\S]*?)<\/packageSources>/i);
+  const pkgSourcesBody = pkgSourcesBlockMatch ? pkgSourcesBlockMatch[1] : cleanXml;
+  if (/<clear\s*\/?>/i.test(pkgSourcesBody)) {
+    result.clearsPackageSources = true;
+  }
+  const addTags = pkgSourcesBody.match(/<add\s+[^>]*>/gi) || [];
+  for (const tag of addTags) {
+    const keyM = tag.match(/key=["']([^"']+)["']/i);
+    const valM = tag.match(/value=["']([^"']+)["']/i);
+    if (keyM && valM) {
+      result.sources.push({
+        name: keyM[1].trim(),
+        url: valM[1].trim(),
+      });
+    }
+  }
+
+  // 2. Parse <disabledPackageSources>
+  const disabledBlockMatch = cleanXml.match(/<disabledPackageSources\b[^>]*>([\s\S]*?)<\/disabledPackageSources>/i);
+  if (disabledBlockMatch) {
+    const disTags = disabledBlockMatch[1].match(/<add\s+[^>]*>/gi) || [];
+    for (const tag of disTags) {
       const keyM = tag.match(/key=["']([^"']+)["']/i);
       const valM = tag.match(/value=["']([^"']+)["']/i);
-      if (keyM && valM) {
-        sources.push({
-          name: keyM[1].trim(),
-          url: valM[1].trim(),
-        });
+      if (keyM && valM && /^(true|1)$/i.test(valM[1].trim())) {
+        result.disabledSources.push(keyM[1].trim());
       }
     }
   }
-  return sources;
+
+  // 3. Parse <packageSourceMapping>
+  const mappingBlockMatch = cleanXml.match(/<packageSourceMapping\b[^>]*>([\s\S]*?)<\/packageSourceMapping>/i);
+  if (mappingBlockMatch) {
+    const sourceBlockRegex = /<packageSource\s+[^>]*key=["']([^"']+)["'][^>]*>([\s\S]*?)<\/packageSource>/gi;
+    let match;
+    while ((match = sourceBlockRegex.exec(mappingBlockMatch[1])) !== null) {
+      const sourceKey = match[1].trim();
+      const body = match[2];
+      const patterns = [];
+      const pkgTags = body.match(/<package\s+[^>]*>/gi) || [];
+      for (const pTag of pkgTags) {
+        const patM = pTag.match(/pattern=["']([^"']+)["']/i);
+        if (patM) patterns.push(patM[1].trim());
+      }
+      result.packageSourceMappings.push({ sourceKey, patterns });
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Backwards-compatible helper returning only the <packageSources> array.
+ */
+function parseSourcesFromXml(xmlContent) {
+  return parseNuGetConfigXml(xmlContent).sources;
+}
+
+/**
+ * Walk directory hierarchy from startDir up to filesystem root plus user-level NuGet.Config,
+ * matching both NuGet.Config and nuget.config case-insensitively.
+ */
+function inspectNuGetConfigHierarchy(startDir) {
+  const configFiles = [];
+  const seenFiles = new Set();
+
+  const addConfigFile = (filePath, scope) => {
+    const norm = process.platform === 'win32' ? path.resolve(filePath).toLowerCase() : path.resolve(filePath);
+    if (seenFiles.has(norm)) return;
+    seenFiles.add(norm);
+    try {
+      const content = fs.readFileSync(filePath, 'utf8');
+      const parsed = parseNuGetConfigXml(content);
+      configFiles.push({
+        path: path.resolve(filePath),
+        scope,
+        ...parsed,
+      });
+    } catch (_) {}
+  };
+
+  if (startDir && fs.existsSync(startDir)) {
+    let curr = fs.statSync(startDir).isDirectory() ? path.resolve(startDir) : path.dirname(path.resolve(startDir));
+    // Also check immediate ngo-api subdirectory if present
+    const apiSub = path.join(curr, 'ngo-api');
+    if (fs.existsSync(apiSub) && fs.statSync(apiSub).isDirectory()) {
+      try {
+        for (const entry of fs.readdirSync(apiSub)) {
+          if (/^nuget\.config$/i.test(entry)) addConfigFile(path.join(apiSub, entry), 'project-api');
+        }
+      } catch (_) {}
+    }
+
+    let depth = 0;
+    while (curr && depth < 15) {
+      try {
+        for (const entry of fs.readdirSync(curr)) {
+          if (/^nuget\.config$/i.test(entry)) {
+            addConfigFile(path.join(curr, entry), depth === 0 ? 'project' : 'parent-directory');
+          }
+        }
+      } catch (_) {}
+      const parent = path.dirname(curr);
+      if (!parent || parent === curr) break;
+      curr = parent;
+      depth++;
+    }
+  }
+
+  // User-level NuGet.Config
+  const appData = process.env.APPDATA || '';
+  const home = process.env.USERPROFILE || process.env.HOME || '';
+  const userCandidates = [];
+  if (appData) userCandidates.push(path.join(appData, 'NuGet', 'NuGet.Config'));
+  if (home) {
+    userCandidates.push(
+      path.join(home, '.nuget', 'NuGet', 'NuGet.Config'),
+      path.join(home, '.nuget', 'NuGet', 'nuget.config')
+    );
+  }
+  for (const uc of userCandidates) {
+    if (fs.existsSync(uc)) addConfigFile(uc, 'user');
+  }
+
+  // Aggregate disabled sources & package source mappings
+  const disabledSources = new Set();
+  const packageSourceMappings = [];
+  for (const cfg of configFiles) {
+    for (const d of cfg.disabledSources) disabledSources.add(d);
+    for (const m of cfg.packageSourceMappings) {
+      packageSourceMappings.push({ ...m, configPath: cfg.path });
+    }
+  }
+
+  return {
+    configFiles,
+    disabledSources: Array.from(disabledSources),
+    packageSourceMappings,
+  };
+}
+
+/**
+ * Evaluate whether packageSourceMapping allows restoring a given packageId (e.g. NGO.Core.API).
+ */
+function checkPackageSourceMappingForPackage(packageId, mappings, enabledSourceNames) {
+  if (!Array.isArray(mappings) || mappings.length === 0) {
+    return { mapped: true, active: false, matchingSources: [], reason: 'packageSourceMapping is not active.' };
+  }
+
+  const pkgLower = String(packageId || 'NGO.Core.API').toLowerCase();
+  const matchingSources = [];
+
+  for (const m of mappings) {
+    for (const pat of m.patterns || []) {
+      const regexStr = '^' + pat.toLowerCase().split('*').map((s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('.*') + '$';
+      if (new RegExp(regexStr, 'i').test(pkgLower)) {
+        matchingSources.push(m.sourceKey);
+      }
+    }
+  }
+
+  if (matchingSources.length === 0) {
+    return {
+      mapped: false,
+      active: true,
+      matchingSources: [],
+      reason: `packageSourceMapping is active, but no pattern matches '${packageId}'. Restore will fail unless a <package pattern="NGO.Core*" /> or <package pattern="*" /> mapping is added.`,
+    };
+  }
+
+  if (Array.isArray(enabledSourceNames) && enabledSourceNames.length > 0) {
+    const enabledSet = new Set(enabledSourceNames.map((n) => n.toLowerCase()));
+    const enabledMatches = matchingSources.filter((s) => enabledSet.has(s.toLowerCase()));
+    if (enabledMatches.length === 0) {
+      return {
+        mapped: false,
+        active: true,
+        matchingSources,
+        reason: `packageSourceMapping maps '${packageId}' to source(s) [${matchingSources.join(', ')}], which are disabled or missing from enabled packageSources.`,
+      };
+    }
+  }
+
+  return {
+    mapped: true,
+    active: true,
+    matchingSources: Array.from(new Set(matchingSources)),
+    reason: `packageSourceMapping maps '${packageId}' to [${Array.from(new Set(matchingSources)).join(', ')}].`,
+  };
 }
 
 /**
@@ -159,12 +378,22 @@ function parseSourcesFromXml(xmlContent) {
 function discoverPackageSources(options) {
   options = options || {};
   if (Array.isArray(options.sources)) {
-    return options.sources;
+    return options.sources.map((s) => {
+      const type = s.type || classifySourceType(s.url);
+      return Object.assign({
+        type,
+        isPrivate: s.isPrivate !== undefined ? s.isPrivate : (s.isPrivateFeed !== undefined ? s.isPrivateFeed : (type !== 'PUBLIC_NUGET_ORG' && type !== 'LOCAL_DIRECTORY')),
+      }, s);
+    });
   }
   const sourcesMap = new Map();
 
-  const addSource = (name, rawUrl, origin) => {
+  const hierarchy = inspectNuGetConfigHierarchy(options.clientPath || options.corePath || process.cwd());
+  const disabledLower = new Set(hierarchy.disabledSources.map((s) => s.toLowerCase()));
+
+  const addSource = (name, rawUrl, origin, enabled = true) => {
     if (!name || !rawUrl) return;
+    if (!enabled || disabledLower.has(name.trim().toLowerCase())) return;
     const cleanUrl = rawUrl.trim();
     if (sourcesMap.has(cleanUrl)) {
       const existing = sourcesMap.get(cleanUrl);
@@ -182,9 +411,17 @@ function discoverPackageSources(options) {
     });
   };
 
-  // 1. Query dotnet nuget list source if available
+  // 1. Hierarchical NuGet.Config files (project -> parent -> user)
+  for (const cfg of hierarchy.configFiles) {
+    for (const s of cfg.sources) {
+      addSource(s.name, s.url, `${cfg.scope}-nuget-config (${path.basename(cfg.path)})`);
+    }
+  }
+
+  // 2. Query dotnet nuget list source if available
   try {
     const res = cp.spawnSync('dotnet', ['nuget', 'list', 'source', '--format', 'json'], {
+      cwd: options.clientPath && fs.existsSync(options.clientPath) ? options.clientPath : process.cwd(),
       encoding: 'utf8',
       windowsHide: true,
       timeout: 5000,
@@ -195,42 +432,14 @@ function discoverPackageSources(options) {
         const parsed = JSON.parse(res.stdout);
         for (const s of parsed.sources || []) {
           if (s.enabled !== false && s.location) {
-            addSource(s.name || 'dotnet-source', s.location, 'dotnet-nuget-config');
+            addSource(s.name || 'dotnet-source', s.location, 'dotnet-nuget-config', true);
           }
         }
       } catch (_) {}
     }
   } catch (_) {}
 
-  // 2. User Roaming NuGet.Config
-  const appData = process.env.APPDATA || '';
-  if (appData) {
-    const userCfg = path.join(appData, 'NuGet', 'NuGet.Config');
-    if (fs.existsSync(userCfg)) {
-      try {
-        const xml = fs.readFileSync(userCfg, 'utf8');
-        for (const s of parseSourcesFromXml(xml)) {
-          addSource(s.name, s.url, 'user-nuget-config');
-        }
-      } catch (_) {}
-    }
-  }
-
-  // 3. Project / Solution specific NuGet.Config if path provided
-  const searchDirs = [options.clientPath, options.corePath].filter(Boolean);
-  for (const dir of searchDirs) {
-    const projCfg = path.join(dir, 'NuGet.Config');
-    if (fs.existsSync(projCfg)) {
-      try {
-        const xml = fs.readFileSync(projCfg, 'utf8');
-        for (const s of parseSourcesFromXml(xml)) {
-          addSource(s.name, s.url, `project-nuget-config (${path.basename(dir)})`);
-        }
-      } catch (_) {}
-    }
-  }
-
-  // 4. Default well-known NGO sources if not already discovered
+  // 3. Default well-known NGO sources if not already discovered
   if (!sourcesMap.has('https://api.nuget.org/v3/index.json')) {
     addSource('nuget.org', 'https://api.nuget.org/v3/index.json', 'default');
   }
@@ -259,6 +468,36 @@ function extractJwtIdentity(token) {
 }
 
 /**
+ * Check VSS_NUGET_EXTERNAL_FEED_ENDPOINTS environment variable for matching feed credentials.
+ */
+function getVssExternalEndpointCredentials(feedUrl) {
+  const raw = process.env.VSS_NUGET_EXTERNAL_FEED_ENDPOINTS;
+  if (!raw || typeof raw !== 'string') return null;
+  try {
+    const parsed = JSON.parse(raw);
+    const endpoints = parsed && Array.isArray(parsed.endpointCredentials) ? parsed.endpointCredentials : [];
+    const normTarget = sanitizeFeedUrl(feedUrl).toLowerCase();
+    for (const ep of endpoints) {
+      if (ep && ep.endpoint && ep.password) {
+        const normEp = sanitizeFeedUrl(ep.endpoint).toLowerCase();
+        if (normTarget === normEp || normTarget.startsWith(normEp) || normEp.startsWith(normTarget)) {
+          const username = ep.username || 'VssSessionToken';
+          const authHeader = 'Basic ' + Buffer.from(`${username}:${ep.password}`).toString('base64');
+          return {
+            username,
+            password: ep.password,
+            authHeader,
+            source: 'vss_external_feed_endpoints',
+            accountIdentity: extractJwtIdentity(ep.password) || username,
+          };
+        }
+      }
+    }
+  } catch (_) {}
+  return null;
+}
+
+/**
  * Acquire provider-native credentials for Azure Artifacts feed.
  */
 function getAzureArtifactsCredentials(feedUrl, options) {
@@ -272,6 +511,13 @@ function getAzureArtifactsCredentials(feedUrl, options) {
       return { ok: true, ...cached.data };
     }
     tokenCache.delete(cacheKey);
+  }
+
+  // 0. Check VSS_NUGET_EXTERNAL_FEED_ENDPOINTS
+  const vssEp = getVssExternalEndpointCredentials(feedUrl);
+  if (vssEp) {
+    tokenCache.set(cacheKey, { expiresAt: Date.now() + TOKEN_CACHE_TTL_MS, data: vssEp });
+    return { ok: true, ...vssEp };
   }
 
   // 1. Check user option, saved settings, or environment variables (e.g. CI / build agent credentials)
@@ -318,34 +564,40 @@ function getAzureArtifactsCredentials(feedUrl, options) {
           source: 'azure_cli',
           accountIdentity: identity,
         };
-        // Token typically valid for 60m; cache for 45m
         tokenCache.set(cacheKey, { expiresAt: Date.now() + 45 * 60 * 1000, data: credData });
         return { ok: true, ...credData };
       }
     }
   } catch (_) {}
 
-  // 3. Check Azure Artifacts Credential Provider executable
-  const credExe = findAzureArtifactsCredentialProvider();
+  // 3. Check Azure Artifacts Credential Provider executable or DLL
+  const credExe = options.credentialProviderPath !== undefined
+    ? options.credentialProviderPath
+    : findAzureArtifactsCredentialProvider();
   if (!credExe) {
     return {
       ok: false,
       error: 'Azure Artifacts Credential Provider not found',
-      remediation: 'Log in with Azure CLI ("az login"), install Azure Artifacts Credential Provider, or provide a Personal Access Token in Platform Settings.',
+      remediation: 'Install Azure Artifacts Credential Provider (https://github.com/microsoft/artifacts-credprovider), sign in with Azure CLI ("az login"), or set AZURE_DEVOPS_EXT_PAT.',
     };
   }
 
   try {
     let res = null;
+    const isDll = credExe.toLowerCase().endsWith('.dll');
     try {
-      res = cp.spawnSync(credExe, ['-Uri', feedUrl, '-NonInteractive', '-OutputFormat', 'Json'], {
+      const invokeCmd = isDll ? 'dotnet' : credExe;
+      const invokeArgs = isDll
+        ? [credExe, '-Uri', feedUrl, '-NonInteractive', '-OutputFormat', 'Json']
+        : ['-Uri', feedUrl, '-NonInteractive', '-OutputFormat', 'Json'];
+      res = cp.spawnSync(invokeCmd, invokeArgs, {
         encoding: 'utf8',
         windowsHide: true,
         timeout: 10000,
       });
     } catch (_) {}
 
-    if (!res || res.status !== 0 || !res.stdout || !res.stdout.includes('{')) {
+    if ((!res || res.status !== 0 || !res.stdout || !res.stdout.includes('{')) && !isDll && process.platform === 'win32') {
       const cmd = `& "${credExe}" -Uri "${feedUrl}" -NonInteractive -OutputFormat Json`;
       res = cp.spawnSync('powershell', ['-NoProfile', '-Command', cmd], {
         encoding: 'utf8',
@@ -354,7 +606,7 @@ function getAzureArtifactsCredentials(feedUrl, options) {
       });
     }
 
-    if (res.status === 0 && res.stdout) {
+    if (res && res.status === 0 && res.stdout) {
       const lines = res.stdout.split(/\r?\n/).map((s) => s.trim());
       const jsonLine = lines.find((s) => s.startsWith('{') && s.endsWith('}'));
       if (jsonLine) {
@@ -378,11 +630,11 @@ function getAzureArtifactsCredentials(feedUrl, options) {
       }
     }
 
-    const stderr = redactSecrets(res.stderr || res.stdout || 'Credential provider returned empty output');
+    const stderr = redactSecrets((res && (res.stderr || res.stdout)) || 'Credential provider returned empty output');
     return {
       ok: false,
       error: `Credential provider execution failed: ${stderr.slice(0, 300)}`,
-      remediation: 'Run "dotnet restore --interactive" once to complete interactive Microsoft device login.',
+      remediation: 'Run "dotnet restore --interactive" once in the client backend directory to complete interactive Microsoft device/browser login.',
     };
   } catch (err) {
     return {
@@ -488,6 +740,7 @@ async function testFeedConnection(source, options) {
     if (credRes.ok && credRes.authHeader) {
       reqHeaders['Authorization'] = credRes.authHeader;
       diag.accountIdentity = credRes.accountIdentity;
+      diag.authMechanism = credRes.source || diag.authMechanism;
     } else {
       diag.diagnosticOutput = `Credential provider failed: ${credRes.error}`;
     }
@@ -502,7 +755,8 @@ async function testFeedConnection(source, options) {
 
   // 3. Send test probe to service index
   try {
-    const resp = await fetchHttp(feedUrl, reqHeaders, options.timeoutMs || 8000);
+    const httpFetcher = options.fetchFn || fetchHttp;
+    const resp = await httpFetcher(feedUrl, reqHeaders, options.timeoutMs || 8000);
     diag.statusCode = resp.statusCode;
 
     if (resp.statusCode === 200) {
@@ -521,9 +775,9 @@ async function testFeedConnection(source, options) {
       diag.connectionStatus = 'UNAUTHENTICATED';
       diag.authStatus = 'AUTH_REQUIRED';
       diag.lastError = 'HTTP 401 Unauthorized: Valid credentials required to access this private feed.';
-      diag.diagnosticOutput = `HTTP 401: Www-Authenticate = ${resp.headers['www-authenticate'] || 'None specified'}`;
+      diag.diagnosticOutput = `HTTP 401: Www-Authenticate = ${(resp.headers && resp.headers['www-authenticate']) || 'None specified'}`;
       diag.remediation = type === 'AZURE_ARTIFACTS'
-        ? 'Run "dotnet restore --interactive" once in a terminal or click Connect to authenticate with Microsoft account.'
+        ? 'Run "dotnet restore --interactive" once in a terminal or sign in via Azure CLI ("az login") to authenticate with your Microsoft account.'
         : 'Configure authentication credentials or Personal Access Token for this package source.';
       return diag;
     }
@@ -533,7 +787,7 @@ async function testFeedConnection(source, options) {
       diag.authStatus = 'FORBIDDEN';
       diag.lastError = 'HTTP 403 Forbidden: Insufficient permissions to access this feed.';
       diag.diagnosticOutput = 'HTTP 403: The authenticated identity does not have Read access to the Azure Artifacts feed.';
-      diag.remediation = 'Verify your Azure DevOps account has Reader permissions in Feed Settings -> Permissions.';
+      diag.remediation = 'Verify your Azure DevOps account has Reader/Collaborator permissions in Feed Settings -> Permissions (do not retry login repeatedly for 403).';
       return diag;
     }
 
@@ -619,7 +873,8 @@ async function queryPackageVersions(packageId, options) {
         if (creds.ok) reqHeaders['Authorization'] = creds.authHeader;
       }
 
-      const indexResp = await fetchHttp(src.url, reqHeaders, 6000);
+      const httpFetcher = options.fetchFn || fetchHttp;
+      const indexResp = await httpFetcher(src.url, reqHeaders, 6000);
       const indexJson = JSON.parse(indexResp.body);
 
       // 1. Try PackageBaseAddress (flat index) first for full, unpaginated version lists
@@ -667,7 +922,6 @@ async function queryPackageVersions(packageId, options) {
     ok: true,
     packageId,
     versions: Array.from(allVersions).sort((a, b) => {
-      // Sort semver descending
       const pa = a.split('.').map((n) => parseInt(n, 10) || 0);
       const pb = b.split('.').map((n) => parseInt(n, 10) || 0);
       for (let i = 0; i < 3; i++) {
@@ -699,12 +953,13 @@ async function verifyPackageAvailability(targetVersion, options) {
     };
   }
 
-  // 1. Fast local cache check (~/.nuget/packages)
+  // 1. Fast local cache check (~/.nuget/packages or custom NUGET_PACKAGES)
   const home = process.env.USERPROFILE || process.env.HOME || '';
-  if (home) {
+  const globalPackagesRoot = options.nugetPackagesDir || process.env.NUGET_PACKAGES || (home ? path.join(home, '.nuget', 'packages') : '');
+  if (globalPackagesRoot && fs.existsSync(globalPackagesRoot)) {
     const candidateNames = ['ngo.core.api', 'ngo.core', 'ngo.core.common'];
     for (const name of candidateNames) {
-      const verDir = path.join(home, '.nuget', 'packages', name, normTarget);
+      const verDir = path.join(globalPackagesRoot, name, normTarget);
       if (fs.existsSync(verDir)) {
         return {
           available: true,
@@ -756,6 +1011,181 @@ async function verifyPackageAvailability(targetVersion, options) {
 }
 
 /**
+ * Execute the 5 separated Phase 5 NuGet & Azure Artifacts preflight checks:
+ *   1. Feed URL and source configuration (including packageSourceMapping) are valid.
+ *   2. Required credential provider is installed and discoverable (when required).
+ *   3. Appropriate authentication mechanism is available.
+ *   4. Identity can access the target private feed (200 vs 401 vs 403 vs network).
+ *   5. Required package and version can actually be restored/resolved.
+ */
+async function runNuGetPreflightChecks(options = {}) {
+  const clientPath = options.clientPath || process.cwd();
+  const targetVersion = options.targetVersion || null;
+  const packageId = options.packageId || 'NGO.Core.API';
+
+  const hierarchy = inspectNuGetConfigHierarchy(clientPath);
+  const sources = discoverPackageSources(options);
+  const privateSources = sources.filter((s) => s.isPrivate);
+  const azureSources = sources.filter((s) => s.type === 'AZURE_ARTIFACTS');
+
+  // Stage 1: Feed URL & Source Configuration
+  const mappingCheck = checkPackageSourceMappingForPackage(
+    packageId,
+    hierarchy.packageSourceMappings,
+    sources.map((s) => s.name)
+  );
+  const hasPrivateOrLocalSource = privateSources.length > 0 || sources.some((s) => s.type === 'LOCAL_DIRECTORY');
+  const stage1Ok = sources.length > 0 && hasPrivateOrLocalSource && mappingCheck.mapped;
+
+  const stage1_feedConfig = {
+    ok: stage1Ok,
+    status: !hasPrivateOrLocalSource
+      ? 'PRIVATE_FEED_MISSING'
+      : (!mappingCheck.mapped ? 'SOURCE_MAPPING_BLOCKED' : 'VALID'),
+    configFiles: hierarchy.configFiles.map((c) => c.path),
+    enabledSources: sources.map((s) => ({ name: s.name, url: sanitizeFeedUrl(s.url), type: s.type })),
+    disabledSources: hierarchy.disabledSources,
+    packageSourceMapping: mappingCheck,
+    detail: !hasPrivateOrLocalSource
+      ? 'Only public nuget.org is configured; private Azure Artifacts feed for NGO.Core is missing or disabled.'
+      : (!mappingCheck.mapped ? mappingCheck.reason : `${sources.length} source(s) configured (${privateSources.length} private).`),
+    remediation: !hasPrivateOrLocalSource
+      ? 'Add or enable the NGO Online Azure Artifacts feed in NuGet.Config.'
+      : (!mappingCheck.mapped ? mappingCheck.reason : null),
+  };
+
+  // Stage 2: Credential Provider Installation & Discoverability
+  const credExe = options.credentialProviderPath !== undefined
+    ? options.credentialProviderPath
+    : findAzureArtifactsCredentialProvider();
+  const credProviderRequired = azureSources.length > 0;
+  const stage2_credentialProvider = {
+    required: credProviderRequired,
+    installed: Boolean(credExe),
+    executablePath: credExe ? redactSecrets(credExe) : null,
+    status: !credProviderRequired
+      ? 'NOT_REQUIRED'
+      : (credExe ? 'DISCOVERED' : 'NOT_INSTALLED'),
+    detail: !credProviderRequired
+      ? 'No Azure Artifacts feeds configured.'
+      : (credExe ? `Azure Artifacts Credential Provider discovered at ${credExe}` : 'CredentialProvider.Microsoft not found in user plugins, Visual Studio, or NUGET_CREDENTIALPROVIDERS_PATH.'),
+    remediation: credProviderRequired && !credExe
+      ? 'Install Azure Artifacts Credential Provider (https://github.com/microsoft/artifacts-credprovider) or authenticate via AZURE_DEVOPS_EXT_PAT / Azure CLI.'
+      : null,
+  };
+
+  // Stage 3: Authentication Mechanism Availability
+  let primaryCreds = { ok: false, source: 'none', accountIdentity: null, error: null, remediation: null };
+  if (azureSources.length > 0) {
+    primaryCreds = getAzureArtifactsCredentials(azureSources[0].url, options);
+  }
+  const stage3_authMechanism = {
+    ok: azureSources.length === 0 ? true : Boolean(primaryCreds.ok),
+    mechanism: primaryCreds.source || (azureSources.length === 0 ? 'not_required' : 'none'),
+    identity: primaryCreds.accountIdentity || null,
+    status: azureSources.length === 0
+      ? 'NOT_REQUIRED'
+      : (primaryCreds.ok ? 'AVAILABLE' : 'AUTH_MECHANISM_UNAVAILABLE'),
+    detail: azureSources.length === 0
+      ? 'No Azure Artifacts authentication required.'
+      : (primaryCreds.ok
+        ? `Authentication mechanism ready: ${primaryCreds.source} (${primaryCreds.accountIdentity || 'configured'})`
+        : `No active authentication token acquired: ${primaryCreds.error}`),
+    remediation: primaryCreds.ok ? null : primaryCreds.remediation,
+  };
+
+  // Stage 4: Feed Reachability & Identity Access
+  let feedProbes = [];
+  if (options.probeFeeds !== false) {
+    feedProbes = await Promise.all(
+      (privateSources.length > 0 ? privateSources : sources).map((src) => testFeedConnection(src, options))
+    );
+  }
+  const failedProbe = feedProbes.find((p) => p.connectionStatus !== 'CONNECTED');
+  const stage4_feedAccess = {
+    ok: feedProbes.length === 0 ? true : !failedProbe,
+    status: !failedProbe
+      ? 'ACCESS_VERIFIED'
+      : failedProbe.connectionStatus, // UNAUTHENTICATED (401), FORBIDDEN (403), NETWORK_ERROR
+    feeds: feedProbes.map((p) => ({
+      name: p.name,
+      url: p.url,
+      statusCode: p.statusCode,
+      connectionStatus: p.connectionStatus,
+      authStatus: p.authStatus,
+      identity: p.accountIdentity,
+      remediation: p.remediation,
+    })),
+    detail: !failedProbe
+      ? `Verified access to ${feedProbes.length} package feed(s).`
+      : `Feed '${failedProbe.name}' failed with ${failedProbe.connectionStatus} (HTTP ${failedProbe.statusCode || 'ERR'}): ${failedProbe.lastError}`,
+    remediation: failedProbe ? failedProbe.remediation : null,
+  };
+
+  // Stage 5: Target Package & Version Restore Readiness
+  let stage5_packageRestore = {
+    checked: false,
+    ok: true,
+    status: 'SKIPPED_NO_TARGET_VERSION',
+    targetVersion: null,
+    source: null,
+    detail: 'No target version specified for package availability probe.',
+    remediation: null,
+  };
+
+  if (targetVersion) {
+    const avail = await verifyPackageAvailability(targetVersion, options);
+    stage5_packageRestore = {
+      checked: true,
+      ok: Boolean(avail.available),
+      status: avail.status,
+      failureType: avail.failureType || null,
+      targetVersion,
+      source: avail.source || null,
+      identity: avail.identity || null,
+      detail: avail.available
+        ? `Confirmed target package ${avail.identity} is available via ${avail.source}.`
+        : (avail.reason || `Target package version ${targetVersion} could not be verified.`),
+      remediation: avail.remediation || (avail.available ? null : `Verify that NGO.Core ${targetVersion} is published to the feed and that your account has read access.`),
+    };
+  }
+
+  // Overall classification
+  // Note: If the package is already confirmed in the local ~/.nuget/packages cache, offline restore can proceed with a warning
+  const availableInLocalCache = stage5_packageRestore.checked && stage5_packageRestore.ok && stage5_packageRestore.source === 'nuget-cache';
+  const overallOk = stage1_feedConfig.ok && (stage4_feedAccess.ok || availableInLocalCache) && (!targetVersion || stage5_packageRestore.ok);
+
+  let failureCategory = null;
+  if (!overallOk) {
+    if (!stage1_feedConfig.ok) failureCategory = 'CONFIG_INVALID';
+    else if (stage4_feedAccess.status === 'FORBIDDEN' || stage5_packageRestore.failureType === 'FORBIDDEN') failureCategory = 'PERMISSION_DENIED';
+    else if (stage4_feedAccess.status === 'NETWORK_ERROR') failureCategory = 'NETWORK_FAILURE';
+    else if (stage4_feedAccess.status === 'UNAUTHENTICATED' || stage5_packageRestore.failureType === 'AUTH_REQUIRED' || !stage3_authMechanism.ok) failureCategory = 'AUTH_MISSING';
+    else if (stage5_packageRestore.failureType === 'NOT_FOUND') failureCategory = 'PACKAGE_UNAVAILABLE';
+    else failureCategory = 'CONFIG_INVALID';
+  }
+
+  return {
+    ok: overallOk,
+    failureCategory,
+    stages: {
+      feedConfig: stage1_feedConfig,
+      credentialProvider: stage2_credentialProvider,
+      authMechanism: stage3_authMechanism,
+      feedAccess: stage4_feedAccess,
+      packageRestore: stage5_packageRestore,
+    },
+    remediation:
+      stage1_feedConfig.remediation ||
+      stage4_feedAccess.remediation ||
+      stage5_packageRestore.remediation ||
+      stage3_authMechanism.remediation ||
+      stage2_credentialProvider.remediation ||
+      null,
+  };
+}
+
+/**
  * Trigger provider-native reauthentication or token refresh for a feed.
  */
 async function reauthenticateSource(sourceUrl, options) {
@@ -778,15 +1208,13 @@ async function reauthenticateSource(sourceUrl, options) {
   }
 
   try {
-    // Attempt retry flag to refresh credentials
     const cmd = `& "${credExe}" -Uri "${sourceUrl}" -IsRetry -NonInteractive -OutputFormat Json`;
-    const res = cp.spawnSync('powershell', ['-NoProfile', '-Command', cmd], {
+    cp.spawnSync('powershell', ['-NoProfile', '-Command', cmd], {
       encoding: 'utf8',
       windowsHide: true,
       timeout: 15000,
     });
 
-    // Test connection after refresh
     const testResult = await testFeedConnection(sourceUrl, { bypassCache: true });
     return {
       ok: testResult.connectionStatus === 'CONNECTED',
@@ -880,7 +1308,7 @@ function detectActiveIdentity(options) {
   } catch (_) {}
 
   cachedActiveIdentity = Object.assign({}, info);
-  cachedActiveIdentityExpiresAt = Date.now() + 30000; // cache unauthenticated for 30s
+  cachedActiveIdentityExpiresAt = Date.now() + 30000;
   return info;
 }
 
@@ -995,7 +1423,7 @@ async function getComprehensiveAuthDiagnostics(options) {
 
   const activeAccount = feedTest.accountIdentity || (azLoggedIn ? azAccountName : null);
 
-  return {
+  const result = {
     ok: true,
     overallStatus,
     activeAccount,
@@ -1092,6 +1520,11 @@ module.exports = {
   classifySourceType,
   findAzureArtifactsCredentialProvider,
   getAzureArtifactsCredentials,
+  getVssExternalEndpointCredentials,
+  parseNuGetConfigXml,
+  inspectNuGetConfigHierarchy,
+  checkPackageSourceMappingForPackage,
+  runNuGetPreflightChecks,
   testFeedConnection,
   queryPackageVersions,
   verifyPackageAvailability,
@@ -1104,4 +1537,3 @@ module.exports = {
   extractJwtIdentity,
   sanitizeFeedUrl,
 };
-

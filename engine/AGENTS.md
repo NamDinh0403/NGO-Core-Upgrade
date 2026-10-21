@@ -22,7 +22,9 @@ node engine/tools/upgrade-engine.js context --run <client>/<run> --track fronten
 node engine/tools/upgrade-engine.js status --run <client>/<run>
 ```
 Dispatch each requested track independently. Engine control commands are serial;
-delegate domain work in parallel only for independent client working trees.
+delegate domain work in parallel for independent client working trees (such as backend
+and frontend in separate subdirectories). When both tracks are upgraded, run them
+concurrently in parallel without waiting for one to finish before starting the other.
 Plan inputs are `{plan:{status,changes:[{file,evidence,validation}]},gateFacts:{...}}`.
 `gateFacts.proofRefs` binds baseline, rollback-checkpoint, repository-status,
 capabilities and uncertainty records, plus core-fingerprint for frontend.

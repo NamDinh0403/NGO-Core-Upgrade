@@ -38,11 +38,11 @@ node tools/check-environment.js --core-path "<corePath>" --client-path "<clientP
 - **NEVER checkout or switch Git branches in Core**: Core is strictly READ-ONLY. Do not run `git checkout` or switch branches in Core; release discovery reads tags, branch refs, and package evidence non-destructively.
 - **No infinite retry loops**: Run engine CLI commands sequentially. If a command exits with an error, pause and present the error and recommended fix to the user.
 
-### 4. Restore, Build, and Verification Gate
-After executing the upgrade modifications:
-- **Backend**: Run `dotnet restore <solutionPath>` and `dotnet build <solutionPath> --no-restore` (assert 0 errors).
-- **Frontend**: Run `npm install` (or `npm ci`) and `npm run build` in the client directory (assert 0 errors).
-- Ensure both backend and frontend build with 0 errors before declaring success.
+### 4. Parallel Track Execution & Verification Gate
+When upgrading both backend and frontend:
+- **Parallel Track Dispatch**: Do NOT run the tracks sequentially or wait for backend to finish before starting frontend. Because backend (e.g. `ngo-api/`) and frontend (e.g. `ngo-client/`) reside in separate directories with independent build toolchains (`dotnet` vs `npm`/`ng`), execute them concurrently in parallel.
+- **Concurrent Restore & Build**: Run backend (`dotnet restore` and `dotnet build`) and frontend (`npm install` and `npm run build`) in parallel background executions without waiting for one to finish before starting the other.
+- **Completion Gate**: Wait for both parallel executions to complete. Verify 0 errors for both backend and frontend builds before declaring completion.
 
 ### 5. Completion Notification
 When complete, notify the user with:

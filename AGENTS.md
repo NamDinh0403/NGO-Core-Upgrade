@@ -36,10 +36,11 @@ When running on any developer machine (especially outside the primary workstatio
    - **NEVER edit the upgrade agent code**: Under no circumstances should an agent modify files in `NGO Core Upgrade/` (engine, backend, frontend, ingest, or tools). If a command fails, report the error with remediation steps; never attempt to "fix" the upgrade agent scripts.
    - **NEVER checkout or switch Git branches in Core**: Core is strictly READ-ONLY. Do not run `git checkout` or switch branches in Core; release discovery reads branch metadata non-destructively.
    - **No infinite retry loops**: Run engine commands deterministically. If blocked, report the blocker and pause for user input.
-4. **Restore, Build & Completion Gate**:
-   - Backend: run `dotnet restore` and `dotnet build` on the client solution; verify 0 errors.
-   - Frontend: run `npm install` / `npm ci` and `npm run build` on the client web app; verify 0 errors.
-   - Report a structured completion summary to the user when finished (version, files changed, build verification: 0 errors).
+4. **Parallel Track Execution & Verification Gate**:
+   - **Parallelize Backend & Frontend**: In both-track upgrades, NEVER execute the tracks sequentially or wait for backend to finish before starting frontend. Because backend (e.g. `ngo-api/`) and frontend (e.g. `ngo-client/`) reside in distinct directories and use isolated toolchains (`.NET/NuGet` vs `Node/npm`), execute their implementation and build validations concurrently in parallel.
+   - **Concurrent Restore & Build**: Run `dotnet restore` & `dotnet build` on the backend solution and `npm install` (or `npm ci`) & `npm run build` on the frontend client concurrently in parallel background executions.
+   - **Completion Gate**: Await both parallel tracks; verify 0 errors for backend build and 0 errors for frontend build.
+   - Report a structured completion summary to the user when finished (version, files changed, parallel build verification: 0 errors).
 
 ## Release Discovery Hierarchy
 Release resolution uses an evidence-based hierarchy:

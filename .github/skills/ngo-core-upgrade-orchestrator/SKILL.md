@@ -18,5 +18,5 @@ Pass one isolated track context per delegation, not the complete shared run.
 1. **Prompt for Inputs**: Prompt the user to provide local `ngo-online-core` path, client project path, and target version if not given. Never guess paths.
 2. **Preflight**: Execute `node tools/check-environment.js --core-path "<corePath>" --client-path "<clientPath>" --target "<targetVersion>"`. Verify git author identity, core git tags, and build tools.
 3. **Engine Run**: Run `node engine/tools/upgrade-engine.js create-run ...` deterministically. Never mutate upgrade agent scripts. Never search for git branches.
-4. **Restore & Build**: Execute `dotnet restore` and `dotnet build` (backend) and `npm install` and `npm run build` (frontend). Verify 0 errors.
-5. **Report**: Notify the user with a structured completion summary when done.
+4. **Parallel Execution**: Execute backend and frontend upgrade tracks concurrently in parallel. Never run them sequentially or wait for backend to finish before starting frontend. Run `dotnet restore`/`dotnet build` and `npm install`/`npm run build` in parallel background executions.
+5. **Verification Gate & Report**: Await both parallel tracks. Ensure both backend and frontend report 0 build errors. Notify the user with a structured completion summary when done.

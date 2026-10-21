@@ -527,49 +527,61 @@ function checkEnvironment(flags = {}) {
     }
   }
 
-  // Stage 7: Source & Target Release Evidence
+  // Stage 7: Source & Target Release Evidence (Package-First, releases/* Branches, Commit History, or Optional Tags)
   if (effectiveCorePath && fs.existsSync(effectiveCorePath)) {
     const coreGitCheck = runCmd('git', ['rev-parse', '--is-inside-work-tree'], effectiveCorePath);
     if (coreGitCheck.status === 0 && coreGitCheck.stdout === 'true') {
       const tagsRes = runCmd('git', ['tag', '-l'], effectiveCorePath);
       const tagList = tagsRes.status === 0 ? tagsRes.stdout.split(/\r?\n/).map((t) => t.trim()).filter(Boolean) : [];
 
+      const evaluateVersionEvidence = (ver, label, isTarget) => {
+        const normVer = normalizeVersion(ver) || String(ver).trim();
+        const sub = normVer.split('.').slice(0, 2).join('.');
+        const branchCheck = runCmd('git', ['rev-parse', '--verify', `origin/releases/${sub}`], effectiveCorePath);
+        const localBranchCheck = runCmd('git', ['rev-parse', '--verify', `releases/${sub}`], effectiveCorePath);
+        const hasBranch = (branchCheck.status === 0 && branchCheck.stdout) || (localBranchCheck.status === 0 && localBranchCheck.stdout);
+        const hasTag = tagList.some((t) => t === `v${normVer}` || t === normVer);
+        const canonicalFile = path.resolve(__dirname, '..', 'ingest', 'knowledge', 'canonical', 'releases', normVer, 'release.yaml');
+        const candidateFile = path.resolve(__dirname, '..', 'ingest', 'knowledge', 'candidates', 'releases', `${normVer}.json`);
+        const srcEv = resolver.discoverSourceEvidence(effectiveCorePath, normVer);
+        const pkgEv = resolver.discoverPackageEvidence(normVer, { corePath: effectiveCorePath });
+
+        if (hasBranch || (srcEv && srcEv.branch && srcEv.branch.exists)) {
+          const branchName = (srcEv && srcEv.branch && srcEv.branch.name) || `releases/${sub}`;
+          addCheck(label, 'PASS', `Resolved ${normVer} via Core release branch (${branchName}).`, null, { stage: 7 });
+        } else if (srcEv && srcEv.sourceRevisionAvailable) {
+          addCheck(label, 'PASS', `Resolved ${normVer} via Core commit/revision evidence (${srcEv.targetCommit ? srcEv.targetCommit.slice(0, 8) : 'verified'}).`, null, { stage: 7 });
+        } else if (pkgEv && pkgEv.available) {
+          addCheck(label, 'PASS', `Resolved ${normVer} via published package metadata (${pkgEv.identity || pkgEv.source}).`, null, { stage: 7 });
+        } else if (fs.existsSync(canonicalFile) || fs.existsSync(candidateFile)) {
+          addCheck(label, 'PASS', `Resolved ${normVer} via pre-ingested release knowledge.`, null, { stage: 7 });
+        } else if (hasTag) {
+          addCheck(label, 'PASS', `Resolved ${normVer} via Git tag in Core repository.`, null, { stage: 7 });
+        } else if (isTarget) {
+          addCheck(
+            label,
+            'WARN',
+            `Release ${normVer} was not found in local releases/${sub} branches or local package cache (will query remote package feeds in package-first mode). To refresh remote release branches, run: git -C "${effectiveCorePath}" fetch --all`,
+            null,
+            { stage: 7 }
+          );
+        } else {
+          addCheck(
+            label,
+            'WARN',
+            `Source release ${normVer} was not found in local releases/${sub} branches (will resolve via package metadata or remote branches). Run: git -C "${effectiveCorePath}" fetch --all`,
+            `git -C "${effectiveCorePath}" fetch --all`,
+            { stage: 7 }
+          );
+        }
+      };
+
       const sourceVer = flags.source || flags['source-version'] || detectedVersions.primary;
       if (sourceVer) {
-        const normSource = normalizeVersion(sourceVer);
-        const hasSourceTag = tagList.some((t) => t === `v${normSource}` || t === normSource);
-        const sub = normSource.split('.').slice(0, 2).join('.');
-        const branchCheck = runCmd('git', ['rev-parse', '--verify', `origin/releases/${sub}`], effectiveCorePath);
-        const localBranchCheck = runCmd('git', ['rev-parse', '--verify', `releases/${sub}`], effectiveCorePath);
-        const hasBranch = (branchCheck.status === 0 && branchCheck.stdout) || (localBranchCheck.status === 0 && localBranchCheck.stdout);
-        const canonicalFile = path.resolve(__dirname, '..', 'ingest', 'knowledge', 'canonical', 'releases', normSource, 'release.yaml');
-        const candidateFile = path.resolve(__dirname, '..', 'ingest', 'knowledge', 'candidates', 'releases', `${normSource}.json`);
-
-        if (hasSourceTag) {
-          addCheck('Source Release Evidence', 'PASS', `Found tag for source v${normSource} in Core repository.`, null, { stage: 7 });
-        } else if (hasBranch) {
-          addCheck('Source Release Evidence', 'PASS', `Found branch releases/${sub} for source v${normSource} in Core repository.`, null, { stage: 7 });
-        } else if (fs.existsSync(canonicalFile) || fs.existsSync(candidateFile)) {
-          addCheck('Source Release Evidence', 'PASS', `Source v${normSource} resolved via pre-ingested release knowledge.`, null, { stage: 7 });
-        } else {
-          addCheck('Source Release Evidence', 'BLOCKED', `Neither tag v${normSource} nor branch releases/${sub} found in Core repo!`, `cd "${effectiveCorePath}" && git fetch --all --tags`, { stage: 7 });
-        }
+        evaluateVersionEvidence(sourceVer, 'Source Release Evidence', false);
       }
-
       if (targetVersion) {
-        const hasTargetTag = tagList.some((t) => t === `v${targetVersion}` || t === targetVersion);
-        const sub = targetVersion.split('.').slice(0, 2).join('.');
-        const branchCheck = runCmd('git', ['rev-parse', '--verify', `origin/releases/${sub}`], effectiveCorePath);
-        const localBranchCheck = runCmd('git', ['rev-parse', '--verify', `releases/${sub}`], effectiveCorePath);
-        const hasBranch = (branchCheck.status === 0 && branchCheck.stdout) || (localBranchCheck.status === 0 && localBranchCheck.stdout);
-
-        if (hasTargetTag) {
-          addCheck('Target Release Evidence', 'PASS', `Found tag for target v${targetVersion} in Core repository.`, null, { stage: 7 });
-        } else if (hasBranch) {
-          addCheck('Target Release Evidence', 'PASS', `Found branch releases/${sub} for target v${targetVersion} in Core repository.`, null, { stage: 7 });
-        } else {
-          addCheck('Target Release Evidence', 'WARN', `Neither tag v${targetVersion} nor branch releases/${sub} found in Core repo (attempting package-first resolution). If branch is remote, run: cd "${effectiveCorePath}" && git fetch --all --tags`, null, { stage: 7 });
-        }
+        evaluateVersionEvidence(targetVersion, 'Target Release Evidence', true);
       }
     }
   }
@@ -622,6 +634,30 @@ async function runEnvironmentCheck(flags = {}) {
     ? rawTracks
     : String(rawTracks).split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
 
+  // Optionally persist validated corePath and workspace root to platform/config/settings.json
+  if (flags['save-settings'] || flags.saveSettings) {
+    try {
+      const updates = {};
+      if (report.inputs.corePath && fs.existsSync(report.inputs.corePath)) {
+        updates.corePath = path.resolve(report.inputs.corePath);
+      }
+      if (report.inputs.clientPath && fs.existsSync(report.inputs.clientPath)) {
+        const currentSettings = settingsLib.loadSettings();
+        const clientParent = path.dirname(path.resolve(report.inputs.clientPath));
+        const existingRoots = Array.isArray(currentSettings.approvedWorkspaceRoots)
+          ? currentSettings.approvedWorkspaceRoots
+          : [];
+        if (!existingRoots.some((r) => path.resolve(r).toLowerCase() === clientParent.toLowerCase())) {
+          updates.approvedWorkspaceRoots = [...existingRoots, clientParent];
+        }
+      }
+      if (Object.keys(updates).length > 0) {
+        settingsLib.saveSettings(updates);
+        report.settingsSaved = updates;
+      }
+    } catch (_) {}
+  }
+
   if (tracks.includes('backend') && !flags.skipNuGetNetworkProbe) {
     const nugetPreflight = await nugetSources.runNuGetPreflightChecks({
       clientPath: report.inputs.clientPath || process.cwd(),
@@ -656,71 +692,78 @@ async function runEnvironmentCheck(flags = {}) {
 
 // CLI Execution
 if (require.main === module) {
-  const flags = parseFlags(process.argv.slice(2));
+  (async () => {
+    const flags = parseFlags(process.argv.slice(2));
 
-  if (flags.help || (!flags['core-path'] && !flags['client-path'] && Object.keys(flags).length === 0)) {
-    console.log(`
+    if (flags.help || (!flags['core-path'] && !flags['client-path'] && Object.keys(flags).length === 0)) {
+      console.log(`
 Deterministic Preflight & Environment Checker for NGO Core Upgrade
 ===================================================================
 
 Usage:
-  node tools/check-environment.js --core-path <path> --client-path <path> [--target <version>] [--tracks <backend,frontend>]
+  node tools/check-environment.js --core-path <path> --client-path <path> [--target <version>] [--tracks <backend,frontend>] [--save-settings]
 
 Options:
   --core-path <path>     Path to local ngo-online-core repository (or auto-discovered via NGO_CORE_PATH)
   --client-path <path>   Path to client project / solution
   --target <version>     Desired target version or branch (e.g. 9.4, 9.4.1, releases/9.4)
   --tracks <list>        Comma-separated tracks: backend,frontend (default: backend,frontend)
+  --save-settings        Save verified corePath and client workspace root into platform/config/settings.json
   --json                 Output raw JSON result
 `);
-    process.exit(flags.help ? 0 : 1);
-  }
-
-  const result = checkEnvironment(flags);
-
-  if (flags.json) {
-    console.log(JSON.stringify(result, null, 2));
-    process.exit(result.readiness === 'READY' ? 0 : 1);
-  }
-
-  console.log('\n=============================================================');
-  console.log(' NGO Core Upgrade - Preflight & Environment Check');
-  console.log('=============================================================\n');
-
-  for (const c of result.checks) {
-    const symbol = c.status === 'PASS' ? '  ✓ [PASS]' : c.status === 'WARN' ? '  ! [WARN]' : '  ✗ [FAIL]';
-    console.log(`${symbol} ${c.name}: ${c.details}`);
-    if (c.remediation) {
-      console.log(`           --> Remediation: ${c.remediation}`);
+      process.exit(flags.help ? 0 : 1);
     }
-  }
 
-  console.log('\n-------------------------------------------------------------');
-  console.log(`Readiness Status: ${result.readiness === 'READY' ? 'READY TO UPGRADE' : 'BLOCKED - ACTION REQUIRED'}`);
-  console.log('-------------------------------------------------------------\n');
+    const result = await runEnvironmentCheck(flags);
 
-  if (result.readiness === 'BLOCKED') {
-    console.log('Please resolve the following blockers before proceeding:\n');
-    for (const b of result.blockers) {
-      console.log(`  - ${b}`);
+    if (flags.json) {
+      console.log(JSON.stringify(result, null, 2));
+      process.exit(result.readiness === 'READY' ? 0 : 1);
     }
-    console.log('');
-    process.exit(1);
-  } else {
-    const core = result.inputs.corePath || flags['core-path'] || flags.core;
-    const client = flags['client-path'] || flags.client;
-    const target = result.inputs.targetVersion || flags.target || '9.4.1';
-    const tracksArg = (result.inputs.tracks || ['backend', 'frontend']).join(',');
-    console.log('Ready to proceed! Run the deterministic upgrade command:');
-    console.log('\nnode engine/tools/upgrade-engine.js create-run \\');
-    console.log(`  --client demo-client \\`);
-    console.log(`  --tracks ${tracksArg} \\`);
-    console.log(`  --core-path "${core}" \\`);
-    console.log(`  --source-version ${result.checks.find((c) => c.name === 'Detected Installed Core Version')?.details.match(/Current version: ([0-9.]+)/)?.[1] || '9.0.0'} \\`);
-    console.log(`  --target-version ${target} \\`);
-    console.log(`  --backend-client-path "${client}"\n`);
-    process.exit(0);
-  }
+
+    console.log('\n=============================================================');
+    console.log(' NGO Core Upgrade - Preflight & Environment Check');
+    console.log('=============================================================\n');
+
+    if (result.settingsSaved) {
+      console.log(`  ✓ [SAVED] Updated platform/config/settings.json with verified paths.`);
+    }
+
+    for (const c of result.checks) {
+      const symbol = c.status === 'PASS' ? '  ✓ [PASS]' : c.status === 'WARN' ? '  ! [WARN]' : '  ✗ [FAIL]';
+      console.log(`${symbol} ${c.name}: ${c.details}`);
+      if (c.remediation) {
+        console.log(`           --> Remediation: ${c.remediation}`);
+      }
+    }
+
+    console.log('\n-------------------------------------------------------------');
+    console.log(`Readiness Status: ${result.readiness === 'READY' ? 'READY TO UPGRADE' : 'BLOCKED - ACTION REQUIRED'}`);
+    console.log('-------------------------------------------------------------\n');
+
+    if (result.readiness === 'BLOCKED') {
+      console.log('Please resolve the following blockers before proceeding:\n');
+      for (const b of result.blockers) {
+        console.log(`  - ${b}`);
+      }
+      console.log('');
+      process.exit(1);
+    } else {
+      const core = result.inputs.corePath || flags['core-path'] || flags.core;
+      const client = flags['client-path'] || flags.client;
+      const target = result.inputs.targetVersion || flags.target || '9.4.1';
+      const tracksArg = (result.inputs.tracks || ['backend', 'frontend']).join(',');
+      console.log('Ready to proceed! Run the deterministic upgrade command:');
+      console.log('\nnode engine/tools/upgrade-engine.js create-run \\');
+      console.log(`  --client demo-client \\`);
+      console.log(`  --tracks ${tracksArg} \\`);
+      console.log(`  --core-path "${core}" \\`);
+      console.log(`  --source-version ${result.checks.find((c) => c.name === 'Detected Installed Core Version')?.details.match(/Current version: ([0-9.]+)/)?.[1] || '9.0.0'} \\`);
+      console.log(`  --target-version ${target} \\`);
+      console.log(`  --backend-client-path "${client}"\n`);
+      process.exit(0);
+    }
+  })();
 }
 
 module.exports = {

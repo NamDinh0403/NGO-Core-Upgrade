@@ -128,10 +128,25 @@ function cmdCheck(flags) {
   const tagPrefix = flags['tag-prefix'] || 'v';
   const r = newerTags(corePath, since, tagPrefix);
   if (!r.ok) { process.stderr.write(`git tag failed: ${r.error}\n`); return 1; }
+
+  const newerVersions = new Set(r.versions);
+  try {
+    const resolver = require('./lib/release-resolver');
+    const branchReleases = resolver.discoverCoreBranchReleases(corePath);
+    if (branchReleases && branchReleases.ok && Array.isArray(branchReleases.versions)) {
+      for (const v of branchReleases.versions) {
+        if (!since || (v !== since && gtVer(v, since))) {
+          newerVersions.add(v);
+        }
+      }
+    }
+  } catch (_) {}
+
+  const sortedVersions = Array.from(newerVersions).sort((a, b) => cmpVer(parseVer(a), parseVer(b)));
   process.stdout.write(`Highest version known to either track: ${since || '(none found)'}\n`);
-  if (r.versions.length === 0) { process.stdout.write('No newer Core releases found.\n'); return 0; }
+  if (sortedVersions.length === 0) { process.stdout.write('No newer Core releases found.\n'); return 0; }
   process.stdout.write('Newer Core release(s) found:\n');
-  for (const v of r.versions) process.stdout.write(`  - ${v}\n`);
+  for (const v of sortedVersions) process.stdout.write(`  - ${v}\n`);
   process.stdout.write('\nNext: node ingest/tools/ingest.js ingest --core-path <path> --release-notes <path> --target <version>\n');
   return 0;
 }

@@ -117,9 +117,19 @@ function validateCore(req) {
   let targetCommit = null, targetResolvable = null;
   if (summary.isGitRepo && targetRef) {
     targetCommit = git.resolveRef(corePath, targetRef);
+    if (!targetCommit) {
+      const sub = (req.upgrade.targetVersion || '').split('.').slice(0, 2).join('.');
+      for (const candidate of [`origin/releases/${sub}`, `releases/${sub}`, `origin/release/${sub}`, `release/${sub}`]) {
+        targetCommit = git.resolveRef(corePath, candidate);
+        if (targetCommit) {
+          req.repositories.core.targetRef = candidate;
+          break;
+        }
+      }
+    }
     targetResolvable = !!targetCommit;
     checks.push(check('core-target-ref-resolvable', targetResolvable,
-      targetResolvable ? `${targetRef} -> ${targetCommit.slice(0, 12)}` : `cannot resolve target ref '${targetRef}'`,
+      targetResolvable ? `${req.repositories.core.targetRef} -> ${targetCommit.slice(0, 12)}` : `cannot resolve target ref '${targetRef}'`,
       targetResolvable ? 'info' : 'warn'));
   } else if (targetRef) {
     checks.push(check('core-target-ref-resolvable', null, `target ref '${targetRef}' cannot be resolved (Core is not a git repository); will use current checkout`, 'warn'));

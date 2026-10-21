@@ -17,6 +17,8 @@ const reviewerLib = require('./reviewer');
 const copilotCli = require('./copilot-cli');
 const telemetryLib = require('./telemetry');
 const nugetSources = require('./nuget-sources');
+const coreDiscovery = require('./core-discovery');
+const npmDiagnostics = require('./npm-diagnostics');
 
 /**
  * Extract clean user handle from Git user.name or user.email.
@@ -178,7 +180,15 @@ async function runWorker() {
     };
   });
 
-  const { clientPath, targetVersion, corePath, tracks, simulateCopilot } = job;
+  const { clientPath, targetVersion, tracks, simulateCopilot } = job;
+  let corePath = job.corePath;
+  if (!corePath || !fs.existsSync(corePath)) {
+    const discovered = coreDiscovery.discoverCoreRepository({ corePath, clientPath });
+    if (discovered.ok && discovered.selected) {
+      corePath = discovered.selected.path;
+      updateJob((j) => { j.corePath = corePath; });
+    }
+  }
   const isSimulation = simulateCopilot || process.env.COPILOT_SIMULATOR === 'true';
 
   try {
@@ -208,7 +218,6 @@ async function runWorker() {
 
       let feedCheck = null;
       try {
-        const nugetSources = require('./nuget-sources');
         feedCheck = await nugetSources.verifyPackageAvailability(targetVersion);
       } catch (_) {}
 
@@ -352,8 +361,8 @@ async function runWorker() {
       if (tracks.includes('frontend')) {
         tasks.push({ track: 'frontend', action: `Align @ngo/core dependency to ${targetVersion} in package.json` });
         tasks.push({ track: 'frontend', action: `Align Angular ${targetAngularMajor} peer dependencies (RxJS, Zone.js, TypeScript, NgRx)` });
-        tasks.push({ track: 'frontend', action: 'Sanitize .npmrc feed registry configuration (FontAwesome + Azure Packaging)' });
-        tasks.push({ track: 'frontend', action: 'Install frontend dependencies via npm i -f --peer-deps' });
+        tasks.push({ track: 'frontend', action: 'Validate .npmrc registry configuration non-destructively' });
+        tasks.push({ track: 'frontend', action: 'Install frontend dependencies via version-aware npm ci / npm install' });
         tasks.push({ track: 'frontend', action: 'Synchronize environment configuration from Core reference host' });
         tasks.push({ track: 'frontend', action: 'Adapt known breaking syntax and API changes (e.g. FormFieldFactoryExt)' });
       }
@@ -478,10 +487,11 @@ async function runWorker() {
         const clientDir = path.join(clientPath, 'ngo-client');
         const targetDir = fs.existsSync(clientDir) ? clientDir : clientPath;
         const pkgFile = path.join(targetDir, 'package.json');
+        let pkgModified = false;
+
         if (fs.existsSync(pkgFile)) {
           try {
             const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf8'));
-            let pkgModified = false;
             for (const scope of ['dependencies', 'devDependencies']) {
               if (pkg[scope]) {
                 for (const dep of Object.keys(pkg[scope])) {
@@ -498,10 +508,12 @@ async function runWorker() {
 
             // Discover Core package.json to align framework and peer dependencies
             let corePkg = null;
-            const candidateCorePkgPaths = [
-              path.join(corePath || 'D:\\NGO Client\\ngo-online-core', 'ngo-client-core', 'package.json'),
-              path.join(corePath || 'D:\\NGO Client\\ngo-online-core', 'package.json'),
-            ];
+            const candidateCorePkgPaths = corePath
+              ? [
+                  path.join(corePath, 'ngo-client-core', 'package.json'),
+                  path.join(corePath, 'package.json'),
+                ]
+              : [];
             for (const cpPath of candidateCorePkgPaths) {
               if (fs.existsSync(cpPath)) {
                 try {
@@ -576,27 +588,22 @@ async function runWorker() {
           }
         }
 
-        // 1. Sanitize .npmrc (remove all email/login lines, keep only FontAwesome and Azure Packaging registry)
-        const npmrcFile = path.join(targetDir, '.npmrc');
-        const canonicalNpmrc = [
-          '@fortawesome:registry=https://npm.fontawesome.com/',
-          '//npm.fontawesome.com/:_authToken=3782FD2E-F78E-470E-BDCF-CD67BB18773C',
-          'registry=https://pkgs.dev.azure.com/preciofishbone/_packaging/NGO_Online_feed/npm/registry/',
-          '//pkgs.dev.azure.com/preciofishbone/_packaging/NGO_Online_feed/npm/registry/:username=VssSessionToken',
-        ].join('\n') + '\n';
-
-        try {
-          fs.writeFileSync(npmrcFile, canonicalNpmrc, 'utf8');
-          appendLog('Sanitized .npmrc to clean FontAwesome & Packaging feed registry (removed email/login lines)', 'INFO', 'IMPLEMENT');
-          modifiedCount++;
-        } catch (err) {
-          appendLog(`Warning: Failed to write clean .npmrc: ${err.message}`, 'WARN', 'IMPLEMENT');
+        // 1. Inspect .npmrc non-destructively (preserve user/project .npmrc; never inject hardcoded tokens)
+        const npmEnv = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks });
+        if (npmEnv.npmrc && npmEnv.npmrc.obsoleteWarnings && npmEnv.npmrc.obsoleteWarnings.length > 0) {
+          for (const warn of npmEnv.npmrc.obsoleteWarnings) {
+            appendLog(`.npmrc notice: ${warn.reason}`, 'WARN', 'IMPLEMENT');
+          }
+        }
+        if (!npmEnv.ok && npmEnv.remediation) {
+          appendLog(`.npmrc authentication warning: ${npmEnv.remediation}`, 'WARN', 'IMPLEMENT');
         }
 
-        // 2. Install frontend packages with npm i -f --peer-deps (deterministic code, no LLM)
+        // 2. Install frontend packages using version-aware execution plan (prefers npm ci when lockfile valid & unchanged)
+        const npmPlan = npmDiagnostics.prepareNpmExecutionPlan(targetDir, { packageJsonChanged: pkgModified });
         if (!isSimulation) {
-          appendLog('Installing frontend packages via npm i -f --peer-deps...', 'INFO', 'IMPLEMENT');
-          const npmRes = cp.spawnSync('npm', ['i', '-f', '--peer-deps'], {
+          appendLog(`Installing frontend packages via ${npmPlan.commandLine} (${npmPlan.reason})...`, 'INFO', 'IMPLEMENT');
+          const npmRes = cp.spawnSync(npmPlan.command, npmPlan.args, {
             cwd: targetDir,
             encoding: 'utf8',
             windowsHide: true,
@@ -604,24 +611,12 @@ async function runWorker() {
             timeout: 180000,
           });
           if (npmRes.status === 0) {
-            appendLog('Frontend packages installed successfully via npm i -f --peer-deps.', 'INFO', 'IMPLEMENT');
+            appendLog(`Frontend packages installed successfully via ${npmPlan.commandLine}.`, 'INFO', 'IMPLEMENT');
           } else {
-            // Fallback to --legacy-peer-deps if npm version requires it
-            const fallbackRes = cp.spawnSync('npm', ['i', '-f', '--legacy-peer-deps'], {
-              cwd: targetDir,
-              encoding: 'utf8',
-              windowsHide: true,
-              shell: process.platform === 'win32',
-              timeout: 180000,
-            });
-            if (fallbackRes.status === 0) {
-              appendLog('Frontend packages installed successfully via npm i -f --legacy-peer-deps.', 'INFO', 'IMPLEMENT');
-            } else {
-              appendLog(`Frontend npm install notice: ${(fallbackRes.stderr || fallbackRes.stdout || npmRes.stderr || npmRes.stdout || '').slice(0, 300)}`, 'WARN', 'IMPLEMENT');
-            }
+            appendLog(`Frontend npm install notice: ${npmDiagnostics.redactNpmSecrets(npmRes.stderr || npmRes.stdout || '').slice(0, 300)}`, 'WARN', 'IMPLEMENT');
           }
         } else {
-          appendLog('[SIMULATION] Frontend package install (npm i -f --peer-deps) simulated.', 'INFO', 'IMPLEMENT');
+          appendLog(`[SIMULATION] Frontend package install (${npmPlan.commandLine}) simulated.`, 'INFO', 'IMPLEMENT');
         }
 
         // Frontend environment adaptation from Core reference host

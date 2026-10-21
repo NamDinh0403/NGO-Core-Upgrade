@@ -13,6 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const resolver = require('../ingest/tools/lib/release-resolver');
 const git = require('../ingest/tools/lib/git');
+const coreDiscovery = require('./core-discovery');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const DEFAULT_CLIENTS_DIR = path.resolve(REPO_ROOT, '..');
@@ -21,6 +22,21 @@ const DEFAULT_CORE_DIR = path.join(DEFAULT_CLIENTS_DIR, 'ngo-online-core');
 const UPGRADE_TARGET_FILE_PATTERN = /(\.csproj|\.sln|package\.json|package-lock\.json|appsettings.*\.json|packages\.config|Directory\.Build\.props)$/i;
 
 const discovery = require('./discovery');
+
+/**
+ * Resolve Core repository path across explicit argument, default sibling, or cross-machine discovery.
+ */
+function resolveEffectiveCorePath(corePath, clientPath) {
+  if (corePath && fs.existsSync(corePath)) return path.resolve(corePath);
+  if (!corePath && fs.existsSync(DEFAULT_CORE_DIR)) return DEFAULT_CORE_DIR;
+  try {
+    const disc = coreDiscovery.discoverCoreRepository({ corePath, clientPath });
+    if (disc.ok && disc.selected && disc.selected.path) {
+      return disc.selected.path;
+    }
+  } catch (_) {}
+  return corePath || (fs.existsSync(DEFAULT_CORE_DIR) ? DEFAULT_CORE_DIR : null);
+}
 
 /**
  * Scan a directory for candidate NGO Client repositories.
@@ -127,8 +143,8 @@ function detectRequiredTargetFramework(corePath, targetVersion) {
   }
 
   // 2. Check Core repository csproj files
-  const cPath = corePath || DEFAULT_CORE_DIR;
-  if (fs.existsSync(cPath)) {
+  const cPath = resolveEffectiveCorePath(corePath, null);
+  if (cPath && fs.existsSync(cPath)) {
     try {
       const scanTfm = (dir) => {
         for (const f of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -144,8 +160,11 @@ function detectRequiredTargetFramework(corePath, targetVersion) {
         }
         return null;
       };
-      const found = scanTfm(path.join(cPath, 'ngo-api-core'));
-      if (found) return found;
+      const apiCoreDir = path.join(cPath, 'ngo-api-core');
+      if (fs.existsSync(apiCoreDir)) {
+        const found = scanTfm(apiCoreDir);
+        if (found) return found;
+      }
     } catch (_) {}
   }
 
@@ -163,7 +182,7 @@ function detectRequiredTargetFramework(corePath, targetVersion) {
  */
 function getAvailableVersions(corePath) {
   const versions = new Set();
-  const cPath = corePath || (fs.existsSync(DEFAULT_CORE_DIR) ? DEFAULT_CORE_DIR : null);
+  const cPath = resolveEffectiveCorePath(corePath, null);
 
   // 1. Read from Ingest version manifest if present
   const manifestPath = path.join(REPO_ROOT, 'ingest', 'knowledge', 'candidates', 'version-manifest.json');
@@ -312,16 +331,6 @@ function parseGitWorkingTreeStatus(clientPath) {
 
 /**
  * Calculate evidence completeness against documented evidence items.
- *
- * Required Evidence (Weight 2 each):
- *   1. Package Binary Available (NuGet / npm)
- *   2. Source Revision Resolved (Tag / Branch / Commit)
- *   3. Client Working Tree Safe (Clean of uncommitted target changes)
- *
- * Optional Evidence (Weight 1 each):
- *   4. Source Diff Available
- *   5. Release Notes / Change Cards Available
- *   6. Approved Ref Mapping Available
  */
 function calculateEvidenceCompleteness(resolution, workingTree) {
   const ev = resolution.evidence || {};
@@ -474,7 +483,7 @@ function runPreflight(options) {
   options = options || {};
   const startTime = Date.now();
   const { clientPath, targetVersion, corePath, tracks } = options;
-  const cPath = corePath || (fs.existsSync(DEFAULT_CORE_DIR) ? DEFAULT_CORE_DIR : null);
+  const cPath = resolveEffectiveCorePath(corePath, clientPath);
 
   const checks = [];
   const blockers = [];
@@ -518,6 +527,7 @@ function runPreflight(options) {
       safetyDecision: 'BLOCKED_INVALID_TARGET',
       decisionReason: `Blocked: Target version '${targetVersion}' is not a valid semantic version.`,
       clientPath,
+      corePath: cPath,
       currentVersion: null,
       targetVersion,
       tracks: tracks || ['backend', 'frontend'],
@@ -640,7 +650,6 @@ function runPreflight(options) {
       freshness: new Date().toISOString(),
     });
   } else {
-    // Package availability check
     const pkg = resolution.sources?.package || {};
     if (pkg.available) {
       addCheck({
@@ -898,6 +907,7 @@ function runPreflight(options) {
     safetyDecision,
     decisionReason,
     clientPath,
+    corePath: cPath,
     currentVersion,
     targetVersion: normTarget,
     targetFramework: requiredTargetFramework,
@@ -995,6 +1005,8 @@ function classifyUpgradeMode(currentVersion, targetVersion) {
 module.exports = {
   discoverProjects,
   detectCurrentVersion,
+  detectRequiredTargetFramework,
+  resolveEffectiveCorePath,
   getAvailableVersions,
   runPreflight,
   parseGitWorkingTreeStatus,

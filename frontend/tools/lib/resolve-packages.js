@@ -179,6 +179,24 @@ function run(ctx) {
       let action = 'preserve';
       let risk = 'LOW';
       if (isNgoPkg(name) && !inCore) {
+        if (name === 'ngo-core' || name === (ctx.expectedPackageName || 'ngo-core')) {
+          const targetVer = ctx.targetVersion || (cDecl ? cDecl.version : null);
+          packages.push({
+            name,
+            clientDeclaredVersion: cDecl ? cDecl.version : null,
+            clientResolvedVersion: clientResolved(name) || null,
+            targetCoreDeclaredVersion: targetVer,
+            targetCoreResolvedVersion: targetVer,
+            targetPeerRange: null,
+            classification: 'CLIENT_AND_CORE_SHARED',
+            selectedTargetVersion: targetVer,
+            action: 'align-to-core-target',
+            evidence: `Target Core release ${targetVer}`,
+            risk: 'LOW',
+            validation: 'install resolves + build passes',
+          });
+          continue;
+        }
         classification = 'REMOVED_FROM_CORE_REVIEW';
         action = 'investigate-removal';
         risk = 'HIGH';

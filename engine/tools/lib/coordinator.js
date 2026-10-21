@@ -26,7 +26,7 @@ function registerPlan(clientId, runId, track, plan, gateFacts) {
   const errors = schema.validate(plan, contracts.Plan, 'Plan');
   if (errors.length) throw new Error(errors.join('; '));
   const current = owner(clientId, runId, track);
-  if (current.state.lifecyclePhase !== 'PLAN') throw new Error('Plans may be registered only during PLAN');
+  if (!['PLAN', 'EXECUTE'].includes(current.state.lifecyclePhase)) throw new Error('Plans may be registered only during PLAN or EXECUTE');
   gateFacts = gateFacts || {};
   const allowedFacts = ['proofRefs', 'baselineRecorded', 'rollbackCheckpointExists', 'repositoryStatusKnown', 'clientStatusKnown', 'coreFingerprintRecorded', 'requiredCapabilitiesAvailable', 'actionInPlan', 'policyPermitsAssumptions', 'uncertaintyRegister', 'planningFingerprintsMatch'];
   if (Object.keys(gateFacts).some((key) => !allowedFacts.includes(key))) throw new Error('Unexpected gate metadata; do not persist secrets or unrelated inputs');
@@ -79,7 +79,7 @@ function dispatch(clientId, runId, track, operation) {
     if (current.state.retryAuthorizations) delete current.state.retryAuthorizations[track];
     lifecycle.executor(current.state, track, 'RUNNING');
     save(current.base, current.state);
-  } else if (current.state.lifecyclePhase !== 'PLAN') throw new Error('Read-only implementation planning requires PLAN');
+  } else if (!['PLAN', 'EXECUTE'].includes(current.state.lifecyclePhase)) throw new Error('Read-only implementation planning requires PLAN or EXECUTE');
   const result = operation === 'inspect' && adapter.inspectDetailed ? adapter.inspectDetailed(current.packet) : adapter[operation](current.packet, plan && plan.plan);
   if (result.status === 'BLOCKED') {
     lifecycle.executor(current.state, track, 'BLOCKED');

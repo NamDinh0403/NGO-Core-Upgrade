@@ -64,7 +64,12 @@ function build(flags, baseDir) {
     // Absolute, resolved repo paths for all downstream skills.
     resolved: {
       clientPath: clientPath ? path.resolve(baseDir, clientPath) : null,
-      corePath: corePath ? path.resolve(baseDir, corePath) : null,
+      corePath: corePath ? (
+        !core.exists(path.join(path.resolve(baseDir, corePath), 'package.json')) &&
+        core.exists(path.join(path.resolve(baseDir, corePath), 'ngo-client-core', 'package.json'))
+          ? path.join(path.resolve(baseDir, corePath), 'ngo-client-core')
+          : path.resolve(baseDir, corePath)
+      ) : null,
       baseDir,
     },
   };

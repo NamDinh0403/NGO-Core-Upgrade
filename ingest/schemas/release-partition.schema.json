@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ingest/schemas/release-partition.schema.json",
+  "title": "Release Change Partition (Schema v2)",
+  "description": "Scoped, structured change index for a domain partition (backend, frontend, shared, or database).",
+  "type": "object",
+  "required": ["schemaVersion", "version", "scope", "recordCount", "changes"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 2 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "scope": {
+      "type": "string",
+      "enum": ["backend", "frontend", "shared", "database"]
+    },
+    "recordCount": { "type": "integer" },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "path", "changeType", "verificationStatus"],
+        "properties": {
+          "id": { "type": "string" },
+          "category": { "type": "string" },
+          "path": { "type": "string" },
+          "oldPath": { "type": ["string", "null"] },
+          "changeType": {
+            "type": "string",
+            "enum": ["ADDED", "MODIFIED", "DELETED", "RENAMED"]
+          },
+          "deterministicFacts": {
+            "type": "object"
+          },
+          "semanticAssessment": {
+            "type": "object",
+            "properties": {
+              "impact": { "type": "string" },
+              "confidence": { "type": "string" },
+              "rationale": { "type": "string" },
+              "requiresHumanReview": { "type": "boolean" },
+              "requiresMigrationExecution": { "type": "boolean" }
+            }
+          },
+          "evidenceRef": { "type": ["string", "null"] },
+          "verificationStatus": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

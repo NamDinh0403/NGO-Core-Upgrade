@@ -22,5 +22,5 @@ root when registered at user level.
 1. Prompt for client frontend directory and core path if not provided.
 2. Verify coworker's git author identity, clean git tree, and core release tags.
 3. Apply planned npm package updates and template/component alignments. Never edit the upgrade agent code itself.
-4. Run `npm install` (or `npm ci`) and `npm run build` (or `ng build`). Verify 0 compile errors.
+4. Run `npm install` (or `npm ci`) and `npm run build` (or `ng build`). Verify 0 compile errors. Do not run full browser unit test suites or modify client test spec files (`*.spec.ts`). Do not download isolated toolchain zips or create duplicate research sandboxes.
 5. Notify the user with a structured completion report when done.

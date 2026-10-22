@@ -189,6 +189,15 @@ try {
 	const replanned = runs.readJson(path.join(base, 'state.json'));
 	assert.strictEqual(replanned.lifecyclePhase, 'PLAN');
 	assert.deepStrictEqual(replanned.retryAttempts, blocked.retryAttempts);
+	replanned.lifecyclePhase = 'EXECUTE';
+	replanned.executorStatus.backend = 'RUNNING';
+	runs.writeJson(path.join(base, 'state.json'), replanned);
+	assert.strictEqual(coordinator.pause(client, runId, 'backend', 'Pause for test').status, 'PAUSED');
+	const paused = runs.readJson(path.join(base, 'state.json'));
+	assert.strictEqual(paused.executorStatus.backend, 'BLOCKED');
+	replanned.lifecyclePhase = 'PLAN';
+	replanned.executorStatus.backend = 'READY';
+	runs.writeJson(path.join(base, 'state.json'), replanned);
 	assert.throws(() => coordinator.dispatch(client, runId, 'backend', 'execute'), /plan/);
 } finally {
 	for (const track of ['backend', 'frontend']) executors.executor(track).prerequisites = originalPrerequisites[track];

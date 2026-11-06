@@ -195,4 +195,20 @@ function replan(clientId, runId, track, approvalRef) {
   return { status: 'READY', track, nextAction: current.state.nextAction };
 }
 
-module.exports = { owner, registerPlan, dispatch, recordValidation, verifyEvidence, diagnose, replan };
+function pause(clientId, runId, track, reason) {
+  const current = owner(clientId, runId, track);
+  if (!['EXECUTE', 'VALIDATE'].includes(current.state.lifecyclePhase)) throw new Error('Pause requires EXECUTE or VALIDATE phase');
+  const tracksToPause = track ? [track] : current.state.tracks;
+  for (const t of tracksToPause) {
+    if (current.state.executorStatus && current.state.executorStatus[t] === 'RUNNING') {
+      lifecycle.executor(current.state, t, 'BLOCKED');
+    }
+  }
+  current.state.status = 'BLOCKED';
+  current.state.nextAction = reason || 'Executors paused; preserve checkpoints before approved replanning or resume.';
+  current.state.safeResumeInstruction = current.state.nextAction;
+  save(current.base, current.state);
+  return { status: 'PAUSED', tracks: tracksToPause, nextAction: current.state.nextAction };
+}
+
+module.exports = { owner, registerPlan, dispatch, recordValidation, verifyEvidence, diagnose, replan, pause };

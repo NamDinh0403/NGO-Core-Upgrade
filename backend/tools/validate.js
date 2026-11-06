@@ -203,12 +203,23 @@ check('shared ingest records valid (if present)', () => {
   const sharedDir = P('..', 'ingest', 'knowledge', 'candidates', 'releases');
   if (!fs.existsSync(sharedDir)) return; // ingest not present (standalone copy) — nothing to check
   const schema = JSON.parse(fs.readFileSync(P('..', 'ingest', 'schemas', 'ingested-release.schema.json'), 'utf8'));
+  const v2SchemaFile = P('..', 'ingest', 'schemas', 'release-manifest-v2.schema.json');
+  const v2Schema = fs.existsSync(v2SchemaFile) ? JSON.parse(fs.readFileSync(v2SchemaFile, 'utf8')) : null;
   let errs = [];
-  for (const f of fs.readdirSync(sharedDir).filter((x) => x.endsWith('.json'))) {
-    const rel = `../ingest/knowledge/candidates/releases/${f}`;
-    const rec = JSON.parse(fs.readFileSync(path.join(sharedDir, f), 'utf8'));
-    errs = errs.concat(validate(rec, schema, rel));
-    if (rec.status !== undefined) assert(rec.status === 'CANDIDATE', `${rel}: status must be CANDIDATE, never canonical`);
+  for (const entry of fs.readdirSync(sharedDir, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith('.json')) {
+      const rel = `../ingest/knowledge/candidates/releases/${entry.name}`;
+      const rec = JSON.parse(fs.readFileSync(path.join(sharedDir, entry.name), 'utf8'));
+      errs = errs.concat(validate(rec, schema, rel));
+      if (rec.status !== undefined) assert(rec.status === 'CANDIDATE', `${rel}: status must be CANDIDATE, never canonical`);
+    } else if (entry.isDirectory() && v2Schema) {
+      const manifestPath = path.join(sharedDir, entry.name, 'manifest.json');
+      if (fs.existsSync(manifestPath)) {
+        const rel = `../ingest/knowledge/candidates/releases/${entry.name}/manifest.json`;
+        const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+        errs = errs.concat(validate(manifest, v2Schema, rel));
+      }
+    }
   }
   assert(errs.length === 0, errs.join(' | '));
 });

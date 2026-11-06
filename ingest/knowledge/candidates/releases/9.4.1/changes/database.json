@@ -1,0 +1,1619 @@
+{
+  "schemaVersion": 2,
+  "version": "9.4.1",
+  "scope": "database",
+  "recordCount": 59,
+  "changes": [
+    {
+      "id": "CHG-9.4.1-DB-001",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250319_RemoveWorkflowRedundantPermissions.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250319_RemoveWorkflowRedundantPermissions.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/38",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-002",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250701_InitIdeaMembers.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250701_InitIdeaMembers.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/39",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-003",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260410_UpdateMissingSQLDtoWorkflowType.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260410_UpdateMissingSQLDtoWorkflowType.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/40",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-004",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260413_UpdateTasksBoxPermissions.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260413_UpdateTasksBoxPermissions.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/41",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-005",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260423_EnsureIdFields.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260423_EnsureIdFields.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/42",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-006",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260507_UpdateFieldInstanceOverallStatus.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260507_UpdateFieldInstanceOverallStatus.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/43",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-007",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260521_UpdateEmailTemplates.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260521_UpdateEmailTemplates.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/44",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-008",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260527_UpdateIconForNewTextAreaControl.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260527_UpdateIconForNewTextAreaControl.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/45",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-009",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260706_UpdateRollupForProgramFinanceMonitoringBoxes.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260706_UpdateRollupForProgramFinanceMonitoringBoxes.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/46",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-010",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260811_UpdateActualsValidation.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260811_UpdateActualsValidation.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/47",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-011",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260820_AutoExpandStructureObjectives.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260820_AutoExpandStructureObjectives.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/48",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-012",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260820_UpdateResxForBreakdownTemplate.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260820_UpdateResxForBreakdownTemplate.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/49",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-013",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260827_FixSqlMappingForTaskExtraFields.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260827_FixSqlMappingForTaskExtraFields.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/50",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-014",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260915_UpdateSqlMappingForIATIAnalyse.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260915_UpdateSqlMappingForIATIAnalyse.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/51",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-015",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260916_SetupIATIAnalysePermissions.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260916_SetupIATIAnalysePermissions.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/52",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-016",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260925_AddIndicatorReportingConfigsToLogframeSetting.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260925_AddIndicatorReportingConfigsToLogframeSetting.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/53",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-017",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261005_UpdateResourceStringsForEntityTabs.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261005_UpdateResourceStringsForEntityTabs.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/54",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-018",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261006_RemoveCoreReviewApprovalSent.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261006_RemoveCoreReviewApprovalSent.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/55",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-019",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20251128_DropGetEntitiesByRelatedEntitiesViewFunction.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20251128_DropGetEntitiesByRelatedEntitiesViewFunction.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/56",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-020",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260616_RemoveUnusedLogframe2FieldDependency.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260616_RemoveUnusedLogframe2FieldDependency.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/57",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-021",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260813_RenameOldCoreChangesIndex.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260813_RenameOldCoreChangesIndex.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/58",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-022",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/59",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-023",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/03.1 InitEmailTemplate.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/03.1 InitEmailTemplate.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/60",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-024",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/61",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-025",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_04 TabFunctions.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_04 TabFunctions.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/62",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-026",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_07 EntityTabs_insert_only.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_07 EntityTabs_insert_only.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/63",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-027",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/64",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-028",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/65",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-029",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldDependencyDefinitions.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldDependencyDefinitions.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/66",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-030",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/67",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-031",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations_insert_only.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations_insert_only.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/68",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-032",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_12 ValidationDefinitions.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_12 ValidationDefinitions.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/69",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-033",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_13 Configurations.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_13 Configurations.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/70",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-034",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/05 InitUserPermission.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/05 InitUserPermission.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/71",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-035",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/06 InitListConfiguration.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/06 InitListConfiguration.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/72",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-036",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/07 InitToolboxConfiguration.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/07 InitToolboxConfiguration.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/73",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-037",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/74",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-038",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/09 InitCommonReportConfiguration.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/09 InitCommonReportConfiguration.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/75",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-039",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/CreateBrowseTVFs.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/CreateBrowseTVFs.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/76",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-040",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/InitOverviewbox.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/InitOverviewbox.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/77",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-041",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Security/05_06 GetTaskThatUserHasViewPermission.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Security/05_06 GetTaskThatUserHasViewPermission.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/78",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-042",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetEntitiesByRelatedEntitiesView.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetEntitiesByRelatedEntitiesView.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/79",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-043",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframe2IndicatorTrackers.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframe2IndicatorTrackers.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/80",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-044",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetOverallEntityStatusSummary.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetOverallEntityStatusSummary.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/81",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-045",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Views/03_14 AnalyseChange.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Views/03_14 AnalyseChange.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/82",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-046",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Views/03_15 IATIAnalyseParticipatingOrgsView.sql",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Views/03_15 IATIAnalyseParticipatingOrgsView.sql",
+            "status": "A",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/83",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-047",
+      "category": "sql-script",
+      "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeedTestData/InitOverviewbox_test_data.sql",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "sql-script",
+            "path": "ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeedTestData/InitOverviewbox_test_data.sql",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in sql-script",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/84",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-048",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260512121940_AddMoreDocumentLinksToCoreLogs.Designer.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260512121940_AddMoreDocumentLinksToCoreLogs.Designer.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260512121940_AddMoreDocumentLinksToCoreLogs.Designer.cs",
+            "added": 1,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/212",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-049",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260512121940_AddMoreDocumentLinksToCoreLogs.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260512121940_AddMoreDocumentLinksToCoreLogs.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260512121940_AddMoreDocumentLinksToCoreLogs.cs",
+            "added": 3,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/213",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-050",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810120000_AddActualsValidationToBreakdownTemplate.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810120000_AddActualsValidationToBreakdownTemplate.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810120000_AddActualsValidationToBreakdownTemplate.cs",
+            "added": 3,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/214",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-051",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810143510_AddIndexCoreChangesEntityId.Designer.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810143510_AddIndexCoreChangesEntityId.Designer.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810143510_AddIndexCoreChangesEntityId.Designer.cs",
+            "added": 1,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/215",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-052",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810143510_AddIndexCoreChangesEntityId.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810143510_AddIndexCoreChangesEntityId.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260810143510_AddIndexCoreChangesEntityId.cs",
+            "added": 3,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/216",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-053",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260826074225_AddDocumentLinks2To5ToTask.Designer.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260826074225_AddDocumentLinks2To5ToTask.Designer.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260826074225_AddDocumentLinks2To5ToTask.Designer.cs",
+            "added": 1,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/217",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-054",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260826074225_AddDocumentLinks2To5ToTask.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260826074225_AddDocumentLinks2To5ToTask.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260826074225_AddDocumentLinks2To5ToTask.cs",
+            "added": 3,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/218",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-055",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260827090558_AddIsFullToCoreSPSites.Designer.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260827090558_AddIsFullToCoreSPSites.Designer.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260827090558_AddIsFullToCoreSPSites.Designer.cs",
+            "added": 1,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/219",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-056",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260827090558_AddIsFullToCoreSPSites.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260827090558_AddIsFullToCoreSPSites.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260827090558_AddIsFullToCoreSPSites.cs",
+            "added": 3,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/220",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-057",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260908065744_AddSourceBudgetRowIdToFinancialActualRow.Designer.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260908065744_AddSourceBudgetRowIdToFinancialActualRow.Designer.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260908065744_AddSourceBudgetRowIdToFinancialActualRow.Designer.cs",
+            "added": 1,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/221",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-058",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260908065744_AddSourceBudgetRowIdToFinancialActualRow.cs",
+      "oldPath": null,
+      "changeType": "ADDED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260908065744_AddSourceBudgetRowIdToFinancialActualRow.cs",
+            "status": "A",
+            "requiresReview": true
+          },
+          {
+            "kind": "api-declaration-change-hint",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/20260908065744_AddSourceBudgetRowIdToFinancialActualRow.cs",
+            "added": 3,
+            "removed": 0,
+            "requiresSemanticReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/222",
+      "verificationStatus": "source-diff-observed"
+    },
+    {
+      "id": "CHG-9.4.1-DB-059",
+      "category": "ef-migration",
+      "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/CoreContextModelSnapshot.cs",
+      "oldPath": null,
+      "changeType": "MODIFIED",
+      "deterministicFacts": {
+        "facts": [
+          {
+            "kind": "ef-migration",
+            "path": "ngo-api-core/NGO/NGO.Core.Repositories/Migrations/CoreContextModelSnapshot.cs",
+            "status": "M",
+            "requiresReview": true
+          }
+        ]
+      },
+      "semanticAssessment": {
+        "impact": "MANUAL_REVIEW_REQUIRED",
+        "confidence": "HIGH",
+        "rationale": "Critical update in ef-migration",
+        "requiresHumanReview": true,
+        "requiresMigrationExecution": true
+      },
+      "evidenceRef": "evidence/raw-diff.json#/gitDiff/rawChanges/223",
+      "verificationStatus": "source-diff-observed"
+    }
+  ]
+}

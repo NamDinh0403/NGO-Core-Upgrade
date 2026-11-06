@@ -31,15 +31,18 @@ When running on any developer machine (especially outside the primary workstatio
    - **Git Author Identity**: Verify coworker's `git config user.name` and `git config user.email`. All commits must use the coworker's authenticated identity.
    - **Client Git Status**: Confirm clean working tree or safe baseline.
    - **Core Repository**: Confirm valid git repo and verify release evidence (git tags `v<source>`, `v<target>` or release branches `releases/*`). If refs are missing, run `cd "<core>" && git fetch --all --tags`. Remind that Core is strictly READ-ONLY (no checkout, no branch changes).
-   - **NuGet & npm Runtimes**: Verify .NET SDK, authenticated NuGet package sources, and Node/npm.
+   - **NuGet & npm Runtimes**: Verify .NET SDK, authenticated NuGet package sources, and Node/npm. If private feeds return 401, install the official Microsoft Credential Provider in PowerShell: `iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) }"` (for NuGet) or run `npx vsts-npm-auth -config .npmrc -Force` (for npm). Never attempt ad-hoc manual zip downloads or manual script stages.
 3. **Anti-Looping & Agent Integrity Rules (STRICT)**:
    - **NEVER edit the upgrade agent code**: Under no circumstances should an agent modify files in `NGO Core Upgrade/` (engine, backend, frontend, ingest, or tools). If a command fails, report the error with remediation steps; never attempt to "fix" the upgrade agent scripts.
    - **NEVER checkout or switch Git branches in Core**: Core is strictly READ-ONLY. Do not run `git checkout` or switch branches in Core; release discovery reads branch metadata non-destructively.
+   - **NEVER modify client test-bed files or unit test specs (`*.spec.ts`, `*Test*.cs`)**: Upgrades align Core packages and APIs; repairing legacy client unit test fixtures or mock providers is strictly forbidden.
+   - **No duplicate research sandboxes or toolchain downloads**: Never manually download standalone Node/npm zip archives or create duplicate `target-host-research` applications to execute redundant `npm install` cycles. Run builds and package restorations directly on the client repository.
    - **No infinite retry loops**: Run engine commands deterministically. If blocked, report the blocker and pause for user input.
 4. **Parallel Track Execution & Verification Gate**:
    - **Parallelize Backend & Frontend**: In both-track upgrades, NEVER execute the tracks sequentially or wait for backend to finish before starting frontend. Because backend (e.g. `ngo-api/`) and frontend (e.g. `ngo-client/`) reside in distinct directories and use isolated toolchains (`.NET/NuGet` vs `Node/npm`), execute their implementation and build validations concurrently in parallel.
    - **Concurrent Restore & Build**: Run `dotnet restore` & `dotnet build` on the backend solution and `npm install` (or `npm ci`) & `npm run build` on the frontend client concurrently in parallel background executions.
-   - **Completion Gate**: Await both parallel tracks; verify 0 errors for backend build and 0 errors for frontend build.
+   - **Completion Gate is Strictly Build Compilation (0 errors)**: Await both parallel tracks; verify 0 errors for backend build and 0 errors for frontend build. Full browser-based unit test suites (e.g. Karma ChromeHeadless regression suites) are NOT a required completion gate. If pre-existing unit test fixture failures occur, record them as skipped/legacy-failing; do NOT alter test files or enter fix loops.
+   - **Safe Pause & Replan**: If external Core drift or execution blocker occurs, pause running executors via `node engine/tools/upgrade-engine.js pause --run <client>/<run>` before re-planning.
    - Report a structured completion summary to the user when finished (version, files changed, parallel build verification: 0 errors).
 
 ## Release Discovery Hierarchy

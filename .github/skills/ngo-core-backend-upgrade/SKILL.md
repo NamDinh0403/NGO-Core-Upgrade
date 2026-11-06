@@ -22,5 +22,5 @@ root when registered at user level.
 1. Prompt for client solution path and core path if not provided.
 2. Verify coworker's git author identity (`git config user.name`, `git config user.email`), clean git tree, and core release tags.
 3. Apply planned NuGet package and code updates. Never edit the upgrade agent code itself.
-4. Run `dotnet restore` and `dotnet build --no-restore`. Verify 0 compile errors.
+4. Run `dotnet restore` and `dotnet build --no-restore`. Verify 0 compile errors. Do not modify client test-bed files or create duplicate compile sandboxes.
 5. Notify the user with a structured completion report when done.

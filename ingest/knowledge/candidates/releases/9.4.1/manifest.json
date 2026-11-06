@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 2,
+  "version": "9.4.1",
+  "lifecycle": {
+    "status": "VALIDATED",
+    "generatedAt": "2026-10-20T10:16:56Z",
+    "validatedAt": "2026-10-21T10:07:05.304Z",
+    "reviewedAt": null,
+    "publishedAt": null,
+    "reviewedBy": null
+  },
+  "identity": {
+    "analyzerVersion": "2",
+    "version": "9.4.1",
+    "fromCommit": "a2b58fb65bec64f293993d10848ac838e779718c",
+    "toCommit": "36351d43ae707fe4054349b8e666c4d7a7ba8217",
+    "notesHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "key": "1aac437a9d1da4fb116d57b56d94e567cb150b85d93c1b76ce5133f3d5f93e40"
+  },
+  "summary": {
+    "totalFilesChanged": 1580,
+    "highSignalChangeCount": 1580,
+    "unresolvedAmbiguities": 1581
+  },
+  "partitions": {
+    "evidence": {
+      "path": "evidence/raw-diff.json",
+      "size": 283010,
+      "sha256": "6399944194b1a021445f3f6359d6dd27d34d470b9ac9f58995f38df192917a63",
+      "recordCount": 1580
+    },
+    "backend": {
+      "path": "changes/backend.json",
+      "size": 884467,
+      "sha256": "2b4d561b9c6a59c840bd955892a3c7b3f2bb53bdd1f7666a766878d2e1fa2f0a",
+      "recordCount": 905
+    },
+    "frontend": {
+      "path": "changes/frontend.json",
+      "size": 307985,
+      "sha256": "3292b6e075751ebd4e8cfdaeb0e83b446bca7fe3b72004d1782ed832db66dc53",
+      "recordCount": 236
+    },
+    "shared": {
+      "path": "changes/shared.json",
+      "size": 241540,
+      "sha256": "532526351422483f8518e1cbbe05258522d6fd8e593bf971db0f1b9c46906b03",
+      "recordCount": 380
+    },
+    "database": {
+      "path": "changes/database.json",
+      "size": 57589,
+      "sha256": "a9bcca00355a7c4ab07cc25438b698a170be264075ddec1ea0a159025cd80cb8",
+      "recordCount": 59
+    },
+    "releaseNotes": {
+      "path": "release-notes.md",
+      "size": 7410,
+      "sha256": "89bbe6d5e7d436639e24330c99f21815020130f895a2cdbd9bd9d368596deb4c"
+    }
+  },
+  "manifestHash": "8ae78ae2fd53c33424f98509129d661c70e90de768e49142f1dcf014044e90a4"
+}

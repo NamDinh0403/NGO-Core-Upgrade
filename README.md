@@ -1,70 +1,97 @@
-# NGO Core Upgrade
+# NGO Core Upgrade 🚀
 
-Plug-and-play upgrade agent for **NGO.Core (.NET backend)** and **Angular frontend**.
+Plug-and-play upgrade agent & dashboard for **NGO.Core (.NET backend)** and **Angular frontend**.
 
-No manual configuration or script setup needed—just paste your prompt in Copilot Chat. The agent automatically checks your environment, saves your paths, guides you through any missing login, and executes the upgrade.
-
----
-
-## ⚡ Plug & Play: How to Run
-
-1. Open this repo in VS Code.
-2. Open **Copilot Chat**, click the agent dropdown (next to `+`), and select **`ngo-core-upgrade-orchestrator`**.
-3. Paste this prompt (replace with your paths and target version):
-
-```text
-Upgrade my client project to NGO Core 9.4.1:
-- Core path: C:\repos\ngo-online-core
-- Client path: C:\repos\ngo-online-shelterbox
-- Target version: 9.4.1
-```
-
-### ✨ What the Agent Does Automatically
-
-- **Auto-Configures Paths:** Saves your `Core path` and `Client path` to settings automatically.
-- **Preflight Check:** Verifies Git, GitHub access, Core release branches/packages, NuGet feeds, and npm.
-- **Guided Fixes:** If any login or feed is missing, the agent gives you the exact one-click command to fix it and re-verifies automatically.
-- **Executes Upgrade:** Upgrades Backend and Frontend in parallel, ensuring **0 build errors** before completion.
+Automates the entire upgrade lifecycle: verifies your environment, resolves target versions, aligns NuGet & npm packages, updates code, and validates **0 compile errors** before finishing.
 
 ---
 
-## 💬 Prompt Examples
+## ⚡ Quick Start: 2 Ways to Run
 
-| What You Want | Copy-Paste Prompt |
-| --- | --- |
-| **Full Upgrade (Backend + Frontend)** | `Upgrade my client project to NGO Core 9.4.1:`<br>`- Core path: C:\repos\ngo-online-core`<br>`- Client path: C:\repos\ngo-online-shelterbox`<br>`- Target version: 9.4.1` |
-| **Latest Release on Branch (e.g. `9.4.x`)** | `Upgrade my client project to the latest 9.4 release:`<br>`- Core path: C:\repos\ngo-online-core`<br>`- Client path: C:\repos\ngo-online-shelterbox`<br>`- Target version: 9.4` |
-| **Backend Only (`.NET / NuGet`)** | `Upgrade only the backend NGO.Core packages:`<br>`- Core path: C:\repos\ngo-online-core`<br>`- Client path: C:\repos\ngo-online-shelterbox`<br>`- Target version: 9.4.1` |
-| **Frontend Only (`Angular / npm`)** | `Align only the frontend with NGO Core 9.4.1:`<br>`- Core path: C:\repos\ngo-online-core`<br>`- Client path: C:\repos\ngo-online-shelterbox`<br>`- Target version: 9.4.1` |
+### Option 1: Web UI Dashboard (Recommended)
 
----
-
-## 🌐 Optional: Local Web UI Dashboard
-
-Prefer a visual dashboard instead of chat?
+Run the local web server:
 ```powershell
 node platform/start.js
 ```
-Open **`http://127.0.0.1:3800/`** to select projects, preview impact, and run upgrades visually.
+Open **`http://127.0.0.1:3800`** in your browser:
+1. Select your client project from the dropdown.
+2. Pick the target Core version (e.g. `9.4.1`, `9.5.0`).
+3. Click **Preflight Check** &rarr; **Start Upgrade**.
 
 ---
 
-<a id="tests--validation"></a>
+### Option 2: Copilot / Antigravity Chat
 
-<details>
-<summary><strong>🛠️ Developer Reference & Validation</strong></summary>
+1. Open this repo in VS Code.
+2. Open chat, select the agent **`@ngo-core-upgrade-orchestrator`** (or paste directly).
+3. Send your prompt:
 
-### Preflight CLI (Manual Check)
-```powershell
-node tools/check-environment.js --core-path "C:\repos\ngo-online-core" --client-path "C:\repos\ngo-online-shelterbox" --target 9.4.1 --save-settings
+```text
+Upgrade my client project to NGO Core 9.4.1:
+- Core path: D:\NGO Client\ngo-online-core
+- Client path: D:\NGO Client\ngo-online-shelterbox
+- Target version: 9.4.1
 ```
 
-### Run Framework Tests
+#### 💡 More Prompt Examples
+
+| What You Want | Prompt |
+| --- | --- |
+| **Latest release on branch** (e.g. `9.4.x`) | `Upgrade client to latest 9.4 release:`<br>`- Core path: D:\NGO Client\ngo-online-core`<br>`- Client path: D:\NGO Client\ngo-online-shelterbox`<br>`- Target version: 9.4` |
+| **Backend only** (`.NET / NuGet`) | `Upgrade only backend NGO.Core packages to 9.4.1:`<br>`- Core path: D:\NGO Client\ngo-online-core`<br>`- Client path: D:\NGO Client\ngo-online-shelterbox`<br>`- Target version: 9.4.1` |
+| **Frontend only** (`Angular / npm`) | `Align only frontend with NGO Core 9.4.1:`<br>`- Core path: D:\NGO Client\ngo-online-core`<br>`- Client path: D:\NGO Client\ngo-online-shelterbox`<br>`- Target version: 9.4.1` |
+
+---
+
+## 🛠️ Common Fixes & Auth Setup
+
+If preflight or package restore fails due to authentication or feeds:
+
+| Issue | Solution (Run in PowerShell) |
+| --- | --- |
+| **NuGet 401 / Credential Provider** | `iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) }"` |
+| **npm private feed 401** | `npx vsts-npm-auth -config .npmrc -Force` |
+| **Core refs missing** | Run in Core repo: `git fetch --all --tags` |
+
+> [!IMPORTANT]
+> **Core is strictly READ-ONLY:** Never switch branches or modify files inside the `ngo-online-core` directory.
+
+---
+
+## 📂 Project Structure
+
+```text
+├── platform/      # Local Web UI dashboard (server, UI, diagnostics)
+├── engine/        # Upgrade lifecycle coordinator & planning engine
+├── backend/       # .NET / NuGet package alignment & verification
+├── frontend/      # Angular / npm dependency alignment & verification
+├── ingest/        # Core release evidence & version change analysis
+└── tools/         # CLI preflight and verification utilities
+```
+
+---
+
+<details>
+<summary><strong>🔧 Developer CLI & Testing Reference</strong></summary>
+
+### Manual Preflight Check
 ```powershell
+node tools/check-environment.js --core-path "D:\NGO Client\ngo-online-core" --client-path "D:\NGO Client\ngo-online-shelterbox" --target 9.4.1 --save-settings
+```
+
+### Run Validation Tests
+```powershell
+# Targeted tests
+node engine/tests/engine.test.js
+node backend/tools/validate.js
+node platform/tests/nuget-sources.test.js
+
+# Complete framework validation
 node tools/validate-all.js
 ```
 
-### Package for Distribution
+### Package Portable Distribution
 ```powershell
 .\package-agent.ps1 -OutputPath ".\dist"
 ```

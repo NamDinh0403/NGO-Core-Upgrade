@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 4,
+  "evidenceSchemaVersion": 4,
+  "analyzerVersion": "release-branches-2",
+  "version": "8.10.0",
+  "previousVersion": "8.9.0",
+  "status": "CANDIDATE",
+  "ingestedAt": "2026-11-09T03:01:24.669Z",
+  "sourceFingerprint": {
+    "normalizedVersion": "8.10.0",
+    "previousNormalizedVersion": "8.9.0",
+    "currentSourceBranch": "releases/8.10",
+    "previousSourceBranch": "releases/8.9",
+    "currentCommitSha": "06f3161c61251420eee8f9fc027e6906b8053ace",
+    "previousCommitSha": "06f3161c61251420eee8f9fc027e6906b8053ace",
+    "evidenceSchemaVersion": 4,
+    "analyzerVersion": "release-branches-2"
+  },
+  "sources": {
+    "coreRepoPath": "D:\\NGO Client\\ngo-online-core",
+    "sourceBranch": "releases/8.10",
+    "previousSourceBranch": "releases/8.9",
+    "sourceCommitSha": "06f3161c61251420eee8f9fc027e6906b8053ace",
+    "previousSourceCommitSha": "06f3161c61251420eee8f9fc027e6906b8053ace",
+    "comparisonRange": "06f3161c61251420eee8f9fc027e6906b8053ace...06f3161c61251420eee8f9fc027e6906b8053ace",
+    "tagRange": {
+      "from": "releases/8.9",
+      "to": "releases/8.10"
+    }
+  },
+  "changedFileCount": 0,
+  "commitsAnalyzed": [],
+  "technicalSummary": "0 files changed across 0 commits from releases/8.9 to releases/8.10.",
+  "highRiskChanges": [],
+  "searchableSymbolChanges": [],
+  "packageAndFrameworkChanges": [],
+  "configurationChanges": [],
+  "databaseChanges": [],
+  "apiChanges": [],
+  "manualReviewItems": [],
+  "validationResults": {
+    "sourcePathsResolved": true,
+    "coreFingerprintUnchanged": null,
+    "duplicateEvidence": false
+  },
+  "changes": [],
+  "facts": [],
+  "findings": {
+    "backend": [],
+    "frontend": [],
+    "shared": []
+  },
+  "unresolvedItems": [],
+  "nextAction": "Review source evidence for 8.10.0 before promoting applicable findings into track canonical knowledge.",
+  "contentHash": "f8a3c62e692220d5c04c42c06f969eaa4dae70b4de57b847d6d750952548eaab"
+}

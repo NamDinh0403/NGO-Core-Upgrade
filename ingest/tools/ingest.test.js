@@ -11,6 +11,9 @@ const notes = require('./lib/notes');
 const classify = require('./lib/classify');
 const ingest = require('./ingest');
 const git = require('./lib/git');
+const partitionLib = require('./lib/partition');
+const releaseReader = require('./lib/release-reader');
+const schemaLib = require('../../engine/tools/lib/schema');
 
 const results = [];
 function test(id, fn) { try { fn(); results.push({ id, pass: true }); } catch (e) { results.push({ id, pass: false, error: e.message }); } }
@@ -208,7 +211,93 @@ test('22-extraction-uses-immutable-commits', () => {
   } finally { git.diffNameStatus = diff; }
 });
 
-test('23-cleanup', () => {
+test('23-partition-candidate-schema-and-integrity', () => {
+  const SCHEMAS_DIR = path.resolve(__dirname, '..', 'schemas');
+  const manifestSchema = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, 'release-manifest-v2.schema.json'), 'utf8'));
+  const partitionSchema = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, 'release-partition.schema.json'), 'utf8'));
+  const evidenceSchema = JSON.parse(fs.readFileSync(path.join(SCHEMAS_DIR, 'release-evidence.schema.json'), 'utf8'));
+
+  const sampleCandidate = {
+    schemaVersion: 1,
+    version: '9.9.0',
+    status: 'CANDIDATE',
+    identity: {
+      analyzerVersion: '2',
+      version: '9.9.0',
+      fromCommit: 'aaaabbbbccccdddd000011112222333344445555',
+      toCommit: '6666777788889999aaaabbbbccccdddd00001111',
+      notesHash: '1234567890abcdef',
+      key: 'abcdef1234567890'
+    },
+    changes: [
+      { status: 'M', path: 'src/backend/app.cs', category: 'dotnet-source', scope: 'backend' },
+      { status: 'A', path: 'src/frontend/app.ts', category: 'frontend-source', scope: 'frontend' },
+      { status: 'A', path: 'src/db/mig.cs', category: 'ef-migration', scope: 'backend' },
+      { status: 'M', path: 'scripts/deploy.sh', category: 'other', scope: 'shared' }
+    ],
+    facts: [
+      { kind: 'api-declaration-change-hint', path: 'src/backend/app.cs', added: 1, removed: 0 },
+      { kind: 'ef-migration', path: 'src/db/mig.cs', status: 'A' },
+      { kind: 'json-key', path: 'packages.lock.json', key: 'AngleSharp', change: 'MODIFIED' }
+    ],
+    ingestedAt: '2026-10-21T00:00:00Z',
+    sources: {
+      coreRepoPath: '/repo',
+      tagRange: { from: 'v9.8.0', to: 'v9.9.0' }
+    },
+    findings: {
+      backend: [{ scope: 'backend', category: 'dotnet-source', path: 'src/backend/app.cs', status: 'M', statement: 'Modified src/backend/app.cs' }],
+      frontend: [{ scope: 'frontend', category: 'frontend-source', path: 'src/frontend/app.ts', status: 'A', statement: 'Added src/frontend/app.ts' }],
+      shared: [
+        { scope: 'backend', category: 'ef-migration', path: 'src/db/mig.cs', status: 'A', statement: 'Added src/db/mig.cs' },
+        { scope: 'shared', category: 'other', path: 'scripts/deploy.sh', status: 'M', statement: 'Modified scripts/deploy.sh' }
+      ]
+    },
+    unresolvedItems: [],
+    nextAction: 'review'
+  };
+
+  const partOut = path.join(tmpOut, 'partitioned');
+  const result = partitionLib.partitionCandidate(sampleCandidate, partOut);
+
+  // Validate schemas
+  const manErrs = schemaLib.validate(result.manifest, manifestSchema, 'manifest');
+  assert(manErrs.length === 0, 'manifest schema valid: ' + manErrs.join(', '));
+  const evErrs = schemaLib.validate(result.rawDiff, evidenceSchema, 'evidence');
+  assert(evErrs.length === 0, 'evidence schema valid: ' + evErrs.join(', '));
+
+  for (const scope of ['backend', 'frontend', 'shared', 'database']) {
+    const partFile = path.join(partOut, '9.9.0', 'changes', `${scope}.json`);
+    const partObj = JSON.parse(fs.readFileSync(partFile, 'utf8'));
+    const partErrs = schemaLib.validate(partObj, partitionSchema, `changes/${scope}`);
+    assert(partErrs.length === 0, `partition ${scope} schema valid: ` + partErrs.join(', '));
+  }
+
+  // Validate partition hashes against manifest
+  for (const [key, part] of Object.entries(result.manifest.partitions)) {
+    const file = path.join(partOut, '9.9.0', part.path);
+    const content = fs.readFileSync(file, 'utf8');
+    assert(partitionLib.sha256(content) === part.sha256, `SHA-256 integrity mismatch for ${key}`);
+  }
+});
+
+test('24-release-reader-dual-format-and-scope-isolation', () => {
+  const partOut = path.join(tmpOut, 'partitioned');
+  const read = releaseReader.readRelease(partOut, '9.9.0');
+  assert(read.isPartitioned === true, 'should identify as partitioned');
+  assert(read.record.version === '9.9.0', 'version matches');
+  assert(read.record.status === 'CANDIDATE', 'status matches CANDIDATE');
+  assert(read.record.findings.backend.length === 1, 'backend findings synthesized');
+  assert(read.record.findings.frontend.length === 1, 'frontend findings synthesized');
+  assert(read.record.findings.shared.length === 2, 'shared and database findings synthesized');
+
+  // Test scope isolation
+  const beScope = releaseReader.readScope(partOut, '9.9.0', 'backend');
+  assert(beScope.scope === 'backend', 'scope matches');
+  assert(beScope.recordCount === 1, 'recordCount matches');
+});
+
+test('25-cleanup', () => {
   fs.rmSync(tmpRepo, { recursive: true, force: true });
   fs.rmSync(tmpOut, { recursive: true, force: true });
   assert(!fs.existsSync(tmpRepo) && !fs.existsSync(tmpOut));

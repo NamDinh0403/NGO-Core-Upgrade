@@ -12,7 +12,14 @@ const path = require('path');
 const yaml = require('./yaml');
 
 function loadCandidateRecord(ingestRoot, version) {
-  const candidatePath = path.join(ingestRoot, 'knowledge', 'candidates', 'releases', `${version}.json`);
+  const releasesDir = path.join(ingestRoot, 'knowledge', 'candidates', 'releases');
+  const readerPath = path.join(ingestRoot, 'tools', 'lib', 'release-reader');
+  try {
+    const reader = require(readerPath);
+    const release = reader.readRelease(releasesDir, version);
+    if (release) return { path: release.path, record: release.record };
+  } catch (_) {}
+  const candidatePath = path.join(releasesDir, `${version}.json`);
   if (!fs.existsSync(candidatePath)) return null;
   return { path: candidatePath, record: JSON.parse(fs.readFileSync(candidatePath, 'utf8')) };
 }

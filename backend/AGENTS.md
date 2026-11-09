@@ -30,7 +30,7 @@ Return `{kind,status,ref}` evidence for `installed-core-assemblies`,
 `installed-public-api`, `restore`, `build`, `tests`, `configuration`,
 `requirement-coverage`, `finding-dispositions`, `deployment-checklist` through
 engine record-validation. Preserve exact commands, logs, target version and
-installed surface. Missing/skipped validation is not PASSED. Migration decisions
+installed surface. Missing/skipped validation is not PASSED. The verification gate is strictly build compilation (0 errors); modifying client test-bed files is strictly forbidden. Migration decisions
 and destructive/public-API/security/auth changes require appropriate approval.
 Disposition each seeded finding VERIFIED or NOT_APPLICABLE_WITH_EVIDENCE using
 concrete proof in release-finding-dispositions.yaml.

@@ -578,7 +578,7 @@ function getAzureArtifactsCredentials(feedUrl, options) {
     return {
       ok: false,
       error: 'Azure Artifacts Credential Provider not found',
-      remediation: 'Install Azure Artifacts Credential Provider (https://github.com/microsoft/artifacts-credprovider), sign in with Azure CLI ("az login"), or set AZURE_DEVOPS_EXT_PAT.',
+      remediation: 'Install Azure Artifacts Credential Provider (run in PowerShell: iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) }"), sign in with Azure CLI ("az login"), or set AZURE_DEVOPS_EXT_PAT.',
     };
   }
 
@@ -1070,7 +1070,7 @@ async function runNuGetPreflightChecks(options = {}) {
       ? 'No Azure Artifacts feeds configured.'
       : (credExe ? `Azure Artifacts Credential Provider discovered at ${credExe}` : 'CredentialProvider.Microsoft not found in user plugins, Visual Studio, or NUGET_CREDENTIALPROVIDERS_PATH.'),
     remediation: credProviderRequired && !credExe
-      ? 'Install Azure Artifacts Credential Provider (https://github.com/microsoft/artifacts-credprovider) or authenticate via AZURE_DEVOPS_EXT_PAT / Azure CLI.'
+      ? 'Install Azure Artifacts Credential Provider (run in PowerShell: iex "& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) }") or authenticate via AZURE_DEVOPS_EXT_PAT / Azure CLI.'
       : null,
   };
 

@@ -670,6 +670,10 @@ async function runEnvironmentCheck(flags = {}) {
     if (!nugetPreflight.ok) {
       const stageBlock = !nugetPreflight.stages.feedConfig.ok
         ? nugetPreflight.stages.feedConfig
+        : (!nugetPreflight.stages.credentialProvider.installed && nugetPreflight.stages.credentialProvider.required)
+        ? nugetPreflight.stages.credentialProvider
+        : !nugetPreflight.stages.authMechanism.ok
+        ? nugetPreflight.stages.authMechanism
         : !nugetPreflight.stages.feedAccess.ok
         ? nugetPreflight.stages.feedAccess
         : nugetPreflight.stages.packageRestore;

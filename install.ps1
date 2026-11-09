@@ -122,6 +122,21 @@ if (Test-Path $agentsSrc) {
 }
 
 Write-Host ""
+# --- 4. Verify/Install Azure Artifacts Credential Provider --------------------
+$pluginDir = Join-Path $HOME '.nuget\plugins\netcore\CredentialProvider.Microsoft'
+if (-not (Test-Path (Join-Path $pluginDir 'CredentialProvider.Microsoft.dll'))) {
+    Write-Step "Azure Artifacts Credential Provider not found in ~/.nuget/plugins. Installing official provider..."
+    try {
+        & ([scriptblock]::Create((Invoke-RestMethod -Uri 'https://aka.ms/install-artifacts-credprovider.ps1')))
+        Write-Host "    + Azure Artifacts Credential Provider installed."
+    } catch {
+        Write-Warning "Could not automatically install Credential Provider. Run manually if using private Azure feeds:"
+        Write-Warning "    iex '& { $(irm https://aka.ms/install-artifacts-credprovider.ps1) }'"
+    }
+} else {
+    Write-Step "Azure Artifacts Credential Provider verified in $pluginDir"
+}
+
 Write-Step "Done."
 Write-Host "The skills and agents are now available in every VS Code workspace and the Copilot CLI."
 Write-Host "Agent workflow + CLIs live at: $InstallDir"

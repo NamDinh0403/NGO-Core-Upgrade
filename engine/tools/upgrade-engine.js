@@ -478,6 +478,7 @@ function main() {
     'record-validation': cmdRecordValidation,
     diagnose: cmdDiagnose,
     replan: cmdReplan,
+    pause: cmdPause,
     learn: cmdLearn,
     status: cmdStatus
   };
@@ -549,4 +550,13 @@ function cmdReplan(flags) {
 }
 
 if (require.main === module) main();
-module.exports = { cmdCreateRun, cmdComposeResults, cmdVerifyCoverage, cmdPrepareHandover, cmdFinalReport, cmdStatus, cmdContext, cmdDispatch, cmdRegisterPlan, cmdRecordValidation, cmdDiagnose, cmdReplan, cmdLearn, ensureIngested, parseFlags, splitRunFlag, main };
+function cmdPause(flags) {
+  try {
+    const ids = splitRunFlag(flags.run);
+    const result = require('./lib/coordinator').pause(ids.clientId, ids.runId, flags.track, flags.reason);
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+    return 0;
+  } catch (error) { process.stderr.write(`BLOCKED: ${error.message}\n`); return 1; }
+}
+
+module.exports = { cmdCreateRun, cmdComposeResults, cmdVerifyCoverage, cmdPrepareHandover, cmdFinalReport, cmdStatus, cmdContext, cmdDispatch, cmdRegisterPlan, cmdRecordValidation, cmdDiagnose, cmdReplan, cmdPause, cmdLearn, ensureIngested, parseFlags, splitRunFlag, main };

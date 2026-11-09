@@ -28,7 +28,7 @@ Return `{kind,status,ref}` evidence for `installed-dependencies`, `toolchain`,
 `development-build`, `production-build`, `tests`, `integration-audit`,
 `core-unchanged`, `requirement-coverage`, `finding-dispositions`,
 `deployment-checklist` through engine record-validation. Verify actual installed graphs,
-not only manifest changes/install success. Missing/skipped checks cannot PASSED.
+not only manifest changes/install success. Missing/skipped checks cannot PASSED. The verification gate is strictly build compilation (0 errors); running browser-based Karma test suites is not required and modifying client test spec files (*.spec.ts) is strictly forbidden.
 Disposition seeded findings VERIFIED or NOT_APPLICABLE_WITH_EVIDENCE, or link
 sourceCandidateIds on evidenced requirement coverage. Manual work has an owner.
 Never load EF/settings values/backend implementation; consume API/integration

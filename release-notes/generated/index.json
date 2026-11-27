@@ -9,7 +9,7 @@
       "summary": {
         "mandatoryActions": 1,
         "conditionalActions": 1,
-        "needsReviewActions": 1,
+        "needsReviewActions": 0,
         "newFeatures": 1,
         "bugFixes": 1
       },

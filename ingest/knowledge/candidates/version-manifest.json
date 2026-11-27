@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T02:31:28.604Z",
+  "generatedAt": "2026-11-23T02:26:31.167Z",
   "minimumProcessedVersion": "5.0.0",
   "latestCoreVersion": "9.5.0",
   "baseline": {
@@ -12,7 +12,7 @@
     "5": "5.17.0",
     "6": "6.10.0",
     "7": "7.8.0",
-    "8": "8.9.0",
+    "8": "8.10.0",
     "9": "9.5.0"
   },
   "releases": [
@@ -497,12 +497,22 @@
       "sourceFingerprintCurrent": true
     },
     {
-      "version": "9.0.0",
+      "version": "8.10.0",
       "previousVersion": "8.9.0",
-      "branch": "releases/9.0",
+      "branch": "releases/8.10",
       "previousBranch": "releases/8.9",
-      "commit": "a2b58fb65bec64f293993d10848ac838e779718c",
+      "commit": "84f1d3530a3fe1ec9db1816006ad86012fb840a3",
       "previousCommit": "06f3161c61251420eee8f9fc027e6906b8053ace",
+      "candidatePath": "ingest/knowledge/candidates/releases/8.10.0.json",
+      "sourceFingerprintCurrent": true
+    },
+    {
+      "version": "9.0.0",
+      "previousVersion": "8.10.0",
+      "branch": "releases/9.0",
+      "previousBranch": "releases/8.10",
+      "commit": "a2b58fb65bec64f293993d10848ac838e779718c",
+      "previousCommit": "84f1d3530a3fe1ec9db1816006ad86012fb840a3",
       "candidatePath": "ingest/knowledge/candidates/releases/9.0.0.json",
       "sourceFingerprintCurrent": true
     },
@@ -551,7 +561,7 @@
       "previousVersion": "9.4.0",
       "branch": "releases/9.5",
       "previousBranch": "releases/9.4",
-      "commit": "53a620f7577ee59ca1ab26a17d555428e8b1c4d7",
+      "commit": "2e6980a50760f86d806120bccc62b5625c47e690",
       "previousCommit": "36351d43ae707fe4054349b8e666c4d7a7ba8217",
       "candidatePath": "ingest/knowledge/candidates/releases/9.5.0.json",
       "sourceFingerprintCurrent": true

@@ -4,7 +4,7 @@
 - **Status:** RELEASED
 - **Release Date:** Not specified
 - **Source Refs:** [OneNote export](docs/onenote-core-release-notes.html), [Candidate record](ingest/knowledge/candidates/releases/9.5.0.json)
-- **Quick Summary:** Mandatory Actions **1** | Conditional Actions **1** | New Features **1** | Bug Fixes **1** | Needs Review **1**
+- **Quick Summary:** Mandatory Actions **1** | Conditional Actions **1** | New Features **1** | Bug Fixes **1**
 
 ## Section A - Upgrade & Deployment Guide (Actionable)
 
@@ -21,7 +21,6 @@
 | Applicability Condition (When to Run) | Tool / Action | Timing | Owner | Instructions & Notes | Card / PR |
 | --- | --- | --- | --- | --- | --- |
 | check if release pipeline / deployment appsettings.json having Core | Update setting on library Document on rootsite | During Upgrade | Deployer | [S] Update setting on library Document on rootsite<br>[For deployment person] check if release pipeline / deployment appsettings.json having Core: Deployment:DeploySPFieldsAndCTypesEnabled false -> if so please add Core: Deployment:DeploySPFieldsAndCTypesEnabled true to the release pipeline, and turn the setting back when the deployment done. | [Card](https://trello.com/c/sUcxhgAI/5692-s-update-setting-on-library-document-on-rootsite) |
-| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | Resolve ingestion uncertainty for 9.5.0 | During Upgrade | Client Dev | Resolve ingestion uncertainty for 9.5.0<br>222 unresolved candidate item(s) require review. The complete list is retained in the structured report metadata and source candidate. Examples: 9.5.0 [backend] ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialTransactionController.cs: observed in diff, no matching release-notes card \| 9.5.0 [backend] ngo-api-core/NGO/NGO.Core.API/Controllers/FinancialTransactionController.cs: observed in diff, no matching release-notes card \| 9.5.0 [backend] ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs: observed in diff, no matching release-notes card | - |
 
 ## Section B - Release Tracking & Lookup (Features & Bug Fixes)
 

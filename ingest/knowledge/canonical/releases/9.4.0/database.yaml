@@ -1,0 +1,75 @@
+version: "9.4.0"
+scope: DATABASE
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.4.0-DATABASE-01
+    releaseVersion: "9.4.0"
+    title: "Review inactive UserOptions in Analyse columns"
+    description: "Showing inactive users from UserOptions is opt-in, not a global default."
+    scope: DATABASE
+    category: configuration
+    timing: MANUAL_REVIEW
+    applicability: IF_PM_APPROVES
+    semanticRoles: ["databaseDatafix"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.4.0; https://trello.com/c/WP3RDffZ"
+    action: "If inactive users should be shown for a UserOptions column, set CoreAnalyzeColumns FieldCharacteristic.isAlwaysShowInactive = true for that column only. Otherwise record that the option is not requested."
+    automation: MANUAL_DECISION
+    validation: "Requested columns show inactive users; other columns retain their existing behavior."
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "client-PM"
+  - schemaVersion: 1
+    id: REQ-9.4.0-DATABASE-02
+    releaseVersion: "9.4.0"
+    title: "Review custom Idea task email actor tokens"
+    description: "Custom email bodies using submitter/creator tokens may need TaskActorName for precise reassignment emails."
+    scope: DATABASE
+    category: email-template
+    timing: MANUAL_REVIEW
+    applicability: IF_DATABASE_DATA_MATCHES
+    semanticRoles: ["databaseDatafix"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.4.0 Idea Task - Reassign"
+    action: "Inspect CoreEmailTemplateContents where TemplateId is within the client's custom ID range and Body contains any of [[TaskFlow.Submitter.Name]], [[FundingIdea.CreatedBy.Name]], or [[Idea.CreatedBy.Name]]. Parenthesize the three OR conditions before applying the ID predicate. Default custom IDs start at 50000; discover the real boundary. Review whether each match should use [[TaskActorName]]; do not blindly replace creator/submitter semantics."
+    automation: MANUAL_DECISION
+    validation: "Every matching custom template has a reviewed disposition; reassignment emails identify the intended actor."
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "backend-owner"
+  - schemaVersion: 1
+    id: REQ-9.4.0-DATABASE-03
+    releaseVersion: "9.4.0"
+    title: "Review inactive ConfigOptionsMapper options in Analyse"
+    description: "Showing inactive ConfigOptionsMapper options is opt-in."
+    scope: DATABASE
+    category: configuration
+    timing: MANUAL_REVIEW
+    applicability: IF_PM_APPROVES
+    semanticRoles: ["databaseDatafix"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.4.0; https://trello.com/c/dYcw3tZP"
+    action: "If inactive ConfigOptionsMapper options should be shown, set CoreAnalyzeColumns FieldCharacteristic.isAlwaysShowInactive = true for the requested columns only."
+    automation: MANUAL_DECISION
+    validation: "Requested columns include inactive options without changing unrequested columns."
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "client-PM"
+  - schemaVersion: 1
+    id: REQ-9.4.0-DATABASE-04
+    releaseVersion: "9.4.0"
+    title: "Review read-only ConfigOptionsMapper options in Analyse"
+    description: "Including read-only ConfigOptionsMapper options is a separate opt-in from inactive options."
+    scope: DATABASE
+    category: configuration
+    timing: MANUAL_REVIEW
+    applicability: IF_PM_APPROVES
+    semanticRoles: ["databaseDatafix"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.4.0; https://trello.com/c/dYcw3tZP"
+    action: "If read-only ConfigOptionsMapper options should be included, set CoreAnalyzeColumns FieldCharacteristic.readOnlyOptionIncluded = true for the requested columns only."
+    automation: MANUAL_DECISION
+    validation: "Requested columns include read-only options; inactive-option behavior remains independently configured."
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "client-PM"

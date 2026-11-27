@@ -1,0 +1,21 @@
+version: "9.5.0"
+scope: BACKEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.5.0-BACKEND-01
+    releaseVersion: "9.5.0"
+    title: "Remove obsolete client email resource-string keys"
+    description: "Email titles using [[TabDefinitionName]] require removal of obsolete resource-string keys ending in _in_email from client code scripts."
+    scope: BACKEND
+    category: resource-string
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["backendCustomization"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.5.0 email title resource-string fix"
+    clientDiscovery: ["_in_email"]
+    action: "Search client code scripts for resource-string keys with the _in_email suffix and remove the obsolete key definitions before deployment. Review exact matches; do not remove unrelated keys or execute database cleanup implicitly."
+    automation: AUTO_AFTER_MAPPING
+    validation: "Client scripts no longer seed obsolete suffixed keys; email titles with [[TabDefinitionName]] resolve correctly."
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE

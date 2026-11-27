@@ -41,6 +41,39 @@
       "rotationRequired": true
     }
   ],
+  "supplementalImports": [
+    {
+      "importedAt": "2026-11-12",
+      "source": "User-supplied deployment note, Pasted text #1",
+      "sourceSha256": "c4c40a99d4facab6e925e171044abb1a55aa8e0ea54c03c0c4c75fc014c431d0",
+      "discoveredVersions": ["9.1.0", "9.2.0", "9.3.0", "9.4.0", "9.5.0"],
+      "requirementsAdded": [
+        "REQ-9.1.0-DATABASE-02",
+        "REQ-9.2.0-BACKEND-04",
+        "REQ-9.2.0-DEPLOYMENT-04",
+        "REQ-9.3.0-FRONTEND-01",
+        "REQ-9.4.0-DATABASE-01",
+        "REQ-9.4.0-DATABASE-02",
+        "REQ-9.4.0-DATABASE-03",
+        "REQ-9.4.0-DATABASE-04",
+        "REQ-9.4.0-DEPLOYMENT-01",
+        "REQ-9.5.0-BACKEND-01",
+        "REQ-9.5.0-DEPLOYMENT-01"
+      ],
+      "requirementsEnriched": [
+        "REQ-8.6.0-BACKEND-01",
+        "REQ-8.6.0-BACKEND-02",
+        "REQ-9.1.0-BACKEND-02",
+        "REQ-9.1.0-BACKEND-03",
+        "REQ-9.1.0-DATABASE-01",
+        "REQ-9.2.0-DECISIONS-01"
+      ],
+      "unresolvedItems": [
+        "The original text-area icon assignment names a value that its condition says may be empty; resolve the pre-datafix/custom icon before writing."
+      ],
+      "notes": "Full note reconciled against existing canonical records without duplicating Outlook manifest or backported tool requirements. November 4 site-count guidance retains its date and client-phase condition. 9.0.0 is a heading only in this attachment; earlier imported 9.0 requirements are unchanged."
+    }
+  ],
   "unresolvedItems": [],
   "notes": "Root release-notes.md is shared with the Backend track; removing it is a cross-track MANUAL_BLOCKER. Runtime never reads this file."
 }

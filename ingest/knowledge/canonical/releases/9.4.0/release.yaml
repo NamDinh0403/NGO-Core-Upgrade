@@ -1,7 +1,7 @@
 schemaVersion: 1
 version: "9.4.0"
 title: "NGO Core 9.4.0"
-summary: "Manual enrichment required; no matching release-note section is present in Upgrade."
+summary: "Optional Analyse option visibility, custom email actor-token review, and phase-specific import-tool site collection reconciliation."
 frameworkTransition: { angularFrom: "15", angularTo: "15", dotnetFrom: "10", dotnetTo: "10" }
-scopes: []
-sourceEvidence: "Core branch releases/9.4 at commit c16a187800e4c04c78dcc63ba89871b53f59ab8a"
+scopes: ["database", "deployment"]
+sourceEvidence: "Team deployment note supplied 2026-11-12, 9.4.0 including 2026-Nov-04 update"

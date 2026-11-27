@@ -76,6 +76,7 @@ function createStore(core) {
     return core.exists(MIGRATIONS_DIR) ? fs.readdirSync(MIGRATIONS_DIR).filter((name) => name.endsWith('.yaml')).map((name) => core.readYamlAbs(path.join(MIGRATIONS_DIR, name))) : [];
   }
   return { RELEASES_DIR, MIGRATIONS_DIR, APPSETTINGS_DIR, VERSIONS_DIR,
+    parseVersion: core.parseVersion, compareVersions: core.compareVersions,
     listVersions, loadReleaseManifest, loadScopeRequirements, load, angularMajorAt,
     allRequirements: (source, target, track) => load(source, target, track).requirements.slice(),
     migrations, appSettings: () => ancillary().appsettings.slice(),

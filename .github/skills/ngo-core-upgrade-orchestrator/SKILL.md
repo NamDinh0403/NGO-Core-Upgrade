@@ -13,6 +13,10 @@ Load track contracts only when delegating to those tracks. The public agent is
 `ngo-core-upgrade`; this skill retains its existing discovery identity.
 The shared lifecycle is [engine/skills/lifecycle/SKILL.md](../../../engine/skills/lifecycle/SKILL.md).
 Pass one isolated track context per delegation, not the complete shared run.
+Follow [command-first execution](../../../engine/AGENTS.md#command-first-upgrade-execution)
+and include it in each delegated context: run supported commands before reading
+JS, no new test/probe files or framework suites, optional tests SKIPPED with a
+reason, and no repeated unchanged successful builds.
 
 ## Workflow Execution Steps
 1. **Gather Inputs**: Check if the user provided local `ngo-online-core` path, client project path, and target version. Ask once if any are missing. Never guess paths.

@@ -35,7 +35,33 @@ function capture(scope, record, options) {
   const id = options.id || crypto.createHash('sha256').update(JSON.stringify(clean)).digest('hex').slice(0, 20);
   const tier = options.candidate ? 'candidates' : 'episodes';
   const file = location(tier, scope, id, options.root);
-  const output = Object.assign({}, clean, { schemaVersion: 1, scope, tier,
+  const episodeDefaults = tier === 'episodes'
+    ? {
+        episodeId: id,
+        runId: options.runId || id,
+        clientScope: 'redacted',
+        sourceVersion: 'unknown',
+        targetVersion: 'unknown',
+        phase: 'UPGRADE',
+        triggeringProblem: String((clean && (clean.triggeringProblem || clean.finding || clean.summary || clean.outcome)) || 'Workflow episode recorded'),
+        actionsAttempted: Array.isArray(clean && clean.actionsAttempted)
+          ? clean.actionsAttempted
+          : [{ order: 1, action: 'workflow execution', outcome: String((clean && clean.outcome) || 'recorded') }],
+        finalOutcome: (() => {
+          const raw = String((clean && (clean.finalOutcome || clean.outcome)) || '').toLowerCase();
+          if (['succeeded', 'passed', 'complete', 'completed'].some((s) => raw.includes(s))) return 'succeeded';
+          if (raw.includes('fail') || raw.includes('error')) return 'failed';
+          return 'blocked';
+        })(),
+        buildResult: String((clean && clean.buildResult) || 'not recorded'),
+        testResult: String((clean && clean.testResult) || 'not recorded'),
+        documentationResult: String((clean && clean.documentationResult) || (clean && clean.limitation) || 'not recorded'),
+        reusability: ['client-specific', 'candidate-global', 'not-reusable'].includes(clean && clean.reusability) ? clean.reusability : 'client-specific',
+        confidence: (clean && typeof clean.confidence === 'number' && clean.confidence >= 0 && clean.confidence <= 1) ? clean.confidence : 0.5,
+        createdAt: (clean && clean.createdAt) || new Date().toISOString(),
+      }
+    : {};
+  const output = Object.assign({}, episodeDefaults, clean, { schemaVersion: 1, scope, tier,
     redactionStatus: (clean && ['redacted', 'not-required', 'pending'].includes(clean.redactionStatus)) ? clean.redactionStatus : 'redacted',
     approvalStatus: 'UNAPPROVED',
     redactionReview: sanitize({ reviewer: review.reviewer, personalDataRemoved: true, clientBusinessRulesRemoved: true, sourceBodiesRemoved: true, evidence: review.evidence }) });

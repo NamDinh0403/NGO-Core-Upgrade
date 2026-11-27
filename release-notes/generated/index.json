@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "source": "platform/tools/sync-release-notes.js",
+  "releases": [
+    {
+      "version": "9.5.0",
+      "status": "RELEASED",
+      "releaseDate": null,
+      "summary": {
+        "mandatoryActions": 1,
+        "conditionalActions": 1,
+        "needsReviewActions": 1,
+        "newFeatures": 1,
+        "bugFixes": 1
+      },
+      "json": "9.5.0/release-notes.json",
+      "markdown": "9.5.0/release-notes.md"
+    },
+    {
+      "version": "10.0.0-draft",
+      "status": "DRAFT / IN PROGRESS",
+      "releaseDate": null,
+      "summary": {
+        "mandatoryActions": 53,
+        "conditionalActions": 18,
+        "needsReviewActions": 52,
+        "newFeatures": 16,
+        "bugFixes": 5
+      },
+      "json": "10.0.0-draft/release-notes.json",
+      "markdown": "10.0.0-draft/release-notes.md"
+    }
+  ]
+}

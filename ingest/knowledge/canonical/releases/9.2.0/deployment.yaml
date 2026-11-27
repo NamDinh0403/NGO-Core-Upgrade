@@ -20,6 +20,24 @@ requirements:
     status: ACTIVE
     owner: "deployment-owner"
   - schemaVersion: 1
+    id: REQ-9.2.0-DEPLOYMENT-04
+    releaseVersion: "9.2.0"
+    title: "Export existing embedded URL sources for CSP"
+    description: "Existing embedded URLs must be collected and reviewed before setting additional frame sources."
+    scope: DEPLOYMENT
+    category: csp-configuration
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_DEPLOYMENT_ENVIRONMENT_USES
+    semanticRoles: ["deploymentConfig"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.2.0; Core PR 38994"
+    action: "Run ExportCspAdditionalFrameSrc.sql from Core PR 38994 after deployment. Review its verification results, then copy the approved CspAdditionalFrameSrc value to Core:CspAdditionalFrameSrc in Azure/App Service. Do not copy unverified sources."
+    automation: MANUAL_EXECUTION
+    validation: "Export verification is reviewed; approved sources are configured and existing embedded content works."
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"
+  - schemaVersion: 1
     id: REQ-9.2.0-DEPLOYMENT-02
     releaseVersion: "9.2.0"
     title: "Optionally add Mail.Read (Delegated) permission"

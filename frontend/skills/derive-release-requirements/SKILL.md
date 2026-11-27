@@ -51,6 +51,13 @@ See `schemas/input.schema.json`.
 3. Never bind a requirement to a specific client file — that is the mapping
    skill's job.
 4. Mark requirements with insufficient evidence as `REQUIRES_RESEARCH`.
+5. For changed public component inputs/outputs, templates or layout styles, read
+   the relevant diff and search custom client consumers (external and inline
+   templates). Do not conclude "package-only" merely because Core host files are
+   unchanged. Example: the 9.3 `ngo-list-filter` change requires shared-column
+   consumers to wrap fields in `browse-filter-layout`, enable
+   `[flattenIntoParentFlow]="true"` and remove sibling floats. Retain the full
+   canonical action/applicability/validation, not just its title.
 
 # Evidence requirements
 

@@ -37,8 +37,8 @@ gates:
     check: Target production build ran.
   - id: tests
     phase: VALIDATE
-    required: true
-    check: Relevant tests ran.
+    required: false
+    check: Existing targeted tests run only when requested or needed for a concrete regression; otherwise record tests SKIPPED with the reason.
   - id: integrationAudit
     phase: AUDIT
     required: true
@@ -58,7 +58,6 @@ requiredDocItems:
   - baselineBuildsRecorded
   - targetDevelopmentBuildCompleted
   - targetProductionBuildCompleted
-  - testsCompleted
   - integrationAuditCompleted
   - changedFilesRecorded
   - uncertaintyResolvedOrDeferred

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "version": "9.5.1",
+  "status": "CANDIDATE",
+  "identity": {
+    "analyzerVersion": "2",
+    "version": "9.5.1",
+    "fromCommit": "2e6980a50760f86d806120bccc62b5625c47e690",
+    "toCommit": "2e6980a50760f86d806120bccc62b5625c47e690",
+    "notesHash": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+    "key": "b532c740da90be58e13e9a8ffadf8c83c79032dcfaca12ac770473a086c0f15c"
+  },
+  "changes": [],
+  "facts": [],
+  "ingestedAt": "2026-11-12T08:21:01Z",
+  "sources": {
+    "coreRepoPath": "D:\\NGO Client\\ngo-online-core",
+    "releaseNotesPath": null,
+    "tagRange": {
+      "from": "2e6980a50760f86d806120bccc62b5625c47e690",
+      "to": "2e6980a50760f86d806120bccc62b5625c47e690"
+    }
+  },
+  "findings": {
+    "backend": [],
+    "frontend": [],
+    "shared": []
+  },
+  "unresolvedItems": [
+    "9.5.1: no release-notes.md provided — findings are git-diff-only for this version"
+  ],
+  "nextAction": "Developer: review ingest/knowledge/candidates/releases/9.5.1.json, resolve unresolvedItems, then promote applicable findings into backend/knowledge/canonical/versions/9.5.1.json and/or frontend/knowledge/canonical/releases/9.5.1/.",
+  "contentHash": "465dd3e1810521f9ff3085ba6d59523bb19e2a1ce9f5fdbb67d168b14491a272"
+}

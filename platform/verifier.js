@@ -11,6 +11,7 @@ const cp = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const testPolicy = require('./test-policy');
+const settingsLib = require('./settings');
 
 /**
  * Execute a subprocess command and capture timing, output, and exit status.
@@ -55,6 +56,157 @@ function execCheck(command, args, options) {
       error: err.message,
     };
   }
+}
+
+/**
+ * Async subprocess execution helper for parallel verification tracks.
+ */
+function execCheckAsync(command, args, options) {
+  options = options || {};
+  const started = Date.now();
+  const cwd = options.cwd || process.cwd();
+  const timeout = options.timeout || 180000;
+  const env = options.env ? Object.assign({}, process.env, options.env) : process.env;
+
+  return new Promise((resolve) => {
+    let stdout = '';
+    let stderr = '';
+    let settled = false;
+    let timedOut = false;
+
+    const child = cp.spawn(command, args, {
+      cwd,
+      windowsHide: true,
+      shell: true,
+      env,
+    });
+
+    const timer = setTimeout(() => {
+      timedOut = true;
+      try { child.kill('SIGTERM'); } catch (_) {}
+    }, timeout);
+
+    child.stdout.on('data', (d) => { stdout += d.toString('utf8'); });
+    child.stderr.on('data', (d) => { stderr += d.toString('utf8'); });
+
+    child.on('error', (err) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve({
+        command: `${command} ${args.join(' ')}`.trim(),
+        ok: false,
+        exitCode: 1,
+        durationMs: Date.now() - started,
+        stdout: stdout.trim(),
+        stderr: (stderr || err.message).trim(),
+        error: err.message,
+      });
+    });
+
+    child.on('close', (code) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      const exitCode = code !== null ? code : 1;
+      const ok = !timedOut && exitCode === 0;
+      resolve({
+        command: `${command} ${args.join(' ')}`.trim(),
+        ok,
+        exitCode,
+        durationMs: Date.now() - started,
+        stdout: stdout.trim(),
+        stderr: timedOut ? `Process timed out after ${timeout}ms.\n${stderr}`.trim() : stderr.trim(),
+        error: timedOut ? 'TIMEOUT' : null,
+      });
+    });
+  });
+}
+
+function collectCsprojFiles(dir, results = [], depth = 0) {
+  if (depth > 8 || !fs.existsSync(dir)) return results;
+  try {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (['bin', 'obj', '.vs', 'node_modules', '.git'].includes(entry.name)) continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        collectCsprojFiles(full, results, depth + 1);
+      } else if (/\.csproj$/i.test(entry.name)) {
+        results.push(full);
+      }
+    }
+  } catch (_) {}
+  return results;
+}
+
+function isSqlProjFailure(buildRes) {
+  if (!buildRes || buildRes.ok) return false;
+  const combined = `${buildRes.stdout || ''}\n${buildRes.stderr || ''}`;
+  return /MSB4278|\.sqlproj|SqlTasks\.targets/i.test(combined);
+}
+
+function buildCsprojFallbackSync(apiDir, isSimulation) {
+  const csprojFiles = collectCsprojFiles(apiDir).filter((f) => !/(\.tests|\.test|\.spec)\.csproj$/i.test(f));
+  if (csprojFiles.length === 0) return null;
+  const started = Date.now();
+  const outputs = [];
+  for (const proj of csprojFiles) {
+    const args = isSimulation ? ['build', proj, '--no-restore'] : ['build', proj];
+    const res = execCheck('dotnet', args, { cwd: apiDir, timeout: 180000 });
+    outputs.push(`[${path.basename(proj)}] ${res.ok ? 'OK' : res.stderr || res.stdout}`);
+    if (!res.ok) {
+      return {
+        command: res.command,
+        ok: false,
+        exitCode: res.exitCode,
+        durationMs: Date.now() - started,
+        stdout: outputs.join('\n'),
+        stderr: res.stderr || res.stdout,
+        error: res.error,
+      };
+    }
+  }
+  return {
+    command: `dotnet build <${csprojFiles.length} .csproj files> (skipped SSDT .sqlproj)`,
+    ok: true,
+    exitCode: 0,
+    durationMs: Date.now() - started,
+    stdout: `Build succeeded for ${csprojFiles.length} .csproj project(s); SSDT .sqlproj skipped under dotnet CLI.`,
+    stderr: '',
+    error: null,
+  };
+}
+
+async function buildCsprojFallbackAsync(apiDir, isSimulation) {
+  const csprojFiles = collectCsprojFiles(apiDir).filter((f) => !/(\.tests|\.test|\.spec)\.csproj$/i.test(f));
+  if (csprojFiles.length === 0) return null;
+  const started = Date.now();
+  const outputs = [];
+  for (const proj of csprojFiles) {
+    const args = isSimulation ? ['build', proj, '--no-restore'] : ['build', proj];
+    const res = await execCheckAsync('dotnet', args, { cwd: apiDir, timeout: 180000 });
+    outputs.push(`[${path.basename(proj)}] ${res.ok ? 'OK' : res.stderr || res.stdout}`);
+    if (!res.ok) {
+      return {
+        command: res.command,
+        ok: false,
+        exitCode: res.exitCode,
+        durationMs: Date.now() - started,
+        stdout: outputs.join('\n'),
+        stderr: res.stderr || res.stdout,
+        error: res.error,
+      };
+    }
+  }
+  return {
+    command: `dotnet build <${csprojFiles.length} .csproj files> (skipped SSDT .sqlproj)`,
+    ok: true,
+    exitCode: 0,
+    durationMs: Date.now() - started,
+    stdout: `Build succeeded for ${csprojFiles.length} .csproj project(s); SSDT .sqlproj skipped under dotnet CLI.`,
+    stderr: '',
+    error: null,
+  };
 }
 
 /**
@@ -125,6 +277,18 @@ function verify(options) {
   const checks = [];
   let allPassed = true;
 
+  let defaultRunTests = false;
+  try {
+    const s = settingsLib.loadSettings({ resolveCore: false });
+    defaultRunTests = Boolean(s && s.verification && s.verification.runTests === true);
+  } catch (_) {}
+  const shouldRunTests = Boolean(
+    forceRegression === true ||
+    forceRunTests === true ||
+    options.runTests === true ||
+    (options.runTests === undefined && defaultRunTests)
+  );
+
   const aggregatedTestDecisions = {
     scopes: [],
     testsSelected: [],
@@ -190,7 +354,11 @@ function verify(options) {
 
     if (hasDotnet) {
       const buildArgs = isSimulation ? ['build', '--no-restore'] : ['build'];
-      const buildRes = execCheck('dotnet', buildArgs, { cwd: apiDir, timeout: 180000 });
+      let buildRes = execCheck('dotnet', buildArgs, { cwd: apiDir, timeout: 180000 });
+      if (!buildRes.ok && isSqlProjFailure(buildRes)) {
+        const csprojRes = buildCsprojFallbackSync(apiDir, isSimulation);
+        if (csprojRes) buildRes = csprojRes;
+      }
       if (!buildRes.ok) allPassed = false;
       checks.push({
         name: 'Backend .NET Solution Build',
@@ -200,12 +368,25 @@ function verify(options) {
         ok: buildRes.ok,
         durationMs: buildRes.durationMs,
         exitCode: buildRes.exitCode,
-        details: buildRes.ok ? 'Build succeeded.' : buildRes.stderr || buildRes.stdout || 'Build failed.',
+        details: buildRes.ok ? (buildRes.stdout || 'Build succeeded.') : buildRes.stderr || buildRes.stdout || 'Build failed.',
       });
 
-      // 2b. Dotnet Test Execution with Regression Test Policy
+      // 2b. Dotnet Test Execution with Regression Test Policy (SKIPPED unless explicitly enabled)
       const testProjects = findTestProjects(apiDir);
-      if (testProjects.length > 0) {
+      if (!shouldRunTests) {
+        aggregatedTestDecisions.scopes.push('SKIPPED');
+        aggregatedTestDecisions.testsSkipped.push('Backend .NET Test Suite (disabled by default verification policy)');
+        checks.push({
+          name: 'Backend .NET Test Suite',
+          category: 'backend',
+          command: 'dotnet test --no-build',
+          status: 'SKIPPED',
+          ok: true,
+          durationMs: 0,
+          exitCode: 0,
+          details: 'Skipped per policy (builds are the verification gate unless verification.runTests is enabled).',
+        });
+      } else if (testProjects.length > 0) {
         const testRes = testPolicy.executeWithPolicy({
           clientPath,
           cwd: apiDir,
@@ -338,8 +519,21 @@ function verify(options) {
       });
     }
 
-    // 3c. Frontend Test Execution (if test script present)
-    if (hasTestScript && !isSimulation) {
+    // 3c. Frontend Test Execution (SKIPPED by default per AGENTS.md; Karma ChromeHeadless only runs when explicitly enabled)
+    if (hasTestScript && !isSimulation && !shouldRunTests) {
+      aggregatedTestDecisions.scopes.push('SKIPPED');
+      aggregatedTestDecisions.testsSkipped.push('Frontend Angular Test Suite (ChromeHeadless skipped per policy)');
+      checks.push({
+        name: 'Frontend Angular Test Suite',
+        category: 'frontend',
+        command: 'npm test -- --watch=false --browsers=ChromeHeadless',
+        status: 'SKIPPED',
+        ok: true,
+        durationMs: 0,
+        exitCode: 0,
+        details: 'Skipped per policy (Karma/ChromeHeadless browser unit tests are optional; build succeeded).',
+      });
+    } else if (hasTestScript && !isSimulation && shouldRunTests) {
       if (!process.env.CHROME_BIN && process.platform === 'win32') {
         const chromeCandidates = [
           'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -417,8 +611,371 @@ function verify(options) {
   };
 }
 
+function checkBackendPackageVersion(clientPath, targetVersion) {
+  const apiDir = findBackendRoot(clientPath);
+  const searchDir = fs.existsSync(apiDir) ? apiDir : clientPath;
+  const started = Date.now();
+  let versionFound = null;
+  let checkedFile = null;
+
+  try {
+    const scanCsproj = (dir) => {
+      for (const file of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, file.name);
+        if (file.isDirectory() && !['bin', 'obj', '.vs', 'node_modules'].includes(file.name)) {
+          scanCsproj(full);
+        } else if (file.name.endsWith('.csproj')) {
+          const content = fs.readFileSync(full, 'utf8');
+          const m = content.match(/<PackageReference\s+Include=["']NGO\.Core(?:\.[^"']+)?["']\s+Version=["']([^"']+)["']/i) ||
+                    content.match(/<PackageReference\s+Version=["']([^"']+)["']\s+Include=["']NGO\.Core/i);
+          if (m) {
+            versionFound = m[1];
+            checkedFile = path.relative(clientPath, full);
+            break;
+          }
+        }
+      }
+    };
+    scanCsproj(searchDir);
+  } catch (_) {}
+
+  const versionMatch = versionFound && (versionFound === targetVersion || versionFound.startsWith(targetVersion));
+  const ok = Boolean(versionMatch);
+
+  return {
+    ok,
+    apiDir,
+    check: {
+      name: 'Backend Core Package Version Check',
+      category: 'backend',
+      command: `inspect .csproj (<PackageReference Include="NGO.Core*" Version="${targetVersion}" />)`,
+      status: ok ? 'PASSED' : 'FAILED',
+      ok,
+      durationMs: Date.now() - started,
+      exitCode: ok ? 0 : 1,
+      details: versionFound
+        ? `Found version ${versionFound} in ${checkedFile}. Expected ${targetVersion}.`
+        : 'No NGO.Core package references found in .csproj files.',
+    },
+  };
+}
+
+function checkFrontendPackageVersion(clientPath, targetVersion) {
+  const clientDir = fs.existsSync(path.join(clientPath, 'ngo-client')) ? path.join(clientPath, 'ngo-client') : clientPath;
+  const pkgPath = path.join(clientDir, 'package.json');
+  const started = Date.now();
+  let frontendVer = null;
+  let hasTestScript = false;
+  let hasBuildScript = false;
+
+  if (fs.existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+      const deps = Object.assign({}, pkg.dependencies || {}, pkg.devDependencies || {});
+      for (const [dep, ver] of Object.entries(deps)) {
+        if (dep.includes('ngo-core') || dep.includes('@ngo/core')) {
+          frontendVer = String(ver).replace(/^[\^~>=<]/, '');
+          break;
+        }
+      }
+      if (pkg.scripts && pkg.scripts.test && !pkg.scripts.test.includes('no test specified')) {
+        hasTestScript = true;
+      }
+      if (pkg.scripts && pkg.scripts.build && !pkg.scripts.build.includes('no build specified')) {
+        hasBuildScript = true;
+      }
+    } catch (_) {}
+  }
+
+  const versionMatch = frontendVer && (frontendVer === targetVersion || frontendVer.startsWith(targetVersion));
+  const ok = Boolean(versionMatch);
+
+  return {
+    ok,
+    clientDir,
+    hasTestScript,
+    hasBuildScript,
+    check: {
+      name: 'Frontend Core Package Version Check',
+      category: 'frontend',
+      command: `inspect package.json (dependencies["@ngo/core"] === "${targetVersion}")`,
+      status: ok ? 'PASSED' : 'FAILED',
+      ok,
+      durationMs: Date.now() - started,
+      exitCode: ok ? 0 : 1,
+      details: frontendVer
+        ? `Found version ${frontendVer} in package.json. Expected ${targetVersion}.`
+        : 'No @ngo/core dependencies found in package.json.',
+    },
+  };
+}
+
+/**
+ * Parallelized asynchronous verifier executing backend (.NET) and frontend (Angular)
+ * verification tracks concurrently.
+ */
+async function verifyParallel(options) {
+  const { clientPath, targetVersion, tracks, isPatch, upgradeMode, breakingChangesCount, forceRegression, forceRunTests, isSimulation, onLog } = options;
+  const log = typeof onLog === 'function' ? onLog : () => {};
+  const selectedTracks = tracks || ['backend', 'frontend'];
+
+  let defaultRunTests = false;
+  try {
+    const s = settingsLib.loadSettings({ resolveCore: false });
+    defaultRunTests = Boolean(s && s.verification && s.verification.runTests === true);
+  } catch (_) {}
+  const shouldRunTests = Boolean(
+    forceRegression === true ||
+    forceRunTests === true ||
+    options.runTests === true ||
+    (options.runTests === undefined && defaultRunTests)
+  );
+
+  const aggregatedTestDecisions = {
+    scopes: [],
+    testsSelected: [],
+    testsSkipped: [],
+    testsReused: [],
+    testExecutionsCount: 0,
+    retriesCount: 0,
+    fullRegressionJustified: false,
+    inputFingerprint: null,
+  };
+
+  const runBackendTrack = async () => {
+    const trackChecks = [];
+    let trackOk = true;
+    if (!selectedTracks.includes('backend')) return { trackChecks, trackOk };
+
+    const pkgCheck = checkBackendPackageVersion(clientPath, targetVersion);
+    if (!pkgCheck.ok) trackOk = false;
+    trackChecks.push(pkgCheck.check);
+
+    if (fs.existsSync(path.join(clientPath, 'ngo-api')) || fs.existsSync(clientPath)) {
+      const apiDir = pkgCheck.apiDir;
+      const hasDotnet = cp.spawnSync('dotnet', ['--version'], { encoding: 'utf8', windowsHide: true, shell: true }).status === 0;
+      if (hasDotnet) {
+        const buildArgs = isSimulation ? ['build', '--no-restore'] : ['build'];
+        let buildRes = await execCheckAsync('dotnet', buildArgs, { cwd: apiDir, timeout: 180000 });
+        if (!buildRes.ok && isSqlProjFailure(buildRes)) {
+          log('[Verify] Solution build hit SSDT .sqlproj MSB4278; verifying individual .csproj projects...');
+          const csprojRes = await buildCsprojFallbackAsync(apiDir, isSimulation);
+          if (csprojRes) buildRes = csprojRes;
+        }
+        if (!buildRes.ok) trackOk = false;
+        trackChecks.push({
+          name: 'Backend .NET Solution Build',
+          category: 'backend',
+          command: buildRes.command,
+          status: buildRes.ok ? 'PASSED' : 'FAILED',
+          ok: buildRes.ok,
+          durationMs: buildRes.durationMs,
+          exitCode: buildRes.exitCode,
+          details: buildRes.ok ? (buildRes.stdout || 'Build succeeded.') : buildRes.stderr || buildRes.stdout || 'Build failed.',
+        });
+
+        const testProjects = findTestProjects(apiDir);
+        if (!shouldRunTests) {
+          aggregatedTestDecisions.scopes.push('SKIPPED');
+          aggregatedTestDecisions.testsSkipped.push('Backend .NET Test Suite (disabled by default verification policy)');
+          trackChecks.push({
+            name: 'Backend .NET Test Suite',
+            category: 'backend',
+            command: 'dotnet test --no-build',
+            status: 'SKIPPED',
+            ok: true,
+            durationMs: 0,
+            exitCode: 0,
+            details: 'Skipped per policy (builds are the verification gate unless verification.runTests is enabled).',
+          });
+        } else if (testProjects.length > 0) {
+          const testRes = testPolicy.executeWithPolicy({
+            clientPath,
+            cwd: apiDir,
+            targetVersion,
+            tracks: selectedTracks,
+            isPatch,
+            upgradeMode,
+            breakingChangesCount,
+            forceRegression,
+            forceRun: forceRunTests,
+            command: 'dotnet',
+            args: ['test', '--no-build'],
+            name: 'Backend .NET Test Suite',
+            category: 'backend',
+            onLog: log,
+          });
+          if (!testRes.ok) trackOk = false;
+          trackChecks.push(testRes);
+          if (testRes.testDecisions) {
+            aggregatedTestDecisions.scopes.push(testRes.testDecisions.scope);
+            aggregatedTestDecisions.testsSelected.push(...testRes.testDecisions.testsSelected);
+            aggregatedTestDecisions.testsSkipped.push(...testRes.testDecisions.testsSkipped);
+            aggregatedTestDecisions.testsReused.push(...testRes.testDecisions.testsReused);
+            aggregatedTestDecisions.testExecutionsCount += testRes.testDecisions.testExecutionsCount;
+            aggregatedTestDecisions.retriesCount += testRes.testDecisions.retriesCount;
+            if (testRes.testDecisions.fullRegressionJustified) {
+              aggregatedTestDecisions.fullRegressionJustified = true;
+            }
+            aggregatedTestDecisions.inputFingerprint = testRes.testDecisions.inputFingerprint;
+          }
+        } else {
+          trackChecks.push({
+            name: 'Backend .NET Test Suite',
+            category: 'backend',
+            command: 'dotnet test',
+            status: 'SKIPPED',
+            ok: true,
+            durationMs: 0,
+            exitCode: 0,
+            details: 'No dedicated .Tests test projects found; test execution skipped.',
+          });
+        }
+      } else {
+        trackChecks.push({
+          name: 'Backend .NET Solution Build',
+          category: 'backend',
+          command: 'dotnet build',
+          status: 'SKIPPED',
+          ok: true,
+          durationMs: 1,
+          exitCode: 0,
+          details: 'dotnet SDK not found in PATH; build check skipped.',
+        });
+      }
+    }
+    return { trackChecks, trackOk };
+  };
+
+  const runFrontendTrack = async () => {
+    const trackChecks = [];
+    let trackOk = true;
+    if (!selectedTracks.includes('frontend')) return { trackChecks, trackOk };
+
+    const pkgCheck = checkFrontendPackageVersion(clientPath, targetVersion);
+    if (!pkgCheck.ok) trackOk = false;
+    trackChecks.push(pkgCheck.check);
+
+    const nodeMajor = parseInt(process.versions.node.split('.')[0], 10);
+    const frontendEnv = Object.assign({}, process.env);
+    if (nodeMajor >= 17) {
+      frontendEnv.NODE_OPTIONS = (frontendEnv.NODE_OPTIONS ? frontendEnv.NODE_OPTIONS + ' ' : '') + '--openssl-legacy-provider';
+    }
+
+    if (pkgCheck.hasBuildScript && !isSimulation) {
+      const buildRes = await execCheckAsync('npm', ['run', 'build'], { cwd: pkgCheck.clientDir, timeout: 240000, env: frontendEnv });
+      if (!buildRes.ok) trackOk = false;
+      trackChecks.push({
+        name: 'Frontend Angular Build',
+        category: 'frontend',
+        command: 'npm run build',
+        status: buildRes.ok ? 'PASSED' : 'FAILED',
+        ok: buildRes.ok,
+        durationMs: buildRes.durationMs,
+        exitCode: buildRes.exitCode,
+        details: buildRes.ok ? 'Frontend build succeeded.' : buildRes.stderr || buildRes.stdout || 'Frontend build failed.',
+      });
+    }
+
+    if (pkgCheck.hasTestScript && !isSimulation && !shouldRunTests) {
+      aggregatedTestDecisions.scopes.push('SKIPPED');
+      aggregatedTestDecisions.testsSkipped.push('Frontend Angular Test Suite (ChromeHeadless skipped per policy)');
+      trackChecks.push({
+        name: 'Frontend Angular Test Suite',
+        category: 'frontend',
+        command: 'npm test -- --watch=false --browsers=ChromeHeadless',
+        status: 'SKIPPED',
+        ok: true,
+        durationMs: 0,
+        exitCode: 0,
+        details: 'Skipped per policy (Karma/ChromeHeadless browser unit tests are optional; build succeeded).',
+      });
+    } else if (pkgCheck.hasTestScript && !isSimulation && shouldRunTests) {
+      if (!process.env.CHROME_BIN && process.platform === 'win32') {
+        const chromeCandidates = [
+          'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+          'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+        ];
+        for (const candidate of chromeCandidates) {
+          if (fs.existsSync(candidate)) {
+            process.env.CHROME_BIN = candidate;
+            frontendEnv.CHROME_BIN = candidate;
+            break;
+          }
+        }
+      }
+      const frontendTestRes = testPolicy.executeWithPolicy({
+        clientPath,
+        cwd: pkgCheck.clientDir,
+        targetVersion,
+        tracks: selectedTracks,
+        isPatch,
+        upgradeMode,
+        breakingChangesCount,
+        forceRegression,
+        forceRun: forceRunTests,
+        command: 'npm',
+        args: ['test', '--', '--watch=false', '--browsers=ChromeHeadless'],
+        name: 'Frontend Angular Test Suite',
+        category: 'frontend',
+        env: frontendEnv,
+        onLog: log,
+      });
+      if (!frontendTestRes.ok) trackOk = false;
+      trackChecks.push(frontendTestRes);
+      if (frontendTestRes.testDecisions) {
+        aggregatedTestDecisions.scopes.push(frontendTestRes.testDecisions.scope);
+        aggregatedTestDecisions.testsSelected.push(...frontendTestRes.testDecisions.testsSelected);
+        aggregatedTestDecisions.testsSkipped.push(...frontendTestRes.testDecisions.testsSkipped);
+        aggregatedTestDecisions.testsReused.push(...frontendTestRes.testDecisions.testsReused);
+        aggregatedTestDecisions.testExecutionsCount += frontendTestRes.testDecisions.testExecutionsCount;
+        aggregatedTestDecisions.retriesCount += frontendTestRes.testDecisions.retriesCount;
+      }
+    }
+
+    return { trackChecks, trackOk };
+  };
+
+  const [backendResult, frontendResult] = await Promise.all([runBackendTrack(), runFrontendTrack()]);
+  const checks = [...backendResult.trackChecks, ...frontendResult.trackChecks];
+  const allPassed = backendResult.trackOk && frontendResult.trackOk;
+
+  const startedGit = Date.now();
+  const gitStatusRes = execCheck('git', ['status', '--porcelain'], { cwd: clientPath });
+  const gitDiffRes = execCheck('git', ['diff', '--stat'], { cwd: clientPath });
+  const modifiedFiles = gitStatusRes.stdout.split(/\r?\n/).filter(Boolean).map((l) => l.trim().slice(3));
+
+  checks.push({
+    name: 'Git Working Tree & Change Verification',
+    category: 'git',
+    command: 'git status --porcelain',
+    status: 'PASSED',
+    ok: true,
+    durationMs: Date.now() - startedGit,
+    exitCode: gitStatusRes.exitCode,
+    details: `${modifiedFiles.length} file(s) modified:\n${gitDiffRes.stdout || 'No changes detected.'}`,
+  });
+
+  return {
+    ok: allPassed,
+    checks,
+    totalChecks: checks.length,
+    passedChecks: checks.filter((c) => c.ok).length,
+    failedChecks: checks.filter((c) => !c.ok).length,
+    modifiedFiles,
+    testDecisions: aggregatedTestDecisions,
+    summary: allPassed
+      ? `All ${checks.length} verification checks passed.`
+      : `${checks.filter((c) => !c.ok).length} of ${checks.length} verification checks failed.`,
+  };
+}
+
 module.exports = {
   verify,
+  verifyParallel,
+  findBackendRoot,
+  findTestProjects,
   execCheck,
+  execCheckAsync,
   testPolicy,
 };

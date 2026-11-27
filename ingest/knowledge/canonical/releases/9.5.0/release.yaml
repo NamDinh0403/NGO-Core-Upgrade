@@ -1,0 +1,7 @@
+schemaVersion: 1
+version: "9.5.0"
+title: "NGO Core 9.5.0"
+summary: "Temporarily enable SharePoint field/content-type deployment when disabled, and remove obsolete client email resource-string keys."
+frameworkTransition: { angularFrom: "15", angularTo: "15", dotnetFrom: "10", dotnetTo: "10" }
+scopes: ["deployment", "backend"]
+sourceEvidence: "Team deployment note supplied 2026-11-12, 9.5.0"

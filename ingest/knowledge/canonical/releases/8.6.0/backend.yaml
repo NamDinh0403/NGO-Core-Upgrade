@@ -12,7 +12,7 @@ requirements:
     applicability: IF_FEATURE_ENABLED
     semanticRoles: ["backendConfig"]
     sourceEvidence: "release-notes.md 8.6.0 Files uploaded mark as paid"
-    action: "Set config; run UpdatePaymentDocumentLinks when Mark as Paid/Cancel is used."
+    action: "Confirm Mark as Paid/Cancel usage and agree the approval subfolder with the client's PM/AM before running the tool. Set SPSignedOffAdditionalDocumentsFolderName (default 'Additional documents', or an agreed custom/empty value), update appsettings.json, then run UpdatePaymentDocumentLinks after deployment when applicable."
     automation: MANUAL_EXECUTION
     validation: "config present; tool run when applicable"
     risk: MEDIUM
@@ -31,7 +31,7 @@ requirements:
     applicability: IF_FEATURE_ENABLED
     semanticRoles: ["migrationTool"]
     sourceEvidence: "release-notes.md 8.6.0 Logframe2SavedQueryMigration"
-    action: "Run tool in review mode; resolve warnings; then run update mode."
+    action: "Run tool in review mode; resolve warnings; then run update mode. Add missing Logframe2 Analyse relations/columns. Use CoreAnalyseLogframeObjectiveView (including client overrides) to classify ambiguous fields into IndicatorStructureFields or ObjectiveStructureFields; remap renamed fields in IndicatorStructureFieldMappings or ObjectiveStructureFieldMappings."
     automation: MANUAL_EXECUTION
     validation: "review mode clean before update mode is run"
     risk: HIGH

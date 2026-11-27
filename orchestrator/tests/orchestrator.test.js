@@ -383,6 +383,17 @@ test('24-backend-configuration-evidence-isolated-and-required', () => {
     const split = requirementsLib.splitRequirements({ records: [], version: '9.2.0', runId: 'isolated' });
     requirementsLib.appendCanonical(split, '8.3.0', '9.2.0');
     assert(split.backend.requirements.some((finding) => finding.id.includes('DATABASE')) && split.frontend.requirements.every((finding) => ['frontend', 'shared'].includes(finding.scope)), 'formerly mixed canonical requirements must route to their owner');
+    const current = requirementsLib.splitRequirements({ records: [], version: '9.5.0', runId: 'notes' });
+    requirementsLib.appendCanonical(current, '9.2.1', '9.5.0');
+    const filter = current.frontend.requirements.find((finding) => finding.id === 'REQ-9.3.0-FRONTEND-01');
+    assert(filter && filter.action.includes('flattenIntoParentFlow') && filter.validation.includes('zoom')
+      && filter.applicability === 'IF_SYMBOL_USED' && filter.clientDiscovery.includes('ngo-list-filter'), 'canonical consumer actions and validation must survive the shared-context boundary');
+    const deploy = current.backend.requirements.find((finding) => finding.id === 'REQ-9.5.0-DEPLOYMENT-01');
+    assert(deploy.action.includes('restore') && deploy.owner === 'deployment-owner', 'temporary deployment overrides must retain restoration and ownership instructions');
+    const earlier = requirementsLib.splitRequirements({ records: [], version: '9.4.1', runId: 'earlier' });
+    requirementsLib.appendCanonical(earlier, '9.2.1', '9.4.1');
+    assert(earlier.all.requirements.some((finding) => finding.id === filter.id)
+      && !earlier.all.requirements.some((finding) => finding.releaseVersion === '9.5.0'), 'intermediate 9.3 requirements apply to 9.4.1 without leaking 9.5 actions');
   } finally { fs.rmSync(root, { recursive: true, force: true }); }
 });
 

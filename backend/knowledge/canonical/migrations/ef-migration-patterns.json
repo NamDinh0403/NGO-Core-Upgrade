@@ -2,26 +2,38 @@
   "schemaVersion": "1.0.0",
   "entryType": "migration-pattern",
   "sourceOfTruth": {
-    "rule": "EF migration runs only after build succeeds. The client DbContext and generated migration output are authoritative for schema changes."
+    "rule": "Automatically generate and review client migration/snapshot and SQL files after the target build succeeds under the registered plan; no separate generation approval. The client DbContext, installed target model and generated output are authoritative. Database application is a separate explicitly approved deployment operation.",
+    "policy": "backend/AGENTS.md#autonomous-upgrades-and-ef-migrations"
   },
   "whenToRun": [
     "After BUILD_SUCCEEDED.",
-    "For Core 8.x and major version upgrades unless the version entry explicitly says no EF migration is required."
+    "For every requested upgrade where a client DbContext exists, including patch/minor releases; inspect existing migrations and target-model impact rather than assuming no schema change from the version number."
   ],
   "contextDetection": {
     "searchPatterns": [
       "*NgoContext*.cs",
       "*DbContext*.cs"
     ],
-    "fallbackContextNames": [
-      "NgoContext",
-      "NGO.Repositories.NgoContext"
-    ]
+    "selectionRule": "Inspect the client's derived context, migrations assembly, startup project and design-time factory. Do not guess a context when multiple candidates exist; resolve from repository configuration or request the missing selection.",
+    "designTimeSafety": "Verify context construction does not invoke Database.Migrate, EnsureCreated or another database write before running EF tooling."
   },
   "commands": {
-    "default": "dotnet ef migrations add UpgradeCore{major}x --context NgoContext --project <migrations-project>",
-    "efCorePackageManagerConsole": "EntityFrameworkCore\\Add-Migration UpgradeCore{major}x -Context NgoContext -Project <migrations-project>"
+    "default": "dotnet ef migrations add UpgradeCore{major}_{minor}_{patch} --context <client-context> --project <migrations-project> --startup-project <startup-project> --output-dir <existing-migrations-directory>",
+    "script": "dotnet ef migrations script <previous-migration-or-0> <generated-migration> --context <client-context> --project <migrations-project> --startup-project <startup-project> --output <sql-artifact>",
+    "efCorePackageManagerConsole": "EntityFrameworkCore\\Add-Migration UpgradeCore{major}_{minor}_{patch} -Context <client-context> -Project <migrations-project> -StartupProject <startup-project>"
   },
+  "approval": {
+    "generateMigrationAndSnapshot": false,
+    "generateAndReviewSql": false,
+    "applyDatabaseChanges": true,
+    "acceptDestructiveOrLossyChanges": true
+  },
+  "review": [
+    "Inspect existing output before generation; reuse a matching target migration on resume and never overwrite unrelated user migrations.",
+    "Review Up/Down, snapshot and SQL against the installed target model; inspect drops, truncation, lossy conversions, required-column backfills and foreign-key/data preconditions.",
+    "Retain a destructive draft as review evidence, not deployment-ready output; block affected acceptance/application pending explicit approval or resolution of data/business semantics.",
+    "Record database application and required prechecks in the deployment checklist; never run database update, execute SQL or start an auto-migrating host as generation validation."
+  ],
   "acceptableOutputs": [
     "Migration created successfully",
     "No changes detected",
@@ -44,16 +56,22 @@
   "antiPatterns": [
     "Do not run EF migration before build succeeds.",
     "Do not manually edit the model snapshot without EF output evidence.",
-    "Do not treat no changes detected as failure."
+    "Do not treat no changes detected as failure.",
+    "Do not block generation/review just because a client migration is required.",
+    "Do not copy Core migration classes into the client's migration history blindly.",
+    "Do not repeatedly scaffold empty or duplicate migrations on resume."
   ],
   "validation": {
     "commands": [
-      "dotnet build --no-restore",
-      "dotnet ef migrations add UpgradeCore{major}x --context NgoContext --project <migrations-project>"
+      "dotnet build <solution> --no-restore",
+      "dotnet ef migrations add UpgradeCore{major}_{minor}_{patch} --context <client-context> --project <migrations-project> --startup-project <startup-project> --output-dir <existing-migrations-directory>",
+      "dotnet ef migrations script <previous-migration-or-0> <generated-migration> --context <client-context> --project <migrations-project> --startup-project <startup-project> --output <sql-artifact>",
+      "dotnet build <solution> --no-restore"
     ],
     "successCriteria": [
       "Migration command exits successfully or reports no changes detected.",
-      "Generated migration and snapshot changes are included in the final report when present."
+      "Generated migration, snapshot and SQL are reviewed and included in the final report when present; no-change or empty-migration outcomes are explicitly recorded.",
+      "Generated code rebuilds successfully. Destructive/data-semantic risks remain explicitly blocked until resolved or approved; database application is not performed."
     ]
   }
 }

@@ -168,4 +168,126 @@ export class FormFieldFactoryExt extends FormFieldFactory {
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 
+test('parseJsonc and adaptBackendConfiguration handle commented appsettings.json and skip MANUAL_DECISION keys', () => {
+  const tmpJsonc = fs.mkdtempSync(path.join(os.tmpdir(), 'ngo-adapt-jsonc-'));
+  try {
+    const apiDir = path.join(tmpJsonc, 'ngo-api', 'NGO.API');
+    fs.mkdirSync(apiDir, { recursive: true });
+    const commentedAppsettings = [
+      '{',
+      '  // Client logging configuration',
+      '  "Logging": {',
+      '    "LogLevel": "Warning", // trailing comma below',
+      '  },',
+      '  "ConnectionStrings": { "Default": "Server=." }',
+      '}',
+    ].join('\n');
+    fs.writeFileSync(path.join(apiDir, 'appsettings.json'), commentedAppsettings, 'utf8');
+
+    const cfgLib = require('../../backend/tools/configuration');
+    const parsedJsonc = cfgLib.parseJsonc(commentedAppsettings);
+    assert.strictEqual(parsedJsonc.Logging.LogLevel, 'Warning');
+
+    const sampleSettings = [
+      { id: 'APPSET-AUTO-1', key: 'Core:NewAutoKey', defaultValue: 'enabled', dataType: 'string', owningProcess: 'API', automation: 'AUTO_AFTER_MAPPING' },
+      { id: 'APPSET-MANUAL-1', key: 'Core:ManualDecisionKey', defaultValue: '', dataType: 'string', owningProcess: 'API', automation: 'MANUAL_DECISION', sensitive: true },
+    ];
+    const cfgRes = adaptation.adaptBackendConfiguration(tmpJsonc, sampleSettings, null, { sourceVersion: '8.1.0', targetVersion: '9.5.0' });
+    assert(cfgRes.modifiedFiles.length >= 1, 'Expected appsettings.json to be updated cleanly despite JSON comments');
+    const updatedJson = JSON.parse(fs.readFileSync(path.join(apiDir, 'appsettings.json'), 'utf8'));
+    assert.strictEqual(updatedJson.Core.NewAutoKey, 'enabled');
+    assert.strictEqual(updatedJson.Core.ManualDecisionKey, undefined, 'MANUAL_DECISION keys must not be auto-injected');
+  } finally {
+    fs.rmSync(tmpJsonc, { recursive: true, force: true });
+  }
+});
+
+test('adaptFrontendEnvironment preserves nested appInsightsConfig and removes deprecated logframes2', () => {
+  const tmpEnvDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ngo-adapt-env-'));
+  try {
+    const feEnv = path.join(tmpEnvDir, 'client', 'ngo-client', 'src', 'environments');
+    const coreEnv = path.join(tmpEnvDir, 'core', 'ngo-client-core', 'src', 'environments');
+    fs.mkdirSync(feEnv, { recursive: true });
+    fs.mkdirSync(coreEnv, { recursive: true });
+
+    fs.writeFileSync(
+      path.join(feEnv, 'environment.ts'),
+      `export const environment = {\n  production: false,\n  logframes2: true,\n  appInsightsConfig: {\n    instrumentationKey: 'client-key-123',\n    enableDebug: true,\n  },\n};\n`,
+      'utf8'
+    );
+    fs.writeFileSync(
+      path.join(coreEnv, 'environment.ts'),
+      `export const environment = {\n  production: true,\n  aiwriter: { enabled: false },\n  appInsightsConfig: {\n    instrumentationKey: '',\n  },\n  newFeatureUrl: 'https://core.example/api',\n};\n`,
+      'utf8'
+    );
+
+    const envRes = adaptation.adaptFrontendEnvironment(path.join(tmpEnvDir, 'client'), path.join(tmpEnvDir, 'core'), null, { targetVersion: '9.4.1' });
+    assert(envRes.modifiedFiles.some((f) => f.includes('environment.ts')));
+    const adaptedText = fs.readFileSync(path.join(feEnv, 'environment.ts'), 'utf8');
+    assert(adaptedText.includes("instrumentationKey: 'client-key-123'"), 'Nested appInsightsConfig must be preserved');
+    assert(!adaptedText.includes('logframes2'), 'Deprecated logframes2 must be removed for Core >= 9.2.0');
+    assert(!adaptedText.includes('aiwriter'), 'Optional aiwriter must not be injected blindly');
+    assert(adaptedText.includes("newFeatureUrl: 'https://core.example/api'"), 'Missing top-level non-optional key must be added cleanly');
+  } finally {
+    fs.rmSync(tmpEnvDir, { recursive: true, force: true });
+  }
+});
+
+test('adaptKnownSourceMigrations migrates browse-filter-layout, cleans _in_email SQL, and audits requirements', () => {
+  const tmpMigDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ngo-adapt-mig-'));
+  try {
+    const htmlFile = path.join(tmpMigDir, 'ngo-client', 'src', 'app', 'sample-browse.component.html');
+    const tsFile = path.join(tmpMigDir, 'ngo-client', 'src', 'app', 'inline-browse.component.ts');
+    const sqlFile = path.join(tmpMigDir, 'ngo-api', 'NGO.Database', 'dbo', 'Stored Procedures', 'spSendMail.sql');
+    fs.mkdirSync(path.dirname(htmlFile), { recursive: true });
+    fs.mkdirSync(path.dirname(sqlFile), { recursive: true });
+
+    fs.writeFileSync(
+      htmlFile,
+      `<div class="col-md-10"><ngo-list-filter></ngo-list-filter><div class="browse-filter pull-right"><ngo-search-box></ngo-search-box></div></div>\n`,
+      'utf8'
+    );
+    fs.writeFileSync(
+      tsFile,
+      `@Component({\n  template: \`<div class="col-12"><ngo-list-filter></ngo-list-filter><ngo-search-box class="pull-left"></ngo-search-box></div>\`\n})\nexport class InlineBrowseComponent {}\n`,
+      'utf8'
+    );
+    fs.writeFileSync(
+      sqlFile,
+      `INSERT INTO [dbo].[ResourceStrings] ([Key], [Value]) VALUES\n  ('active_key', 'Active'),\n  ('mail_subject_in_email', 'Obsolete');\n`,
+      'utf8'
+    );
+
+    const migRes = adaptation.adaptKnownSourceMigrations(tmpMigDir, '9.5.0', '8.1.0');
+    const updatedHtml = fs.readFileSync(htmlFile, 'utf8');
+    const updatedTs = fs.readFileSync(tsFile, 'utf8');
+    const updatedSql = fs.readFileSync(sqlFile, 'utf8');
+    assert(updatedHtml.includes('browse-filter-layout') && updatedHtml.includes('[flattenIntoParentFlow]="true"'), 'HTML browse filter should migrate');
+    assert(!updatedHtml.includes('pull-right'), 'HTML pull-right should be stripped');
+    assert(updatedTs.includes('browse-filter-layout') && updatedTs.includes('[flattenIntoParentFlow]="true"'), 'Inline TS browse filter should migrate');
+    assert(!updatedTs.includes('pull-left'), 'Inline TS pull-left should be stripped');
+    assert(!updatedSql.includes('mail_subject_in_email') && updatedSql.includes("'active_key'") && !updatedSql.includes(',;'), '_in_email SQL seed row should be cleaned cleanly for Core >= 9.5.0');
+
+    const auditRes = adaptation.auditReleaseRequirements(
+      tmpMigDir,
+      {
+        split: {
+          all: {
+            requirements: [
+              { id: 'REQ-9.3.0-FRONTEND-01', release: '9.3.0', scope: 'FRONTEND', title: 'Browse filter layout', action: 'Wrap in browse-filter-layout', timing: 'DURING_UPGRADE', automation: 'AUTOMATED_CODE_MOD' },
+              { id: 'REQ-9.2.0-DB-AFTER', release: '9.2.0', scope: 'BACKEND', title: 'Run SQL seed', action: 'Execute seed script post-deploy', timing: 'AFTER_DEPLOYMENT', automation: 'MANUAL_DECISION' },
+            ],
+          },
+        },
+      },
+      migRes,
+      ['backend', 'frontend']
+    );
+    assert.strictEqual(auditRes.semanticMigrationsRequired.length, 0, 'Migrated browse filter should pass deterministic audit');
+    assert.strictEqual(auditRes.manualHandoverItems.length, 1, 'After-deployment manual item should be queued for handover');
+  } finally {
+    fs.rmSync(tmpMigDir, { recursive: true, force: true });
+  }
+});
+
 console.log('\nAll adaptation tests passed successfully!');

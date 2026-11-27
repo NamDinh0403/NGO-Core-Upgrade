@@ -33,6 +33,7 @@ const serverLib = require('../server');
 const diagnosticsLib = require('../diagnostics');
 const settingsLib = require('../settings');
 const telemetryLib = require('../telemetry');
+const releaseNotesTests = require('./release-notes.test');
 
 const results = [];
 function test(id, fn) {
@@ -540,7 +541,24 @@ async function runAllTests() {
         assert.strictEqual(analyticsGet.data.ok, true);
         assert.strictEqual(analyticsGet.data.summary.tokenCounts.status, 'UNAVAILABLE');
 
-        // 4. Copilot CLI auth endpoints
+        // 4. Four-table release reports, range aggregation, and search
+        const releaseGet = await fetchJson('/api/release-notes?version=9.5.0');
+        assert.strictEqual(releaseGet.status, 200);
+        assert.strictEqual(releaseGet.data.ok, true);
+        assert(releaseGet.data.content.includes('### Table 1:'));
+        assert(releaseGet.data.content.includes('### Table 4:'));
+
+        const releaseRange = await fetchJson('/api/release-notes?from=9.2&to=9.5');
+        assert.strictEqual(releaseRange.status, 200);
+        assert.strictEqual(releaseRange.data.ok, true);
+        assert(releaseRange.data.content.includes('## Mandatory Actions'));
+        assert(releaseRange.data.content.includes('## Conditional Actions'));
+
+        const releaseSearch = await fetchJson('/api/release-notes?query=AlwaysUpdate&from=9.2&to=10.0');
+        assert.strictEqual(releaseSearch.status, 200);
+        assert(Array.isArray(releaseSearch.data.matches));
+
+        // 5. Copilot CLI auth endpoints
         const copilotAuthGet = await fetchJson('/api/copilot/auth-status');
         assert.strictEqual(copilotAuthGet.status, 200);
         assert.strictEqual(copilotAuthGet.data.ok, true);
@@ -620,6 +638,10 @@ async function runAllTests() {
 
       // Clean up dummy file
       fs.unlinkSync(dummyFile);
+    });
+
+    test('17-release-notes-classification-range-drafts-and-format', () => {
+      releaseNotesTests.runReleaseNotesTests();
     });
 
   } finally {

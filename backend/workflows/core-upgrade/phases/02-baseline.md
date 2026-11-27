@@ -14,20 +14,22 @@ Discovery completed with `SUCCEEDED`.
 
 ## Required actions
 1. Attempt a baseline `dotnet restore` + `dotnet build --no-restore`; capture result (may already fail — record honestly).
-2. If a test project exists, run tests with the timeout from `config/quality-gates.yaml#gates.tests-run.timeoutSeconds`; capture the baseline result. If none, record `noTests: true`.
+2. Record tests SKIPPED with the reason by default, even if a test project exists.
+   Run existing targeted tests only when explicitly requested or needed to
+   diagnose a concrete regression; apply the configured timeout when run.
 3. Write `baseline` block into `state.json` and a `baseline-build.log` artifact.
 
 ## Allowed tools
 `dotnet restore`, `dotnet build`, test runner. No source edits.
 
 ## Required evidence
-`baseline-build.log`, baseline test output.
+`baseline-build.log`, test disposition/reason (or output if explicitly run).
 
 ## Required outputs
 `state.json.baseline` populated.
 
 ## Completion criteria
-Baseline build + test outcome captured (success or failure both acceptable); `nextAction = "Load phases/03-plan.md"`.
+Baseline build and optional-test disposition captured; `nextAction = "Load phases/03-plan.md"`.
 
 ## Documentation responsibilities
 Baseline build/test status feeds the report's "before" column.

@@ -13,6 +13,11 @@ Resolve links against the installed agent root when running from a user profile.
 Load only the requested track's contract and current applicable evidence.
 Delegate only its verified track context and domain inputs. Core ensuring and
 generic lifecycle belong to the shared owner; executors do not repeat ingestion.
+Follow [command-first execution](../../engine/AGENTS.md#command-first-upgrade-execution)
+and pass that policy to each executor: run supported commands before reading
+JS, create no test/probe files, skip optional unit/browser suites with a reason,
+reuse valid outputs and keep independent tracks parallel. Do not run framework
+test suites as part of a client upgrade.
 
 ## Automated Guided Onboarding, Preflight & Execution Protocol
 

@@ -6,6 +6,41 @@ not a projection over track workflows. Generic policy is
 [execution-policy.json](config/execution-policy.json). Domain adapters implement
 inspection, implementation planning, execution and verification only.
 
+## Command-First Upgrade Execution
+This is the default for client upgrades, including minor/patch releases:
+- Execute documented CLI commands, consume their structured output and proceed.
+  Run `node engine/tools/upgrade-engine.js --help` for syntax, then `status` /
+  `context` for an existing run. Reading a JS file is not executing a check.
+  Do not inspect CLI/library/test implementations before running the supported
+  command; read only the failing function when an actual error cannot be
+  explained by help, current context and the relevant contract.
+- Read root/engine/requested-track contracts once, the current skill and the
+  relevant release slice. Search for symbols/files first and read bounded
+  ranges. Reuse verified ingestion, inventory, installed API and prior command
+  output while its identity/fingerprint remains valid. Do not reread entire
+  frameworks, all skills, raw release JSON or unrelated client directories.
+- Do not create test/spec files, test projects, synthetic apps, custom harnesses
+  or duplicate research/probe scripts during a client upgrade. Use existing
+  tools and direct bounded commands. Required run evidence/logs, plan/report,
+  production compatibility edits and EF migration/snapshot/SQL files are not
+  tests and remain required; keep artifacts in the existing run.
+- Default validation is restore/install, required zero-error builds, installed
+  package/API checks, configuration/integration coverage and planned EF output
+  review. Unit/browser/regression suites are opt-in: run existing targeted tests
+  only when explicitly requested or needed to diagnose a concrete regression.
+  Record `tests` as `SKIPPED` with the reason; never fabricate a passing command.
+  A skipped optional suite is not a completion blocker or a claim tests passed.
+- Capture one baseline and validate each coherent changed batch. Rebuild only
+  after relevant input changes, failed-build fixes or generated EF code; do not
+  repeat restore/install/build for reporting or duplicate audit evidence.
+  Independent backend/frontend work remains parallel. Never hide a real failed
+  command, omit mandatory checks or bypass safety/coverage gates to save time.
+- Framework test suites validate changes to this framework, not client upgrades.
+  Do not run `tools/validate-all.js` or framework tests during a client upgrade.
+  When explicitly maintaining this framework, extend an existing relevant test
+  and run the smallest affected suite; the full framework check is the final
+  maintenance check, not an executor step.
+
 ## Commands
 From repository root:
 ```
@@ -34,7 +69,11 @@ alone never open the gate. Planned files cannot escape the client root or Core.
 Evidence is `[{kind,status,ref}]`; each ref is a JSON envelope produced by
 `tools/lib/validation.envelope(packet, kind, proof)`. It carries schemaVersion,
 run/client/track/target identity, kind/status, summary and hashed artifact refs.
-Command-based checks include exact command and exitCode 0. Coverage, dispositions
+Command-based passed checks include exact command and exitCode 0. The optional
+`tests` envelope may instead use `status: "SKIPPED"` and a nonempty summary
+explaining why; omit command/exitCode. Other skipped checks still block. Keep
+the test disposition visible in the report; do not set testsCompleted to true
+when tests were not run. Coverage, dispositions
 and deployment records contain requirements/findings/items arrays respectively.
 Baseline and repository-status proofs carry the live clientFingerprint; baseline
 also records its successful command/result. Rollback proof carries the existing

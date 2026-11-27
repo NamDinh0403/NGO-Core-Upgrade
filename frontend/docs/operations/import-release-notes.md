@@ -48,3 +48,28 @@ node tools/repo-layout.test.js        # no runtime module reads the raw notes
   requirement; the client mapping resolves the real implementation point at run time.
 - Canonical YAML is authoritative; any Markdown under `knowledge/derived/` is generated or
   validated from it - never independently edited as a second source of truth.
+
+## 2026-11-12 deployment-note reconciliation
+
+The supplied note was checked in full, including earlier-baseline and optional
+items. This import adds 11 missing requirements and enriches existing records:
+
+| Release | Coverage |
+|---|---|
+| 9.5 | Temporary SharePoint field/content-type enablement **and restoration**; obsolete `_in_email` resource keys |
+| 9.4 | Separate inactive UserOptions, inactive ConfigOptionsMapper and read-only options; custom email actor-token review; phase-specific site-count follow-up |
+| 9.3 | All custom shared-column filter consumers, including inline templates; wrapper, flatten input, float removal and order/alignment |
+| 9.2 | Existing routing/bootstrap, Graph permissions, manifest, CSP setting, Analyse configuration, export, environment and role-seed requirements retained; add tracker SortOrder adaptation and verified CSP-source export |
+| 9.1 | Add multiple RelatedEntity field-instance review; retain/enrich payment PM choices, EF tooling qualification, icon preservation and saved-query warning remediation |
+
+9.5 requirements are excluded from a 9.4.1 target; 9.3 still applies when
+crossing it on the way to 9.4.1. The November 4 site-count note is dated evidence,
+not proof that its instructions were available during an October upgrade.
+The icon note contains a contradictory empty-value assignment; the canonical
+record explicitly requires resolving the original icon before any write.
+
+Shared contexts now retain the complete action, applicability and validation.
+The frontend executor rejects package-only plans that omit unresolved filter
+consumers and rejects validation while those layouts remain unmigrated, even
+when the source version is already later than 9.3. This structural check does
+not replace an affected-page check of visual field order and zoom/wrapping.

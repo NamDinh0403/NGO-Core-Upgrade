@@ -1,0 +1,22 @@
+version: "9.3.0"
+scope: FRONTEND
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.3.0-FRONTEND-01
+    releaseVersion: "9.3.0"
+    title: "Migrate custom browse-list filter layouts"
+    description: "Custom components where ngo-list-filter shares a column with search or other fields must adopt the new shared layout; a package update alone does not migrate client templates."
+    scope: FRONTEND
+    category: HTML structure
+    timing: DURING_UPGRADE
+    applicability: IF_SYMBOL_USED
+    semanticRoles: ["listFilterLayout"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.3.0; https://trello.com/c/bd3CO8en; Core PR 37427"
+    corePaths: ["projects/ngo-core/src/lib/shared/lists/list-filter/list-filter.component.ts", "projects/ngo-core/src/lib/shared/home/shell/styles/common/_views.scss"]
+    clientDiscovery: ["ngo-list-filter"]
+    action: "Find every custom template, including inline templates, sharing a column with other fields. Wrap all fields together in div.browse-filter-layout, add [flattenIntoParentFlow]=\"true\" to ngo-list-filter, and remove sibling pull-right/pull-left classes. Reorder formerly right-floating fields to preserve their intended visual order; for formerly left-floating fields add filter-align-left to the wrapper. Preserve bindings, visibility and events."
+    automation: AUTO_AFTER_MAPPING
+    validation: "Every affected consumer is migrated or evidenced already compatible. Check wrapping and field order at normal and increased browser zoom/narrow widths; compilation alone does not verify layout."
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE

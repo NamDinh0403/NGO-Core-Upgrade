@@ -10,6 +10,9 @@ is controlled by `engine/tools/lib/lifecycle.js`. Executors expose only
 READY/RUNNING/PASSED/FAILED/BLOCKED. Old track phase names are checkpoint labels,
 not another lifecycle. Load only the current run, selected skill and applicable
 evidence; never all skills, knowledge, history or the complete diff by default.
+Follow [command-first execution](../../AGENTS.md#command-first-upgrade-execution):
+execute the supported commands, not source-code simulations; no new test/probe
+files or framework suites during client upgrades.
 
 ## Discover And Analyze
 Discover client paths and installed source versions deterministically through the
@@ -49,7 +52,10 @@ Use the shared diagnosis/retry policy with domain-specific evidence. Do not
 repeat identical unsuccessful fixes or hide skipped checks. Return validation
 via `record-validation --file <json-array>` with `{kind,status,ref}` entries.
 Domain executors check their required evidence; the engine fingerprints results.
-Missing installed-surface/build/test/config/integration evidence cannot PASSED.
+Missing mandatory installed-surface/build/config/integration evidence cannot
+PASSED. Optional tests use an explicit SKIPPED envelope with a reason; no command
+or exit code is claimed. Do not run unit/browser suites by default or rerun
+unchanged successful builds for report/audit artifacts.
 Legacy track state files remain readable as checkpoint/evidence projections.
 
 ## Report And Learn

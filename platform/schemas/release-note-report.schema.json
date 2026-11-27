@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "platform/schemas/release-note-report.schema.json",
+  "title": "NGO Core release notes report",
+  "description": "Deterministic per-version release report used by the four-table Markdown renderer and release-notes agent.",
+  "type": "object",
+  "required": ["schemaVersion", "version", "status", "releaseDate", "sourceRefs", "summary", "sections"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["RELEASED", "DRAFT / IN PROGRESS"] },
+    "releaseDate": { "type": ["string", "null"] },
+    "sourceRefs": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/sourceRef" }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["mandatoryActions", "conditionalActions", "newFeatures", "bugFixes"],
+      "properties": {
+        "mandatoryActions": { "type": "integer", "minimum": 0 },
+        "conditionalActions": { "type": "integer", "minimum": 0 },
+        "needsReviewActions": { "type": "integer", "minimum": 0 },
+        "newFeatures": { "type": "integer", "minimum": 0 },
+        "bugFixes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "sections": {
+      "type": "object",
+      "required": ["upgradeAndDeployment", "releaseTracking"],
+      "properties": {
+        "upgradeAndDeployment": {
+          "type": "object",
+          "required": ["mandatoryActions", "conditionalActions", "needsReviewActions"],
+          "properties": {
+            "mandatoryActions": { "type": "array", "items": { "$ref": "#/definitions/action" } },
+            "conditionalActions": { "type": "array", "items": { "$ref": "#/definitions/action" } },
+            "needsReviewActions": { "type": "array", "items": { "$ref": "#/definitions/action" } }
+          },
+          "additionalProperties": false
+        },
+        "releaseTracking": {
+          "type": "object",
+          "required": ["newFeatures", "bugFixes"],
+          "properties": {
+            "newFeatures": { "type": "array", "items": { "$ref": "#/definitions/feature" } },
+            "bugFixes": { "type": "array", "items": { "$ref": "#/definitions/bugFix" } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": { "type": "object" }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "sourceRef": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "type": { "type": "string" },
+        "label": { "type": "string" },
+        "value": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "cardRef": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "action": {
+      "type": "object",
+      "required": ["id", "version", "applicability", "condition", "timing", "owner", "action", "instructionsAndNotes", "cardOrPr", "category"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string" },
+        "applicability": { "type": "string", "enum": ["mandatory", "conditional", "needs_review"] },
+        "condition": { "type": ["string", "null"] },
+        "timing": { "type": "string", "enum": ["Before Deploy", "During Upgrade", "After Deploy"] },
+        "owner": { "type": "string", "enum": ["Client Dev", "Deployer"] },
+        "action": { "type": "string" },
+        "instructionsAndNotes": { "type": "string" },
+        "cardOrPr": { "type": "array", "items": { "$ref": "#/definitions/cardRef" } },
+        "category": { "type": "string", "const": "upgrade_action" },
+        "needsReview": { "type": "boolean" },
+        "classificationReason": { "type": "string" },
+        "sourceSection": { "type": ["string", "null"] },
+        "gitDiffSummary": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "feature": {
+      "type": "object",
+      "required": ["id", "version", "moduleScope", "featureOrChange", "technicalSummary", "clientImpact", "cardOrPr", "category"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string" },
+        "moduleScope": { "type": "string" },
+        "featureOrChange": { "type": "string" },
+        "technicalSummary": { "type": "string" },
+        "clientImpact": { "type": "string" },
+        "cardOrPr": { "type": "array", "items": { "$ref": "#/definitions/cardRef" } },
+        "category": { "type": "string", "const": "feature" },
+        "needsReview": { "type": "boolean" },
+        "sourceSection": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "bugFix": {
+      "type": "object",
+      "required": ["id", "version", "moduleScope", "bugDescription", "rootCauseOrKeyFiles", "extraClientAction", "cardOrPr", "category"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string" },
+        "moduleScope": { "type": "string" },
+        "bugDescription": { "type": "string" },
+        "rootCauseOrKeyFiles": { "type": "string" },
+        "extraClientAction": { "type": "string" },
+        "cardOrPr": { "type": "array", "items": { "$ref": "#/definitions/cardRef" } },
+        "category": { "type": "string", "const": "bugfix" },
+        "needsReview": { "type": "boolean" },
+        "sourceSection": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

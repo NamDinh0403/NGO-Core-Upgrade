@@ -1,0 +1,21 @@
+version: "9.5.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.5.0-DEPLOYMENT-01
+    releaseVersion: "9.5.0"
+    title: "Temporarily enable SharePoint field and content-type deployment"
+    description: "The root-site Document library update requires DeploySPFieldsAndCTypesEnabled to be true during deployment when normally disabled."
+    scope: DEPLOYMENT
+    category: deployment-config
+    timing: BEFORE_DEPLOYMENT
+    applicability: IF_DEPLOYMENT_ENVIRONMENT_USES
+    semanticRoles: ["deploymentConfig"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.5.0 Update setting on library Document on rootsite"
+    action: "Check effective release-pipeline settings and deployment appsettings.json for Core:Deployment:DeploySPFieldsAndCTypesEnabled. If false, record its original value, temporarily override it to true for deployment, then restore the original value after deployment. If already true, record that no temporary override is needed."
+    automation: MANUAL_EXECUTION
+    validation: "Root-site Document library update succeeds and any temporary setting override is restored after deployment."
+    risk: HIGH
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"

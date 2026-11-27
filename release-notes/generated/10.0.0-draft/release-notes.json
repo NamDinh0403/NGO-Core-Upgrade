@@ -1,0 +1,2539 @@
+{
+  "schemaVersion": 1,
+  "version": "10.0.0-draft",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 53,
+    "conditionalActions": 18,
+    "needsReviewActions": 52,
+    "newFeatures": 16,
+    "bugFixes": 5
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-f4d2aa7a8166",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add resilient email sending to NGO Online",
+          "instructionsAndNotes": "[L] Add resilient email sending to NGO Online\nAdd webjob appsettings:\n_ Core:NumberOfSendingEmailPerCall: 20\n_ Core:ExpireOutboxMailThreshold: 90,\n_ Core:NumberOfRetryCall: 5",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2b0847bca2f4",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Azure Configuration from",
+          "instructionsAndNotes": "- Update Azure Configuration from",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ddb0427fb639",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add client secret to new key: Core.PowerBI.ClientSecret",
+          "instructionsAndNotes": "- Add client secret to new key: Core.PowerBI.ClientSecret",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6cb4e7dcd3e8",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Compare and copy the changes of and app-routing.service.ts",
+          "instructionsAndNotes": "- Compare and copy the changes of  and app-routing.service.ts",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/37921?_a=files&path=/ngo-client-core/src/app/app-routing.module.ts"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0ef9ca2c9604",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Copy the changes of",
+          "instructionsAndNotes": "- Copy the changes of",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/37921?_a=files&path=/ngo-client-core/src/main.ts"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d64ca8df2df9",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run script ExportCspAdditionalFrameSrc.sql in the PR attached card, then copy the value of CspAdditionalFrameSrc into \"Core:CspAdditionalFrameSrc\" on Azure/App Service (Check the v",
+          "instructionsAndNotes": "Write a script/tool to collect existing embedded URLs for CSP configuration\n[For deployment person][AfterDeployment] Run script ExportCspAdditionalFrameSrc.sql in the PR attached card, then copy the value of CspAdditionalFrameSrc into \"Core:CspAdditionalFrameSrc\" on Azure/App Service (Check the verification results before copying):",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/QlrpCYr1/5777-write-a-script-tool-to-collect-existing-embedded-urls-for-csp-configuration"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/38994"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b1d1627482be",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Install ngx-captcha",
+          "instructionsAndNotes": "- Install ngx-captcha",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f5bd624167c2",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to appsettings.json (below AzureOpenAISettings ):",
+          "instructionsAndNotes": "- Add to appsettings.json (below AzureOpenAISettings ):\n\"Recaptcha\" : {\n\"SiteKey\" : \"site_key_generated_for_ recaptcha_v2_from_google_account \" ,\n\"SecretKey\" : \" secret_key_generated_for_ recaptcha_v2_from_google_account \"\n},\n( Need google account to setup reCAPTCHA type: v2 Checkbox and add a list of acceptable domains)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3665d023f519",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to environments files:",
+          "instructionsAndNotes": "- Add to environments files:\nresponseTemplates : 'api/core/responseTemplates' ,\nexternalApplications : 'api/core/externalapplications'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a329353a3263",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run NGO.Core.Tools.EnsureApprovalFileLinkPreviewMode . See details in file README.md.",
+          "instructionsAndNotes": "[S] Approval pdf can't open when contain # character on Current sprint - Core | Trello\n[For deployment person] [After deployment] Run NGO.Core.Tools.EnsureApprovalFileLinkPreviewMode . See details in file README.md.\nNote: Processing 1,700 task flows in the local CoreTest database took approximately 20 minutes, averaging 0.7 seconds each.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WI7UdCt5/5771-s-approval-pdf-cant-open-when-contain-character"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b1a3410004a1",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run SharePoint Deployment",
+          "instructionsAndNotes": "Run SharePoint Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/CBjhtpm3/5187-lock-entity-uncheck-documentview-permisison-but-still-display-document-foler-in-document-tab-of-locked-entity"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-c3ae497c8e17",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove Add, Edit and Delete permissions on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[Permission/Beneficiaries & Logframe] Remove Add, Edit and Delete permissions on Current sprint - Core | Trello\nAdd the permission roles as resource strings and support multiple languages on Current sprint - Core | Trello\n[For upgraded person] Update resource string for name of custom role (follow this PR:",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/kNG93Itk/4097-permission-beneficiaries-logframe-remove-add-edit-and-delete-permissions?filter=member:anphamquoc2,member:loantranthikim"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Tx0KteEy/4818-add-the-permission-roles-as-resource-strings-and-support-multiple-languages"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/29898"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e4a942688337",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Then run job SPPermissionProcess with message:",
+          "instructionsAndNotes": "- Then run job SPPermissionProcess with message:\n{\"Action\":1,\"EntityId\":null,\"NeedToEnsureEntityUserPermission\":null,\"NeedToEnsureRootUserPermission\":true,\"FileCopyingToBeTriggeredFromIdeaEntityId\":null}",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5b990b883fba",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Update appSettings.json (Core:AzureAd:Domain, Core:InternalDomains, ConnectionStrings) and run tool NGO.Core.Tools.SetIsExternalForUser",
+          "instructionsAndNotes": "[Admin UI] [Users] - New Users & Roles interface\n[ForUpgradePerson] There is a new db column named 'IsExternal' in CoreUsers, if having custom code to add a new user, ensure to set IsExternal (reference Core code)\n[AfterDeployment] Update appSettings.json (Core:AzureAd:Domain, Core:InternalDomains, ConnectionStrings) and run tool NGO.Core.Tools.SetIsExternalForUser\n[ForDeployment] Ensure Core:AzureAd:Domain, Core:InternalDomains correctly in Azure env settings",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Xmu03JTO/5487-16ladmin-ui-users-new-users-roles-interface"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d10c4d22f0e5",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run this script when you want to remove existing deputies who are Restricted roles",
+          "instructionsAndNotes": "This card related to\nRun this script when you want to remove existing deputies who are Restricted roles\n\\DataFixes\\20261021_RemoveRestrictedDeputies.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/UVlC5DCH/5755-sdeputy-assignment-remove-existing-deputy-assignments-that-conflict-with-restricted-roles"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/kTRXQbKH/5493-4sdeputy-permission-on-task-partner-users-should-not-be-possible-to-set-as-deputy"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-cf8a6efb37c4",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Approval for restricted users",
+          "instructionsAndNotes": "[XL] [Tasks] Approval for restricted users\n[For Upgrade Person]\nTasks and task flows are now loaded from the current user's point of view. For a restricted user, internal approvals are hidden. The defaults already follow the current user, so calls that only display data need no change.\nChanged methods:\nITaskService.GetById(..., bool skipViewerProjection = false): returns the task without internal approval flows if restricted user.\nITaskFlowService.GetById(int id, User currentUser, bool skipRestrictedViewerCheck = false): throws UnauthorizedAccessException for an internal approval flow if restricted user.\nITaskFlowService.GetByTaskId(int taskId, User currentUser, bool skipViewerProjection = false): returns the flows without internal approvals if restricted user.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ReOz698O/5573-xl-tasks-approval-for-restricted-users"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5fb5425fc0e3",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update angular.json",
+          "instructionsAndNotes": "Update angular.json\nAdd \"node_modules/tinymce/plugins/lists/plugin.min.js\" to projects => ngo-nxt => architest => test => options => scripts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e2fed190a86f",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add import of NotificationCenterModule",
+          "instructionsAndNotes": "[For upgrade]\napp.module.ts:\nAdd import of NotificationCenterModule\nAdd faBell icon to import from '@fortawesome/pro-light-svg-icons' and in library.addIcons()",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/KUp9C5b8/5535-l-notification-centre"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-dc3d42e75d57",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following after the \"path: 'analyse'\" element.",
+          "instructionsAndNotes": "app-route.service.ts:\nAdd the following after the \"path: 'analyse'\" element.\n{\npath: 'notifications',\ncanActivate: [ConfigurationGuard],\ncanDeactivate: [ConfigurationDeactivateGuard],\nchildren: [\n{\npath: '', component: NotificationPageComponent,\ndata: { permissionAction: PermissionAction.List, functionDefinition: FunctionDefinitionId.NotificationCenter },\n},\n]\n},",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d537ff71e9cf",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add",
+          "instructionsAndNotes": "Environment.ts/environment.prod.ts:\nAdd\nnotifications: 'api/core/notifications',\nnotificationTemplates: 'api/core/notificationTemplates'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-dc9e8d9048af",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add new item to Database CoreNotificationTemplates and CoreNotificationTemplateContents",
+          "instructionsAndNotes": "- Add new item to Database CoreNotificationTemplates and CoreNotificationTemplateContents",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-97855a204257",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add new to Database NotificationType from number 1000",
+          "instructionsAndNotes": "- Add new to Database NotificationType from number 1000",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5240de6e6ed1",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "remove and write new with INotificationHandler",
+          "instructionsAndNotes": "- remove and write new with INotificationHandler",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-47f32c3f8576",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to environments files:",
+          "instructionsAndNotes": "Add to environments files:\nhighestDonorsSummary: 'api/core/highestDonorsSummary' ,",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5589b21e0f02",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check override code of Logframe and Beneficiary to see if we use just Tab Definition permissions for checking permissions for Tab function view. In this case, we should add Tab fun",
+          "instructionsAndNotes": "[For upgrade person] Check override code of Logframe and Beneficiary to see if we use just Tab Definition permissions for checking permissions for Tab function view. In this case, we should add Tab function in checking permissions.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3c13dc8e6195",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update angular.json",
+          "instructionsAndNotes": "Update angular.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3e8422643085",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": ": Check for custom components where ngo-list-filter shares a row with other fields, such as a search field, and update the layout as follows:",
+          "instructionsAndNotes": "[For upgrade person] : Check for custom components where ngo-list-filter shares a row with other fields, such as a search field, and update the layout as follows:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-22e2665f2e87",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Delete Files",
+          "instructionsAndNotes": "Delete Files\nRemove the following files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f6c37e93b199",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add File",
+          "instructionsAndNotes": "Add File\nAdd the following file and copy its contents from Core:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-86530466ca08",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update angular.json",
+          "instructionsAndNotes": "Update angular.json\n\"lint\": {\n\"builder\": \"@angular-eslint/builder:lint\",\n\"options\": {\n\"lintFilePatterns\": [\n\"src/**/*.ts\",\n\"src/**/*.html\"\n]\n}\n}",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6e16a163f681",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update package.json",
+          "instructionsAndNotes": "Update package.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9e79aff8dded",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Package Updates",
+          "instructionsAndNotes": "Package Updates",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a597795a4651",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update package.json",
+          "instructionsAndNotes": "Update package.json\nRemove the following packages:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a59a146525c9",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update polyfills.js",
+          "instructionsAndNotes": "Update polyfills.js",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-de7d0ea4c6c8",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update angular.json",
+          "instructionsAndNotes": "Update angular.json\nUnder projects.ngo-next.architect.build.options.styles , add:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1560dd35ce98",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update tsconfig.json",
+          "instructionsAndNotes": "Update tsconfig.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bc701981bbb0",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following entry to all appSettings.json files:",
+          "instructionsAndNotes": "[For Upgrade Person]\nAdd the following entry to all appSettings.json files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-addf5fa717e9",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Build Pipeline Changes",
+          "instructionsAndNotes": "Build Pipeline Changes",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-58f26a8928b7",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to environments files:",
+          "instructionsAndNotes": "Add to environments files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-18a847c0c86c",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run the tool ' UpdateIdeaMembers ' (update the appSettings before running the tool. There are two actions in the app console:",
+          "instructionsAndNotes": "[For deployment person] [AfterDeployment] Run the tool ' UpdateIdeaMembers ' (update the appSettings before running the tool. There are two actions in the app console:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f3f19eeac082",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add IATIModule to @NgModule",
+          "instructionsAndNotes": "Add IATIModule to @NgModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a32a9db6a546",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update app.module.ts:",
+          "instructionsAndNotes": "Update app.module.ts:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e01a394c3e00",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API url to environment files:",
+          "instructionsAndNotes": "Add API url to environment files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2e59c3b5b18e",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For upgrade person]\nIf we copied ManageTask function from Core, consider to use ManageTask from BaseService or remove task.Checklist = null and task.ChecklistTitle = null",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-8e82c1760e72",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "update CoreTaskTemplates set AddFinalAttachments = null where Id = 7",
+          "instructionsAndNotes": "Please be advised this function doesn't work together with the function \"Upload recipt(s)\" for payments. If this function is enabled, it needs to be turned off by setting AddFinalDocuments = NULL in CoreTaskTemplates before enabling Cancel Payment and Mark as Paid. Also conder tasks that are currently in the \"Waiting for finalization\" stage.\nupdate CoreTaskTemplates set AddFinalAttachments = null where Id = 7\nupdate CoreTasks set StatusId = 3 where StatusId = 6 and TemplateId = 7\nupdate CoreTasks set AddFinalAttachments = null where TemplateId = 7",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ff06f4a98433",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Upgrade Person] [Before deployment]\nImportant: \" BeforeCore\" folder should put same level with DatabaseSeed\n<None Include=\"BeforeCore\\**\\*.*\">\n<CopyToOutputDirectory>Always</CopyToOutputDirectory>\n</None>\n[For deployment person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ed7433cfe9af",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Upgrade Person] [Before deployment]\nImportant: \" BeforeCore\" folder should put same level with DatabaseSeed\n<None Include=\"BeforeCore\\**\\*.*\">\n<CopyToOutputDirectory>Always</CopyToOutputDirectory>\n</None>\n[For Deployment Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9a998005a585",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deployment Person]\nBefore Deployment:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3381254168fd",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Upgrade Person]\n\"postLogoutRedirectUri\": \"  \" ￼\n{ path: 'logout-success', component: LogOutComponent }, ￼",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "http://localhost:4200/logout-success"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bf1e8adfdd85",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deployment Person]\n\" to \"  \"",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://xxxxx.com"
+            },
+            {
+              "label": "Ref",
+              "value": "https://xxxxx.com/logout-success"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2caaf091ab92",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update app.module.ts:",
+          "instructionsAndNotes": "1) Update app.module.ts:\n2) Add API url to environment files:\n3) There's a script to automatically read current values of BudgetSetting.Frequency and IsBudgetValidationAllYears from CoreConfigurations and add default budget templates for Project, Programme and Restricted Funding.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-644e130652c0",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update the second parameter to use '_coreAppSettings.SP.TenantUrl'",
+          "instructionsAndNotes": "1. Replace (if exists) URIUtilities.BuildSharePointAbsoluteUrl -> SPUtilities.BuildAbsoluteUrl\n- Update the second parameter to use '_coreAppSettings.SP.TenantUrl'\n- Make sure the first parameter is either SP server relative URL or Absolute URL",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-4981eab1c595",
+          "version": "10.0.0-draft",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Update pipeline",
+          "instructionsAndNotes": "[Before Deployment] Update pipeline",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-c2596fc727c9",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "If GetLogframe2IndicatorTrackers is customized in the client project",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" 2/Rollup] Level and Sort order when roll up by indicator level on Current sprint - Core | Trello 2/Rollup] Level and Sort order when roll up by indicator level on Curr",
+          "instructionsAndNotes": "﷟HYPERLINK \" 2/Rollup] Level and Sort order when roll up by indicator level on Current sprint - Core | Trello  2/Rollup] Level and Sort order when roll up by indicator level on Current sprint - Core | Trello\nIf GetLogframe2IndicatorTrackers is customized in the client project, adapt this card's PR changes to it.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mtZ69DZQ/5234-logframe-2-rollup-level-and-sort-order-when-roll-up-by-indicator-level"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d11169a7d487",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "Check whether the client project includes customizations for the CoreAnalyseLogframeObjectiveView and CoreAnalyseLogframeReporting views",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check whether the client project includes customizations for the CoreAnalyseLogframeObjectiveView and CoreAnalyseLogframeReporting views, and apply the following card updates accor",
+          "instructionsAndNotes": "[Analyse/Logframe Indicator tracker] Is Latest Reported Period are not working right on Current sprint - Core | Trello\nCheck whether the client project includes customizations for the CoreAnalyseLogframeObjectiveView and CoreAnalyseLogframeReporting views, and apply the following card updates accordingly.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ZqZrBLN7/5004-analyse-logframe-indicator-tracker-is-latest-reported-period-are-not-working-right"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-79fd089ab4ad",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "if client project are using FundingFinanceType 3 (Purpose-bound fund). If yes, please replace every places that are using it to use FundingFinanceType 2 (Unrestricted fund) instead (update code if it is a customisation and write a data fix script if it is a config in database)",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check if client project are using FundingFinanceType 3 (Purpose-bound fund). If yes, please replace every places that are using it to use FundingFinanceType 2 (Unrestricted fund) i",
+          "instructionsAndNotes": "Funding finance - enum values identify Restricted/Unrestricted funds on Current sprint - Core | Trello\n[For upgrade person] Check if client project are using FundingFinanceType 3 (Purpose-bound fund). If yes, please replace every places that are using it to use FundingFinanceType 2 (Unrestricted fund) instead (update code if it is a customisation and write a data fix script if it is a config in database).",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/rjQmlPbp/5186-funding-finance-enum-values-identify-restricted-unrestricted-funds"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-484cb83737fe",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "Client developers: If system config \"LogframeSetting\" has AlwaysUpdate = 1: must check and update manually to ensure value for \"objectiveLevelsWithInputOnly\" is correct after upgrade (if AlwaysUpdate = 0, data will be auto fixed)",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Fill data in appsettings.json of the tool and run tool CleanupDocumentReferences. After running, open folder specified and we will receive",
+          "instructionsAndNotes": "﷟HYPERLINK \" All indicators are deleted when switching from any objective level to Activity level. Should we fix this?  All indicators are deleted when switching from any objective level to Activity level. Should we fix this?\nClient developers: If system config \"LogframeSetting\" has AlwaysUpdate = 1: must check and update manually to ensure value for \"objectiveLevelsWithInputOnly\" is correct after upgrade (if AlwaysUpdate = 0, data will be auto fixed)\n﷟HYPERLINK \" key box - no key documents appear after removing an item on Current sprint - Core | Trello  key box - no key documents appear after removing an item on Current sprint - Core | Trello\n[After Deployment] Fill data in appsettings.json of the tool and run tool CleanupDocumentReferences. After running, open folder specified and we will receive\nCleanup.sql file, run.log file; open log file to check \" Unresolved\" items and check the links valid or not, if the links not valid should consider\nto remove. For sql file, set @Commit = 1 and run for client.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/wilG1635/5770-logframe2-all-indicators-are-deleted-when-switching-from-any-objective-level-to-activity-level-should-we-fix-this"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/hFB31zsN/5639-overview-key-box-no-key-documents-appear-after-removing-an-item"
+            },
+            {
+              "label": "Ref",
+              "value": "http://Overview"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e5ef806200bd",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "- In CoreEntityRestrictions table, set IsSPSyncAlready = false",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "In CoreEntityRestrictions table, set IsSPSyncAlready = false",
+          "instructionsAndNotes": "- In CoreEntityRestrictions table, set IsSPSyncAlready = false",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2d7fcd9c22c7",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "Only when Client don't want to use AzureWebJobsStorage connectionstring",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Only when Client don't want to use AzureWebJobsStorage connectionstring",
+          "instructionsAndNotes": "[Optional] Only when Client don't want to use AzureWebJobsStorage connectionstring\nDocument link:﷟HYPERLINK \" Identities Storage accounts  Identities Storage accounts",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/oN8mjJfY/5567-s-change-so-managed-identities-can-be-used-for-storage-accounts-connections-instead-of-connections-strings"
+            },
+            {
+              "label": "Ref",
+              "value": "https://precio.sharepoint.com/:w:/r/sites/NGOOnline/Shared%20Documents/General/Managed%20Identities%C2%A0Storage%20accounts.docx?d=wd3a217aa99f54a92a4f25fabb90ba570&csf=1&web=1&e=AdeEoc"
+            },
+            {
+              "label": "Ref",
+              "value": "http://Managed"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9186c86698bf",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "If client use SearchAsTypeOptionsMapper",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If client use SearchAsTypeOptionsMapper. GetRestrictedUserQuery(",
+          "instructionsAndNotes": "If client use SearchAsTypeOptionsMapper. GetRestrictedUserQuery(\nOf use SearchAsTypeOptionsMapper. IsRestrictedUser(\nYou must define IBaseRestrictedRepository to base Contructor",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/uLNIeBEW/5548-ssystem-config-refactor-to-centralize-logic-for-retrieving-and-checking-restrictedglobalrolesinviews"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-8bb727b0b051",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "Check if any custom TaskTemplate options mapper for \"associatedTasks\" field, if existed, ensure result options including the property \"EditTitle\" binded to property of CoreTaskTemplates table",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check if any custom TaskTemplate options mapper for \"associatedTasks\" field, if existed, ensure result options including the property \"EditTitle\" binded to property of CoreTaskTemp",
+          "instructionsAndNotes": ",\nIFieldOptionsMapper\npublic const string ConfigurationId = \"UserOptions\";\nprotected readonly IUserMapper<User> _userMapper;\npublic UserOptionsMapper (\nCoreContext context,\nOptionMapperParameter parameter,\nIUserMapper<User> userMapper,\nIConfigurationRepository configurationRepository,\nIBaseRestrictedRepository baseRestrictedRepository)\n: base(context, parameter, null, configurationRepository,\nbaseRestrictedRepository)\n_context = context;\n_userMapper = userMapper;\n_parameter = parameter;\npublic IEnumerable<IGenericItem> LoadOptions()\nvar query = context. CoreUsers.Where(u => parameter. IsAlwaysShowInactive == true | | u.Active);\nquery =\nGetRestrictedUserQuery(query, _parameter);\nvar result = IssearchAsType( ) ? Filteroptions (query. ToList ( ), _parameter) : query . ToList () ;\nreturn result. Select(t => userMapper. ToModel(t) ) . OrderBy(e => e.Name); \" />\n[ForUpgradePerson] Check if any custom TaskTemplate options mapper for \"associatedTasks\" field, if existed, ensure result options including the property \"EditTitle\" binded to property of CoreTaskTemplates table.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VkvxaaLf/5533-xl-subtasks"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3a2bc471be0d",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "Check if the current LIVE version that before the upgrade",
+          "timing": "Before Deploy",
+          "owner": "Client Dev",
+          "action": "Check if the current LIVE version that before the upgrade:",
+          "instructionsAndNotes": "- [BeforeDeployment] Check if the current LIVE version that before the upgrade:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-4cbad4fa1506",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "- If below 6.2: I don't think we have this case, but if yes, then write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the value from Core.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If below 6.2: I don't think we have this case, but if yes, then write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the val",
+          "instructionsAndNotes": "- If below 6.2: I don't think we have this case, but if yes, then write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the value from Core.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-fbce83699d73",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "check if any one was be used, the approval task name of it should be as expected",
+          "timing": "After Deploy",
+          "owner": "Client Dev",
+          "action": "NameFieldSetting configuration will be also used to build approval name for Log (Id=8), Log2 (Id=15), Log3 (Id=24), Agreement(Id=10), Bank account, etc. Therefore you have to check",
+          "instructionsAndNotes": "- [AfterDeployment] NameFieldSetting configuration will be also used to build approval name for Log (Id=8), Log2 (Id=15), Log3 (Id=24), Agreement(Id=10), Bank account, etc. Therefore you have to check if any one was be used, the approval task name of it should be as expected. If the approval task name is unexpected, write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the value from your local env, this case you need to add \"approvalFieldName\": \"<field_name>\" for approval task name.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-af1717a3ab80",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "if client intends to use Embedded Token",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Note: Only apply step 2 if client intends to use Embedded Token. In this case, need to assign permissions as Member for Service Principle in Workspace",
+          "instructionsAndNotes": "Note: Only apply step 2 if client intends to use Embedded Token. In this case, need to assign permissions as Member for Service Principle in Workspace",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6c0611e3934d",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "If Client use AI function",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If Client use AI function, follow these steps to set up: (Please contact me if you experience any issues during the setup process.)",
+          "instructionsAndNotes": "If Client use AI function, follow these steps to set up: (Please contact me if you experience any issues during the setup process.)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b88f8f63febe",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "check if release pipeline / deployment appsettings.json having Core",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "check if release pipeline / deployment appsettings.json having Core: Deployment:DeploySPFieldsAndCTypesEnabled false -> if so please add Core: Deployment:DeploySPFieldsAndCTypesEna",
+          "instructionsAndNotes": "[For deployment person] check if release pipeline / deployment appsettings.json having Core: Deployment:DeploySPFieldsAndCTypesEnabled false -> if so please add Core: Deployment:DeploySPFieldsAndCTypesEnabled true to the release pipeline, and turn the setting back when the deployment done.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3a49bea91f82",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "Adding new key name \"SwitchCurrentSiteCollectionSchedule\" to configuration of appsetting.json of webjobs, the value default is \"0 4 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the key \"Core:Queue:SwitchCurrentSiteCollectionQueue\" with the value \"switchcurrentsitecollectionqueue\" in Azure AppService.",
+          "instructionsAndNotes": "[For Upgrade Person]\nAdding new key name \"SwitchCurrentSiteCollectionSchedule\" to configuration of appsetting.json of webjobs, the value default is \"0 4 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.\nAdding new key name \"SwitchCurrentSiteCollectionQueue\" to Queue section in configuration of appsetting.json of webjobs, deployment and api, the value is \"switchcurrentsitecollectionqueue\".\n[For Deploy Person]\nAdding new key name \"Core:SwitchCurrentSiteCollectionSchedule\" to configuration of Azure, the value default is \"0 4 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.\nAdd the key \"Core:Queue:SwitchCurrentSiteCollectionQueue\" with the value \"switchcurrentsitecollectionqueue\" in Azure AppService.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-01eabb038e57",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "UPDATE CoreFieldOptions SET Active = 1 WHERE Id = 2401 ￼",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "UPDATE CoreFieldOptions SET Active = 1 WHERE Id = 2401 ￼",
+          "instructionsAndNotes": "If you do not use these functions, you can ignore the steps mentioned.\nUPDATE CoreFieldOptions SET Active = 1 WHERE Id = 2401 ￼\nUPDATE CoreEntityTabs SET Active = 1 WHERE TabFunctionId = 132 AND EntityId = [YourEntityId]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bb5b9dd907b1",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "Only for client environments, add check list item to inform PM/AM about authentication platform change in Entra ID after deployment, so they can notify clients to clear browser cache if needed",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Only for client environments, add check list item to inform PM/AM about authentication platform change in Entra ID after deployment, so they can notify clients to clear browser cac",
+          "instructionsAndNotes": "[For Upgrade Person] Only for client environments, add check list item to inform PM/AM about authentication platform change in Entra ID after deployment, so they can notify clients to clear browser cache if needed.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e88b76bf7b10",
+          "version": "10.0.0-draft",
+          "applicability": "conditional",
+          "condition": "check if CoreConfigurations for RestrictedGlobalRolesInViews in case ALways Update = 0, if yes",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "run script Datafixes/ 20230811_UpdateCoreConfigurationForPartnerUser",
+          "instructionsAndNotes": "[S] Permissions, Members tab - Validation for Partner users (Guest) accounts to only be able to be added as Partner members\n[After Deployment] run script Datafixes/ 20230811_UpdateCoreConfigurationForPartnerUser\nNote: Please check if CoreConfigurations for RestrictedGlobalRolesInViews in case ALways Update = 0, if yes, please add {\"roles\": [{\"id\": 12}], \"tabFunctionId\": 113} to the existed configuration",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-74b5fcb0d602",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Setup Broker accept: Go to EntraId App Registation -> Manage -> Manifest",
+          "instructionsAndNotes": "Setup Broker accept: Go to EntraId App Registation -> Manage -> Manifest\nIn manifest file, at redirectUris add 2 lines\n\"spa\" : {\n\"redirectUris\":\n…\n…\n\"brk-9199bf20-a13f-4107-85dc-02114787ef48://ngo-pr-38723.azurewebsites.net\" ,\n\"brk-multihub://ngo-pr-38723.azurewebsites.net\" ,",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ZldrXtWZ/5682-s-outlook-add-in-doesnt-work-in-microsoft-edge"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-fdd2e44050ae",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "(Only change NGO azure web, GUID is Outlook App ID)f",
+          "instructionsAndNotes": "(Only change NGO azure web, GUID is Outlook App ID)f",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-57c39f057c1c",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "PBI: Implement embedded Token based on Service Principle authentication",
+          "instructionsAndNotes": "PBI: Implement embedded Token based on Service Principle authentication",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Ok75wHm5"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d387f33a32a0",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Core.PowerBIResource to Core.PowerBI.Resource",
+          "instructionsAndNotes": "- Core.PowerBIResource to Core.PowerBI.Resource",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1b4fdab7e2db",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Core.PowerBIApi to Core.PowerBI.Api",
+          "instructionsAndNotes": "- Core.PowerBIApi to Core.PowerBI.Api",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-70d97bf92edc",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Bd9l1Kzy/5637-iframe-doesnt-work-with-ngo-sites"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9365e144d37f",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Top 10 highest donor box - Summary",
+          "instructionsAndNotes": "[S] Top 10 highest donor box - Summary",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/lkoM5bZM/5796-s-top-10-highest-donor-box-summary"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-baf5ae96ebb2",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/AhbRcyCA/5494-4sdocuments-prevent-partner-users-to-list-project-pages-in-sharepoint-and-see-the-other-project-names"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ac10c7f24752",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "To setup for CI, local and client here Remove \"AllSites.FullControl\" - Delegate onenote:Core%20Releases.one#Remove%20\"AllSites.FullControl\"%20-%20Delegate&section-id={5dd09b29-f7c0",
+          "instructionsAndNotes": "To setup for CI, local and client here Remove \"AllSites.FullControl\" - Delegate onenote:Core%20Releases.one#Remove%20\"AllSites.FullControl\"%20-%20Delegate&section-id={5dd09b29-f7c0-4264-9e9c-3078b6bb1c12}&page-id={e09bdcc4-565d-429e-b8ba-607c3b0c13cd}&end",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/tcso1DdB/5595-review-if-permission-allsitesfullcontrol-delegate-is-required"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-adaa20851dee",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "loads a task and saves it back. Otherwise the internal approval flows are deleted if the current user is restricted user.",
+          "instructionsAndNotes": "- loads a task and saves it back. Otherwise the internal approval flows are deleted if the current user is restricted user.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e9fcd2334f5c",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "runs as the system: workflows, webjobs, tools, permission or state checks.",
+          "instructionsAndNotes": "- runs as the system: workflows, webjobs, tools, permission or state checks.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-79ab94405ab8",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "needs every approver, for example to send emails.",
+          "instructionsAndNotes": "- needs every approver, for example to send emails.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-817ee88e7b34",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "for system calls with the regardless of user, pass the flag set to true.",
+          "instructionsAndNotes": "- for system calls with the regardless of user, pass the flag set to true.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-8cbe91769798",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If 6.2 and above: copy the Characteristic of field instance id = 22538 that having taskLinkFormat in LIVE (prefer CoreFieldInstanceLocations first, if no then CoreFieldInstances), ",
+          "instructionsAndNotes": "- If 6.2 and above: copy the Characteristic of field instance id = 22538 that having taskLinkFormat in LIVE (prefer CoreFieldInstanceLocations first, if no then CoreFieldInstances), and update the characteristic in your local env.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6d3a992c67af",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Permission setup:",
+          "instructionsAndNotes": "Permission setup:\nNotifications. View: Show Bell icon in Topbar\nNotifications. Edit : Mark Read/unread\nNotifications. List: can go to/load /notifications page",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e7019ca2646d",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If you want to replace NotificationHandler ,",
+          "instructionsAndNotes": "- If you want to replace NotificationHandler ,",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ee3e641b8033",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Example remove code:",
+          "instructionsAndNotes": "- Example remove code:\n//services.RemoveNotificationHandlerRegistry<NotificationHandler< ￼ // NotificationRecipient, ￼ // NotificationTemplate, ￼ // Notification>>();",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-73f27fa354a3",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[UpgradePerson]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6986df4214ff",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Custom forms - External Applications (v3)",
+          "instructionsAndNotes": "[XL] Custom forms - External Applications (v3)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/dcORfZN4/5608-xl-custom-forms-external-applications-v3"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f2474e7885f4",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Pass true when the call:",
+          "instructionsAndNotes": "Pass true when the call:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1d9fcdc4f48f",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Follow those manual steps:",
+          "instructionsAndNotes": "[ForUpgradePerson-Only] Follow those manual steps:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-602d7a7763a9",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "After Deploy",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[UpgradePerson]\n[AfterDeployment]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-fcaca3a73976",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Example warnings:",
+          "instructionsAndNotes": "Example warnings:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3400b2f2dfe8",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deployment Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-21ddbb90582a",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "BREAKING CHANGE",
+          "instructionsAndNotes": "BREAKING CHANGE\nIn addition, the return type has changed:\nAny custom code that calls getComponentFactory() must be updated to use getComponentType() and adjusted to work with the new return type.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6c69fd8062ff",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Angular ESLint Migration",
+          "instructionsAndNotes": "Angular ESLint Migration",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a514957183f2",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Context Menu Migration",
+          "instructionsAndNotes": "Context Menu Migration",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b44426df9c4c",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "BREAKING CHANGE",
+          "instructionsAndNotes": "BREAKING CHANGE",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e0c85e85cda3",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Old Syntax",
+          "instructionsAndNotes": "Old Syntax\n<context-menu>￼\n<ng-template contextMenuItem>￼\n...\n</ng-template>￼\n</context-menu>",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3a7863e8fce4",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Required Changes",
+          "instructionsAndNotes": "Required Changes",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ecdd8d5fd3cd",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Queue Configuration Changes",
+          "instructionsAndNotes": "Queue Configuration Changes",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0a451348b555",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "For Upgrade Person",
+          "instructionsAndNotes": "For Upgrade Person",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ca78654939dd",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "For Deployment Person",
+          "instructionsAndNotes": "For Deployment Person\nThe deployment environment must also be updated to support .NET 10.0 .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f5cd65e8834a",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For upgraded person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5631dbc00b9c",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "IATI - Transaction import",
+          "instructionsAndNotes": "IATI - Transaction import",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/s9jJq4S2/4896-l-iati-transaction-import"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b5309859a92a",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Lock entities when ready for further registration on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[32][L] Lock entities when ready for further registration on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/5SMHGhna/5054-32l-lock-entities-when-ready-for-further-registration"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ea15d752f951",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "In Entra ID App Registration for NGO Online:",
+          "instructionsAndNotes": "In Entra ID App Registration for NGO Online:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-daa10c663c59",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Create approval pdf template for Partner expenditure",
+          "instructionsAndNotes": "[Partner expenditure] Create approval pdf template for Partner expenditure",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Ti88ijq5/4965-partner-expenditure-create-approval-pdf-template-for-partner-expenditure"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-19d68957f0ba",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Upgrade Person]\n[For Deployment Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f0393027f840",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "NET Upgrade",
+          "instructionsAndNotes": ".NET Upgrade",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f62970e6b9cc",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Configuration",
+          "instructionsAndNotes": "Configuration\n\"Core:IATIDocumentsBlob\" : \"iati-documents\"\n\"Core:Queue:GenerateIATIFileQueue\" : \"generateiatifilequeue\"\n\"Core:IATIValidationApi\": \"\n\"Core:IATISubscriptionKey\": \"<FROM_SECRET_PROVIDER>\"\n\"Core:GenerateIATIFileSchedule\": \"0 2 * * *\"\nadminIATIPage: 'api/core/adminIATIPage' ,\nentityIATI: 'api/core/entity' ,\niatiDocument: 'api/core/entity' ,\niatitransactions: 'api/core/entity' ,",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://api.iatistandard.org/validator/validate"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-29049376856e",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Manual SQL Script (Run Before Deployment)",
+          "instructionsAndNotes": "Manual SQL Script (Run Before Deployment)\nNote: IDs 21355 & 21356 are now used for IATI. They may be redundant in existing databases.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d15a97e97ef3",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Upgrade Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d50760209f78",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For U pgrade P erson]\n[For Deploy Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-dc5144a34b57",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deployment Person] [Before deployment]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a326e2363c41",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deployment – Upgrade Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-08aefdf705f1",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[Before deployment]\n[For upgrade person]",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/pKyRWL8J/4277-m-web-job-monitoring-admin-ui"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ae09dc96accf",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ktUgRun4/4185-net-8"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e3198b0495e2",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Notes for ngo- release pipelines (for Previo dev env):",
+          "instructionsAndNotes": "Notes for ngo- release pipelines (for Previo dev env):",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5caeea27566e",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Notes before client deployments (for client env) :",
+          "instructionsAndNotes": "Notes before client deployments (for client env) :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0ba42b19da80",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Beside of activating security policy, it requires to set Azure configurations to make web job run",
+          "instructionsAndNotes": "Beside of activating security policy, it requires to set Azure configurations to make web job run",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-20bb97110832",
+          "version": "10.0.0-draft",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "How to use:",
+          "instructionsAndNotes": "How to use:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-035972801dae",
+          "version": "10.0.0-draft",
+          "moduleScope": "Permission/Beneficiaries & Logframe / For upgraded person",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/kNG93Itk/4097-permission-beneficiaries-logframe-remove-add-edit-and-delete-permissions?filter=member:anphamquoc2,member:loantranthikim"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Tx0KteEy/4818-add-the-permission-roles-as-resource-strings-and-support-multiple-languages"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/29898"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[Permission/Beneficiaries & Logframe] Remove Add, Edit and Delete permissions on Current sprint - Core | Trello",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Remove Add, Edit and Delete permissions on Current sprint - Core | Trello"
+        },
+        {
+          "id": "feature-05be2e08f74e",
+          "version": "10.0.0-draft",
+          "moduleScope": "Admin UI / Users / ForUpgradePerson / ForDeployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Xmu03JTO/5487-16ladmin-ui-users-new-users-roles-interface"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[Admin UI] [Users] - New Users & Roles interface",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Update appSettings.json (Core:AzureAd:Domain, Core:InternalDomains, ConnectionStrings) and run tool NGO.Core.Tools.SetIsExternalForUser"
+        },
+        {
+          "id": "feature-fd3938c52f69",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/AiVZgYxE/5492-4s-cannot-remove-access-manage-deputies"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Enable permission Start page. Manage deputies. Edit",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-4c723bdc246f",
+          "version": "10.0.0-draft",
+          "moduleScope": "System task/Task name",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Ls5rutLY/5214-system-task-task-name-task-name-is-not-updated-after-editing"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[System task/Task name] Task name is not updated after editing",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-588569eaeccf",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "If below 6.2: I don't think we have this case, but if yes, then write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the value from Core.",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "- If below 6.2: I don't think we have this case, but if yes, then write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the value from Core. If below 6.2: I don't think we have this case, but if yes, then write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the val"
+        },
+        {
+          "id": "feature-504875506afe",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[AfterDeployment] NameFieldSetting configuration will be also used to build approval name for Log (Id=8), Log2 (Id=15), Log3 (Id=24), Agreement(Id=10), Bank account, etc. Therefore you have to check if any one was be used, the approval task name of it should be as expected. If the approval task name is unexpected, write a custom client one-time script with your updates on the new system config 'NameFieldSetting' based on the value from your local env, this case you need to add \"approvalFieldName\": \"<field_name>\" for approval task name.",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "check if any one was be used, the approval task name of it should be as expected NameFieldSetting configuration will be also used to build approval name for Log (Id=8), Log2 (Id=15), Log3 (Id=24), Agreement(Id=10), Bank account, etc. Therefore you have to check"
+        },
+        {
+          "id": "feature-0d6d695a1441",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Fp3vQeE2/5669-s-rtf-formatting-add-list-button-bullet-and-numerical"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] RTF Formatting: add \"List\" button (bullet and numerical) on Current sprint - Core | Trello",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-240361c920ac",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "If you want to add new event:",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-1375f51b0e35",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "and MUST Remove the old register of NotificationHandler and add new one to DI using this code",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-6d885870108f",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "New Syntax",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-51515f363773",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/MmBli1nv"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Transaction of new funding source for funding plan are duplicated  :",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-8a7240a82c8d",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/vgGizvHA/4295-s-beneficiaries-tab-add-config-option-to-hide-donor-disaggregation-column-on-roll-up-tabs"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Beneficiaries tab: Add config option to hide Donor disaggregation column on roll-up tabs on Current sprint - Core | Trello",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-2444acc07648",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Adding a new configuration named beneficiarySortTypeInList in BeneficiarySetting with values 1 or 2 (default will be 2). These two values will correspond to the following scenarios:",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-0ba5be46be7d",
+          "version": "10.0.0-draft",
+          "moduleScope": "For Upgrade Person",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[For Upgrade Person] Only for client environments, add check list item to inform PM/AM about authentication platform change in Entra ID after deployment, so they can notify clients to clear browser cache if needed.",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Only for client environments, add check list item to inform PM/AM about authentication platform change in Entra ID after deployment, so they can notify clients to clear browser cache if needed Only for client environments, add check list item to inform PM/AM about authentication platform change in Entra ID after deployment, so they can notify clients to clear browser cac"
+        },
+        {
+          "id": "feature-32ec3b0089f6",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/s2IOcMpb/3677-s-finance-budget-when-project-periods-have-been-changes-the-budget-row-values-out-of-from-new-period-must-be-removed-in-draft-ve"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Finance / Budget: when project periods have been changes, the budget row values out of from new period must be removed in draft version",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-89a49cd28062",
+          "version": "10.0.0-draft",
+          "moduleScope": "{\"id\": 12}",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Permissions, Members tab - Validation for Partner users (Guest) accounts to only be able to be added as Partner members",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "check if CoreConfigurations for RestrictedGlobalRolesInViews in case ALways Update = 0, if yes run script Datafixes/ 20230811_UpdateCoreConfigurationForPartnerUser"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-9bde0f41db7b",
+          "version": "10.0.0-draft",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WI7UdCt5/5771-s-approval-pdf-cant-open-when-contain-character"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Approval pdf can't open when contain # character on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Run NGO.Core.Tools.EnsureApprovalFileLinkPreviewMode . See details in file README.md."
+        },
+        {
+          "id": "bugfix-4bfd4ba67f82",
+          "version": "10.0.0-draft",
+          "moduleScope": "Analyse/Logframe Indicator tracker",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ZqZrBLN7/5004-analyse-logframe-indicator-tracker-is-latest-reported-period-are-not-working-right"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Analyse/Logframe Indicator tracker] Is Latest Reported Period are not working right on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Check whether the client project includes customizations for the CoreAnalyseLogframeObjectiveView and CoreAnalyseLogframeReporting views. Check whether the client project includes customizations for the CoreAnalyseLogframeObjectiveView and CoreAnalyseLogframeReporting views, and apply the following card updates accor"
+        },
+        {
+          "id": "bugfix-d157144d89f7",
+          "version": "10.0.0-draft",
+          "moduleScope": "Logframe2",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/wilG1635/5770-logframe2-all-indicators-are-deleted-when-switching-from-any-objective-level-to-activity-level-should-we-fix-this"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/hFB31zsN/5639-overview-key-box-no-key-documents-appear-after-removing-an-item"
+            },
+            {
+              "label": "Ref",
+              "value": "http://Overview"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "﷟HYPERLINK \" All indicators are deleted when switching from any objective level to Activity level. Should we fix this?  All indicators are deleted when switching from any objective level to Activity level. Should we fix this?",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Client developers: If system config \"LogframeSetting\" has AlwaysUpdate = 1: must check and update manually to ensure value for \"objectiveLevelsWithInputOnly\" is correct after upgrade (if AlwaysUpdate = 0, data will be auto fixed). Fill data in appsettings.json of the tool and run tool CleanupDocumentReferences. After running, open folder specified and we will receive"
+        },
+        {
+          "id": "bugfix-6fc8663c1bb3",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ttW93QKa/5585-s-fix-iframes-and-maps-after-introduction-of-csp"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "﷟HYPERLINK \" Fix iframes and maps after introduction of CSP on Current sprint - Core | Trello  Fix iframes and maps after introduction of CSP on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        },
+        {
+          "id": "bugfix-df7531f2f94c",
+          "version": "10.0.0-draft",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Please be advised this function doesn't work together with the function \"Upload recipt(s)\" for payments. If this function is enabled, it needs to be turned off by setting AddFinalDocuments = NULL in CoreTaskTemplates before enabling Cancel Payment and Mark as Paid. Also conder tasks that are currently in the \"Waiting for finalization\" stage.",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "update CoreTaskTemplates set AddFinalAttachments = null where Id = 7"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "Waiting list",
+      "Next major version (Add here)",
+      "Next version (Add here)",
+      "10.0.0 (Beta)"
+    ],
+    "rawCardCount": 134,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

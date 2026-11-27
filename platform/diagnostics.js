@@ -239,51 +239,68 @@ function diagnoseCopilotCli(customPath, options) {
       let diagDetails = 'Standalone Copilot CLI executable detected and responding.';
       let remedSteps = [];
 
-      if (credentialSource !== 'none') {
+      // Fast local auth inspection (never spawn blocking LLM pings on HTTP status polls)
+      let oauthLogin = null;
+      try {
+        const homeDir = process.env.USERPROFILE || process.env.HOME || '';
+        const copilotCfgPath = path.join(homeDir, '.copilot', 'config.json');
+        if (fs.existsSync(copilotCfgPath)) {
+          const raw = fs.readFileSync(copilotCfgPath, 'utf8').replace(/^\s*\/\/.*$/gm, '').trim();
+          const cfg = JSON.parse(raw);
+          if (cfg && cfg.lastLoggedInUser && cfg.lastLoggedInUser.login) {
+            oauthLogin = String(cfg.lastLoggedInUser.login);
+          }
+        }
+        if (!oauthLogin) {
+          for (const f of [
+            path.join(homeDir, '.config', 'github-copilot', 'hosts.json'),
+            path.join(homeDir, '.config', 'github-copilot', 'apps.json'),
+          ]) {
+            if (fs.existsSync(f)) {
+              const data = JSON.parse(fs.readFileSync(f, 'utf8'));
+              const entry = Object.values(data || {}).find((e) => e && (e.oauth_token || e.user));
+              if (entry) {
+                oauthLogin = entry.user ? String(entry.user) : 'GitHub User';
+                break;
+              }
+            }
+          }
+        }
+      } catch (_) {}
+
+      let storedCredToken = null;
+      try {
+        const copilotCliAdapter = require('./copilot-cli');
+        storedCredToken = copilotCliAdapter.getStoredCopilotToken();
+      } catch (_) {}
+
+      if (oauthLogin) {
+        isAuthenticated = true;
+        accountIdentity = `${oauthLogin} (GitHub Copilot CLI)`;
+        if (credentialSource === 'none') credentialSource = 'oauth_session';
+        diagDetails = `Copilot CLI is installed (${rawVer}) and signed in via OAuth (${oauthLogin}).`;
+      } else if (credentialSource !== 'none') {
         isAuthenticated = true;
         accountIdentity = 'Environment Credential';
         diagDetails = 'Copilot CLI detected and authenticated via environment variable.';
+      } else if (storedCredToken) {
+        isAuthenticated = true;
+        accountIdentity = 'Configured GitHub Token';
+        credentialSource = 'stored_token';
+        diagDetails = `Copilot CLI is installed (${rawVer}) with a stored token.`;
       } else {
-        // Safe read-only probe: run copilot with non-interactive ping and short timeout
-        try {
-          const probe = cp.spawnSync('copilot', ['-p', 'PING', '--no-custom-instructions'], {
-            encoding: 'utf8',
-            windowsHide: true,
-            timeout: 3500,
-            shell: true,
-          });
-          const probeOutput = ((probe.stdout || '') + (probe.stderr || '')).toLowerCase();
-          if (
-            probeOutput.includes('no authentication information found') ||
-            probeOutput.includes('not authenticated') ||
-            probeOutput.includes('error: no authentication')
-          ) {
-            isAuthenticated = false;
-            diagDetails = `Copilot CLI is installed (${rawVer}), but not signed in to GitHub.`;
-            remedSteps = [
-              'Open a terminal and run: "copilot", then type "/login" to complete OAuth sign-in.',
-              'Or set the COPILOT_GITHUB_TOKEN or GH_TOKEN environment variable in your system.',
-              'Or enable Simulation Mode in platform settings for offline testing.',
-            ];
-          } else if (probe.status === 0 || !probeOutput.includes('authentication')) {
-            isAuthenticated = true;
-            accountIdentity = 'GitHub User';
-            diagDetails = `Copilot CLI is installed (${rawVer}) and authenticated.`;
-          } else {
-            isAuthenticated = false;
-            diagDetails = `Authentication check returned: ${redactSecrets(probeOutput.slice(0, 150))}`;
-            remedSteps = ['Run "copilot" in terminal and use "/login" to sign in.'];
-          }
-        } catch (_) {
-          isAuthenticated = false;
-          diagDetails = 'Copilot CLI is installed, but status verification timed out or was blocked.';
-          remedSteps = ['Run "copilot" in terminal and execute "/login".'];
-        }
+        isAuthenticated = false;
+        diagDetails = `Copilot CLI is installed (${rawVer}), but not signed in to GitHub.`;
+        remedSteps = [
+          'Open a terminal and run: "copilot", then type "/login" to complete OAuth sign-in.',
+          'Or click Sign In with GitHub / enter a token in Settings.',
+          'Or enable Simulation Mode in platform settings for offline testing.',
+        ];
       }
 
       const status = isAuthenticated ? 'HEALTHY' : 'SIGN_IN_REQUIRED';
 
-      return normalizeCliResult({
+      const diagResult = normalizeCliResult({
         available: true,
         executablePath: execPath,
         version: rawVer,
@@ -298,6 +315,11 @@ function diagnoseCopilotCli(customPath, options) {
         remediationSteps: remedSteps,
         error: isAuthenticated ? null : 'AUTHENTICATION_REQUIRED',
       });
+      if (!customPath) {
+        cachedCliDiag = diagResult;
+        lastCliDiagTime = Date.now();
+      }
+      return diagResult;
     }
   } catch (_) {}
 

@@ -41,7 +41,7 @@ When running on any developer machine (especially outside the primary workstatio
 4. **Parallel Track Execution & Verification Gate**:
    - **Parallelize Backend & Frontend**: In both-track upgrades, NEVER execute the tracks sequentially or wait for backend to finish before starting frontend. Because backend (e.g. `ngo-api/`) and frontend (e.g. `ngo-client/`) reside in distinct directories and use isolated toolchains (`.NET/NuGet` vs `Node/npm`), execute their implementation and build validations concurrently in parallel.
    - **Concurrent Restore & Build**: Run `dotnet restore` & `dotnet build` on the backend solution and `npm install` (or `npm ci`) & `npm run build` on the frontend client concurrently in parallel background executions.
-   - **Completion Gate is Strictly Build Compilation (0 errors)**: Await both parallel tracks; verify 0 errors for backend build and 0 errors for frontend build. Full browser-based unit test suites (e.g. Karma ChromeHeadless regression suites) are NOT a required completion gate. If pre-existing unit test fixture failures occur, record them as skipped/legacy-failing; do NOT alter test files or enter fix loops.
+   - **Builds are necessary, not sufficient**: Await both parallel tracks and verify 0 compilation errors. Also close release-requirement coverage and affected client-consumer compatibility; package updates and unchanged reference-host files do not prove custom templates compatible. Full browser-based unit test suites (e.g. Karma ChromeHeadless regression suites) are NOT a required completion gate. If pre-existing unit test fixture failures occur, record them as skipped/legacy-failing; do NOT alter test files or enter fix loops.
    - **Safe Pause & Replan**: If external Core drift or execution blocker occurs, pause running executors via `node engine/tools/upgrade-engine.js pause --run <client>/<run>` before re-planning.
    - Report a structured completion summary to the user when finished (version, files changed, parallel build verification: 0 errors).
 
@@ -59,6 +59,22 @@ branches or tags exist, proceed using package evidence and available artifacts. 
 optional evidence is not missing required input; never block on absent branches.
 
 ## Safety
+For each supplied deployment-note item, retain its release, applicability, action,
+validation and owner in the shared context. Compare the whole note with canonical
+knowledge before declaring coverage complete; an empty requirement list is not
+proof that no work exists. Preserve optional choices and maintenance-phase
+conditions rather than enabling features or running tools unconditionally.
+
+An upgrade request authorizes routine, evidence-backed package, compatibility
+source and configuration edits plus client EF migration/snapshot and SQL script
+generation. Prepare/register the plan and execute automatically; do not ask for a
+second approval for these steps. Use supplied or verified inputs without asking
+the user to confirm them again. Backend migration boundaries are defined in
+[backend/AGENTS.md](backend/AGENTS.md#autonomous-upgrades-and-ef-migrations).
+Generation is not database application. Database updates, destructive operations,
+and genuine business/security/auth/public-contract decisions still need explicit
+approval; scope a blocker to the affected work, not unrelated safe work.
+
 Never mutate a client before its engine-registered plan is READY and all safety
 gates pass. Core is strictly read-only, with no branch switching. Never expose
 secrets or automatically write/promote canonical/approved knowledge. Every
@@ -66,5 +82,10 @@ result has one status and an exact next action. Verify coverage before handover;
 no COMPLETE with incomplete evidence or unowned outstanding work.
 
 ## Framework Validation
-Run `node tools/validate-all.js`. It runs all existing ingest/orchestrator/backend/
-frontend suites plus engine tests and fails if tracked content changes.
+For explicitly requested changes to this framework only, run the smallest
+affected suite, then `node tools/validate-all.js` as the final maintenance check.
+It runs ingest/orchestrator/backend/frontend suites plus engine tests and fails
+if tracked content changes. Do not run these suites during client upgrades.
+Client upgrades follow [command-first execution](engine/AGENTS.md#command-first-upgrade-execution):
+execute existing tools before reading their JS, do not create test/probe files,
+and record optional unit/browser suites as SKIPPED rather than running them.

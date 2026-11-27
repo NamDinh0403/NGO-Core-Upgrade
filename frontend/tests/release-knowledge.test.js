@@ -231,6 +231,53 @@ try {
   process.stdout.write(`Release YAML reads (9.1.0 -> 9.2.0): full=${fullReads}, scoped=${scopedReads}\n`);
 } finally { core.readYamlAbs = readYaml; store.reset(); }
 
+const layout = require('../tools/lib/browse-filter-layout');
+const legacyLayout = '<div class="col-md-10"><ngo-list-filter></ngo-list-filter><div class="browse-filter pull-right"><ngo-search-box></ngo-search-box></div></div>';
+const migratedLayout = '<div class="col-md-10"><div class="browse-filter-layout"><ngo-list-filter [flattenIntoParentFlow]="true"></ngo-list-filter><div class="browse-filter"><ngo-search-box></ngo-search-box></div></div></div>';
+ok('39-legacy-shared-column-requires-all-layout-adaptations', layout.inspectTemplate(legacyLayout).issues.length === 3);
+ok('40-migrated-layout-is-compatible', layout.inspectTemplate(migratedLayout).applicable && layout.inspectTemplate(migratedLayout).issues.length === 0);
+ok('41-filter-in-separate-column-is-not-affected', !layout.inspectTemplate('<div class="row"><div class="col-md-6"><ngo-list-filter></ngo-list-filter></div><div class="col-md-6"><ngo-search-box></ngo-search-box></div></div>').applicable);
+ok('42-wrapper-must-include-sibling-search', layout.inspectTemplate('<div class="col"><div class="browse-filter-layout"><ngo-list-filter [flattenIntoParentFlow]="true"></ngo-list-filter></div><ngo-search-box></ngo-search-box></div>').issues.length === 1);
+ok('43-dynamic-template-values-do-not-break-tag-discovery', layout.inspectTemplate(migratedLayout.replace('<ngo-search-box>', '<ngo-search-box *ngIf="count > 0">')).issues.length === 0);
+const consumerRoot = fs.mkdtempSync(path.join(require('os').tmpdir(), 'frontend-consumers-'));
+try {
+  const legacyFile = 'custom-list.component.html', inlineFile = 'inline-list.component.ts';
+  fs.writeFileSync(path.join(consumerRoot, legacyFile), legacyLayout);
+  fs.writeFileSync(path.join(consumerRoot, inlineFile), '@Component({template: `' + legacyLayout + '`})');
+  fs.writeFileSync(path.join(consumerRoot, 'ignored.component.html'), '<!--' + legacyLayout + '-->');
+  const inventory = { fileInventory: { roles: {}, files: [legacyFile, inlineFile, 'ignored.component.html'] } };
+  const client = require('../tools/lib/client-model').fromInventory(inventory, consumerRoot);
+  const filterReq = store.requirementById('REQ-9.3.0-FRONTEND-01');
+  const mapping = rmap.map(filterReq, client.model);
+  ok('44-discover-and-map-all-external-and-inline-consumers', applic.evaluate(filterReq, client.evidence).status === 'APPLICABLE'
+    && mapping.targets.length === 2 && mapping.targets.includes(inlineFile));
+  const adapter = require('../tools/executor');
+  const packet = { client: { path: consumerRoot }, requirements: [], upgrade: { target: { sourceVersion: '9.4.1', targetVersion: '9.5.0' }, sharedRequirements: [], integration: {} } };
+  ok('45-package-only-plan-rejected-even-for-inherited-debt', adapter.planIssues(packet, { changes: [{ file: 'package.json' }] }).length === 2);
+  ok('46-every-affected-consumer-must-be-planned', adapter.planIssues(packet, { changes: [{ file: legacyFile }] }).length === 1
+    && adapter.planIssues(packet, { changes: [{ file: legacyFile }, { file: inlineFile }] }).length === 0);
+  const evidenceFile = path.join(consumerRoot, 'evidence.json');
+  fs.writeFileSync(evidenceFile, '{}');
+  const checks = adapter.plan(packet).verification.map((kind) => ({ kind, status: 'PASSED', ref: evidenceFile }));
+  ok('47-passing-build-evidence-cannot-hide-unmigrated-consumers', adapter.validate(packet, checks).passed === false);
+  fs.writeFileSync(path.join(consumerRoot, legacyFile), migratedLayout);
+  fs.writeFileSync(path.join(consumerRoot, inlineFile), '@Component({template: `' + migratedLayout + '`})');
+  ok('48-migrated-consumers-pass-without-redundant-edits', adapter.validate(packet, checks).passed
+    && adapter.planIssues(packet, { changes: [] }).length === 0);
+  fs.writeFileSync(path.join(consumerRoot, inlineFile), '@Component({template: "' + migratedLayout.replace(/"/g, '\\"') + '"})');
+  ok('49-quoted-inline-templates-preserve-attribute-values', layout.inspect(consumerRoot).issues.length === 0);
+
+  const migratedTpl = layout.migrateTemplate(legacyLayout);
+  ok('50-migrate-template-rewrites-legacy-shared-column-and-strips-pull',
+    migratedTpl.changed === true && layout.inspectTemplate(migratedTpl.content).issues.length === 0);
+
+  fs.writeFileSync(path.join(consumerRoot, legacyFile), legacyLayout);
+  fs.writeFileSync(path.join(consumerRoot, inlineFile), '@Component({template: `' + legacyLayout + '`})');
+  const migratedDisk = layout.migrate(consumerRoot);
+  ok('51-migrate-rewrites-disk-html-and-inline-ts-to-zero-issues',
+    migratedDisk.migratedFiles.length >= 2 && layout.inspect(consumerRoot).issues.length === 0);
+} finally { fs.rmSync(consumerRoot, { recursive: true, force: true }); }
+
 process.stdout.write(`\n${pass}/${pass + fail} release-knowledge tests passed\n`);
 if (fail) { for (const f of fails) process.stdout.write(`  - ${f}\n`); process.exit(1); }
 process.exit(0);

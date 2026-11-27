@@ -1,0 +1,131 @@
+name: Sync release notes
+
+on:
+  repository_dispatch:
+    types:
+      - onenote-updated
+      - release-cards-updated
+      - git-diff-updated
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - docs/onenote-core-release-notes.html
+      - release-notes/raw/**
+      - ingest/knowledge/candidates/releases/**
+  workflow_dispatch:
+    inputs:
+      target_version:
+        description: Release or draft alias to generate (for example 10.0 or v10); leave empty for all.
+        required: false
+        type: string
+      core_ref:
+        description: Core development branch/ref used for the optional active-diff collection.
+        required: false
+        type: string
+        default: ''
+  schedule:
+    - cron: '17 2 * * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: release-notes-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_VERSION: ${{ inputs.target_version || github.event.client_payload.target_version || vars.CORE_DRAFT_TARGET_VERSION || '' }}
+      CORE_REF_INPUT: ${{ inputs.core_ref || github.event.client_payload.core_ref || vars.CORE_DEVELOPMENT_REF || 'HEAD' }}
+      CORE_REPOSITORY: ${{ vars.CORE_REPOSITORY || '' }}
+      CORE_BASE_REF: ${{ github.event.client_payload.core_base_ref || vars.CORE_BASE_REF || '' }}
+    steps:
+      - name: Check out release-note repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decode optional repository-dispatch OneNote payload
+        if: ${{ github.event_name == 'repository_dispatch' && github.event.client_payload.onenote_content_base64 != '' }}
+        env:
+          ONENOTE_CONTENT_BASE64: ${{ github.event.client_payload.onenote_content_base64 }}
+        run: |
+          node -e "const fs=require('fs'); const p='docs/onenote-core-release-notes.html'; fs.mkdirSync(require('path').dirname(p),{recursive:true}); fs.writeFileSync(p,Buffer.from(process.env.ONENOTE_CONTENT_BASE64,'base64'));"
+
+      - name: Check out Core for active development diff
+        if: ${{ env.CORE_REPOSITORY != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.CORE_REPOSITORY }}
+          ref: ${{ env.CORE_REF_INPUT }}
+          token: ${{ secrets.CORE_REPOSITORY_TOKEN || github.token }}
+          path: .release-notes-core
+          fetch-depth: 0
+
+      - name: Merge and generate release reports
+        env:
+          CORE_PATH: ${{ env.CORE_REPOSITORY != '' && '.release-notes-core' || '' }}
+          CORE_REF_INPUT: ${{ env.CORE_REF_INPUT }}
+          CORE_BASE_REF: ${{ env.CORE_BASE_REF }}
+          TARGET_VERSION: ${{ env.TARGET_VERSION }}
+        run: |
+          args=()
+          if [ -n "$TARGET_VERSION" ]; then
+            args+=(--target-version "$TARGET_VERSION")
+          fi
+          if [ -n "$CORE_PATH" ] && [ -n "$TARGET_VERSION" ]; then
+            args+=(--core-path "$CORE_PATH" --core-ref "$CORE_REF_INPUT")
+            if [ -n "$CORE_BASE_REF" ]; then
+              args+=(--base-ref "$CORE_BASE_REF")
+            fi
+          fi
+          node platform/tools/sync-release-notes.js "${args[@]}"
+
+      - name: Create or update release-note pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- release-notes/generated docs/onenote-core-release-notes.html; then
+            echo "No generated release-note changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="automation/sync-release-notes"
+          default_branch="${{ github.event.repository.default_branch }}"
+          git fetch origin "$default_branch"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git fetch origin "$branch"
+            existing_branch=true
+          else
+            existing_branch=false
+          fi
+          git switch -C "$branch" "origin/$default_branch"
+          git add release-notes/generated
+          if [ -f docs/onenote-core-release-notes.html ]; then
+            git add docs/onenote-core-release-notes.html
+          fi
+          git commit -m "chore(release-notes): cloud sync"
+          if [ "$existing_branch" = true ]; then
+            git push --force-with-lease origin "HEAD:$branch"
+          else
+            git push origin "HEAD:$branch"
+          fi
+
+          pr_number="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$pr_number" ]; then
+            gh pr edit "$pr_number" --repo "$GITHUB_REPOSITORY" \
+              --title "chore(release-notes): cloud sync" \
+              --body "Deterministic sync of OneNote, release-card, and git-diff evidence. Generated reports remain DRAFT / IN PROGRESS until the source is released."
+          else
+            gh pr create --repo "$GITHUB_REPOSITORY" --base "$default_branch" --head "$branch" \
+              --title "chore(release-notes): cloud sync" \
+              --body "Deterministic sync of OneNote, release-card, and git-diff evidence. Generated reports remain DRAFT / IN PROGRESS until the source is released."
+          fi

@@ -9,3 +9,12 @@ description: Apply common read-only implementation planning and safety gates to 
 4. Record changes with file, evidence, validation, rollback and any approval requirement. Keep research isolated and request only needed capabilities.
 5. Register the plan with the shared engine. READY requires no blocking HIGH/CRITICAL uncertainty, recorded baseline/checkpoint, available prerequisites and current fingerprints. Replan after unexpected scope or evidence changes.
 6. Return one status and exact next action. Planning never mutates a client repository.
+
+The upgrade request authorizes routine evidence-backed compatibility fixes and
+backend migration/snapshot/SQL generation/review under the registered plan. Do
+not invent a separate approval requirement or OPEN HIGH uncertainty for the
+known need to generate those files; follow the
+[backend policy](../../../backend/AGENTS.md#autonomous-upgrades-and-ef-migrations).
+Keep genuine data/business ambiguity and destructive/database-application
+approvals explicit. Never bypass the engine gate or require generated target
+artifacts before the planned restore/build/generation that produces them.

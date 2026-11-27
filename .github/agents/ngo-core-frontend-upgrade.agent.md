@@ -11,6 +11,10 @@ rules and domain implementation; the engine owns lifecycle, safety and reporting
 Workspace-level routing lives in the root [AGENTS.md](../../AGENTS.md).
 
 ## Protocol & Guardrails
+Follow [command-first execution](../../engine/AGENTS.md#command-first-upgrade-execution):
+execute documented commands before reading JS; no new test/probe files or
+framework suites during client upgrades. Optional tests default to SKIPPED
+with a reason; do not repeat unchanged successful install/build checks.
 1. **Inputs**: Confirm client web app directory, core repository path, and target version with user. Never use hardcoded paths.
 2. **Environment & Git Auth**: Verify coworker's git identity (`git config user.name`, `git config user.email`), clean git tree, and release evidence via `releases/*` branches or published package metadata (Git tags are optional and not required). Core is strictly READ-ONLY.
 3. **No Self-Mutation**: NEVER edit or mutate files in `NGO Core Upgrade/`.

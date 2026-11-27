@@ -4,7 +4,7 @@
   ],
   "corePath": "D:\\NGO Client\\ngo-online-core",
   "copilotCliPath": null,
-  "copilotModel": "auto",
+  "copilotModel": "gpt-6-luna",
   "defaultUpgradeMode": "AUTO",
   "executionTimeoutMs": 180000,
   "concurrencyLimit": 2,

@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { acceptableStatus } = require('../../engine/tools/lib/validation');
 
 function inspect(packet) {
   const clientPath = packet.client.path;
@@ -23,22 +24,32 @@ function inspect(packet) {
 function plan(packet) {
   return { track: 'frontend', requiresSemanticReview: true, facts: inspect(packet), requirements: packet.requirements,
     shared: packet.upgrade.sharedRequirements, api: packet.upgrade.integration.apiHints,
+    consumerCompatibility: require('./lib/browse-filter-layout').forPacket(packet),
     skill: 'frontend/skills/plan-frontend-upgrade/SKILL.md',
+    testPolicy: 'Skip unit/browser/regression suites by default; record tests as SKIPPED with the reason. Run existing targeted tests only when explicitly requested or needed to diagnose a concrete regression. Do not create test/probe projects.',
     verification: ['installed-dependencies', 'toolchain', 'development-build', 'production-build', 'tests', 'integration-audit', 'core-unchanged', 'requirement-coverage', 'finding-dispositions', 'deployment-checklist', 'documentation'] };
 }
 
 function execute(packet, implementationPlan) {
   return { track: 'frontend', status: 'RUNNING', changes: implementationPlan.changes,
     skill: 'frontend/skills/execute-frontend-upgrade/SKILL.md',
-    nextAction: 'Apply only the registered client changes; preserve custom routes/providers, validate exact installed dependencies, development/production builds and integration, then return evidence to the engine.' };
+    nextAction: 'Apply only the registered client changes; preserve custom routes/providers, validate exact installed dependencies, development/production builds and integration, record optional tests as SKIPPED with the reason, then return evidence to the engine.' };
 }
 
 function validate(packet, evidence) {
-  const required = plan(packet).verification;
-  const issues = required.filter((kind) => !(evidence || []).some((entry) => entry.kind === kind && entry.status === 'PASSED' && entry.ref && fs.existsSync(entry.ref)));
+  const inspection = plan(packet);
+  const required = inspection.verification;
+  const issues = required.filter((kind) => !(evidence || []).some((entry) => entry.kind === kind && acceptableStatus(entry) && entry.ref && fs.existsSync(entry.ref)));
+  issues.push(...inspection.consumerCompatibility.issues);
   for (const entry of evidence || []) if (entry.status === 'FAILED') issues.push(entry.kind);
   return { passed: issues.length === 0, missing: [...new Set(issues)],
     nextAction: issues.length ? `Frontend verification incomplete: ${issues.join(', ')}. Diagnose within the shared retry policy; Core remains read-only.` : 'Frontend evidence passed; return to engine validation.' };
+}
+
+function planIssues(packet, implementationPlan) {
+  return require('./lib/browse-filter-layout').forPacket(packet).consumers
+    .filter((consumer) => consumer.issues.length && !implementationPlan.changes.some((change) => change.file.replace(/\\/g, '/') === consumer.file))
+    .map((consumer) => `${consumer.file}: required browse-filter migration is absent from the plan`);
 }
 
 function diagnose(packet, failure) {
@@ -81,4 +92,4 @@ function prerequisites() {
   return { ready: missing.length === 0, missing };
 }
 
-module.exports = { inspect, inspectRequest, inspectDetailed, plan, execute, validate, diagnose, prerequisites, mutationGate: (facts) => require('./lib/engine').mutationGate(facts) };
+module.exports = { inspect, inspectRequest, inspectDetailed, plan, planIssues, execute, validate, diagnose, prerequisites, mutationGate: (facts) => require('./lib/engine').mutationGate(facts) };

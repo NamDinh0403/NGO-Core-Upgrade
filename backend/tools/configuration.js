@@ -2,6 +2,55 @@
 const fs = require('fs');
 const path = require('path');
 
+function stripJsonComments(text) {
+  let out = '';
+  let inString = false;
+  let escaped = false;
+  let i = 0;
+  const len = text.length;
+  while (i < len) {
+    const ch = text[i];
+    const next = text[i + 1];
+    if (inString) {
+      out += ch;
+      if (escaped) {
+        escaped = false;
+      } else if (ch === '\\') {
+        escaped = true;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      i++;
+      continue;
+    }
+    if (ch === '"') {
+      inString = true;
+      out += ch;
+      i++;
+      continue;
+    }
+    if (ch === '/' && next === '/') {
+      i += 2;
+      while (i < len && text[i] !== '\n' && text[i] !== '\r') i++;
+      continue;
+    }
+    if (ch === '/' && next === '*') {
+      i += 2;
+      while (i < len - 1 && !(text[i] === '*' && text[i + 1] === '/')) i++;
+      i += 2;
+      continue;
+    }
+    out += ch;
+    i++;
+  }
+  return out.replace(/,\s*([}\]])/g, '$1');
+}
+
+function parseJsonc(text) {
+  const clean = String(text || '').replace(/^\uFEFF/, '');
+  return JSON.parse(stripJsonComments(clean));
+}
+
 function classifyProcess(filePath) {
   const lower = String(filePath).toLowerCase();
   if (lower.includes('webjob')) return 'WEBJOB';
@@ -41,7 +90,7 @@ function discover(root) {
       if (entry.isDirectory()) visit(file, depth + 1);
       else if (/^appsettings.*\.json$/i.test(entry.name)) {
         let json = {};
-        try { json = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (_) { json = {}; }
+        try { json = parseJsonc(fs.readFileSync(file, 'utf8')); } catch (_) { json = {}; }
         files.push({ path: path.relative(root, file), json });
       }
     }
@@ -84,4 +133,4 @@ function inspect(root, requirements) {
   return Object.assign({ inventory: { files: inventory.files.map((file) => ({ path: file.path, process: file.process, keys: file.keys })) } }, result);
 }
 
-module.exports = { analyze, discover, classifyProcess, flattenKeys, isPlaceholder, isSecretLeak, mapRequirements, inspect };
+module.exports = { analyze, discover, classifyProcess, flattenKeys, isPlaceholder, isSecretLeak, mapRequirements, inspect, stripJsonComments, parseJsonc };

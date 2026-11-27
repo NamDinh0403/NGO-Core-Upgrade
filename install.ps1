@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   Installs (or updates) the NGO Core Upgrade agent from Git and registers its skills and
   custom agents with GitHub Copilot at the user level.
@@ -137,8 +137,47 @@ if (-not (Test-Path (Join-Path $pluginDir 'CredentialProvider.Microsoft.dll'))) 
     Write-Step "Azure Artifacts Credential Provider verified in $pluginDir"
 }
 
+Write-Host ""
+# --- 5. New-Machine Readiness Summary ----------------------------------------
+Write-Step "New-Machine Environment Readiness:"
+$gitUser = (& git config user.name 2>$null)
+$gitEmail = (& git config user.email 2>$null)
+if ($gitUser -and $gitEmail) {
+    Write-Host "    [OK]   Git Author: $gitUser <$gitEmail>"
+} else {
+    Write-Warning "    [WARN] Git author missing -> git config --global user.name 'Your Name' ; git config --global user.email 'you@company.com'"
+}
+
+$dotnetVer = (& dotnet --version 2>$null)
+if ($dotnetVer) {
+    Write-Host "    [OK]   .NET SDK: $dotnetVer"
+} else {
+    Write-Warning "    [WARN] dotnet SDK not found -> winget install Microsoft.DotNet.SDK.10"
+}
+
+$nodeVer = (& node --version 2>$null)
+if ($nodeVer) {
+    Write-Host "    [OK]   Node.js: $nodeVer (for private Azure npm feeds run inside <client>\ngo-client: npx vsts-npm-auth -config .npmrc -Force)"
+} else {
+    Write-Warning "    [WARN] Node.js not found -> winget install OpenJS.NodeJS.LTS"
+}
+
+$copilotCfg = Join-Path $HOME '.copilot\config.json'
+if (Test-Path $copilotCfg) {
+    if ($env:COPILOT_GITHUB_TOKEN) {
+        Write-Warning "    [WARN] ~/.copilot/config.json OAuth session exists AND COPILOT_GITHUB_TOKEN is set (token env overrides OAuth & can break model catalog)."
+    } else {
+        Write-Host "    [OK]   Copilot CLI OAuth config found (~/.copilot/config.json)"
+    }
+} else {
+    Write-Warning "    [WARN] Copilot CLI not logged in -> run 'copilot' then type '/login' (or configure in the Web UI)"
+}
+
+Write-Host ""
 Write-Step "Done."
 Write-Host "The skills and agents are now available in every VS Code workspace and the Copilot CLI."
 Write-Host "Agent workflow + CLIs live at: $InstallDir"
-Write-Host "Next: open Copilot Chat (agent mode) and pick 'ngo-core-upgrade',"
-Write-Host "or just type e.g. 'Upgrade NGO Core packages to 9.2.1 for <client>'."
+Write-Host "First run check on this machine:"
+Write-Host "  node `"$InstallDir\tools\check-environment.js`" --core-path `"<ngo-online-core>`" --client-path `"<client-repo>`" --target 9.4.1 --save-settings"
+Write-Host "Web UI dashboard (optional): cd `"$InstallDir`" && node platform/server.js (http://127.0.0.1:3800)"
+Write-Host "Copilot Agent mode: open VS Code Copilot Chat, pick 'ngo-core-upgrade', and say e.g. 'Upgrade NGO Core packages to 9.4.1 for <client>'."

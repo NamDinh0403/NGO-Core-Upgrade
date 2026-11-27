@@ -35,6 +35,8 @@ function registerPlan(clientId, runId, track, plan, gateFacts) {
     proofRefs: (gateFacts.proofRefs || []).map((entry) => ({ kind: entry.kind, ref: entry.ref, status: entry.status || 'PASSED' })) });
   const gate = require('./executors').executor(track).mutationGate(Object.assign({}, derivedFacts, { planExists: true, planStatus: plan.status }));
   gate.reasons.push(...proofs.reasons);
+  const adapter = require('./executors').executor(track);
+  if (adapter.planIssues) gate.reasons.push(...adapter.planIssues(current.packet, plan));
   gate.permitted = gate.reasons.length === 0;
   if (!Array.isArray(plan.changes) || plan.changes.some((change) => !change.file || !change.evidence || !change.validation)) throw new Error('Every planned change requires a file, evidence and validation');
   const file = path.join(current.base, 'plans', `${track}.json`);
@@ -113,6 +115,7 @@ function recordValidation(clientId, runId, track, evidence) {
   const resultDir = path.join(current.base, 'results', track);
   const status = current.state.executorStatus[track];
   runs.writeJson(path.join(resultDir, 'state.json'), { schemaVersion: 1, track, status, targetVersion: current.state.targetVersion,
+    testDisposition: checked.documents.tests ? { status: checked.documents.tests.status, summary: checked.documents.tests.summary } : null,
     evidence: references, nextAction: result.nextAction, safeResumeInstruction: result.nextAction });
   const artifacts = { 'requirement-coverage': 'requirement-coverage.yaml', 'finding-dispositions': 'release-finding-dispositions.yaml',
     'deployment-checklist': 'deployment-checklist.yaml', 'before-deployment': 'before-deployment.md', 'after-deployment': 'after-deployment.md' };

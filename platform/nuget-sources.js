@@ -372,6 +372,9 @@ function checkPackageSourceMappingForPackage(packageId, mappings, enabledSourceN
   };
 }
 
+const discoveredSourcesCache = new Map();
+const DISCOVERED_SOURCES_TTL_MS = 60000;
+
 /**
  * Discover configured NuGet package sources.
  */
@@ -386,6 +389,15 @@ function discoverPackageSources(options) {
       }, s);
     });
   }
+
+  const cacheKey = options.clientPath || options.corePath || '__global__';
+  if (!options.bypassCache && !options.refresh) {
+    const hit = discoveredSourcesCache.get(cacheKey);
+    if (hit && Date.now() < hit.expiresAt) {
+      return hit.sources;
+    }
+  }
+
   const sourcesMap = new Map();
 
   const hierarchy = inspectNuGetConfigHierarchy(options.clientPath || options.corePath || process.cwd());
@@ -448,7 +460,12 @@ function discoverPackageSources(options) {
     addSource('NGO Online', ngoFeedUrl, 'ngo-default');
   }
 
-  return Array.from(sourcesMap.values());
+  const resolvedSources = Array.from(sourcesMap.values());
+  discoveredSourcesCache.set(cacheKey, {
+    sources: resolvedSources,
+    expiresAt: Date.now() + DISCOVERED_SOURCES_TTL_MS,
+  });
+  return resolvedSources;
 }
 
 /**
@@ -1238,8 +1255,11 @@ const IDENTITY_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 function refreshPackageMetadataCache() {
   tokenCache.clear();
   metadataCache.clear();
+  discoveredSourcesCache.clear();
   cachedActiveIdentity = null;
   cachedActiveIdentityExpiresAt = 0;
+  cachedComprehensiveAuth = null;
+  lastComprehensiveAuthTime = 0;
   return { ok: true, clearedAt: new Date().toISOString() };
 }
 
@@ -1263,8 +1283,8 @@ function detectActiveIdentity(options) {
 
   // Git identity
   try {
-    const nameRes = cp.spawnSync('git', ['config', 'user.name'], { encoding: 'utf8', shell: true, windowsHide: true, timeout: 3000 });
-    const emailRes = cp.spawnSync('git', ['config', 'user.email'], { encoding: 'utf8', shell: true, windowsHide: true, timeout: 3000 });
+    const nameRes = cp.spawnSync('git', ['config', 'user.name'], { encoding: 'utf8', shell: true, windowsHide: true, timeout: 1500 });
+    const emailRes = cp.spawnSync('git', ['config', 'user.email'], { encoding: 'utf8', shell: true, windowsHide: true, timeout: 1500 });
     if (nameRes.status === 0 && nameRes.stdout) info.gitUser = nameRes.stdout.trim();
     if (emailRes.status === 0 && emailRes.stdout) info.gitEmail = emailRes.stdout.trim();
   } catch (_) {}
@@ -1274,7 +1294,7 @@ function detectActiveIdentity(options) {
   if (!pat) {
     try {
       const settingsLib = require('./settings');
-      const s = settingsLib.loadSettings();
+      const s = settingsLib.loadSettings({ resolveCore: false });
       if (s && s.azureDevOpsPat) pat = s.azureDevOpsPat;
     } catch (_) {}
   }
@@ -1288,13 +1308,13 @@ function detectActiveIdentity(options) {
     return info;
   }
 
-  // Check Azure CLI
+  // Check Azure CLI with bounded timeout so HTTP status polling never stalls
   try {
     const azRes = cp.spawnSync('az', ['account', 'show', '--query', 'user.name', '-o', 'tsv'], {
       encoding: 'utf8',
       shell: true,
       windowsHide: true,
-      timeout: 5000,
+      timeout: 2500,
     });
     if (azRes.status === 0 && azRes.stdout && azRes.stdout.trim()) {
       info.azureAccount = azRes.stdout.trim();

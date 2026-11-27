@@ -19,3 +19,23 @@ requirements:
     confidence: MEDIUM
     status: ACTIVE
     owner: "deployment-owner"
+    notes: "The supplied note's final assignment names an iconWhenHaveValue value that the condition says may be empty. Inspect the pre-datafix value and fileIcon fallback; resolve the intended custom icon before writing either characteristic. Never overwrite with an absent value."
+  - schemaVersion: 1
+    id: REQ-9.1.0-DATABASE-02
+    releaseVersion: "9.1.0"
+    title: "Configure multiple RelatedEntity fields for Log, Log2 and Log3"
+    description: "The new RelatedEntity fields are not automatically multiple-valued for custom client field instances."
+    scope: DATABASE
+    category: field-instance
+    timing: DURING_UPGRADE
+    applicability: IF_CLIENT_CUSTOMIZED
+    semanticRoles: ["backendConfig"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.1.0; https://trello.com/c/HRVFghna"
+    clientDiscovery: ["RelatedEntity"]
+    action: "Inspect customized Log/Log2/Log3 RelatedEntity field instances. If multiple selection is required, change the field-instance type in client code according to the Core change; otherwise preserve single selection."
+    automation: MANUAL_DECISION
+    validation: "Field-instance type matches the requested single/multiple behavior."
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "backend-owner"

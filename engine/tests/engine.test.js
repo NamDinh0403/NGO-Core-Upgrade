@@ -46,6 +46,17 @@ const runs = require('../tools/lib/run');
 const engine = require('../tools/upgrade-engine');
 const executors = require('../tools/lib/executors');
 const verification = require('../tools/lib/validation');
+const cli = path.resolve(__dirname, '..', 'tools', 'upgrade-engine.js');
+for (const args of [['--help'], ['dispatch', '--help'], ['help']]) {
+	const result = require('child_process').spawnSync(process.execPath, [cli, ...args], { encoding: 'utf8' });
+	assert.strictEqual(result.status, 0, result.stderr);
+	for (const command of ['dispatch', 'register-plan', 'record-validation', 'diagnose', 'pause', 'replan'])
+		assert(result.stdout.includes(command), `help must document ${command}`);
+	assert(result.stdout.includes('SKIPPED') && result.stdout.includes('--operation'), 'help explains current contracts');
+}
+const unknownCommand = require('child_process').spawnSync(process.execPath, [cli, 'not-a-command'], { encoding: 'utf8' });
+assert.strictEqual(unknownCommand.status, 2);
+assert(unknownCommand.stderr.includes('--help'), 'invalid command points to executable help');
 const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'engine-contract-'));
 const client = `engine-contract-${process.pid}`;
 const runId = 'synthetic';
@@ -131,23 +142,51 @@ try {
 		assert.strictEqual(executors.executor(track).validate(packet, []).passed, false);
 		const evidence = executors.executor(track).plan(packet).verification.map((kind) => {
 			const ref = path.join(base, 'artifacts', track, 'verification', `${kind}.json`);
+			if (kind === 'tests') {
+				write(ref, verification.envelope(packet, kind, { status: 'SKIPPED',
+					summary: 'Optional unit suite not requested; required compilation and integration checks are verified separately.' }));
+				return { kind, ref, status: 'SKIPPED' };
+			}
 			const log = path.join(base, 'artifacts', track, 'verification', `${kind}.log`);
 			write(log, `synthetic ${kind} verification`);
 			const documentationStatus = Object.fromEntries(require('../tools/lib/checkpoint-compatibility').forTrack(track).REQUIRED_DOC_ITEMS.map((item) => [item, true]));
 			write(ref, verification.envelope(packet, kind, { summary: `synthetic ${kind} verification`, command: `synthetic-check ${kind}`, exitCode: 0, artifacts: [log], requirements: [], findings: [], items: [], documentationStatus }));
 			return { kind, ref, status: 'PASSED' };
 		});
+		const testEvidence = evidence.find((entry) => entry.kind === 'tests');
+		const originalTests = fs.readFileSync(testEvidence.ref);
+		assert.deepStrictEqual(verification.inspect(packet, [testEvidence]).issues, [], 'explicit optional skip accepted');
+		assert.strictEqual(executors.executor(track).validate(packet, evidence.filter((entry) => entry.kind !== 'tests')).passed, false, 'test disposition must still be recorded');
+		assert.strictEqual(executors.executor(track).validate(packet, evidence.map((entry) => entry.kind === 'tests' ? { ...entry, status: 'FAILED' } : entry)).passed, false, 'actual failed tests cannot be hidden');
+		write(testEvidence.ref, { ...JSON.parse(originalTests), summary: '' });
+		assert(verification.inspect(packet, [testEvidence]).issues.some((issue) => /summary/.test(issue)), 'skip must explain why');
+		write(testEvidence.ref, { ...JSON.parse(originalTests), command: 'pretend test', exitCode: 0 });
+		assert(verification.inspect(packet, [testEvidence]).issues.some((issue) => /must not claim/.test(issue)), 'skip cannot fabricate execution');
+		write(testEvidence.ref, { ...JSON.parse(originalTests), status: 'PASSED' });
+		assert(verification.inspect(packet, [{ ...testEvidence, status: 'PASSED' }]).issues.some((issue) => /successful command/.test(issue)), 'passed tests still require real command evidence');
+		fs.writeFileSync(testEvidence.ref, originalTests);
+		for (const kind of executors.executor(track).plan(packet).verification.filter((kind) => kind !== 'tests')) {
+			const entry = evidence.find((item) => item.kind === kind);
+			assert.strictEqual(executors.executor(track).validate(packet, evidence.filter((item) => item !== entry)).passed, false, `${kind} remains mandatory`);
+			assert.strictEqual(executors.executor(track).validate(packet, evidence.map((item) => item === entry ? { ...entry, status: 'SKIPPED' } : item)).passed, false, `${kind} cannot be skipped`);
+			const original = fs.readFileSync(entry.ref);
+			write(entry.ref, { ...JSON.parse(original), status: 'SKIPPED' });
+			assert(verification.inspect(packet, [{ ...entry, status: 'SKIPPED' }]).issues.length > 0, `${kind} skip rejected by shared evidence validation`);
+			fs.writeFileSync(entry.ref, original);
+		}
 		const invalid = { kind: 'build', ref: path.join(fixture, 'unrelated.log'), status: 'PASSED' };
 		write(invalid.ref, 'unrelated nonempty file');
 		assert(verification.inspect(packet, [invalid]).issues.length > 0);
 		const docs = evidence.find((entry) => entry.kind === 'documentation');
 		const originalDocs = fs.readFileSync(docs.ref);
 		const pendingDocs = JSON.parse(originalDocs.toString());
+		assert(!Object.prototype.hasOwnProperty.call(pendingDocs.documentationStatus, 'testsCompleted'), 'skipped tests do not claim tests completed');
 		pendingDocs.documentationStatus = {};
 		write(docs.ref, pendingDocs);
 		assert(verification.inspect(packet, [docs]).issues.some((issue) => /Documentation completion/.test(issue)));
 		fs.writeFileSync(docs.ref, originalDocs);
 		assert.strictEqual(coordinator.recordValidation(client, runId, track, evidence).passed, true);
+		assert.strictEqual(runs.readJson(path.join(base, 'results', track, 'state.json')).testDisposition.status, 'SKIPPED');
 	}
 	const passed = runs.readJson(path.join(base, 'state.json'));
 	assert.strictEqual(passed.lifecyclePhase, 'VALIDATE');
@@ -162,6 +201,9 @@ try {
 	assert.strictEqual(engine.cmdVerifyCoverage({ run: `${client}/${runId}` }), 0);
 	assert.strictEqual(engine.cmdPrepareHandover({ run: `${client}/${runId}` }), 0);
 	assert.strictEqual(engine.cmdFinalReport({ run: `${client}/${runId}` }), 0);
+	const finalReport = fs.readFileSync(path.join(base, 'final-report.md'), 'utf8');
+	assert.strictEqual((finalReport.match(/Tests: SKIPPED/g) || []).length, 2, 'report keeps optional tests distinct from passed builds');
+	assert(finalReport.includes('Optional unit suite not requested'), 'report includes the skip reason');
 	const reported = runs.readJson(path.join(base, 'state.json'));
 	assert.strictEqual(reported.status, 'COMPLETE', reported.nextAction);
 	const installed = passed.executorEvidence.backend.files[0];

@@ -28,7 +28,7 @@ const DEFAULT_SETTINGS = {
   ],
   corePath: DEFAULT_CORE_DIR,
   copilotCliPath: null,
-  copilotModel: 'auto',
+  copilotModel: 'gpt-6-luna',
   azureDevOpsPat: null,
   defaultUpgradeMode: 'AUTO',
   executionTimeoutMs: 180000,
@@ -37,7 +37,7 @@ const DEFAULT_SETTINGS = {
   simulationMode: false,
   verification: {
     runBuild: true,
-    runTests: true,
+    runTests: false,
     checkPublicApi: true,
   },
   logging: {

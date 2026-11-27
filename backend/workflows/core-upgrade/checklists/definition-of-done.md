@@ -11,8 +11,9 @@ never `COMPLETE`.
 - [ ] Required appsettings keys merged without overwriting client values.
 - [ ] `dotnet restore --force` completed.
 - [ ] `dotnet build --no-restore` reports 0 errors.
-- [ ] Required tests executed (or `noTests` recorded).
-- [ ] EF migration attempted where a DbContext exists.
+- [ ] Optional tests recorded as SKIPPED with the reason, or actual requested/diagnostic test results captured; no test files/projects created.
+- [ ] Client EF migration/snapshot and SQL automatically generated/reviewed where a DbContext exists; no-change/empty outcomes recorded and generated code rebuilt.
+- [ ] Destructive/data-semantic risks resolved or explicitly approved; database application left as a separately approved deployment step.
 - [ ] No unresolved regressions versus baseline (or each is documented + escalated).
 
 ## Documentation (mandatory gate)

@@ -7,6 +7,10 @@ const hash = (file) => crypto.createHash('sha256').update(fs.readFileSync(file))
 const commandKinds = new Set(['restore', 'build', 'tests', 'toolchain', 'development-build', 'production-build', 'installed-dependencies', 'installed-core-assemblies', 'installed-public-api']);
 const structured = { 'requirement-coverage': 'requirements', 'finding-dispositions': 'findings', 'deployment-checklist': 'items', uncertainty: 'uncertainties', capabilities: 'capabilities' };
 
+function acceptableStatus(entry) {
+  return entry.status === 'PASSED' || (entry.kind === 'tests' && entry.status === 'SKIPPED');
+}
+
 function gitFingerprint(root) {
   const cp = require('child_process');
   const commands = [['status', '--porcelain'], ['rev-parse', '--verify', 'HEAD'], ['symbolic-ref', '--quiet', 'HEAD'], ['diff', '--no-ext-diff', '--no-textconv', 'HEAD']];
@@ -69,12 +73,14 @@ function read(packet, entry) {
   for (const [key, expected] of Object.entries({ schemaVersion: 1, runId: packet.upgrade.run.runId, clientId: packet.upgrade.run.clientId, track: packet.track, targetVersion: packet.upgrade.target.targetVersion, kind: entry.kind, status: entry.status })) {
     if (document[key] !== expected) throw new Error(`Evidence ${entry.kind} has a different ${key}`);
   }
-  if (document.status !== 'PASSED') return document;
+  if (!acceptableStatus(document)) return document;
   if (entry.kind === 'documentation' && !require('./execution-primitives').documentationComplete(document.documentationStatus, require('./checkpoint-compatibility').forTrack(packet.track).REQUIRED_DOC_ITEMS)) throw new Error('Documentation completion gate has outstanding items');
   if (typeof document.summary !== 'string' || !document.summary.trim()) throw new Error(`Evidence ${entry.kind} lacks a verification summary`);
-  if (commandKinds.has(entry.kind) && (typeof document.command !== 'string' || !document.command.trim() || document.exitCode !== 0)) throw new Error(`Evidence ${entry.kind} requires the exact successful command/result`);
+  const skippedTests = entry.kind === 'tests' && document.status === 'SKIPPED';
+  if (skippedTests && (document.command !== undefined || document.exitCode !== undefined)) throw new Error('Skipped tests must not claim a command or exit code');
+  if (!skippedTests && commandKinds.has(entry.kind) && (typeof document.command !== 'string' || !document.command.trim() || document.exitCode !== 0)) throw new Error(`Evidence ${entry.kind} requires the exact successful command/result`);
   if (structured[entry.kind] && !Array.isArray(document[structured[entry.kind]])) throw new Error(`Evidence ${entry.kind} requires structured ${structured[entry.kind]}`);
-  if (!structured[entry.kind] && (!Array.isArray(document.artifacts) || !document.artifacts.length)) throw new Error(`Evidence ${entry.kind} requires concrete artifacts`);
+  if (!skippedTests && !structured[entry.kind] && (!Array.isArray(document.artifacts) || !document.artifacts.length)) throw new Error(`Evidence ${entry.kind} requires concrete artifacts`);
   for (const artifact of document.artifacts || []) {
     if (!artifact || Object.keys(artifact).some((key) => !['ref', 'hash'].includes(key))) throw new Error('Unexpected artifact metadata');
     if (!artifact.ref || !fs.existsSync(artifact.ref) || !fs.statSync(artifact.ref).isFile() || fs.statSync(artifact.ref).size === 0 || hash(artifact.ref) !== artifact.hash) throw new Error(`Evidence ${entry.kind} artifact is missing, empty or changed`);
@@ -89,7 +95,7 @@ function inspect(packet, entries) {
       const document = read(packet, entry);
       documents[entry.kind] = document;
       files.push(entry.ref, ...(document.artifacts || []).map((artifact) => artifact.ref));
-      if (document.status !== 'PASSED') issues.push(`${entry.kind}: ${document.status}`);
+      if (!acceptableStatus(document)) issues.push(`${entry.kind}: ${document.status}`);
     } catch (error) { issues.push(`${entry.kind || 'unknown'}: ${error.message}`); }
   }
   return { documents, files: [...new Set(files)], issues };
@@ -148,4 +154,4 @@ function gateProofs(packet, facts, plan) {
     derived, uncertaintyRegister: uncertainty ? uncertainty.uncertainties : [] };
 }
 
-module.exports = { envelope, read, inspect, fingerprint, coreFingerprint, planningIdentity, head, gateProofs, hash };
+module.exports = { envelope, read, inspect, acceptableStatus, fingerprint, coreFingerprint, planningIdentity, head, gateProofs, hash };

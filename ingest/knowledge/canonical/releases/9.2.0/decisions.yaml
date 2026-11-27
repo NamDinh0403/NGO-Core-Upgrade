@@ -12,7 +12,7 @@ requirements:
     applicability: IF_PM_APPROVES
     semanticRoles: ["decision"]
     sourceEvidence: "release-notes.md 9.2.0 manifest reinstall"
-    action: "Coordinate manifest update and reinstall with the PM."
+    action: "When the Outlook add-in is used, coordinate with the PM to update its manifest according to Core PR 36783, remove URL hashes as specified, and reinstall the updated manifest."
     automation: REPORT_ONLY
     validation: "PM confirms manifest reinstalled"
     risk: LOW

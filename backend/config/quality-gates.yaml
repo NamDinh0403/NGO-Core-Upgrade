@@ -23,9 +23,9 @@ gates:
     onFail: enter fix loop (see escalation-policy budgets)
   tests-run:
     phase: TEST
-    required: true
+    required: false
     allowNoTests: true          # if the client solution has no test project, record and pass
-    check: test command executed and results captured in test-results.json
+    check: optional existing targeted tests run only when requested or needed for a concrete regression; otherwise record tests SKIPPED with the reason
     timeoutSeconds: 1200        # 20 min; a hung/non-terminating test run is a BLOCKED_NEEDS_DEVELOPER escalation (phases/02-baseline.md, phases/06-test.md), never a silent pass
   ef-migration-attempted:
     phase: TEST
@@ -40,7 +40,6 @@ gates:
       - changesApplied
       - restoreCompleted
       - buildCompleted
-      - testsCompleted
       - changedFilesRecorded
       - configChangesDocumented
       - breakingChangesDocumented

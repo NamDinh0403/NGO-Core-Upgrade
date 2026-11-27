@@ -61,6 +61,12 @@ Separate Work group A (common integration) from Work group B (client
 customizations). Work group A is planned and aligned before broad Work group B
 adaptation.
 
+Before a package-only plan is READY, inspect the executor's
+`consumerCompatibility` result and resolve every affected client consumer.
+Include all files needing migration, not only the first matching template.
+Already-compatible consumers need evidence, not unnecessary edits. Missing
+release-note enrichment or unknown library impact is not evidence of no work.
+
 # Evidence requirements
 
 Reject vague actions ("update environment", "check AppModule", "fix routes",

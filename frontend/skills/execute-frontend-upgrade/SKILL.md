@@ -53,6 +53,10 @@ See `schemas/input.schema.json`.
    detected client package manager.
 5. On failure, route to `investigate-frontend-failure`; do not brute-force.
 6. After the batch, re-verify Core fingerprint unchanged and record results.
+7. Use existing tools and commands, not new test/probe files. Optional
+   unit/browser suites default to SKIPPED with a reason; run existing targeted
+   tests only when requested or needed to diagnose a concrete regression.
+   Reuse unchanged successful install/build results for audit/report evidence.
 
 # Operational safety (learned)
 

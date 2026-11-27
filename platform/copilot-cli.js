@@ -20,7 +20,8 @@ const SECRET_PATTERNS = [
 ];
 
 const AVAILABLE_MODELS = [
-  { id: 'auto', name: 'Auto (Recommended)', description: 'Let GitHub Copilot dynamically select the optimal model for each step' },
+  { id: 'auto', name: 'Auto', description: 'Let GitHub Copilot dynamically select the optimal model for each step' },
+  { id: 'gpt-6-luna', name: 'GPT-6 Luna (Recommended)', description: 'Fast, budget-friendly OpenAI reasoning model for code generation and repairs' },
   { id: 'gpt-5.4', name: 'GPT-5.4', description: 'Latest OpenAI reasoning model for code generation and refactoring' },
   { id: 'gpt-5.5', name: 'GPT-5.5', description: 'Advanced OpenAI reasoning model for deep architectural changes' },
   { id: 'gpt-6-sol', name: 'GPT-6 Sol', description: 'Frontier reasoning model for complex upgrade decisions' },
@@ -40,6 +41,67 @@ const CREDENTIALS_FILE = path.join(__dirname, 'config', '.credentials.json');
 // In-memory active login sessions: loginId -> sessionData
 const activeDeviceLogins = new Map();
 const activeWebLogins = new Map();
+
+let cachedAvailability = null;
+let cachedAvailabilityKey = '';
+let cachedAvailabilityAt = 0;
+const AVAILABILITY_TTL_MS = 30000;
+
+function clearAvailabilityCache() {
+  cachedAvailability = null;
+  cachedAvailabilityKey = '';
+  cachedAvailabilityAt = 0;
+}
+
+/**
+ * Inspect local Copilot OAuth session files (~/.copilot/config.json, ~/.config/github-copilot).
+ */
+function readCopilotOAuthConfig() {
+  const homeDir = process.env.USERPROFILE || process.env.HOME || '';
+  if (!homeDir) return { loggedInUser: null, hasOAuthConfig: false };
+
+  try {
+    const copilotCfgPath = path.join(homeDir, '.copilot', 'config.json');
+    if (fs.existsSync(copilotCfgPath)) {
+      const raw = fs.readFileSync(copilotCfgPath, 'utf8').replace(/^\s*\/\/.*$/gm, '').trim();
+      const cfg = JSON.parse(raw);
+      if (cfg && cfg.lastLoggedInUser && cfg.lastLoggedInUser.login) {
+        return {
+          loggedInUser: String(cfg.lastLoggedInUser.login),
+          hasOAuthConfig: true,
+        };
+      }
+      if (cfg && Array.isArray(cfg.logged_in_users) && cfg.logged_in_users.length > 0 && cfg.logged_in_users[0].login) {
+        return {
+          loggedInUser: String(cfg.logged_in_users[0].login),
+          hasOAuthConfig: true,
+        };
+      }
+    }
+  } catch (_) {}
+
+  for (const cfgFile of [
+    path.join(homeDir, '.config', 'github-copilot', 'hosts.json'),
+    path.join(homeDir, '.config', 'github-copilot', 'apps.json'),
+    path.join(process.env.LOCALAPPDATA || path.join(homeDir, 'AppData', 'Local'), 'github-copilot', 'hosts.json'),
+  ]) {
+    try {
+      if (fs.existsSync(cfgFile)) {
+        const parsed = JSON.parse(fs.readFileSync(cfgFile, 'utf8'));
+        const entries = Object.values(parsed || {});
+        const withToken = entries.find((e) => e && (e.oauth_token || e.user));
+        if (withToken) {
+          return {
+            loggedInUser: withToken.user ? String(withToken.user) : 'GitHub User',
+            hasOAuthConfig: true,
+          };
+        }
+      }
+    } catch (_) {}
+  }
+
+  return { loggedInUser: null, hasOAuthConfig: false };
+}
 
 /**
  * Load credentials from protected store.
@@ -100,6 +162,7 @@ function setAuthToken(token) {
     delete process.env.COPILOT_GITHUB_TOKEN;
   }
   saveProtectedCredentials(creds);
+  clearAvailabilityCache();
   return { ok: true, authenticated: Boolean(clean) };
 }
 
@@ -197,7 +260,8 @@ function resolveExecutable(binName) {
 /**
  * Check whether Copilot CLI is available and authenticated.
  */
-function checkCliAvailability(customBin) {
+function checkCliAvailability(customBin, options) {
+  options = options || {};
   const binary = customBin || process.env.COPILOT_CLI_PATH;
 
   if (process.env.COPILOT_SIMULATOR === 'true') {
@@ -212,9 +276,22 @@ function checkCliAvailability(customBin) {
   }
 
   const storedToken = getStoredCopilotToken();
-  if (storedToken) {
-    process.env.COPILOT_GITHUB_TOKEN = storedToken;
+  const explicitEnvToken = Boolean(process.env.COPILOT_GITHUB_TOKEN || process.env.GH_TOKEN || process.env.GITHUB_TOKEN);
+  const cacheKey = `${binary || ''}|${storedToken ? 'tok' : 'notok'}|${explicitEnvToken ? 'env' : 'noenv'}`;
+  if (!customBin && !options.bypassCache && cachedAvailability && cachedAvailabilityKey === cacheKey && (Date.now() - cachedAvailabilityAt < AVAILABILITY_TTL_MS)) {
+    return cachedAvailability;
   }
+
+  const cacheResult = (res) => {
+    if (!customBin) {
+      cachedAvailability = res;
+      cachedAvailabilityKey = cacheKey;
+      cachedAvailabilityAt = Date.now();
+    }
+    return res;
+  };
+
+  const oauthInfo = readCopilotOAuthConfig();
 
   // 1. If explicit custom binary provided
   if (customBin) {
@@ -272,50 +349,22 @@ function checkCliAvailability(customBin) {
       let identity = null;
       let credSrc = 'none';
 
-      if (storedToken) {
+      // Prefer active OAuth CLI session unless user supplied an explicit env token override
+      if (oauthInfo.hasOAuthConfig && !explicitEnvToken) {
         isAuth = true;
-        identity = 'Configured GitHub Token';
+        identity = `${oauthInfo.loggedInUser || 'GitHub User'} (GitHub Copilot CLI)`;
+        credSrc = 'oauth_session';
+      } else if (storedToken) {
+        isAuth = true;
+        identity = explicitEnvToken ? 'Environment GitHub Token' : 'Configured GitHub Token';
         credSrc = 'stored_token';
-      } else {
-        // Fast probe: check ~/.copilot/config.json for active user
-        try {
-          const homeDir = process.env.USERPROFILE || process.env.HOME || '';
-          const copilotCfgPath = path.join(homeDir, '.copilot', 'config.json');
-          if (fs.existsSync(copilotCfgPath)) {
-            const raw = fs.readFileSync(copilotCfgPath, 'utf8').replace(/^\s*\/\/.*$/gm, '').trim();
-            const cfg = JSON.parse(raw);
-            if (cfg.lastLoggedInUser && cfg.lastLoggedInUser.login) {
-              isAuth = true;
-              identity = `${cfg.lastLoggedInUser.login} (GitHub Copilot CLI)`;
-              credSrc = 'oauth_session';
-            }
-          }
-        } catch (_) {}
-
-        if (!isAuth) {
-          // Fast non-interactive probe
-          try {
-            const probe = cp.spawnSync(copilotBin, ['-p', 'PING', '--no-custom-instructions'], {
-              encoding: 'utf8',
-              windowsHide: true,
-              timeout: 3000,
-              shell: false,
-            });
-            const probeOut = ((probe.stdout || '') + (probe.stderr || '')).toLowerCase();
-            if (probeOut.includes('no authentication information found') || probeOut.includes('not authenticated')) {
-              isAuth = false;
-            } else if (probe.status === 0 || !probeOut.includes('authentication')) {
-              isAuth = true;
-              identity = 'GitHub Copilot OAuth';
-              credSrc = 'oauth_session';
-            }
-          } catch (_) {
-            isAuth = false;
-          }
-        }
+      } else if (oauthInfo.hasOAuthConfig) {
+        isAuth = true;
+        identity = `${oauthInfo.loggedInUser || 'GitHub User'} (GitHub Copilot CLI)`;
+        credSrc = 'oauth_session';
       }
 
-      return {
+      return cacheResult({
         available: true,
         authenticated: isAuth,
         command: copilotBin,
@@ -324,7 +373,8 @@ function checkCliAvailability(customBin) {
         accountIdentity: identity,
         credentialSource: credSrc,
         storedTokenConfigured: Boolean(storedToken),
-      };
+        oauthConfigured: Boolean(oauthInfo.hasOAuthConfig),
+      });
     }
   } catch (_) {}
 
@@ -333,25 +383,25 @@ function checkCliAvailability(customBin) {
     const ghBin = resolveExecutable('gh');
     const res = cp.spawnSync(ghBin, ['copilot', '--version'], { encoding: 'utf8', windowsHide: true, timeout: 5000, shell: false });
     if (res.status === 0) {
-      return {
+      return cacheResult({
         available: true,
-        authenticated: Boolean(storedToken),
+        authenticated: Boolean(storedToken || oauthInfo.hasOAuthConfig),
         command: ghBin,
         type: 'gh-extension',
         version: (res.stdout || '').trim(),
-        accountIdentity: storedToken ? 'GitHub Token' : null,
-        credentialSource: storedToken ? 'stored_token' : 'none',
-      };
+        accountIdentity: storedToken ? 'GitHub Token' : (oauthInfo.loggedInUser || null),
+        credentialSource: storedToken ? 'stored_token' : (oauthInfo.hasOAuthConfig ? 'oauth_session' : 'none'),
+      });
     }
   } catch (_) {}
 
-  return {
+  return cacheResult({
     available: false,
     authenticated: false,
     command: null,
     type: 'none',
     guidance: 'GitHub Copilot CLI was not found in PATH. Install via "winget install GitHub.Copilot" or set COPILOT_CLI_PATH.',
-  };
+  });
 }
 
 /**
@@ -639,99 +689,133 @@ function invoke(prompt, options) {
       command = resolveExecutable(cliInfo.command);
       if (cliInfo.command === 'copilot' || (typeof cliInfo.command === 'string' && /copilot(\.exe)?$/i.test(cliInfo.command))) {
         const modelArgs = (chosenModel && chosenModel !== 'auto') ? ['--model', chosenModel] : [];
-        args = ['-p', cleanPrompt, ...modelArgs, '--allow-all-tools', '--no-custom-instructions'];
+        const addDirs = [path.resolve(__dirname, '..'), path.resolve(cwd)];
+        if (options.corePath && fs.existsSync(options.corePath)) {
+          addDirs.push(path.resolve(options.corePath));
+        }
+        const addDirArgs = [];
+        for (const dirPath of Array.from(new Set(addDirs))) {
+          addDirArgs.push('--add-dir', dirPath);
+        }
+        args = ['-p', cleanPrompt, ...modelArgs, '--allow-all-tools', ...addDirArgs, '--no-custom-instructions'];
       } else {
         args = chosenModel ? ['--model', chosenModel, cleanPrompt] : [cleanPrompt];
       }
     }
 
-    let stdout = '';
-    let stderr = '';
-    let timedOut = false;
-    let cancelled = false;
-
-    onLog(`[Copilot CLI] Invoking (model: ${chosenModel}) in ${cwd}...`);
-
-    const env = Object.assign({}, process.env);
-    if (chosenModel) {
-      env.COPILOT_MODEL = chosenModel;
-    }
+    const oauthInfo = readCopilotOAuthConfig();
+    const explicitEnvToken = process.env.COPILOT_GITHUB_TOKEN || '';
     const storedToken = getStoredCopilotToken();
-    if (storedToken) {
-      env.COPILOT_GITHUB_TOKEN = storedToken;
-    }
 
-    const child = cp.spawn(command, args, {
-      cwd,
-      shell: false,
-      windowsHide: true,
-      env,
-    });
+    const runSpawn = (forceOAuthOnly) => {
+      let stdout = '';
+      let stderr = '';
+      let timedOut = false;
+      let cancelled = false;
 
-    if (options.signal) {
-      options.signal.addEventListener('abort', () => {
+      onLog(`[Copilot CLI] Invoking (model: ${chosenModel}) in ${cwd}...`);
+
+      const env = Object.assign({}, process.env);
+      if (chosenModel) {
+        env.COPILOT_MODEL = chosenModel;
+      }
+      if (forceOAuthOnly) {
+        delete env.COPILOT_GITHUB_TOKEN;
+      } else if (storedToken && (!oauthInfo.hasOAuthConfig || explicitEnvToken)) {
+        env.COPILOT_GITHUB_TOKEN = explicitEnvToken || storedToken;
+      }
+
+      const child = cp.spawn(command, args, {
+        cwd,
+        shell: false,
+        windowsHide: true,
+        env,
+      });
+
+      const onAbort = () => {
         cancelled = true;
         child.kill('SIGTERM');
-      });
-    }
-
-    const timer = setTimeout(() => {
-      timedOut = true;
-      child.kill('SIGTERM');
-      onLog(`[Copilot CLI Error] Process timed out after ${timeoutMs}ms.`);
-    }, timeoutMs);
-
-    child.stdout.on('data', (chunk) => {
-      const text = redactSecrets(chunk.toString('utf8'));
-      stdout += text;
-      for (const line of text.split(/\r?\n/).filter(Boolean)) {
-        onLog(`[Copilot] ${line}`);
+      };
+      if (options.signal) {
+        options.signal.addEventListener('abort', onAbort, { once: true });
       }
-    });
 
-    child.stderr.on('data', (chunk) => {
-      const text = redactSecrets(chunk.toString('utf8'));
-      stderr += text;
-      for (const line of text.split(/\r?\n/).filter(Boolean)) {
-        onLog(`[Copilot stderr] ${line}`);
-      }
-    });
+      const timer = setTimeout(() => {
+        timedOut = true;
+        child.kill('SIGTERM');
+        onLog(`[Copilot CLI Error] Process timed out after ${timeoutMs}ms.`);
+      }, timeoutMs);
 
-    child.on('error', (err) => {
-      clearTimeout(timer);
-      const cleanErr = redactSecrets(err.message);
-      onLog(`[Copilot CLI Error] Process spawn failed: ${cleanErr}`);
-      resolve({
-        ok: false,
-        exitCode: 1,
-        stdout,
-        stderr: stderr || cleanErr,
-        durationMs: Date.now() - startTime,
-        timedOut: false,
-        cancelled,
-        error: cleanErr,
-        model: chosenModel,
+      child.stdout.on('data', (chunk) => {
+        const text = redactSecrets(chunk.toString('utf8'));
+        stdout += text;
+        for (const line of text.split(/\r?\n/).filter(Boolean)) {
+          onLog(`[Copilot] ${line}`);
+        }
       });
-    });
 
-    child.on('close', (code) => {
-      clearTimeout(timer);
-      const durationMs = Date.now() - startTime;
-      const hasErrorOutput = Boolean(stderr && /error:\s+/i.test(stderr));
-      const ok = code === 0 && !timedOut && !cancelled && !hasErrorOutput;
-
-      onLog(`[Copilot CLI] Exited with code ${code} (${durationMs}ms, model: ${chosenModel}).`);
-      resolve({
-        ok,
-        exitCode: ok ? code : (code === 0 ? 1 : code),
-        stdout,
-        stderr,
-        durationMs,
-        timedOut,
-        cancelled,
-        model: chosenModel,
+      child.stderr.on('data', (chunk) => {
+        const text = redactSecrets(chunk.toString('utf8'));
+        stderr += text;
+        for (const line of text.split(/\r?\n/).filter(Boolean)) {
+          onLog(`[Copilot stderr] ${line}`);
+        }
       });
-    });
+
+      child.on('error', (err) => {
+        clearTimeout(timer);
+        const cleanErr = redactSecrets(err.message);
+        onLog(`[Copilot CLI Error] Process spawn failed: ${cleanErr}`);
+        resolve({
+          ok: false,
+          exitCode: 1,
+          stdout,
+          stderr: stderr || cleanErr,
+          durationMs: Date.now() - startTime,
+          timedOut: false,
+          cancelled,
+          error: cleanErr,
+          model: chosenModel,
+        });
+      });
+
+      child.on('close', (code) => {
+        clearTimeout(timer);
+        if (options.signal) {
+          options.signal.removeEventListener('abort', onAbort);
+        }
+        const durationMs = Date.now() - startTime;
+        const combinedErr = `${stderr}\n${stdout}`;
+        const hasCatalogOrTokenErr =
+          !forceOAuthOnly &&
+          Boolean(env.COPILOT_GITHUB_TOKEN) &&
+          oauthInfo.hasOAuthConfig &&
+          /(?:failed to load models|model catalog|bad credentials|authentication|unauthorized|401)/i.test(combinedErr);
+
+        if (code !== 0 && !timedOut && !cancelled && hasCatalogOrTokenErr) {
+          onLog('[Copilot CLI] Token override conflicted with OAuth session; retrying using local OAuth login...');
+          runSpawn(true);
+          return;
+        }
+
+        const hasErrorOutput = Boolean(stderr && /error:\s+/i.test(stderr));
+        const ok = code === 0 && !timedOut && !cancelled && !hasErrorOutput;
+
+        onLog(`[Copilot CLI] Exited with code ${code} (${durationMs}ms, model: ${chosenModel}).`);
+        resolve({
+          ok,
+          exitCode: ok ? code : (code === 0 ? 1 : code),
+          stdout,
+          stderr,
+          durationMs,
+          timedOut,
+          cancelled,
+          model: chosenModel,
+        });
+      });
+    };
+
+    runSpawn(false);
   });
 }
 

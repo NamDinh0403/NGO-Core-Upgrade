@@ -400,6 +400,42 @@ async function runAuditSuite() {
       assert(src.targetCommit !== null);
     });
 
+    // -----------------------------------------------------------------------
+    // TEST 16: BE/FE Version Mismatch Alignment Upgrade Allowed
+    // -----------------------------------------------------------------------
+    test('16-version-mismatch-alignment-passes-without-blocking', () => {
+      const mismatchClient = path.join(tmpRoot, 'mismatch-client');
+      fs.mkdirSync(path.join(mismatchClient, 'ngo-api', 'NGO.API'), { recursive: true });
+      fs.mkdirSync(path.join(mismatchClient, 'ngo-client'), { recursive: true });
+      fs.writeFileSync(
+        path.join(mismatchClient, 'ngo-api', 'NGO.API', 'NGO.API.csproj'),
+        '<Project Sdk="Microsoft.NET.Sdk.Web"><PropertyGroup><TargetFramework>net8.0</TargetFramework></PropertyGroup><ItemGroup><PackageReference Include="NGO.Core.API" Version="9.3.0" /></ItemGroup></Project>',
+        'utf8'
+      );
+      fs.writeFileSync(
+        path.join(mismatchClient, 'ngo-client', 'package.json'),
+        JSON.stringify({ name: 'mismatch-client', dependencies: { '@ngo/core': '9.2.0' } }, null, 2),
+        'utf8'
+      );
+      sh('git init -q', mismatchClient);
+      sh('git config user.name "Test User"', mismatchClient);
+      sh('git config user.email "test@example.com"', mismatchClient);
+      sh('git add -A', mismatchClient);
+      sh('git commit -q -m "Initial mismatch client"', mismatchClient);
+
+      const res = preflightLib.runPreflight({
+        clientPath: mismatchClient,
+        targetVersion: '9.3.0',
+        corePath: tmpCore,
+        packageAvailable: true,
+      });
+
+      assert.strictEqual(res.ok, true, 'Track alignment upgrade (BE 9.3.0 / FE 9.2.0 -> 9.3.0) must not block');
+      assert.strictEqual(res.canProceed, true);
+      assert.strictEqual(res.hasVersionMismatch, true);
+      assert.strictEqual(res.effectiveCurrentVersion, '9.2.0');
+    });
+
   } finally {
     // Clean up temporary fixtures safely on Windows
     try {

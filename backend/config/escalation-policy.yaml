@@ -14,8 +14,9 @@ escalateWhen:
   - same-error-remains-after-max-attempts
   - same-test-regresses-twice-after-a-targeted-fix
   - test-regression-loop-budget-exceeded
-  - change-affects-public-api
-  - destructive-database-migration-may-be-required
+  - client-public-contract-or-business-semantics-change
+  - generated-migration-has-unresolved-destructive-or-data-semantics-risk
+  - database-application-requested-without-explicit-approval
   - security-behaviour-changes
   - auth-behaviour-changes
   - repository-wide-architectural-change-required
@@ -33,6 +34,9 @@ escalateWhen:
 # A standalone/probe package download failure is NOT by itself an escalation: fall back
 # to restore-in-place (config/agent-policy.yaml#packageAcquisition). Escalate for
 # credentials only when the client `dotnet restore` fails authentication.
+# Routine Core API compatibility fixes and migration/snapshot/SQL generation are
+# authorized by the upgrade request. Generate and inspect first; a possible need
+# for a migration is not itself an approval blocker. See backend/AGENTS.md.
 
 confidenceThresholdSource: sharedExecutionPolicy.budgets.confidenceThreshold
 

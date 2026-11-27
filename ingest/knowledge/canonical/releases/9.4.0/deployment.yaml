@@ -1,0 +1,21 @@
+version: "9.4.0"
+scope: DEPLOYMENT
+requirements:
+  - schemaVersion: 1
+    id: REQ-9.4.0-DEPLOYMENT-01
+    releaseVersion: "9.4.0"
+    title: "Reconcile import-tool site collection counts"
+    description: "The 2026-Nov-04 note distinguishes Support & Maintenance clients from new/implementation clients."
+    scope: DEPLOYMENT
+    category: tool
+    timing: AFTER_DEPLOYMENT
+    applicability: IF_DEPLOYMENT_ENVIRONMENT_USES
+    semanticRoles: ["migrationTool"]
+    sourceEvidence: "Team deployment note supplied 2026-11-12, 9.4.0, update 2026-Nov-04; https://trello.com/c/ldhZv7CQ; Core PR 39207"
+    action: "Confirm the client's phase. For Support & Maintenance, assign regular maintenance under https://trello.com/c/pyza1qZl/. For new/implementation clients, run NGO.Core.Tools.CompareSiteCount after deployment according to PR 39207 README. Record the applicable route and owner; do not run the tool unconditionally."
+    automation: MANUAL_EXECUTION
+    validation: "Client phase, maintenance handoff or tool results, and follow-up discrepancies are recorded with an owner."
+    risk: MEDIUM
+    confidence: HIGH
+    status: ACTIVE
+    owner: "deployment-owner"

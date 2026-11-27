@@ -9,6 +9,9 @@ This skill dispatches the specialized front-end executor in
 [frontend/](../../../frontend/AGENTS.md). Do not re-derive the process —
 the [shared engine](../../../engine/AGENTS.md) owns lifecycle, safety, memory,
 generic skills and reporting. Frontend owns Angular/TypeScript/NgRx work only.
+Follow [command-first execution](../../../engine/AGENTS.md#command-first-upgrade-execution):
+run existing commands before reading JS, create no test/probe files, skip
+optional tests with a reason, and reuse unchanged successful build evidence.
 
 ## When to use
 - Upgrading a client Angular SPA to align with a target NGO Core version.

@@ -99,12 +99,20 @@ function cmdCreateRun(flags) {
   }
   const base = runLib.ensureRunLayout(clientId, runId);
 
+  let defaultReleaseNotesPath = flags['release-notes'] || null;
+  if (!defaultReleaseNotesPath && !flags['ingest-root']) {
+    const teamNotes = path.join(REPO_ROOT, 'orchestrator', 'release-notes', `${targetVersion}.md`);
+    const sanitizedNotes = path.join(REPO_ROOT, 'frontend', 'knowledge', 'raw', 'release-note-import', 'release-notes-sanitized.md');
+    if (fs.existsSync(teamNotes)) defaultReleaseNotesPath = teamNotes;
+    else if (fs.existsSync(sanitizedNotes)) defaultReleaseNotesPath = sanitizedNotes;
+  }
+
   const request = {
     schemaVersion: 1, clientId, tracks,
     backendClientPath: flags['backend-client-path'] || null,
     frontendClientPath: flags['frontend-client-path'] || null,
     corePath: corePath || null,
-    releaseNotesPath: flags['release-notes'] || null,
+    releaseNotesPath: defaultReleaseNotesPath,
     sourceVersion: flags['source-version'] || null,
     targetVersion,
     featureDecisionsPath: flags['feature-decisions'] || null
@@ -403,7 +411,13 @@ function cmdFinalReport(flags) {
   const coverage = artifact('requirement-coverage.yaml');
   const checklist = artifact('deployment-checklist.yaml');
 
-  const trackStatusLines = state.tracks.map((t) => `- ${t}: ${state.trackStatus[t] || 'NOT_RUN'} (run ref: ${t === 'backend' ? state.backendRunRef : state.frontendRunRef || 'n/a'})`).join('\n');
+  const trackStatusLines = state.tracks.map((t) => {
+    const ref = t === 'backend' ? state.backendRunRef : state.frontendRunRef;
+    const result = ref ? runLib.readJson(path.join(ref, 'state.json')) : null;
+    const tests = result && result.testDisposition;
+    const testLine = tests ? `\n  - Tests: ${tests.status} - ${tests.summary}` : '';
+    return `- ${t}: ${state.trackStatus[t] || 'NOT_RUN'} (run ref: ${ref || 'n/a'})${testLine}`;
+  }).join('\n');
   const coverageSummaryLine = coverage && coverage.summary
     ? `${coverage.summary.verifiedOrNotApplicable}/${coverage.summary.total} requirements verified or not-applicable-with-evidence; ${coverage.summary.outstanding} outstanding.`
     : 'verify-coverage has not run yet.';
@@ -463,9 +477,48 @@ function cmdContext(flags) {
   }
 }
 
+function cmdHelp() {
+  process.stdout.write(`Usage: node engine/tools/upgrade-engine.js <command> [--flags]
+
+Run commands; do not read JavaScript implementations to simulate their results.
+  create-run --client <id> --tracks backend[,frontend] --core-path <path>
+    --source-version <x.y.z> --target-version <version-or-minor>
+    --backend-client-path <solution> --frontend-client-path <app> [--run-id <id>]
+    Supply only the client paths for the requested tracks.
+  status --run <client/run>
+  context --run <client/run> --track <backend|frontend> [--evidence-version <x.y.z>]
+  dispatch --run <client/run> --track <track> --operation <plan|execute>
+  register-plan --run <client/run> --track <track> --file <plan.json>
+    Input: {plan:{status:"READY",changes:[{file,evidence,validation}]},gateFacts:{proofRefs:[{kind,ref}]}}
+    Proof kinds: baseline, rollback-checkpoint, repository-status, capabilities,
+    uncertainty; also core-fingerprint for frontend. See engine/AGENTS.md.
+  record-validation --run <client/run> --track <track> --file <evidence.json>
+    Input: [{kind,status,ref}] with run-bound evidence envelopes.
+    Tests may be SKIPPED with a nonempty summary/reason, no command/exitCode;
+    builds and other mandatory checks still require PASSED and real evidence.
+  diagnose --run <client/run> --track <track> --file <failure.json>
+    Input: {signature,ref}; retry only a changed, evidenced fix within the budget.
+  pause --run <client/run> [--track <track>] --reason <reason>
+  replan --run <client/run> --track <track> --file <approval.json>
+    Requires a matching explicit Developer APPROVED_FOR_REPLAN decision.
+  compose-results --run <client/run>
+  verify-coverage --run <client/run>
+  prepare-handover --run <client/run>
+  final-report --run <client/run>
+  learn --run <client/run> --track <track> --file <redacted-record.json> [--candidate]
+    Input: {record,redactionReview}; never auto-promote knowledge.
+
+Default client validation: restore/install, required builds, installed-package,
+configuration/integration and planned migration/SQL review. No new test/probe
+files or full test suites. See engine/AGENTS.md#command-first-upgrade-execution.
+`);
+  return 0;
+}
+
 function main() {
   const [cmd, ...rest] = process.argv.slice(2);
   const flags = parseFlags(rest);
+  if (!cmd || cmd === 'help' || cmd === '--help' || cmd === '-h' || flags.help === true) process.exit(cmdHelp());
   const commands = {
     'create-run': cmdCreateRun,
     'compose-results': cmdComposeResults,
@@ -483,7 +536,7 @@ function main() {
     status: cmdStatus
   };
   if (!commands[cmd]) {
-    process.stderr.write(`unknown command: ${cmd}\nUsage: node orchestrator.js <create-run|compose-results|verify-coverage|prepare-handover|final-report|status> [--flags]\n`);
+    process.stderr.write(`unknown command: ${cmd}\nRun node engine/tools/upgrade-engine.js --help for commands and input shapes.\n`);
     process.exit(2);
   }
   process.exit(commands[cmd](flags));

@@ -8,6 +8,7 @@
  */
 
 const http = require('http');
+const cp = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
@@ -20,6 +21,7 @@ const diagnostics = require('./diagnostics');
 const settings = require('./settings');
 const telemetry = require('./telemetry');
 const nugetSources = require('./nuget-sources');
+const npmDiagnostics = require('./npm-diagnostics');
 const discovery = require('./discovery');
 
 const PORT = parseInt(process.env.PORT || '3800', 10);
@@ -156,7 +158,7 @@ async function handleRequest(req, res) {
       let versions = preflight.getAvailableVersions(corePath);
       try {
         const pkgPromise = nugetSources.queryPackageVersions('NGO.Core.API', { bypassCache: forceRefresh });
-        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000));
         const pkgRes = await Promise.race([pkgPromise, timeoutPromise]);
         if (pkgRes && Array.isArray(pkgRes.versions) && pkgRes.versions.length > 0) {
           const merged = new Set(versions);
@@ -500,11 +502,89 @@ async function handleRequest(req, res) {
       return sendJson(res, 400, { ok: false, error: 'Either pat or action is required' });
     }
 
+    // GET /api/npm/status
+    if (method === 'GET' && pathname === '/api/npm/status') {
+      const clientPath = parsedUrl.query.clientPath || process.cwd();
+      const npmEnv = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks: ['frontend'] });
+      return sendJson(res, 200, { ok: true, clientPath, ...npmEnv });
+    }
+
+    // POST /api/npm/auth
+    if (method === 'POST' && pathname === '/api/npm/auth') {
+      const body = await parseJsonBody(req);
+      const clientPath = body.clientPath;
+      if (!clientPath || !fs.existsSync(clientPath)) {
+        return sendJson(res, 400, { ok: false, error: 'Valid clientPath is required' });
+      }
+      const feDir = fs.existsSync(path.join(clientPath, 'ngo-client')) ? path.join(clientPath, 'ngo-client') : clientPath;
+      const npmrcPath = path.join(feDir, '.npmrc');
+      if (!fs.existsSync(npmrcPath)) {
+        const npmEnv = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks: ['frontend'] });
+        return sendJson(res, 200, {
+          ok: npmEnv.ok,
+          message: 'No project .npmrc found; public npm registry is active.',
+          npmEnv,
+        });
+      }
+
+      if (process.platform !== 'win32') {
+        const npmEnv = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks: ['frontend'] });
+        return sendJson(res, npmEnv.ok ? 200 : 400, {
+          ok: npmEnv.ok,
+          message: npmEnv.ok ? 'npm registry credentials detected.' : 'vsts-npm-auth is Windows-only; configure ~/.npmrc base64 PAT manually.',
+          remediation: npmEnv.remediation,
+          npmEnv,
+        });
+      }
+
+      const authRes = cp.spawnSync('npx', ['--yes', 'vsts-npm-auth', '-config', '.npmrc', '-Force'], {
+        cwd: feDir,
+        encoding: 'utf8',
+        windowsHide: true,
+        shell: true,
+        timeout: 45000,
+      });
+      const npmEnvAfter = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks: ['frontend'] });
+      const cleanOut = npmDiagnostics.redactNpmSecrets(((authRes.stdout || '') + '\n' + (authRes.stderr || '')).trim());
+      if (authRes.status === 0 && npmEnvAfter.ok) {
+        return sendJson(res, 200, {
+          ok: true,
+          message: 'Azure Artifacts npm authentication refreshed via vsts-npm-auth.',
+          output: cleanOut,
+          npmEnv: npmEnvAfter,
+        });
+      }
+      return sendJson(res, authRes.status === 0 ? 200 : 400, {
+        ok: authRes.status === 0 && npmEnvAfter.ok,
+        error: npmEnvAfter.remediation || cleanOut || 'vsts-npm-auth failed',
+        output: cleanOut,
+        npmEnv: npmEnvAfter,
+      });
+    }
+
     // GET /api/release-notes
     if (method === 'GET' && pathname === '/api/release-notes') {
       const releaseNotesLib = require('./release-notes');
+      if (parsedUrl.query.query) {
+        return sendJson(res, 200, {
+          ok: true,
+          matches: releaseNotesLib.searchReleaseNotes(parsedUrl.query.query, {
+            sourceVersion: parsedUrl.query.from,
+            targetVersion: parsedUrl.query.to,
+            module: parsedUrl.query.module,
+          }),
+        });
+      }
+      if (parsedUrl.query.from && parsedUrl.query.to) {
+        const range = releaseNotesLib.getReleaseNotesForRange(parsedUrl.query.from, parsedUrl.query.to);
+        return sendJson(res, 200, { ok: range.exists, ...range });
+      }
       const version = parsedUrl.query.version;
       if (version) {
+        if (parsedUrl.query.clientPath) {
+          const filtered = releaseNotesLib.filterReleaseNotesForClient(version, parsedUrl.query.clientPath);
+          return sendJson(res, filtered ? 200 : 404, { ok: Boolean(filtered), clientFilter: filtered });
+        }
         const notes = releaseNotesLib.getReleaseNotes(version);
         return sendJson(res, 200, { ok: true, ...notes });
       }
@@ -627,8 +707,10 @@ async function handleRequest(req, res) {
       // POST /api/jobs/:id/commit
       if (method === 'POST' && subAction === 'commit') {
         const body = await parseJsonBody(req);
-        const result = controller.approveAndCommit(jobId, body.message);
-        return sendJson(res, 200, result);
+        const commitMessage = body.message || body.commitMessage;
+        const result = controller.approveAndCommit(jobId, commitMessage);
+        const commitHash = (result && result.commitResult && result.commitResult.commitHash) || result.commitHash || null;
+        return sendJson(res, 200, Object.assign({}, result, { commitHash }));
       }
     }
 

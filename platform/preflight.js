@@ -14,6 +14,7 @@ const path = require('path');
 const resolver = require('../ingest/tools/lib/release-resolver');
 const git = require('../ingest/tools/lib/git');
 const coreDiscovery = require('./core-discovery');
+const npmDiagnostics = require('./npm-diagnostics');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
 const DEFAULT_CLIENTS_DIR = path.resolve(REPO_ROOT, '..');
@@ -483,6 +484,7 @@ function runPreflight(options) {
   options = options || {};
   const startTime = Date.now();
   const { clientPath, targetVersion, corePath, tracks } = options;
+  const selectedTracks = tracks || ['backend', 'frontend'];
   const cPath = resolveEffectiveCorePath(corePath, clientPath);
 
   const checks = [];
@@ -549,8 +551,22 @@ function runPreflight(options) {
   // -------------------------------------------------------------------------
   const detected = detectCurrentVersion(clientPath);
   const currentVersion = detected.version;
+  let effectiveCurrentVersion = currentVersion;
+  if (detected.hasVersionMismatch) {
+    const activeTrackVersions = [];
+    if (selectedTracks.includes('backend') && detected.backendVersion) {
+      activeTrackVersions.push(detected.backendVersion);
+    }
+    if (selectedTracks.includes('frontend') && detected.frontendVersion) {
+      activeTrackVersions.push(detected.frontendVersion);
+    }
+    if (activeTrackVersions.length > 0) {
+      activeTrackVersions.sort((a, b) => resolver.cmpVer(a, b));
+      effectiveCurrentVersion = activeTrackVersions[0];
+    }
+  }
 
-  if (!currentVersion) {
+  if (!effectiveCurrentVersion) {
     addCheck({
       id: 'CHK-CURRENT-VERSION',
       name: 'Current Installed Core Version Detection',
@@ -566,7 +582,7 @@ function runPreflight(options) {
       freshness: new Date().toISOString(),
     });
   } else {
-    const cmp = resolver.cmpVer(normTarget, currentVersion);
+    const cmp = resolver.cmpVer(normTarget, effectiveCurrentVersion);
     if (cmp === 0) {
       addCheck({
         id: 'CHK-VERSION-TRAJECTORY',
@@ -574,9 +590,9 @@ function runPreflight(options) {
         status: 'BLOCKED',
         severity: 'CRITICAL',
         durationMs: 1,
-        sourceOrCommand: `cmpVer('${normTarget}', '${currentVersion}')`,
-        sanitizedOutput: `Current (${currentVersion}) == Target (${normTarget})`,
-        evidenceReferences: `${currentVersion} -> ${normTarget}`,
+        sourceOrCommand: `cmpVer('${normTarget}', '${effectiveCurrentVersion}')`,
+        sanitizedOutput: `Current (${effectiveCurrentVersion}) == Target (${normTarget})`,
+        evidenceReferences: `${effectiveCurrentVersion} -> ${normTarget}`,
         failureReason: `Client is already at target Core version ${normTarget}. No upgrade is needed.`,
         remediation: 'Select a newer target Core version to perform an upgrade.',
         fromCache: false,
@@ -589,10 +605,10 @@ function runPreflight(options) {
         status: 'BLOCKED',
         severity: 'CRITICAL',
         durationMs: 1,
-        sourceOrCommand: `cmpVer('${normTarget}', '${currentVersion}')`,
-        sanitizedOutput: `Target (${normTarget}) < Current (${currentVersion})`,
-        evidenceReferences: `${currentVersion} -> ${normTarget}`,
-        failureReason: `Target version ${normTarget} is older than current version ${currentVersion}. Downgrading is disallowed by policy.`,
+        sourceOrCommand: `cmpVer('${normTarget}', '${effectiveCurrentVersion}')`,
+        sanitizedOutput: `Target (${normTarget}) < Current (${effectiveCurrentVersion})`,
+        evidenceReferences: `${effectiveCurrentVersion} -> ${normTarget}`,
+        failureReason: `Target version ${normTarget} is older than current version ${effectiveCurrentVersion}. Downgrading is disallowed by policy.`,
         remediation: 'Select a target version newer than the currently installed version.',
         fromCache: false,
         freshness: new Date().toISOString(),
@@ -604,9 +620,11 @@ function runPreflight(options) {
         status: 'PASS',
         severity: 'INFO',
         durationMs: 1,
-        sourceOrCommand: `cmpVer('${normTarget}', '${currentVersion}')`,
-        sanitizedOutput: `Valid upgrade trajectory: v${currentVersion} -> v${normTarget}`,
-        evidenceReferences: `${currentVersion} -> ${normTarget}`,
+        sourceOrCommand: `cmpVer('${normTarget}', '${effectiveCurrentVersion}')`,
+        sanitizedOutput: detected.hasVersionMismatch
+          ? `Valid alignment/upgrade trajectory: v${effectiveCurrentVersion} -> v${normTarget} (Backend: ${detected.backendVersion || 'none'}, Frontend: ${detected.frontendVersion || 'none'})`
+          : `Valid upgrade trajectory: v${effectiveCurrentVersion} -> v${normTarget}`,
+        evidenceReferences: `${effectiveCurrentVersion} -> ${normTarget}`,
         failureReason: null,
         remediation: null,
         fromCache: false,
@@ -625,7 +643,7 @@ function runPreflight(options) {
   const resolutionStart = Date.now();
   const resolution = resolver.resolveRelease(normTarget, {
     corePath: cPath,
-    since: currentVersion,
+    since: effectiveCurrentVersion,
     feedCheck: options.feedCheck,
     authError: options.authError,
     forbiddenError: options.forbiddenError,
@@ -844,7 +862,6 @@ function runPreflight(options) {
   // -------------------------------------------------------------------------
   // Compute Evidence Completeness & Traceable Plan
   // -------------------------------------------------------------------------
-  const selectedTracks = tracks || ['backend', 'frontend'];
   const requiredTargetFramework = detectRequiredTargetFramework(cPath, normTarget);
   const currentTargetFramework = (detected && detected.backendTargetFramework) ? detected.backendTargetFramework : 'net8.0';
   const requiresFrameworkUpgrade = Boolean(
@@ -869,6 +886,52 @@ function runPreflight(options) {
       freshness: new Date().toISOString(),
       details: `Target Core ${normTarget} requires ${requiredTargetFramework} (client currently targets ${currentTargetFramework}). Framework will be updated during implementation.`,
     });
+  }
+
+  if (selectedTracks.includes('frontend')) {
+    const npmStarted = Date.now();
+    try {
+      const npmEnv = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks: selectedTracks });
+      const registries = (npmEnv.npmrc && Array.isArray(npmEnv.npmrc.registries)) ? npmEnv.npmrc.registries : [];
+      const firstPrivate = registries.find((r) => r && r.registry && !/registry\.npmjs\.org/i.test(r.registry));
+      const npmrcEvidence = (npmEnv.npmrc && (npmEnv.npmrc.projectNpmrcPath || npmEnv.npmrc.userNpmrcPath)) || clientPath;
+      const firstUnauth = (npmEnv.npmrc && Array.isArray(npmEnv.npmrc.unauthenticatedRegistries) && npmEnv.npmrc.unauthenticatedRegistries[0]) || null;
+
+      if (npmEnv.ok) {
+        addCheck({
+          id: 'CHK-NPM-CONFIG',
+          name: 'Frontend npm Registry & Auth (.npmrc)',
+          status: 'PASS',
+          severity: 'INFO',
+          durationMs: Date.now() - npmStarted,
+          sourceOrCommand: 'inspect .npmrc & npm userconfig',
+          sanitizedOutput: firstPrivate
+            ? `Registry ${firstPrivate.registry} configured with credentials.`
+            : 'No unauthenticated private npm registry detected.',
+          evidenceReferences: npmrcEvidence,
+          failureReason: null,
+          remediation: null,
+          fromCache: false,
+          freshness: new Date().toISOString(),
+        });
+      } else {
+        const reason = (firstUnauth && firstUnauth.reason) || npmEnv.status || 'Private npm feed configured in .npmrc without credentials';
+        addCheck({
+          id: 'CHK-NPM-CONFIG',
+          name: 'Frontend npm Registry & Auth (.npmrc)',
+          status: 'WARNING',
+          severity: 'WARNING',
+          durationMs: Date.now() - npmStarted,
+          sourceOrCommand: 'inspect .npmrc & npm userconfig',
+          sanitizedOutput: reason,
+          evidenceReferences: npmrcEvidence,
+          failureReason: reason,
+          remediation: npmEnv.remediation || 'Run "npx vsts-npm-auth -config .npmrc -Force" inside ngo-client.',
+          fromCache: false,
+          freshness: new Date().toISOString(),
+        });
+      }
+    } catch (_) {}
   }
 
   // Load team release notes if present
@@ -896,7 +959,7 @@ function runPreflight(options) {
     decisionReason = `Preflight passed with ${warnings.length} warning(s): ${warnings[0]}`;
   }
 
-  const upgradeMode = classifyUpgradeMode(currentVersion, normTarget);
+  const upgradeMode = classifyUpgradeMode(effectiveCurrentVersion, normTarget);
 
   return {
     ok: canProceed,
@@ -909,6 +972,10 @@ function runPreflight(options) {
     clientPath,
     corePath: cPath,
     currentVersion,
+    effectiveCurrentVersion,
+    backendVersion: detected.backendVersion || null,
+    frontendVersion: detected.frontendVersion || null,
+    hasVersionMismatch: Boolean(detected.hasVersionMismatch),
     targetVersion: normTarget,
     targetFramework: requiredTargetFramework,
     currentFramework: currentTargetFramework,

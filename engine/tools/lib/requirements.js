@@ -111,7 +111,7 @@ function appendCanonical(split, source, target) {
   const store = require('./knowledge').defaultStore();
   for (const requirement of store.allRequirements(source, target)) {
     const scope = requirement.scope === 'FRONTEND' ? 'frontend' : requirement.scope === 'SHARED' ? 'shared' : 'backend';
-    const finding = { id: requirement.id, scope, category: requirement.category,
+    const finding = { ...requirement, scope,
       statement: requirement.title || requirement.action || requirement.id,
       source: 'canonical', evidence: `${store.RELEASES_DIR}/${requirement.releaseVersion}/${requirement.scope.toLowerCase()}.yaml`,
       canonicalRequirementId: requirement.id, automation: requirement.automation, timing: requirement.timing,

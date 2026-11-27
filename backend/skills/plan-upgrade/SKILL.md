@@ -22,7 +22,8 @@ any client mutation. This skill is the mandatory first step of every run.
 
 # Exclusions
 - Do not use to modify the client (see the client-mutation gate in `config/` / `tools/skills/lib/engine.js`).
-- Do not use to install target packages, run migrations, or apply fixes.
+- Do not use to install target packages, generate/apply migrations, or apply fixes.
+  Plan migration generation here; execute it automatically after the gate opens.
 
 # Preconditions
 - A run directory exists: `runs/<client>/<run-id>/`.
@@ -42,13 +43,13 @@ Follow the engine's shared planning procedure first; this skill supplies backend
 1. Inspect .NET solution/projects, SDK, NuGet dependency graph and installed NGO.Core assemblies/public API. Write backend inventory and surface evidence.
 2. Interpret the backend slice and approved .NET version/symbol/error knowledge; request isolated package/API research only for unresolved compatibility. Missing Core release evidence returns to the shared owner, never independent ingestion.
 3. Map backend source, EF/migration and all startup-required appsettings changes to exact API/WebJob/Deployment files, preserving client values and secret-provider use.
-4. Produce backend changes, restore/build/test/config/migration validation and rollback facts. Register the implementation plan with the engine; do not assign global lifecycle status locally.
+4. Include client migration/snapshot output paths and SQL artifacts, restore/build/test/config/migration validation and rollback facts. Follow [autonomous migration policy](../../AGENTS.md#autonomous-upgrades-and-ef-migrations); generation/review needs no separate approval. Register the implementation plan with the engine; do not assign global lifecycle status locally.
 
 # Evidence requirements
 Every KNOWN fact references a file/route/tool artifact. Assumptions state validation method, impact, and whether they block mutation.
 
 # Uncertainty handling
-HIGH/CRITICAL open uncertainty blocks the affected mutation and cannot be auto-accepted. Record all uncertainty in `uncertainty-register.yaml`.
+HIGH/CRITICAL open uncertainty blocks the affected mutation and cannot be auto-accepted. Record all uncertainty in `uncertainty-register.yaml`. A known requirement to generate/review a client migration is planned work, not a blocking migration decision. Resolve routine technical questions from repository evidence; escalate only genuinely unresolved data/business semantics or unsafe operations. Do not demand generated target-model evidence before the planned restore/build/generation that produces it.
 
 # Completion criteria
 `plan.yaml` + `uncertainty-register.yaml` exist and validate; status is one of READY, READY_WITH_ASSUMPTIONS, RESEARCH_REQUIRED, BLOCKED_NEEDS_CONTEXT, BLOCKED_NEEDS_DEVELOPER, FAILED_POLICY. Mutation is permitted only for READY or policy-permitted READY_WITH_ASSUMPTIONS.

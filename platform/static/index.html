@@ -380,12 +380,13 @@
                     <div class="auth-section-card" id="step1-auth-banner">
                       <div class="auth-section-header">
                         <div class="auth-header-title">
-                          <h4>Private NuGet Feed &amp; Credentials</h4>
+                          <h4>Private NuGet &amp; npm Feed Credentials</h4>
                         </div>
                         <div class="auth-footer-actions">
-                          <button type="button" id="btn-test-auth-step1" class="btn btn-secondary btn-xs">Test Connection</button>
+                          <button type="button" id="btn-test-auth-step1" class="btn btn-secondary btn-xs">Test NuGet</button>
                           <button type="button" id="btn-connect-azure-step1" class="btn btn-primary btn-xs">Connect Azure CLI</button>
                           <button type="button" id="btn-open-nuget-auth-step1" class="btn btn-secondary btn-xs">Configure PAT...</button>
+                          <button type="button" id="btn-npm-auth-step1" class="btn btn-secondary btn-xs" title="Run npx vsts-npm-auth -config .npmrc -Force for Frontend">Fix npm (.npmrc)</button>
                           <button type="button" id="btn-refresh-auth-step1" class="btn btn-ghost btn-xs" title="Refresh identity and clear token cache">Refresh</button>
                         </div>
                       </div>
@@ -411,6 +412,13 @@
                               CredentialProvider.Microsoft.exe
                             </div>
                             <small class="text-xs text-muted" id="step1-cred-status">MSAL / Azure CLI / PAT</small>
+                          </div>
+                          <div class="auth-info-item">
+                            <span class="auth-info-label">Frontend npm (.npmrc)</span>
+                            <div class="auth-info-value text-xs font-mono" id="step1-npm-status">
+                              Checking .npmrc...
+                            </div>
+                            <small class="text-xs text-muted" id="step1-npm-detail">Select client project to inspect</small>
                           </div>
                         </div>
                         <div id="step1-auth-alert" class="alert alert-warning mt-2 mb-0" style="display:none;"></div>

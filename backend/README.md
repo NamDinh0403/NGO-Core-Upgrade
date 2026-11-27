@@ -30,9 +30,22 @@ You give a coding agent one prompt:
 Upgrade NGO Core packages to version <X.Y.Z>
 ```
 
-The agent enters the workflow at [AGENTS.md](AGENTS.md), prepares its research tools, writes a plan before touching code, updates packages/config, fixes every compiler error by inspecting the installed package on disk, runs tests + EF migrations, and writes an `upgrade-report-YYYY-MM-DD.md` to the solution root.
+The agent enters the workflow at [AGENTS.md](AGENTS.md), prepares its research tools, writes a plan before touching code, updates packages/config, fixes compiler errors by inspecting the installed package on disk, runs validation, automatically generates/reviews client EF migration/snapshot and SQL files, and writes an `upgrade-report-YYYY-MM-DD.md` to the solution root.
 
 **It does not stop silently. It does not skip the report.**
+
+### Automatic migration generation, separate database approval
+An upgrade request authorizes routine package, compatibility source and
+configuration fixes plus migration/SQL generation under the engine-registered
+plan; no second approval is needed. After the target build, the agent detects
+the client context/projects, scaffolds and reviews migration/snapshot/SQL output,
+and rebuilds. Existing matching output is reused on resume; no-change outcomes
+are recorded.
+
+The agent does **not** apply database changes or accept destructive/lossy output
+without explicit approval. Genuine data/business decisions remain blockers for
+the affected work; the mere need for a migration does not block generation.
+See [the authoritative policy](AGENTS.md#autonomous-upgrades-and-ef-migrations).
 
 ## Why it exists
 

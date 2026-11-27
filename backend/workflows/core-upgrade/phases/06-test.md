@@ -4,7 +4,8 @@
 - **State:** `TEST`
 
 ## Purpose
-Verify the upgraded build and apply required EF migrations.
+Verify the upgraded build and automatically generate/review required client EF
+migration, snapshot and SQL files. Do not apply database changes.
 
 ## Required inputs
 Green build, routed `knowledge/canonical/migrations/ef-migration-patterns.json`.
@@ -13,21 +14,32 @@ Green build, routed `knowledge/canonical/migrations/ef-migration-patterns.json`.
 Build succeeded.
 
 ## Required actions
-1. If a `DbContext` exists, run the EF migration per the migration pattern. Treat "no changes detected" as success.
-2. Run the client's test suite if present (same timeout as baseline: `config/quality-gates.yaml#gates.tests-run.timeoutSeconds`); capture `test-results.json`. A hung/non-terminating run is not a silent pass — kill it, record the evidence, and escalate `BLOCKED_NEEDS_DEVELOPER`. If no test project exists, record `noTests: true` and pass.
+1. If a `DbContext` exists, automatically generate/review migration/snapshot and SQL
+   files per the migration pattern and
+   [autonomous migration policy](../../../AGENTS.md#autonomous-upgrades-and-ef-migrations).
+   No separate generation approval. Reuse matching output on resume, inspect
+   destructive/data-precondition risks and rebuild. Treat "no changes detected"
+   as success; record empty output explicitly. Never run database update or SQL.
+2. Record optional tests SKIPPED with the reason by default. Do not create test
+   files/projects or run full suites. Run existing targeted tests only when
+   explicitly requested or needed to diagnose a concrete regression; if run,
+   capture real results and use the configured timeout. Never claim skipped
+   tests passed.
 3. Compare against the baseline: if tests that passed at baseline now fail, treat as a regression. Increment `state.json.testRegressionLoopCount` and record which test(s) regressed and after which fix, so a repeat regression on the same test is detectable.
 
 ## Allowed tools
 `dotnet ef`, test runner.
 
 ## Required evidence
-EF migration output, `test-results.json`.
+EF migration/snapshot diff, SQL artifact, review findings, post-generation build
+and EF command outputs, `test-results.json`.
 
 ## Required outputs
 `test-results.json`, EF migration result recorded in `state.json`.
 
 ## Completion criteria
-EF migration attempted (where applicable) and tests captured with no new regressions; `nextAction = "Load phases/07-document.md"`.
+EF migration attempted/reviewed (where applicable), generated code rebuilt and
+optional-test disposition recorded; `nextAction = "Load phases/07-document.md"`.
 
 ## Documentation responsibilities
 Test and EF results feed the report and `documentation-status.json`.
@@ -39,7 +51,9 @@ Checkpoint before EF migration (side effect) and after results received.
 "No DbContext found" / "build failed" follow the migration pattern's retry rules.
 
 ## Escalation conditions
-- Destructive DB migration may be required → `BLOCKED_NEEDS_APPROVAL`.
+- Generated output has unresolved destructive/data-semantic risks, or database
+  application is requested without explicit approval → `BLOCKED_NEEDS_APPROVAL`
+  for the affected acceptance/application step, not generation/review.
 - Tests regress after a fix → back to `BUILD_AND_FIX`. "Unresolved" means either:
   (a) the **same** test regresses a second time after a second `BUILD_AND_FIX`
   pass targeting it, or (b) the number of TEST→BUILD_AND_FIX round-trips in this

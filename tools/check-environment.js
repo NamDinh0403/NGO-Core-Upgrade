@@ -442,6 +442,42 @@ function checkEnvironment(flags = {}) {
     );
   }
 
+  // Copilot CLI OAuth vs COPILOT_GITHUB_TOKEN sanity check
+  try {
+    const homeDir = process.env.USERPROFILE || process.env.HOME || '';
+    const copilotCfgPath = homeDir ? path.join(homeDir, '.copilot', 'config.json') : null;
+    let oauthUser = null;
+    if (copilotCfgPath && fs.existsSync(copilotCfgPath)) {
+      const cfg = JSON.parse(fs.readFileSync(copilotCfgPath, 'utf8'));
+      oauthUser = cfg && cfg.lastLoggedInUser && cfg.lastLoggedInUser.login ? cfg.lastLoggedInUser.login : null;
+    }
+    if (oauthUser && process.env.COPILOT_GITHUB_TOKEN) {
+      addCheck(
+        'Copilot CLI Auth Conflict',
+        'WARN',
+        `Both Copilot OAuth session (${oauthUser}) and COPILOT_GITHUB_TOKEN env var are active. COPILOT_GITHUB_TOKEN can override OAuth and cause model catalog errors.`,
+        'Remove stale COPILOT_GITHUB_TOKEN env var (e.g. Remove-Item Env:COPILOT_GITHUB_TOKEN) so Copilot CLI uses OAuth.',
+        { stage: 2 }
+      );
+    } else if (oauthUser || process.env.COPILOT_GITHUB_TOKEN || process.env.GH_TOKEN) {
+      addCheck(
+        'Copilot CLI Auth',
+        'PASS',
+        oauthUser ? `Authenticated via Copilot OAuth (${oauthUser})` : 'Authenticated via GitHub token env var',
+        null,
+        { stage: 2 }
+      );
+    } else {
+      addCheck(
+        'Copilot CLI Auth',
+        'WARN',
+        'No active Copilot CLI OAuth session detected in ~/.copilot/config.json.',
+        'Run "copilot" and execute "/login" (required if Copilot semantic edits or repair are needed).',
+        { stage: 2 }
+      );
+    }
+  } catch (_) {}
+
   // Stage 3: Local NGO Core Repository Discovery & Validation
   report.stages.coreDiscovery = discoveryRes;
   if (!effectiveCorePath && discoveryRes.status !== 'MULTIPLE_CANDIDATES_FOUND') {
@@ -478,14 +514,18 @@ function checkEnvironment(flags = {}) {
     const npmDiag = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks });
     report.stages.npmDiagnostics = npmDiag;
     const npmStatus = npmDiag.ok ? (npmDiag.npmrc && npmDiag.npmrc.obsoleteWarnings.length > 0 ? 'WARN' : 'PASS') : 'BLOCKED';
+    const feDir = fs.existsSync(path.join(clientPath, 'ngo-client')) ? path.join(clientPath, 'ngo-client') : clientPath;
     const issueDetails = !npmDiag.ok
       ? npmDiag.remediation || npmDiag.status
       : `npm ${npmDiag.npm ? npmDiag.npm.version : ''} ready`;
+    const npmRemediation = !npmDiag.ok && process.platform === 'win32'
+      ? `Run inside "${feDir}": npx vsts-npm-auth -config .npmrc -Force`
+      : npmDiag.remediation;
     addCheck(
       'npm & .npmrc Configuration',
       npmStatus,
       issueDetails,
-      npmDiag.remediation,
+      npmRemediation,
       { stage: 5 }
     );
   } else if (!needFrontend) {
@@ -678,11 +718,19 @@ async function runEnvironmentCheck(flags = {}) {
         ? nugetPreflight.stages.feedAccess
         : nugetPreflight.stages.packageRestore;
       if (stageBlock) {
+        const feedAccess = nugetPreflight.stages && nugetPreflight.stages.feedAccess;
+        const isForbidden = feedAccess && (feedAccess.statusCode === 403 || feedAccess.connectionStatus === 'FORBIDDEN');
+        const isUnauth = feedAccess && (feedAccess.statusCode === 401 || feedAccess.connectionStatus === 'UNAUTHENTICATED');
+        const remediation = isForbidden
+          ? 'Authenticated to Azure DevOps, but missing Feed Reader (HTTP 403) permission on NGO_Online_feed. Ask your Azure DevOps administrator to grant Packaging Read access or supply a PAT with Packaging Read.'
+          : isUnauth
+            ? 'Azure Artifacts authentication missing/expired (HTTP 401). Install Credential Provider, run "az login", or provide a PAT with Packaging Read.'
+            : nugetPreflight.remediation;
         report.checks.push({
           name: 'NuGet / Azure Artifacts Preflight',
           status: 'BLOCKED',
           details: stageBlock.detail,
-          remediation: nugetPreflight.remediation,
+          remediation,
           stage: 4,
         });
         report.blockers.push(`NuGet / Azure Artifacts Preflight: ${stageBlock.detail}`);

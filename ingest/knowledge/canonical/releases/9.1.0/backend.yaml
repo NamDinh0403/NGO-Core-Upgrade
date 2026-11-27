@@ -32,7 +32,7 @@ requirements:
     applicability: ALWAYS
     semanticRoles: ["backendPackages"]
     sourceEvidence: "release-notes.md 9.1.0 EF Core tooling"
-    action: "Add/update the two EF Core tooling packages at version 10.0.7."
+    action: "Add/update the two EF Core tooling packages at version 10.0.7 for this release; resolve target-compatible versions for later releases rather than downgrading. If EF6 and EF Core are both installed, use EntityFrameworkCore\\Add-Migration explicitly."
     automation: MANUAL_EXECUTION
     validation: "NGO.API restores; migrations use EF Core"
     risk: MEDIUM
@@ -50,7 +50,7 @@ requirements:
     applicability: IF_FEATURE_ENABLED
     semanticRoles: ["migrationTool"]
     sourceEvidence: "release-notes.md 9.1.0 Logframe2SavedQueryMigration (repeat of 8.6.0)"
-    action: "Run tool in review mode; resolve warnings; then run in update mode."
+    action: "Run tool in review mode; resolve warnings; then run in update mode. Add missing Logframe2 Analyse relations/columns. Use CoreAnalyseLogframeObjectiveView (including client overrides) to classify ambiguous fields into IndicatorStructureFields or ObjectiveStructureFields and remap renamed fields in the respective StructureFieldMappings."
     automation: MANUAL_EXECUTION
     validation: "review mode clean before update mode is run"
     risk: HIGH

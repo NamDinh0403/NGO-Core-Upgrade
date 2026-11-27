@@ -19,6 +19,43 @@ const telemetryLib = require('./telemetry');
 const nugetSources = require('./nuget-sources');
 const coreDiscovery = require('./core-discovery');
 const npmDiagnostics = require('./npm-diagnostics');
+const settingsLib = require('./settings');
+const releaseNotesLib = require('./release-notes');
+
+function spawnAsync(command, args, options) {
+  return new Promise((resolve) => {
+    let stdout = '';
+    let stderr = '';
+    let settled = false;
+    let timedOut = false;
+    const child = cp.spawn(command, args, {
+      cwd: options.cwd,
+      windowsHide: true,
+      shell: options.shell !== undefined ? options.shell : false,
+      env: options.env || process.env,
+    });
+    const timer = options.timeout
+      ? setTimeout(() => {
+          timedOut = true;
+          try { child.kill('SIGTERM'); } catch (_) {}
+        }, options.timeout)
+      : null;
+    child.stdout.on('data', (d) => { stdout += d.toString('utf8'); });
+    child.stderr.on('data', (d) => { stderr += d.toString('utf8'); });
+    child.on('error', (err) => {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      resolve({ status: 1, stdout, stderr: stderr || err.message, error: err });
+    });
+    child.on('close', (code) => {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      resolve({ status: timedOut ? 1 : (code !== null ? code : 1), stdout, stderr });
+    });
+  });
+}
 
 /**
  * Extract clean user handle from Git user.name or user.email.
@@ -264,7 +301,29 @@ async function runWorker() {
     // -----------------------------------------------------------------------
     const stage2Start = Date.now();
     const adaptationLib = require('./adaptation');
-    const sourceVersion = job.preflight ? job.preflight.currentVersion : null;
+    job = readJob();
+    const preflightInfo = job.preflight || {};
+    const backendSourceVersion = preflightInfo.backendVersion || preflightInfo.currentVersion || null;
+    const frontendSourceVersion = preflightInfo.frontendVersion || preflightInfo.currentVersion || null;
+    let sourceVersion = preflightInfo.currentVersion || backendSourceVersion || frontendSourceVersion || null;
+    if (backendSourceVersion && frontendSourceVersion) {
+      sourceVersion = preflightLib.cmpVer(backendSourceVersion, frontendSourceVersion) <= 0
+        ? backendSourceVersion
+        : frontendSourceVersion;
+    }
+
+    try {
+      const rangeNotes = sourceVersion
+        ? releaseNotesLib.getReleaseNotesForRange(sourceVersion, targetVersion)
+        : releaseNotesLib.getReleaseNotes(targetVersion);
+      if (rangeNotes && rangeNotes.exists && rangeNotes.content) {
+        const mergedNotes = job.releaseNotes && !String(job.releaseNotes).includes(rangeNotes.content.slice(0, 80))
+          ? `${job.releaseNotes}\n\n${rangeNotes.content}`
+          : rangeNotes.content;
+        updateJob((j) => { j.releaseNotes = mergedNotes; });
+        job = readJob();
+      }
+    } catch (_) {}
 
     let releaseAnalysis = null;
     try {
@@ -420,19 +479,25 @@ async function runWorker() {
     ).isPatch;
 
     const stage4Start = Date.now();
+    let releaseAudit = job.implementation && job.implementation.releaseAudit ? job.implementation.releaseAudit : null;
+    let runtimeBackendConfigResult = null;
     if (job.completedStages.includes('IMPLEMENT')) {
       appendLog('Implementation already applied.', 'INFO', 'IMPLEMENT');
     } else {
-      appendLog('Applying package updates and code adjustments...', 'INFO', 'IMPLEMENT');
+      appendLog('Applying package updates, configurations, and release migrations (parallel backend/frontend tracks)...', 'INFO', 'IMPLEMENT');
       updateJob((j) => {
         j.currentStage = 'IMPLEMENT';
         j.stageMetrics.IMPLEMENT = { startedAt: new Date().toISOString(), status: 'RUNNING' };
       });
 
-      let modifiedCount = 0;
+      const adaptedFilesAll = [];
+      let copilotDurationMs = 0;
+      let copilotExitCode = 0;
+      let semanticMigrationsUnresolved = [];
 
-      // Backend updates
-      if (tracks.includes('backend')) {
+      const runBackendImplementation = async () => {
+        if (!tracks.includes('backend')) return 0;
+        let count = 0;
         const targetTfm = (job.preflight && job.preflight.targetFramework)
           ? job.preflight.targetFramework
           : (preflightLib.detectRequiredTargetFramework(corePath, targetVersion) || 'net10.0');
@@ -464,7 +529,8 @@ async function runWorker() {
               if (text !== orig) {
                 fs.writeFileSync(full, text);
                 appendLog(`Updated NGO.Core references${targetTfm ? ' and TargetFramework to ' + targetTfm : ''} to ${targetVersion} in ${path.relative(clientPath, full)}`, 'INFO', 'IMPLEMENT');
-                modifiedCount++;
+                count++;
+                adaptedFilesAll.push(path.relative(clientPath, full));
               }
             }
           }
@@ -472,18 +538,57 @@ async function runWorker() {
         const apiDir = path.join(clientPath, 'ngo-api');
         updateCsproj(fs.existsSync(apiDir) ? apiDir : clientPath);
 
-        // AppSettings configuration adaptation (merges missing Core keys, strictly preserves client values)
         try {
           const storeSettings = releaseAnalysis && releaseAnalysis.appSettings ? releaseAnalysis.appSettings : [];
-          const configRes = adaptationLib.adaptBackendConfiguration(clientPath, storeSettings, (l) => appendLog(l, 'INFO', 'IMPLEMENT'));
-          modifiedCount += (configRes.modifiedFiles || []).length;
+          const configRes = adaptationLib.adaptBackendConfiguration(
+            clientPath,
+            storeSettings,
+            (l) => appendLog(l, 'INFO', 'IMPLEMENT'),
+            { sourceVersion: backendSourceVersion, targetVersion }
+          );
+          runtimeBackendConfigResult = configRes;
+          count += (configRes.modifiedFiles || []).length;
+          adaptedFilesAll.push(...(configRes.modifiedFiles || []));
         } catch (err) {
           appendLog(`Warning: Backend AppSettings adaptation: ${err.message}`, 'WARN', 'IMPLEMENT');
         }
-      }
 
-      // Frontend updates
-      if (tracks.includes('frontend')) {
+        try {
+          const sourceRes = adaptationLib.adaptKnownSourceMigrations(
+            clientPath,
+            targetVersion,
+            backendSourceVersion,
+            (l) => appendLog(l, 'INFO', 'IMPLEMENT'),
+            { corePath, tracks: ['backend'] }
+          );
+          count += sourceRes.adaptedFilesCount || 0;
+          adaptedFilesAll.push(...(sourceRes.modifiedFiles || []));
+        } catch (err) {
+          appendLog(`Warning: Backend source migration: ${err.message}`, 'WARN', 'IMPLEMENT');
+        }
+
+        if (!isSimulation) {
+          const backendRoot = verifierLib.findBackendRoot(clientPath);
+          if (fs.existsSync(backendRoot)) {
+            appendLog('Running concurrent dotnet restore on backend...', 'INFO', 'IMPLEMENT');
+            const restoreRes = await spawnAsync('dotnet', ['restore'], {
+              cwd: backendRoot,
+              shell: true,
+              timeout: 180000,
+            });
+            if (restoreRes.status === 0) {
+              appendLog('Backend dotnet restore completed cleanly.', 'INFO', 'IMPLEMENT');
+            } else {
+              appendLog(`Backend dotnet restore notice: ${(restoreRes.stderr || restoreRes.stdout || '').slice(0, 300)}`, 'WARN', 'IMPLEMENT');
+            }
+          }
+        }
+        return count;
+      };
+
+      const runFrontendImplementation = async () => {
+        if (!tracks.includes('frontend')) return 0;
+        let count = 0;
         const clientDir = path.join(clientPath, 'ngo-client');
         const targetDir = fs.existsSync(clientDir) ? clientDir : clientPath;
         const pkgFile = path.join(targetDir, 'package.json');
@@ -506,7 +611,6 @@ async function runWorker() {
               }
             }
 
-            // Discover Core package.json to align framework and peer dependencies
             let corePkg = null;
             const candidateCorePkgPaths = corePath
               ? [
@@ -581,14 +685,14 @@ async function runWorker() {
 
             if (pkgModified) {
               fs.writeFileSync(pkgFile, JSON.stringify(pkg, null, 2));
-              modifiedCount++;
+              count++;
+              adaptedFilesAll.push(path.relative(clientPath, pkgFile));
             }
           } catch (err) {
             appendLog(`Warning: Failed to update client package.json: ${err.message}`, 'WARN', 'IMPLEMENT');
           }
         }
 
-        // 1. Inspect .npmrc non-destructively (preserve user/project .npmrc; never inject hardcoded tokens)
         const npmEnv = npmDiagnostics.inspectNpmEnvironment({ clientPath, tracks });
         if (npmEnv.npmrc && npmEnv.npmrc.obsoleteWarnings && npmEnv.npmrc.obsoleteWarnings.length > 0) {
           for (const warn of npmEnv.npmrc.obsoleteWarnings) {
@@ -599,16 +703,13 @@ async function runWorker() {
           appendLog(`.npmrc authentication warning: ${npmEnv.remediation}`, 'WARN', 'IMPLEMENT');
         }
 
-        // 2. Install frontend packages using version-aware execution plan (prefers npm ci when lockfile valid & unchanged)
         const npmPlan = npmDiagnostics.prepareNpmExecutionPlan(targetDir, { packageJsonChanged: pkgModified });
         if (!isSimulation) {
           appendLog(`Installing frontend packages via ${npmPlan.commandLine} (${npmPlan.reason})...`, 'INFO', 'IMPLEMENT');
-          const npmRes = cp.spawnSync(npmPlan.command, npmPlan.args, {
+          const npmRes = await spawnAsync(npmPlan.command, npmPlan.args, {
             cwd: targetDir,
-            encoding: 'utf8',
-            windowsHide: true,
             shell: process.platform === 'win32',
-            timeout: 180000,
+            timeout: 240000,
           });
           if (npmRes.status === 0) {
             appendLog(`Frontend packages installed successfully via ${npmPlan.commandLine}.`, 'INFO', 'IMPLEMENT');
@@ -619,30 +720,101 @@ async function runWorker() {
           appendLog(`[SIMULATION] Frontend package install (${npmPlan.commandLine}) simulated.`, 'INFO', 'IMPLEMENT');
         }
 
-        // Frontend environment adaptation from Core reference host
         try {
-          const envRes = adaptationLib.adaptFrontendEnvironment(clientPath, corePath, (l) => appendLog(l, 'INFO', 'IMPLEMENT'));
-          modifiedCount += (envRes.modifiedFiles || []).length;
+          const envRes = adaptationLib.adaptFrontendEnvironment(
+            clientPath,
+            corePath,
+            (l) => appendLog(l, 'INFO', 'IMPLEMENT'),
+            { targetVersion }
+          );
+          count += (envRes.modifiedFiles || []).length;
+          adaptedFilesAll.push(...(envRes.modifiedFiles || []));
         } catch (err) {
           appendLog(`Warning: Frontend environment adaptation: ${err.message}`, 'WARN', 'IMPLEMENT');
         }
 
-        // Pre-build source code adaptations (known mechanical migrations)
         try {
-          const sourceRes = adaptationLib.adaptKnownSourceMigrations(clientPath, targetVersion, sourceVersion, (l) => appendLog(l, 'INFO', 'IMPLEMENT'));
-          modifiedCount += sourceRes.adaptedFilesCount || 0;
+          const sourceRes = adaptationLib.adaptKnownSourceMigrations(
+            clientPath,
+            targetVersion,
+            frontendSourceVersion,
+            (l) => appendLog(l, 'INFO', 'IMPLEMENT'),
+            { corePath, tracks: ['frontend'] }
+          );
+          count += sourceRes.adaptedFilesCount || 0;
+          adaptedFilesAll.push(...(sourceRes.modifiedFiles || []));
         } catch (err) {
-          appendLog(`Warning: Source code adaptation: ${err.message}`, 'WARN', 'IMPLEMENT');
+          appendLog(`Warning: Frontend source migration: ${err.message}`, 'WARN', 'IMPLEMENT');
         }
-      }
+        return count;
+      };
 
-      appendLog('Deterministic package updates, configuration, and source adaptations applied successfully (no LLM).', 'INFO', 'IMPLEMENT');
+      const [beCount, feCount] = await Promise.all([runBackendImplementation(), runFrontendImplementation()]);
+      let modifiedCount = beCount + feCount;
+
+      // Audit full release requirement coverage across range before deciding if Copilot semantic edits are required
+      releaseAudit = adaptationLib.auditReleaseRequirements(
+        clientPath,
+        releaseAnalysis,
+        { modifiedFiles: Array.from(new Set(adaptedFilesAll)) },
+        tracks
+      );
+      appendLog(
+        `Release requirement coverage audit: ${releaseAudit.verifiedCount}/${releaseAudit.total} verified deterministically, ${releaseAudit.semanticMigrationsRequired.length} requiring semantic code review, ${releaseAudit.manualHandoverItems.length} manual handover item(s).`,
+        'INFO',
+        'IMPLEMENT'
+      );
+
+      if (releaseAudit.semanticMigrationsRequired.length > 0 && job.upgradeMode !== 'FAST_PATCH') {
+        const semanticSummary = releaseAudit.semanticMigrationsRequired
+          .map((item) => `- [${item.id}] (${item.release}) ${item.title}: ${item.action} (matched client files: ${item.matchedFiles.join(', ')})`)
+          .join('\n');
+        const notesSnippet = job.releaseNotes ? `\n\nCumulative Release Notes (${sourceVersion || '?'} -> ${targetVersion}):\n${String(job.releaseNotes).slice(0, 3500)}` : '';
+        const semanticPrompt = `
+You are upgrading the NGO client repository at "${clientPath}" to Core version ${targetVersion} (backend: ${backendSourceVersion || '?'}, frontend: ${frontendSourceVersion || '?'}).
+Read-only Core repository path: "${corePath || 'N/A'}".
+
+The deterministic adaptation pass already updated packages, AppSettings keys, environment.ts, and mechanical syntax migrations.
+Complete the remaining semantic release requirements identified in the client workspace:
+${semanticSummary}${notesSnippet}
+
+Strict rules:
+- NEVER modify files inside "${corePath || 'ngo-online-core'}" (Core is strictly READ-ONLY).
+- NEVER modify unit test spec files (*.spec.ts, *Test*.cs).
+- NEVER modify files inside NGO Core Upgrade itself.
+- Apply minimal, idiomatic edits to satisfy the remaining release requirements above cleanly.
+`.trim();
+
+        appendLog(`Invoking Copilot CLI for ${releaseAudit.semanticMigrationsRequired.length} semantic release requirement(s)...`, 'INFO', 'IMPLEMENT');
+        const copilotRes = await copilotCli.invoke(semanticPrompt, {
+          cwd: clientPath,
+          corePath,
+          model: job.copilotModel || job.model,
+          simulate: isSimulation,
+          onLog: (l) => appendLog(l, 'INFO', 'IMPLEMENT'),
+        });
+        copilotDurationMs = copilotRes.durationMs || 0;
+        copilotExitCode = copilotRes.exitCode !== undefined ? copilotRes.exitCode : 0;
+        if (!copilotRes.ok) {
+          semanticMigrationsUnresolved = releaseAudit.semanticMigrationsRequired.map((s) => s.id);
+          appendLog(
+            `Warning: Copilot semantic pass exited with code ${copilotExitCode}. Unresolved semantic requirements: ${semanticMigrationsUnresolved.join(', ')}`,
+            'WARN',
+            'IMPLEMENT'
+          );
+        }
+      } else {
+        appendLog('All applicable release requirements in range handled deterministically (no semantic LLM edits needed).', 'INFO', 'IMPLEMENT');
+      }
 
       updateJob((j) => {
         j.implementation = {
           modifiedFilesCount: modifiedCount,
-          copilotDurationMs: 0,
-          copilotExitCode: 0,
+          adaptedFiles: Array.from(new Set(adaptedFilesAll)),
+          releaseAudit,
+          semanticMigrationsUnresolved,
+          copilotDurationMs,
+          copilotExitCode,
           fastPatchMode: isAutoPatch,
         };
         j.completedStages.push('IMPLEMENT');
@@ -660,19 +832,26 @@ async function runWorker() {
     // STAGE 5: VERIFY (with Bounded Repair)
     // -----------------------------------------------------------------------
     const stage5Start = Date.now();
-    appendLog('Executing deterministic local verification checks...', 'INFO', 'VERIFY');
+    appendLog('Executing parallel deterministic local verification checks...', 'INFO', 'VERIFY');
     updateJob((j) => {
       j.currentStage = 'VERIFY';
       j.stageMetrics.VERIFY = { startedAt: new Date().toISOString(), status: 'RUNNING' };
     });
 
-    let verification = verifierLib.verify({
+    let configuredRunTests = false;
+    try {
+      const s = settingsLib.loadSettings({ resolveCore: false });
+      configuredRunTests = Boolean(s && s.verification && s.verification.runTests === true);
+    } catch (_) {}
+
+    let verification = await verifierLib.verifyParallel({
       clientPath,
       targetVersion,
       tracks,
       isPatch: isAutoPatch,
       upgradeMode: job.upgradeMode,
       breakingChangesCount: job.preflight && job.preflight.impactPreview ? job.preflight.impactPreview.breakingChangesCount : 0,
+      runTests: configuredRunTests,
       isSimulation,
       onLog: (l) => appendLog(l, 'INFO', 'VERIFY'),
     });
@@ -716,24 +895,26 @@ Automated build verification failed during upgrade to NGO Core ${targetVersion}:
 ${failedChecksSummary}${releaseNotesContext}
 
 Please diagnose and provide necessary source adjustments for any API changes, TargetFramework updates, node module changes, environment files, or configuration.
+Strict rule: NEVER modify unit test specs (*.spec.ts, *Test*.cs) or Core files under "${corePath || 'ngo-online-core'}".
 `.trim();
 
       await copilotCli.invoke(repairPrompt, {
         cwd: clientPath,
+        corePath,
         model: job.copilotModel || job.model,
         simulate: isSimulation,
         onLog: (l) => appendLog(l, 'INFO', 'REPAIR'),
       });
 
-      // Re-run deterministic verification with forced re-test after mutation
-      verification = verifierLib.verify({
+      verification = await verifierLib.verifyParallel({
         clientPath,
         targetVersion,
         tracks,
         isPatch: isAutoPatch,
         upgradeMode: job.upgradeMode,
         breakingChangesCount: job.preflight && job.preflight.impactPreview ? job.preflight.impactPreview.breakingChangesCount : 0,
-        forceRunTests: true,
+        runTests: configuredRunTests,
+        forceRunTests: false,
         isSimulation,
         onLog: (l) => appendLog(l, 'INFO', 'REPAIR'),
       });
@@ -776,12 +957,16 @@ Please diagnose and provide necessary source adjustments for any API changes, Ta
     });
 
     try {
+      const latestJob = readJob();
+      const baseBackendConfig = latestJob.plan && latestJob.plan.backendConfigResult ? latestJob.plan.backendConfigResult : {};
+      const mergedBackendConfigResult = Object.assign({}, baseBackendConfig, runtimeBackendConfigResult || {});
       const handover = adaptationLib.generateHandoverChecklist({
         runId: job.runId,
         clientId: job.clientName,
         sourceVersion,
         targetVersion,
-        backendConfigResult: job.plan ? job.plan.backendConfigResult : null,
+        backendConfigResult: mergedBackendConfigResult,
+        releaseAudit: releaseAudit || (latestJob.implementation && latestJob.implementation.releaseAudit) || null,
         jobDir,
       });
       review.handover = handover;

@@ -1,6 +1,6 @@
 'use strict';
 /*
- * Skill layer evaluation suite — 40 scenarios. Dependency-free, offline-deterministic.
+ * Skill layer evaluation suite. Dependency-free, offline-deterministic.
  * Exercises tools/skills/lib/engine.js against the registry, per-skill schemas, and
  * sample outputs. Run: node tools/skills.test.js
  */
@@ -169,6 +169,67 @@ test('39-invalid-transitions-rejected', () => {
 test('40-new-dev-plan-without-specialist-tools', () => {
   const r = e.planningReadiness({ domainDotnet: false, frontendPresent: false }, ['repository-version-control']);
   assert(r.status === 'READY_FOR_PLANNING', 'plan without specialist tools');
+});
+
+test('41-migration-generation-is-not-database-approval', () => {
+  const migration = readJson('knowledge/canonical/migrations/ef-migration-patterns.json');
+  assert(migration.approval.generateMigrationAndSnapshot === false, 'scaffolding needs no separate approval');
+  assert(migration.approval.generateAndReviewSql === false, 'SQL generation/review needs no separate approval');
+  assert(migration.approval.applyDatabaseChanges === true, 'database writes still require approval');
+  assert(migration.approval.acceptDestructiveOrLossyChanges === true, 'destructive acceptance still requires approval');
+});
+
+test('42-migration-commands-use-client-context-and-produce-sql', () => {
+  const migration = readJson('knowledge/canonical/migrations/ef-migration-patterns.json');
+  for (const command of [migration.commands.default, migration.commands.script]) {
+    for (const option of ['--context <client-context>', '--project <migrations-project>', '--startup-project <startup-project>'])
+      assert(command.includes(option), `missing detected client option: ${option}`);
+    assert(!/database update/i.test(command), 'generation must not apply database changes');
+  }
+  assert(migration.commands.script.includes('migrations script <previous-migration-or-0> <generated-migration>'), 'SQL is scoped to the upgrade migration');
+  assert(migration.commands.script.includes('--output <sql-artifact>'), 'SQL artifact is captured');
+  assert(migration.validation.commands[0].startsWith('dotnet build '), 'build before generation');
+  assert(migration.validation.commands[migration.validation.commands.length - 1].startsWith('dotnet build '), 'rebuild generated code');
+  assert(migration.contextDetection.designTimeSafety.includes('Database.Migrate'), 'design-time database writes are checked');
+  assert(migration.review.some((rule) => /resume/.test(rule)), 'resume checks existing output');
+});
+
+test('43-routine-migration-plan-opens-gate-without-human-approval', () => {
+  const facts = { planExists: true, planStatus: 'READY', baselineRecorded: true,
+    rollbackCheckpointExists: true, repositoryStatusKnown: true,
+    requiredCapabilitiesAvailable: true, actionInPlan: true, uncertaintyRegister: [] };
+  assert(e.mutationGate(facts).permitted, 'routine generation can execute without a separate approval fact');
+  for (const impact of ['HIGH', 'CRITICAL']) {
+    const gate = e.mutationGate(Object.assign({}, facts, {
+      uncertaintyRegister: [{ status: 'OPEN', impact, statement: 'Required backfill business semantics unknown' }],
+    }));
+    assert(!gate.permitted, `${impact} genuine data ambiguity must still block`);
+  }
+});
+
+test('44-migration-policy-is-wired-into-agent-entry-points', () => {
+  const root = path.resolve(__dirname, '..', '..');
+  const files = ['AGENTS.md', 'backend/skills/plan-upgrade/SKILL.md',
+    'backend/skills/execute-upgrade/SKILL.md', 'engine/skills/plan/SKILL.md',
+    '.github/agents/ngo-core-backend-upgrade.agent.md',
+    '.github/skills/ngo-core-backend-upgrade/SKILL.md',
+    'backend/workflows/core-upgrade/phases/06-test.md', 'backend/tools/test/README.md'];
+  for (const file of files) {
+    const text = fs.readFileSync(path.join(root, file), 'utf8');
+    assert(text.includes('#autonomous-upgrades-and-ef-migrations'), `${file} must route to the authoritative policy`);
+  }
+  const contract = fs.readFileSync(e.P('AGENTS.md'), 'utf8');
+  assert(contract.includes('not an OPEN HIGH'), 'known generation work is not a fabricated uncertainty');
+  assert(contract.includes('destructive generated draft'), 'destructive drafts remain review-only');
+  assert(contract.includes('independent safe in-plan work'), 'blockers are scoped without bypassing the engine');
+});
+
+test('45-escalation-does-not-block-on-possible-migration', () => {
+  const policy = yaml.parse(fs.readFileSync(e.P('config/escalation-policy.yaml'), 'utf8'));
+  assert(!policy.escalateWhen.includes('destructive-database-migration-may-be-required'), 'inspect generated output before escalating');
+  assert(!policy.escalateWhen.includes('change-affects-public-api'), 'routine Core API adaptations are not public-contract decisions');
+  assert(policy.escalateWhen.includes('generated-migration-has-unresolved-destructive-or-data-semantics-risk'), 'actual migration risks still escalate');
+  assert(policy.escalateWhen.includes('database-application-requested-without-explicit-approval'), 'unapproved database writes still escalate');
 });
 
 // ---- report ----

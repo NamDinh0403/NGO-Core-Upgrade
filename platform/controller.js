@@ -73,18 +73,6 @@ function createJob(options) {
     throw new Error(`An upgrade job is already running for client at ${clientPath}. Cancel or wait for it to finish.`);
   }
 
-  // Clean previous run logs and directories for this client so every upgrade starts clean
-  const clientRunsDir = path.join(RUNS_ROOT, clientId);
-  if (fs.existsSync(clientRunsDir)) {
-    try {
-      for (const entry of fs.readdirSync(clientRunsDir, { withFileTypes: true })) {
-        if (entry.isDirectory()) {
-          fs.rmSync(path.join(clientRunsDir, entry.name), { recursive: true, force: true });
-        }
-      }
-    } catch (_) {}
-  }
-
   const runId = runLib.newRunId(clientId);
   const jobDir = getJobDir(clientId, runId);
   const jobFile = path.join(jobDir, 'job.json');

@@ -4,12 +4,12 @@ const shared = require('./execution-primitives');
 const profiles = {
   backend: {
     phases: ['DISCOVERY', 'TOOL_BOOTSTRAP', 'BASELINE', 'PLAN', 'UPGRADE', 'BUILD_AND_FIX', 'TEST', 'DOCUMENT', 'HANDOVER', 'COMPLETE'],
-    documentation: ['upgradePlanCompleted', 'changesApplied', 'restoreCompleted', 'buildCompleted', 'testsCompleted', 'changedFilesRecorded', 'configChangesDocumented', 'breakingChangesDocumented', 'deploymentImplicationsDocumented', 'unresolvedIssuesDocumented', 'developerDecisionsRecorded', 'upgradeReportGenerated'],
+    documentation: ['upgradePlanCompleted', 'changesApplied', 'restoreCompleted', 'buildCompleted', 'changedFilesRecorded', 'configChangesDocumented', 'breakingChangesDocumented', 'deploymentImplicationsDocumented', 'unresolvedIssuesDocumented', 'developerDecisionsRecorded', 'upgradeReportGenerated'],
     extra: { BUILD_AND_FIX: ['UPGRADE'], TEST: ['BUILD_AND_FIX'], DOCUMENT: ['COMPLETE'], HANDOVER: ['DOCUMENT'] },
   },
   frontend: {
     phases: ['REQUEST', 'DOCTOR', 'VALIDATE_REPOS', 'INVENTORY_CLIENT', 'INSPECT_CORE', 'RESOLVE_PACKAGES', 'DERIVE_REQUIREMENTS', 'MAP_REQUIREMENTS', 'PLAN', 'CHECKPOINT', 'EXECUTE', 'BUILD_AND_FIX', 'AUDIT', 'VALIDATE', 'REPORT', 'LEARN', 'COMPLETE', 'HANDOVER'],
-    documentation: ['planCompleted', 'packageAlignmentResolved', 'clientInventoryCompleted', 'coreInspectionCompleted', 'coreRemainedUnchanged', 'changesApplied', 'baselineBuildsRecorded', 'targetDevelopmentBuildCompleted', 'targetProductionBuildCompleted', 'testsCompleted', 'integrationAuditCompleted', 'changedFilesRecorded', 'uncertaintyResolvedOrDeferred', 'finalReportGenerated'],
+    documentation: ['planCompleted', 'packageAlignmentResolved', 'clientInventoryCompleted', 'coreInspectionCompleted', 'coreRemainedUnchanged', 'changesApplied', 'baselineBuildsRecorded', 'targetDevelopmentBuildCompleted', 'targetProductionBuildCompleted', 'integrationAuditCompleted', 'changedFilesRecorded', 'uncertaintyResolvedOrDeferred', 'finalReportGenerated'],
     extra: { BUILD_AND_FIX: ['EXECUTE'], AUDIT: ['BUILD_AND_FIX'], VALIDATE: ['BUILD_AND_FIX'], HANDOVER: ['COMPLETE', 'REPORT'] },
     readOnly: ['REQUEST', 'DOCTOR', 'VALIDATE_REPOS', 'INVENTORY_CLIENT', 'INSPECT_CORE', 'RESOLVE_PACKAGES', 'DERIVE_REQUIREMENTS', 'MAP_REQUIREMENTS', 'PLAN'],
     mutation: ['CHECKPOINT', 'EXECUTE', 'BUILD_AND_FIX'],

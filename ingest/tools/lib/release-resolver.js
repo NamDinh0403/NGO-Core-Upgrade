@@ -271,7 +271,43 @@ function discoverPackageEvidence(targetVersion, options) {
     } catch (_) {}
   }
 
-  // 8. Check standard NuGet global packages cache (~/.nuget/packages)
+  // 8. Explicit feed auth/forbidden/registry failures must not be masked by local NuGet global cache
+  if (options.authError) {
+    return {
+      available: false,
+      status: 'AUTH_FAILED',
+      source: 'authenticated-feed',
+      identity: null,
+      reason: `Package feed authentication failed (HTTP 401): ${options.authError}`,
+      failureType: 'AUTH_REQUIRED',
+      remediation: 'Authenticate using Azure Artifacts Credential Provider or provide AZURE_DEVOPS_EXT_PAT.',
+    };
+  }
+
+  if (options.forbiddenError) {
+    return {
+      available: false,
+      status: 'FORBIDDEN',
+      source: 'authenticated-feed',
+      identity: null,
+      reason: `Package feed access forbidden (HTTP 403): ${options.forbiddenError}`,
+      failureType: 'FORBIDDEN',
+      remediation: 'Verify your Azure DevOps account has Reader permissions in Feed Settings -> Permissions.',
+    };
+  }
+
+  if (options.registryError) {
+    return {
+      available: false,
+      status: 'CHECK_FAILED',
+      source: 'registry-probe',
+      identity: null,
+      reason: `Package registry check failed: ${options.registryError}`,
+      failureType: 'NETWORK_OR_TIMEOUT',
+    };
+  }
+
+  // 9. Check standard NuGet global packages cache (~/.nuget/packages)
   const homeDir = process.env.USERPROFILE || process.env.HOME || '';
   if (homeDir) {
     const nugetDir = path.join(homeDir, '.nuget', 'packages');
@@ -292,44 +328,6 @@ function discoverPackageEvidence(targetVersion, options) {
         }
       } catch (_) {}
     }
-  }
-
-  // 9. If authenticated feed failed with authentication error (HTTP 401)
-  if (options.authError) {
-    return {
-      available: false,
-      status: 'AUTH_FAILED',
-      source: 'authenticated-feed',
-      identity: null,
-      reason: `Package feed authentication failed (HTTP 401): ${options.authError}`,
-      failureType: 'AUTH_REQUIRED',
-      remediation: 'Authenticate using Azure Artifacts Credential Provider or provide AZURE_DEVOPS_EXT_PAT.',
-    };
-  }
-
-  // 10. If authenticated feed failed with forbidden / insufficient permissions (HTTP 403)
-  if (options.forbiddenError) {
-    return {
-      available: false,
-      status: 'FORBIDDEN',
-      source: 'authenticated-feed',
-      identity: null,
-      reason: `Package feed access forbidden (HTTP 403): ${options.forbiddenError}`,
-      failureType: 'FORBIDDEN',
-      remediation: 'Verify your Azure DevOps account has Reader permissions in Feed Settings -> Permissions.',
-    };
-  }
-
-  // 11. If registry probe failed with network error / timeout
-  if (options.registryError) {
-    return {
-      available: false,
-      status: 'CHECK_FAILED',
-      source: 'registry-probe',
-      identity: null,
-      reason: `Package registry check failed: ${options.registryError}`,
-      failureType: 'NETWORK_OR_TIMEOUT',
-    };
   }
 
   // 12. If pre-resolved feed check passed in options

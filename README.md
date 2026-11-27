@@ -4,6 +4,15 @@ Plug-and-play upgrade agent & dashboard for **NGO.Core (.NET backend)** and **An
 
 Automates the entire upgrade lifecycle: verifies your environment, resolves target versions, aligns NuGet & npm packages, updates code, and validates **0 compile errors** before finishing.
 
+Client upgrades are **command-first and build-gated**: the agent runs existing
+tools instead of reading their JavaScript to simulate results, reads only the
+relevant release/client slices, and reuses valid build evidence. It does not
+create test/probe projects or run framework/unit/browser suites by default.
+Optional tests are explicitly reported as **SKIPPED**, not passed; existing
+targeted tests can still be requested or used for a concrete regression.
+Installed-package, configuration/integration and planned EF migration/SQL
+checks remain required. See [execution policy](engine/AGENTS.md#command-first-upgrade-execution).
+
 ---
 
 ## ⚡ Quick Start: 2 Ways to Run

@@ -612,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.startUpgradeForProject = async function(projectId) {
-    const proj = (allProjects || []).find(p => p.id === projectId);
+    const proj = (projects || []).find(p => p.id === projectId);
     if (!proj) {
       switchView('new-upgrade');
       return;
@@ -633,8 +633,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     }
-    if (!targetVer && Array.isArray(allVersions) && allVersions.length > 0) {
-      targetVer = allVersions[0].version || allVersions[0];
+    if (!targetVer && Array.isArray(availableVersions) && availableVersions.length > 0) {
+      targetVer = availableVersions[0].version || availableVersions[0];
     }
     if (!targetVer) {
       switchView('new-upgrade');
@@ -998,7 +998,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (step1AuthAlert) {
           step1AuthAlert.style.display = 'block';
           step1AuthAlert.className = (statusText === 'SIGN-IN REQUIRED' || statusText === 'FORBIDDEN') ? 'alert alert-warning mt-3' : 'alert alert-danger mt-3';
-          step1AuthAlert.innerHTML = `<strong>Feed Status (${statusText}):</strong> ${escapeHtml(result.error || `HTTP ${result.statusCode}`)}<br><small class="mt-1 d-block">${escapeHtml(result.remediation || 'Run "az login" in terminal or click Enter PAT...')}</small>`;
+          const permHint = (result.statusCode === 403 || statusText === 'FORBIDDEN')
+            ? 'Your Azure account is signed in, but lacks Feed Reader permissions on NGO_Online_feed (HTTP 403). Request Feed Reader permission from your Azure DevOps administrator, or configure a PAT with Packaging (Read).'
+            : (result.remediation || 'Run "az login" in terminal or click Configure PAT...');
+          step1AuthAlert.innerHTML = `<strong>Feed Status (${statusText}):</strong> ${escapeHtml(result.error || `HTTP ${result.statusCode}`)}<br><small class="mt-1 d-block">${escapeHtml(permHint)}</small>`;
         }
       }
     } catch (err) {
@@ -1163,6 +1166,73 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnModalSavePat) btnModalSavePat.addEventListener('click', () => handleSavePat(modalPatInput ? modalPatInput.value.trim() : '', modalAuthFeedback));
   if (btnModalClearPat) btnModalClearPat.addEventListener('click', () => handleClearPat(modalAuthFeedback));
 
+  // Step 1 npm (.npmrc) auth check & one-click repair
+  const step1NpmStatus = document.getElementById('step1-npm-status');
+  const step1NpmDetail = document.getElementById('step1-npm-detail');
+  const btnNpmAuthStep1 = document.getElementById('btn-npm-auth-step1');
+
+  async function loadNpmAuthStatus(clientPath) {
+    if (!step1NpmStatus) return;
+    const targetPath = clientPath || (selectedProject ? selectedProject.path : '');
+    if (!targetPath) {
+      step1NpmStatus.innerHTML = '<span class="text-muted">Pending project</span>';
+      if (step1NpmDetail) step1NpmDetail.textContent = 'Select client project to inspect .npmrc';
+      return;
+    }
+    try {
+      const data = await safeFetchJson(`/api/npm/status?clientPath=${encodeURIComponent(targetPath)}`, {}, 10000);
+      if (data && data.ok) {
+        const priv = (data.npmrc && Array.isArray(data.npmrc.registries))
+          ? data.npmrc.registries.find(r => r && r.registry && !/registry\.npmjs\.org/i.test(r.registry))
+          : null;
+        step1NpmStatus.innerHTML = priv
+          ? '<span class="text-success">Authenticated</span>'
+          : '<span class="text-muted">Public npm</span>';
+        if (step1NpmDetail) {
+          step1NpmDetail.textContent = priv ? priv.registry : 'No private .npmrc credentials needed';
+        }
+      } else {
+        step1NpmStatus.innerHTML = '<span class="text-warning">Auth Needed</span>';
+        if (step1NpmDetail) {
+          const reason = (data && data.npmrc && data.npmrc.unauthenticatedRegistries && data.npmrc.unauthenticatedRegistries[0]?.reason) || 'Missing ~/.npmrc token for private feed';
+          step1NpmDetail.textContent = reason;
+        }
+      }
+    } catch (err) {
+      step1NpmStatus.innerHTML = '<span class="text-muted">Unknown</span>';
+      if (step1NpmDetail) step1NpmDetail.textContent = err.message;
+    }
+  }
+
+  if (btnNpmAuthStep1) {
+    btnNpmAuthStep1.addEventListener('click', async () => {
+      if (!selectedProject) {
+        alert('Select a client repository in Step 1 first so we know which ngo-client/.npmrc to authenticate.');
+        return;
+      }
+      btnNpmAuthStep1.disabled = true;
+      btnNpmAuthStep1.textContent = 'Authenticating npm...';
+      try {
+        const data = await safeFetchJson('/api/npm/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ clientPath: selectedProject.path }),
+        }, 45000);
+        if (step1AuthAlert) {
+          step1AuthAlert.style.display = 'block';
+          step1AuthAlert.className = data && data.ok ? 'alert alert-success mt-3' : 'alert alert-warning mt-3';
+          step1AuthAlert.innerHTML = `<strong>npm (.npmrc) Auth:</strong> ${escapeHtml((data && (data.message || data.error)) || 'Completed')}`;
+        }
+        await loadNpmAuthStatus(selectedProject.path);
+      } catch (err) {
+        alert('npm authentication error: ' + err.message);
+      } finally {
+        btnNpmAuthStep1.disabled = false;
+        btnNpmAuthStep1.textContent = 'Fix npm (.npmrc)';
+      }
+    });
+  }
+
   // Step 1 Active Auth listeners
   if (btnTestAuthStep1) btnTestAuthStep1.addEventListener('click', testAuthConnectionStep1);
   if (btnConnectAzureStep1) btnConnectAzureStep1.addEventListener('click', () => handleConnectAzureCli(step1AuthAlert));
@@ -1174,6 +1244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await safeFetchJson('/api/nuget/refresh-metadata', { method: 'POST' });
         await Promise.all([
           loadAccountIdentity(),
+          loadNpmAuthStatus(),
           loadAvailableVersions(true, true),
           loadProjects(true),
         ]);
@@ -1281,6 +1352,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateUpgradeModePreview();
     preflightResult = null;
+    loadNpmAuthStatus(selectedProject ? selectedProject.path : '');
     validateStartPrerequisites();
   });
 
@@ -1349,6 +1421,7 @@ document.addEventListener('DOMContentLoaded', () => {
   targetVersionSelect.addEventListener('change', () => {
     updateUpgradeModePreview();
     preflightResult = null;
+    loadNpmAuthStatus(selectedProject ? selectedProject.path : '');
     validateStartPrerequisites();
     loadReleaseNotesForTarget(targetVersionSelect.value);
   });
@@ -2159,12 +2232,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`/api/jobs/${activeJobId}/commit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ commitMessage: message })
+        body: JSON.stringify({ message, commitMessage: message })
       });
 
       const data = await res.json();
       if (data.ok) {
-        alert(`Commit successful locally!\nHash: ${data.commitHash}\nAuthor: local developer`);
+        const hash = data.commitHash || (data.commitResult && data.commitResult.commitHash) || 'HEAD';
+        alert(`Commit successful locally!\nHash: ${hash}\nAuthor: local developer`);
         pollJob(activeJobId);
         loadResultsAndDiff(activeJobId);
       } else {
@@ -2581,6 +2655,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentVersionDisplay.textContent = `v${proj.installedCoreVersion || '0.0.0'}`;
     updateUpgradeModePreview();
     preflightResult = null;
+    loadNpmAuthStatus(selectedProject ? selectedProject.path : '');
     validateStartPrerequisites();
     goToWizardStep(1);
   };

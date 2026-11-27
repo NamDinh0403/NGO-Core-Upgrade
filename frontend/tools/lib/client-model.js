@@ -120,7 +120,12 @@ function buildEvidence(inv, clientPath) {
 }
 
 function fromInventory(inv, clientPath) {
-  return { model: buildModel(inv), evidence: buildEvidence(inv, clientPath) };
+  const model = buildModel(inv);
+  const evidence = buildEvidence(inv, clientPath);
+  const layout = require('./browse-filter-layout').inspect(clientPath, (inv.fileInventory && inv.fileInventory.files) || []);
+  model.roleFiles.listFilterLayout = layout.consumers.map((consumer) => consumer.file);
+  if (layout.consumers.length) evidence.tokens.push('ngo-list-filter');
+  return { model, evidence };
 }
 
 module.exports = { fromInventory, buildModel, buildEvidence };

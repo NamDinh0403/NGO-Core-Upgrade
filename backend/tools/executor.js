@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { acceptableStatus } = require('../../engine/tools/lib/validation');
 
 function inspect(packet) {
   const clientPath = packet.client.path;
@@ -22,18 +23,19 @@ function plan(packet) {
   return { track: 'backend', requiresSemanticReview: true, facts: inspect(packet), requirements: packet.requirements,
     shared: packet.upgrade.sharedRequirements, api: packet.upgrade.integration.apiHints,
     skill: 'backend/skills/plan-upgrade/SKILL.md',
+    testPolicy: 'Skip unit/browser/regression suites by default; record tests as SKIPPED with the reason. Run existing targeted tests only when explicitly requested or needed to diagnose a concrete regression. Do not create test/probe projects.',
     verification: ['installed-core-assemblies', 'installed-public-api', 'restore', 'build', 'tests', 'configuration', 'requirement-coverage', 'finding-dispositions', 'deployment-checklist', 'documentation'] };
 }
 
 function execute(packet, implementationPlan) {
   return { track: 'backend', status: 'RUNNING', changes: implementationPlan.changes,
     skill: 'backend/skills/execute-upgrade/SKILL.md',
-    nextAction: 'Inspect actual installed NGO.Core assemblies/public API, apply only the registered backend changes, then restore/build/test and return evidence to the engine.' };
+    nextAction: 'Run the registered backend upgrade, verify installed Core/API and restore/build, generate/review planned EF migration/SQL, record optional tests as SKIPPED with the reason, then return evidence to the engine.' };
 }
 
 function validate(packet, evidence) {
   const required = plan(packet).verification;
-  const issues = required.filter((kind) => !(evidence || []).some((entry) => entry.kind === kind && entry.status === 'PASSED' && entry.ref && fs.existsSync(entry.ref)));
+  const issues = required.filter((kind) => !(evidence || []).some((entry) => entry.kind === kind && acceptableStatus(entry) && entry.ref && fs.existsSync(entry.ref)));
   for (const entry of evidence || []) if (entry.status === 'FAILED') issues.push(entry.kind);
   return { passed: issues.length === 0, missing: [...new Set(issues)],
     nextAction: issues.length ? `Backend verification incomplete: ${issues.join(', ')}. Preserve installed-surface/build evidence; diagnose within the shared retry policy.` : 'Backend evidence passed; return to engine validation.' };

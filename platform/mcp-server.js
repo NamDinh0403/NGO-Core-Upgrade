@@ -38,7 +38,7 @@ const TOOLS = [
   },
   {
     name: 'get_release_notes',
-    description: 'Retrieve team release notes, migration guides, breaking changes, and API adjustments for a target NGO Core version.',
+    description: 'Retrieve the structured four-table release report for a released or draft NGO Core version.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -48,6 +48,44 @@ const TOOLS = [
         },
       },
       required: ['version'],
+    },
+  },
+  {
+    name: 'get_release_notes_range',
+    description: 'Aggregate mandatory and conditional upgrade actions across a Core version range in execution order.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        sourceVersion: { type: 'string', description: 'Current Core version, excluded from the result range.' },
+        targetVersion: { type: 'string', description: 'Target Core version, included in the result range.' },
+      },
+      required: ['sourceVersion', 'targetVersion'],
+    },
+  },
+  {
+    name: 'search_release_notes',
+    description: 'Search deterministic feature, bug-fix, and upgrade-action evidence across one or more releases.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Exact lookup terms to match.' },
+        sourceVersion: { type: 'string', description: 'Optional source bound, excluded.' },
+        targetVersion: { type: 'string', description: 'Optional target bound, included.' },
+        module: { type: 'string', description: 'Optional module/scope text.' },
+      },
+      required: ['query'],
+    },
+  },
+  {
+    name: 'filter_release_notes_for_client',
+    description: 'Evaluate conditional release actions against a client repository without changing it.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        version: { type: 'string', description: 'Release version or draft alias such as v10.' },
+        clientPath: { type: 'string', description: 'Absolute client repository path.' },
+      },
+      required: ['version', 'clientPath'],
     },
   },
   {
@@ -165,6 +203,39 @@ async function callTool(name, args) {
               : `No release notes found for NGO Core ${args.version}.`,
           },
         ],
+      };
+    }
+
+    case 'get_release_notes_range': {
+      const range = releaseNotesLib.getReleaseNotesForRange(args.sourceVersion, args.targetVersion);
+      return {
+        content: [
+          {
+            type: 'text',
+            text: range && range.exists ? range.content : `No releases found in ${args.sourceVersion} -> ${args.targetVersion}.`,
+          },
+        ],
+      };
+    }
+
+    case 'search_release_notes': {
+      const matches = releaseNotesLib.searchReleaseNotes(args.query, {
+        sourceVersion: args.sourceVersion,
+        targetVersion: args.targetVersion,
+        module: args.module,
+      });
+      return {
+        content: [{ type: 'text', text: JSON.stringify({ query: args.query, matches }, null, 2) }],
+      };
+    }
+
+    case 'filter_release_notes_for_client': {
+      const result = releaseNotesLib.filterReleaseNotesForClient(args.version, args.clientPath);
+      return {
+        content: [{
+          type: 'text',
+          text: result ? JSON.stringify(result, null, 2) : `No release notes found for ${args.version}.`,
+        }],
       };
     }
 

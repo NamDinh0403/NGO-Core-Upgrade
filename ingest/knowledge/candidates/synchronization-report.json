@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-09T02:59:12.878Z",
+  "generatedAt": "2026-11-23T02:26:31.167Z",
   "minimumProcessedVersion": "5.0.0",
   "latestDiscoveredCoreVersion": "9.5.0",
   "latestReleaseByMajor": {
@@ -11,10 +11,9 @@
     "9": "9.5.0"
   },
   "duplicateBranches": [],
-  "versionsAdded": [
-    "8.10.0"
-  ],
+  "versionsAdded": [],
   "versionsUpdated": [
+    "8.10.0",
     "9.0.0",
     "9.5.0"
   ],
@@ -235,6 +234,7 @@
       "ingest/knowledge/candidates/releases/9.4.1/evidence/raw-diff.json",
       "ingest/knowledge/candidates/releases/9.4.1/manifest.json",
       "ingest/knowledge/candidates/releases/9.4.1/release-notes.md",
+      "ingest/knowledge/candidates/releases/9.5.0.json",
       "ingest/knowledge/candidates/synchronization-report.json",
       "ingest/knowledge/candidates/version-manifest.json",
       "ingest/knowledge/canonical/releases/7.1.0/backend.yaml",
@@ -447,6 +447,7 @@
       "ingest/knowledge/candidates/releases/9.4.1/changes/shared.json",
       "ingest/knowledge/candidates/releases/9.4.1/evidence/raw-diff.json",
       "ingest/knowledge/candidates/releases/9.4.1/release-notes.md",
+      "ingest/knowledge/candidates/releases/9.5.0.json",
       "ingest/knowledge/candidates/synchronization-report.json",
       "ingest/knowledge/candidates/version-manifest.json",
       "ingest/knowledge/canonical/appsettings/backend-appsettings.yaml",
@@ -680,6 +681,7 @@
       "ingest/knowledge/candidates/releases/9.4.1/evidence/raw-diff.json",
       "ingest/knowledge/candidates/releases/9.4.1/manifest.json",
       "ingest/knowledge/candidates/releases/9.4.1/release-notes.md",
+      "ingest/knowledge/candidates/releases/9.5.0.json",
       "ingest/knowledge/candidates/synchronization-report.json",
       "ingest/knowledge/candidates/version-manifest.json",
       "ingest/knowledge/canonical/appsettings/backend-appsettings.yaml",
@@ -959,6 +961,7 @@
       "ingest/knowledge/candidates/releases/9.4.1/changes/shared.json",
       "ingest/knowledge/candidates/releases/9.4.1/evidence/raw-diff.json",
       "ingest/knowledge/candidates/releases/9.4.1/release-notes.md",
+      "ingest/knowledge/candidates/releases/9.5.0.json",
       "ingest/knowledge/candidates/synchronization-report.json",
       "ingest/knowledge/candidates/version-manifest.json",
       "ingest/knowledge/canonical/backend-appsettings/appsettings-by-version.json",
@@ -1100,12 +1103,17 @@
       "ingest/knowledge/canonical/versions/version-manifest.json"
     ],
     "8.9.0": [
+      "ingest/knowledge/candidates/releases/8.10.0.json",
       "ingest/knowledge/candidates/releases/8.9.0.json",
+      "ingest/knowledge/candidates/synchronization-report.json",
+      "ingest/knowledge/candidates/version-manifest.json"
+    ],
+    "8.10.0": [
+      "ingest/knowledge/candidates/releases/8.10.0.json",
       "ingest/knowledge/candidates/releases/9.0.0.json",
       "ingest/knowledge/candidates/synchronization-report.json",
       "ingest/knowledge/candidates/version-manifest.json"
     ],
-    "8.10.0": [],
     "9.0.0": [
       "backend/README.md",
       "backend/config/core-repository.yaml",

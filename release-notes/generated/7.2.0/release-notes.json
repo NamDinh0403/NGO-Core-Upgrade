@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "version": "7.2.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/7.2.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 5,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-749881bd38be",
+          "version": "7.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Documents/ PdfTemplates/ExpenditureTaskTemplate.docx follow client requirement",
+          "instructionsAndNotes": "- Overrides LandscapeFunctionIds in ExportPdfService to support landscape by tabid\nUpdate Documents/ PdfTemplates/ExpenditureTaskTemplate.docx follow client requirement",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/PdfTemplates/ExpenditureTaskTemplate.docx`, M `ngo-api-core/NGO/NGO.Core.Services/ExportPdfServices/ExportPdfService.cs`"
+        },
+        {
+          "id": "action-cad925553dd4",
+          "version": "7.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run SharePoint Deployment",
+          "instructionsAndNotes": "- Run SharePoint Deployment",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 190 files (backend: 71, frontend: 87, shared: 32); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/HttpClientSPWebRequestExecutor.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/ErrorException.cs`."
+        },
+        {
+          "id": "action-cd92746961df",
+          "version": "7.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "P/S: this SQL After-script will run automatically if PdfTemplates on CoreTaskApprovalSettings is null or empty.",
+          "instructionsAndNotes": "- P/S: this SQL After-script will run automatically if PdfTemplates on CoreTaskApprovalSettings is null or empty.\n20250801_SetupPartnerExpenditureApprovalScreenshotTemplate.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250801_SetupPartnerExpenditureApprovalScreenshotTemplate.sql`"
+        },
+        {
+          "id": "action-6d316f564220",
+          "version": "7.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "overview box",
+          "instructionsAndNotes": "[M][Funding & Summary] [Income planned vs received] overview box\n[For upgrade person] Find the text 'DateAndValueFields' in your custom SQL scripts, if any, please update it to the new format (see new config format in the description of card)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ngBU5eEx/4967-mfunding-summary-income-planned-vs-received-overview-box"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 190 files (backend: 71, frontend: 87, shared: 32); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/HttpClientSPWebRequestExecutor.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/ErrorException.cs`."
+        },
+        {
+          "id": "action-30a21f79f008",
+          "version": "7.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Ensure in API permission of entra app registrations has permission Mail.Read (type: Application) and Granted admin consent",
+          "instructionsAndNotes": "[M] Outlook add-in stops working due to recent MS changes on Current sprint - Core | Trello\n[For deployment person] Ensure in API permission of entra app registrations has permission Mail.Read (type: Application) and Granted admin consent",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/IWyi7qRy/5035-m-outlook-add-in-stops-working-due-to-recent-ms-changes"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 190 files (backend: 71, frontend: 87, shared: 32); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/HttpClientSPWebRequestExecutor.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/ErrorException.cs`."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-fbc8c3be893f",
+          "version": "7.2.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/IWyi7qRy/5035-m-outlook-add-in-stops-working-due-to-recent-ms-changes"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[M] Outlook add-in stops working due to recent MS changes on Current sprint - Core | Trello",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 190 files (backend: 71, frontend: 87, shared: 32); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/HttpClientSPWebRequestExecutor.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/ErrorException.cs`.",
+          "clientImpact": "Action applies during the upgrade. Ensure in API permission of entra app registrations has permission Mail.Read (type: Application) and Granted admin consent"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "7.2.0"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 190,
+    "unresolvedItems": []
+  }
+}

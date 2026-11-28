@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "version": "3.6.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 9,
+    "conditionalActions": 2,
+    "needsReviewActions": 0,
+    "newFeatures": 4,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-ef37c7689703",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "delete from CoreFieldInstanceLocations where id >= 20455 and id <= 20517",
+          "instructionsAndNotes": "For ngo-nextgen only (clean up unused fields in logframe)\ndelete from CoreFieldInstanceLocations where id >= 20455 and id <= 20517",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5c19cc58fd7b",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "delete from CoreCacheItems",
+          "instructionsAndNotes": "delete from CoreCacheItems",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-47afd1663404",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Show view only in main form when Auto Sum Not Editable validation applied (run again to ensure this logic)",
+          "instructionsAndNotes": "Show view only in main form when Auto Sum Not Editable validation applied (run again to ensure this logic)\n[After deployment]: DataFixes/ 20220816_UpdateReadOnlyDependencyForSumNotEditableLogframe.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9aec1dc39d5c",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Wrong format and default config in core scripts <",
+          "instructionsAndNotes": "Card: [T] [Side effect] Wrong format and default config in core scripts <\n[After deployment]: DataFixes/20220905_UpdateTaskTemplatePermissions.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/D3sqFIrI"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-98385e878208",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Admin UI: Metadata error messages <",
+          "instructionsAndNotes": "Card: Admin UI: Metadata error messages <\n[After deployment]: DataFixes/ 20220906_UpdateResourceString_DeleteOptionError.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/fz74ePNB"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-cf7365c8e051",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Workflow, Activate phase form: Rename reference to 'project' <",
+          "instructionsAndNotes": "Card: [T] Workflow, Activate phase form: Rename reference to 'project' <\n[After deployment]: 20221609_UpdateWorkflowResourceStringDescription.sql => Changed file name on version 3.7 to : 20220916_UpdateWorkflowResourceStringDescription.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Mrfd8jag"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1c76ef08e2f9",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Logframe / Reporting: After rejecting report, there is no Save button when re-editing. Also no option to re-send for approval when re-opening an approved report",
+          "instructionsAndNotes": "[S] Logframe / Reporting: After rejecting report, there is no Save button when re-editing. Also no option to re-send for approval when re-opening an approved report\n<\n<\n[After deployment]: DataFixes/ 20220914_AllowReApproval.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/wrmw3wtY"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/pS7zJHBD"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f8303315e29c",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run DataFixes/20220714_PowerBIv2.sql",
+          "instructionsAndNotes": "PowerBI v2\nRun DataFixes/20220714_PowerBIv2.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/8oIfhF5S/2527-m-power-bi-configurability-v2"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-87377cf34cc2",
+          "version": "3.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Entity overall status box: Add more field options <",
+          "instructionsAndNotes": "Card: Entity overall status box: Add more field options <\n[After deployment]: DataFixes/20220915_EntityOverallStatus_RemoveDuplicateTextField2.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/x201Jstw"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-b7da6ecf6395",
+          "version": "3.6.0",
+          "applicability": "conditional",
+          "condition": "check if your client project has NgoContext, if exists please replace Row 43 (see Row 43 in image below) with two new lines in 'App_Start/UnityConfig.cs' file",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Card: Update 'UnityConfig.cs.pp' file in nuget folder",
+          "instructionsAndNotes": "Card: [Technical] Update 'UnityConfig.cs.pp' file in nuget folder\n<\nNote1: when upgrading new core version, if it says to replace file 'UnityConfig.cs', please allow to replace file and then compare with previous file and copy specific lines that needed for your client project.\nNote2: check if your client project has NgoContext, if exists please replace Row 43 (see Row 43 in image below) with two new lines in 'App_Start/UnityConfig.cs' file:\ncontainer.RegisterType<Core.Repositories.CoreContext, Repositories.NgoContext>(new PerRequestLifetimeManager());",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yeVB1Qu2"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-cf08c0982e57",
+          "version": "3.6.0",
+          "applicability": "conditional",
+          "condition": "if your client project has custom NGO",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "(new PerRequesCLifeCimeManageI ;",
+          "instructionsAndNotes": "(new PerRequesCLifeCimeManageI ;\ncont .CoreConCexC, Core PerRequesCLifeCimeManageI()) ;\nDEBUG\ncontainer . AddExCension (new Diagnostic ;\n\" />\nNote3: if your client project has custom NGO.WebJobs.Common, please find 'UnityConfig.cs' inside and add those two lines RegisterType but with PerResolveLifetimeManager for webjob.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-3c21e8240161",
+          "version": "3.6.0",
+          "moduleScope": "Technical",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yeVB1Qu2"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Card: [Technical] Update 'UnityConfig.cs.pp' file in nuget folder",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "check if your client project has NgoContext, if exists please replace Row 43 (see Row 43 in image below) with two new lines in 'App_Start/UnityConfig.cs' file Card: Update 'UnityConfig.cs.pp' file in nuget folder"
+        },
+        {
+          "id": "feature-46d66a59fafa",
+          "version": "3.6.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "container.RegisterType<Repositories.NgoContext, Repositories.NgoContext>(new PerRequestLifetimeManager());",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-cf08c0982e57",
+          "version": "3.6.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "(new PerRequesCLifeCimeManageI ;",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "if your client project has custom NGO (new PerRequesCLifeCimeManageI ;"
+        },
+        {
+          "id": "feature-87377cf34cc2",
+          "version": "3.6.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/x201Jstw"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Card: Entity overall status box: Add more field options <",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Card: Entity overall status box: Add more field options <"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-00c9e92ce88f",
+          "version": "3.6.0",
+          "moduleScope": "Side effect",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/D3sqFIrI"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Card: [T] [Side effect] Wrong format and default config in core scripts <",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Card: Wrong format and default config in core scripts <"
+        },
+        {
+          "id": "bugfix-98385e878208",
+          "version": "3.6.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/fz74ePNB"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Card: Admin UI: Metadata error messages <",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Card: Admin UI: Metadata error messages <"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.6.0"
+    ],
+    "rawCardCount": 12,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

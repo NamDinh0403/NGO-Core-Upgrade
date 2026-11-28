@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "version": "3.2.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-998a2fe0db4f",
+          "version": "3.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Beneficiaries Boxes - Add figures of EOP if existing",
+          "instructionsAndNotes": "Beneficiaries Boxes - Add figures of EOP if existing\n[After deployment]: DataFixes/20220525_Beneficiaries_boxes_AddEOP_Info.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ef1ff070e4a6",
+          "version": "3.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Logframe: Cannot report on Breakdown if no breakdown targets are set",
+          "instructionsAndNotes": "Logframe: Cannot report on Breakdown if no breakdown targets are set\nDataFixes/20220520_LogframeIndicatorTracker_AddMissingBreakdowns.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-998a2fe0db4f",
+          "version": "3.2.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Beneficiaries Boxes - Add figures of EOP if existing",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Beneficiaries Boxes - Add figures of EOP if existing"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-ef1ff070e4a6",
+          "version": "3.2.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Logframe: Cannot report on Breakdown if no breakdown targets are set",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Logframe: Cannot report on Breakdown if no breakdown targets are set"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.2.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

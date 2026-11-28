@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "version": "2.22.3",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [
+        {
+          "id": "action-31d2117fb235",
+          "version": "2.22.3",
+          "applicability": "conditional",
+          "condition": "check if you Override \"app-route.service.ts\" in your Client project",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add canDeactivate: to each of the state, like in Core",
+          "instructionsAndNotes": "Double check if you Override \"app-route.service.ts\" in your Client project\nAdd canDeactivate: [ConfigurationDeactivateGuard] to each of the state, like in Core\nCheck",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core-test/pullrequest/8985"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.22.3"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

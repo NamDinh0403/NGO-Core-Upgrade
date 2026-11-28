@@ -1,0 +1,534 @@
+{
+  "schemaVersion": 1,
+  "version": "3.4.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 19,
+    "conditionalActions": 2,
+    "needsReviewActions": 2,
+    "newFeatures": 3,
+    "bugFixes": 4
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-d463f0496a18",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Approval PDF - Logframe Indicator Tracker",
+          "instructionsAndNotes": "Approval PDF - Logframe Indicator Tracker\nDataFixes/20220729_UpdateLogframeTaskApprovalSettings.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-8888bad9d0bc",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add system configuration key for webjob queue in Azure Setting \"sp:GenerateLogframeDraftVersionQueue\": generatedraftversionqueue-dev",
+          "instructionsAndNotes": "- Add system configuration key for webjob queue in Azure Setting \"sp:GenerateLogframeDraftVersionQueue\": generatedraftversionqueue-dev",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-aec576416cb4",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "task: ExtractFiles@1",
+          "instructionsAndNotes": "- task: ExtractFiles@1\ndisplayName: 'extract GenerateLogframeDraftVersion'\ninputs:\narchiveFilePatterns: '**\\NGO.Deployment\\**\\GenerateLogframeDraftVersion.zip'\ndestinationFolder: '$(Build.ArtifactStagingDirectory)/WebJobs/app_data/Jobs/Continuous/GenerateLogframeDraftVersion'\nin the build-pipeline-api.yml file",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-629c1002ea81",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "",
+          "instructionsAndNotes": "- [After deployment]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-227a2b3af9a9",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run Tools/NGO.Core.Tools.PopulateLogframeDraftVersions to generate draft versions for remaining published versions which don't have draft version",
+          "instructionsAndNotes": "Run Tools/NGO.Core.Tools.PopulateLogframeDraftVersions to generate draft versions for remaining published versions which don't have draft version",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-76c64d3b86ef",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add system configuration key for allow review workflow when budget exceeds total funding: ByPassReviewValidationForBudget",
+          "instructionsAndNotes": "Project Budget: Allow review workflow when budget exceeds total funding\nAdd system configuration key for allow review workflow when budget exceeds total funding: ByPassReviewValidationForBudget",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ae589a2802e9",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add configuration key in Azure Setting for configuring internal domains: InternalDomains",
+          "instructionsAndNotes": "Admin UI, Manage users: All users showing as 'Guest users'\nAdd configuration key in Azure Setting for configuring internal domains: InternalDomains",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e0c430d0a3c1",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Update overview document box to show icon",
+          "instructionsAndNotes": "Update overview document box to show icon\nDataFixes/20220422_UpdateShowIconForDocumentBox.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-fe33f4f81199",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Logframe: Cannot report on Breakdown if no breakdown targets are set",
+          "instructionsAndNotes": "Logframe: Cannot report on Breakdown if no breakdown targets are set\nDataFixes/20220520_LogframeIndicatorTracker_AddMissingBreakdowns.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-dc56da4a6074",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Admin UI - Permissions - Recycle bin",
+          "instructionsAndNotes": "Admin UI - Permissions - Recycle bin\nDataFixes/20220602_CoreRolePermissions_ReplaceViewByListPermissionForRecycleBin.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-370e6f639716",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Tab entry number: Add a function similar to the EntityNumber generation for tab entries",
+          "instructionsAndNotes": "Tab entry number: Add a function similar to the EntityNumber generation for tab entries\nDataFixes/SequenceNumberFix.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1b1493de63a2",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add min-width for Start page Task box column to support mobile UI",
+          "instructionsAndNotes": "Add min-width for Start page Task box column to support mobile UI\n20220622_UpdateMinWidthForStartPageTaskBox",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-c6a4e6a9e6ad",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Fix for modification info fields (modifiedDate, createdDate, modifiedBy, createdBy) of Stakeholder Compliance",
+          "instructionsAndNotes": "Fix for modification info fields (modifiedDate, createdDate, modifiedBy, createdBy) of Stakeholder Compliance\nDataFixes/20220628_StakeholderCompliance_FixModificationInfoFields.sql Pull request",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/fqRJmUK8"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/11028"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b1997ffead96",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "_update_ExchangeRatePublishMode.sql",
+          "instructionsAndNotes": "[BeforeDeployment] 20220628_update_ExchangeRatePublishMode.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-8b04c7d3558b",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Remove default Description field in Overview box description, use Description field from Entity instead",
+          "instructionsAndNotes": "Remove default Description field in Overview box description, use Description field from Entity instead\n20220707_RemoveDescriptionFieldInOverviewboxDescription.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9889573615b6",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run tool Tools/NGO.Core.Tools.UpdateTotalBudgetRow . Correct connection string",
+          "instructionsAndNotes": "Recalculate budget total amount for old data\nRun tool Tools/NGO.Core.Tools.UpdateTotalBudgetRow . Correct connection string",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-538facd5cf98",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run manual script to setup logic related to Validation AutoSum Not Editable",
+          "instructionsAndNotes": "Fix validation for Breakdown form\nIMPORTANT NOTE: for CFGB\nLogframe - Structure - Objective form: From now in Breakdown config, we will remove \"extraIndicatorBaselineColIndex : 3\". Any client that is using this one should be updated to use colIndex = \"indicatorColIndex: 1\" instead.\nRun manual script to setup logic related to Validation AutoSum Not Editable\n20220816_UpdateReadOnlyDependencyForSumNotEditableLogframe.sql\nNote for Core Development Env after this card is approved:\n[Clean up Test fields - ignore this in client projects] Need to run LogframeBreakdownDataFix.sql to fix Logframe data",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/KWbxIFnD/2493-s-logframe-baseline-target-inputs-not-working-correctly-in-cfgb"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ba616a8d0cd0",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Update log overview box",
+          "instructionsAndNotes": "Update log overview box\nDataFixes/20220329_UpdateLogBoxSetting.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-4d96ec49160a",
+          "version": "3.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Add missing Document icon to Document box item",
+          "instructionsAndNotes": "Add missing Document icon to Document box item\n20220701_FixMissingIconInDocumentBox.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-afd33e4b4de2",
+          "version": "3.4.0",
+          "applicability": "conditional",
+          "condition": "If client project customize the names of beneficiaries template",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Beneficiaries template: names of categories in Dissagregation and Additional Breakdown not support multi language.",
+          "instructionsAndNotes": "Beneficiaries template: names of categories in Dissagregation and Additional Breakdown not support multi language.\nIf client project customize the names of beneficiaries template, please change the name in templates to resource strings and write the hot fix script to correct old data following the hot fix below. If not, run\nthis hot fix before deployment\nDataFixes/20220517_UpdateResourceStringForBeneficiaryCategories.sql (read the note above)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-72af5a2c2d65",
+          "version": "3.4.0",
+          "applicability": "conditional",
+          "condition": "ExchangeRatePublishMode { Editable = 0, AutoFill = 1, AutoFillAndEditable = 2 } . More detail in Config wiki > CoreExchangeRates",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Finance tabs: Have exchange rates auto-fill but remain editable",
+          "instructionsAndNotes": "Finance tabs: Have exchange rates auto-fill but remain editable\nBase on the current configuration of the client, make sure to update all sql script of the client to the value from\nExchangeRatePublishMode { Editable = 0, AutoFill = 1, AutoFillAndEditable = 2 } . More detail in Config wiki > CoreExchangeRates\nfor these key\n( 'AutoSetBudgetExchangeRate' ,'AutoSetFundingExchangeRate' , 'AutoSetExpenditureExchangeRate')",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yZIw8i1y"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-fa2154afd555",
+          "version": "3.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Logframe draft versions",
+          "instructionsAndNotes": "Logframe draft versions\nFrom now on, the draft version of logframe will be auto generated after the previous version published via",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b8a5f0c229e3",
+          "version": "3.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "NGO.Core.Webjobs.GenerateLogframeDraftVersion webjob (for more information:",
+          "instructionsAndNotes": "NGO.Core.Webjobs.GenerateLogframeDraftVersion webjob (for more information:",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/uqZLlXB1"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-0d00fb833993",
+          "version": "3.4.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "In case client project, please make sure to add",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-a565481a3f0b",
+          "version": "3.4.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Project Budget: Allow review workflow when budget exceeds total funding",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Add system configuration key for allow review workflow when budget exceeds total funding: ByPassReviewValidationForBudget"
+        },
+        {
+          "id": "feature-370e6f639716",
+          "version": "3.4.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Tab entry number: Add a function similar to the EntityNumber generation for tab entries",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Tab entry number: Add a function similar to the EntityNumber generation for tab entries"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-fe33f4f81199",
+          "version": "3.4.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Logframe: Cannot report on Breakdown if no breakdown targets are set",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Logframe: Cannot report on Breakdown if no breakdown targets are set"
+        },
+        {
+          "id": "bugfix-c6a4e6a9e6ad",
+          "version": "3.4.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/fqRJmUK8"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/11028"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Fix for modification info fields (modifiedDate, createdDate, modifiedBy, createdBy) of Stakeholder Compliance",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Fix for modification info fields (modifiedDate, createdDate, modifiedBy, createdBy) of Stakeholder Compliance"
+        },
+        {
+          "id": "bugfix-093160694e31",
+          "version": "3.4.0",
+          "moduleScope": "Clean up Test fields - ignore this in client projects",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/KWbxIFnD/2493-s-logframe-baseline-target-inputs-not-working-correctly-in-cfgb"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Fix validation for Breakdown form",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Run manual script to setup logic related to Validation AutoSum Not Editable"
+        },
+        {
+          "id": "bugfix-4d96ec49160a",
+          "version": "3.4.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Add missing Document icon to Document box item",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Add missing Document icon to Document box item"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.4.0"
+    ],
+    "rawCardCount": 24,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

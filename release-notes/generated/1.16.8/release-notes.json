@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "version": "1.16.8",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "1.16.8"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

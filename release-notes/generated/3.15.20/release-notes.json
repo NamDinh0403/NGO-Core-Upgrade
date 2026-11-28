@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "3.15.20",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-a58595fed43a",
+          "version": "3.15.20",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update package references for Aspose.Words to version 21.9.0 when upgrading to this version.",
+          "instructionsAndNotes": "Update package references for Aspose.Words to version 21.9.0 when upgrading to this version.\nUpdate 2024/02/07 ( (If we go directly to 3.15.24 or above, then no need to do this step) : Ensure client NGO.Webjobs.Job also includes package Aspose.Words 21.9.0 => Ensure ScreenshotAsyncFunctions (Webjob) work without error.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.15.20"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

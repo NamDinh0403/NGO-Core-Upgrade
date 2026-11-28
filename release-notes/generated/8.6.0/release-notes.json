@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "version": "8.6.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.6.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 1,
+    "needsReviewActions": 4,
+    "newFeatures": 0,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-b97ff8980a69",
+          "version": "8.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to IndicatorStructureFields if it belongs to Indicator",
+          "instructionsAndNotes": "- Add to IndicatorStructureFields if it belongs to Indicator",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 89, frontend: 61, shared: 28); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`."
+        },
+        {
+          "id": "action-1045e314c030",
+          "version": "8.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to ObjectiveStructureFields if it belongs to Objective",
+          "instructionsAndNotes": "- Add to ObjectiveStructureFields if it belongs to Objective",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 89, frontend: 61, shared: 28); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-83998d4262b3",
+          "version": "8.6.0",
+          "applicability": "conditional",
+          "condition": "optional approval subfolder for \"Mark as Paid\" or \"Cancel\" actions",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Add new system config SPSignedOffAdditionalDocumentsFolderName to control the optional approval subfolder for \"Mark as Paid\" or \"Cancel\" actions.",
+          "instructionsAndNotes": "[8][M] Files uploaded using \"mark as paid\" or \"mark as cancelled\" should be copied to 99 approval on Current sprint - Core | Trello\nAdd new system config SPSignedOffAdditionalDocumentsFolderName to control the optional approval subfolder for \"Mark as Paid\" or \"Cancel\" actions.\nDefault: \"Additional documents\" . Can be changed or set empty per client needs. Please ask client's PM/ AM about this before running tool below\n[After Deployment] Check if the client uses \"Mark as Paid\" or \"Cancel\" on payments. ( select * from Coreentitytabs where TabFunctionId in( 35,132,136) and Active = 1) and check CoreRolePermissions as well for these tab functions.\nIf yes, update appsettings.json and run:\nNGO.Core.Tools.UpdatePaymentDocumentLinks",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/r6gg5amB/5499-8m-files-uploaded-using-mark-as-paid-or-mark-as-cancelled-should-be-copied-to-99-approval"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Enums/TabFunctionId.cs`, A `ngo-api-core/NGO/NGO.Core.Tools.Logframe2SavedQueryMigration/appsettings.json`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdatePaymentDocumentLinks/NGO.Core.Tools.UpdatePaymentDocumentLinks.csproj`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdatePaymentDocumentLinks/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-2550d6435c59",
+          "version": "8.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If you want the field is multiple, change type of field instances in code",
+          "instructionsAndNotes": "If you want the field is multiple, change type of field instances in code",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/HRVFghna/5454-s-add-new-relatedentity-fields-to-log-log2-log3"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 89, frontend: 61, shared: 28); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`."
+        },
+        {
+          "id": "action-e38518ad9907",
+          "version": "8.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" Migration tool for saved analyse queries on Current sprint - Core | Trello Migration tool for saved analyse queries on Current sprint - Core | Trello",
+          "instructionsAndNotes": "﷟HYPERLINK \" Migration tool for saved analyse queries on Current sprint - Core | Trello  Migration tool for saved analyse queries on Current sprint - Core | Trello\nIf using Logframe2: Run NGO.Core.Tools.Logframe2SavedQueryMigration to verify and migrate saved analysis queries from Logframe1. Please start with review mode , resolve all warnings (search for \" See warnings for details\" in console or log file) , then run update mode .",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/3TaYSPQr/5519-slogframe2-migration-tool-for-saved-analyse-queries"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Tools.Logframe2SavedQueryMigration/NGO.Core.Tools.Logframe2SavedQueryMigration.csproj`"
+        },
+        {
+          "id": "action-884fe3b37dd4",
+          "version": "8.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\" Unable to determine if field …\": Check CoreAnalyseLogframeObjectiveView (Core/Client if available) to determine whether the field belongs to the Objective or Indicator table",
+          "instructionsAndNotes": "- \" Unable to determine if field …\": Check CoreAnalyseLogframeObjectiveView (Core/Client if available) to determine whether the field belongs to the Objective or Indicator table",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 89, frontend: 61, shared: 28); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`."
+        },
+        {
+          "id": "action-ee9d88159e2e",
+          "version": "8.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If any structure fields were renamed in Logframe2, remap them in IndicatorStructureFieldMappings or ObjectiveStructureFieldMappings",
+          "instructionsAndNotes": "- If any structure fields were renamed in Logframe2, remap them in IndicatorStructureFieldMappings or ObjectiveStructureFieldMappings",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 89, frontend: 61, shared: 28); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-e70849e77181",
+          "version": "8.6.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "\"Missing analyse table relation for …\": Add the corresponding analyse table relation for Logframe2",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 178 files (backend: 89, frontend: 61, shared: 28); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`.",
+          "extraClientAction": "None stated in the release source."
+        },
+        {
+          "id": "bugfix-105b3fadb26c",
+          "version": "8.6.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "\" Missing analyse column for field …\": Identify the new field in the relevant tab function and add it as new analyse column",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 178 files (backend: 89, frontend: 61, shared: 28); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PageImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "8.6.0"
+    ],
+    "rawCardCount": 9,
+    "gitDiffFileCount": 178,
+    "unresolvedItems": []
+  }
+}

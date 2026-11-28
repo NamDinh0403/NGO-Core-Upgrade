@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "version": "2.15.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 5,
+    "conditionalActions": 0,
+    "needsReviewActions": 2,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-7bf86da7c7d9",
+          "version": "2.15.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "CoreResourceStrings: Document button bar - Rename \"New from template\" to \"New Document\"",
+          "instructionsAndNotes": "CoreResourceStrings: Document button bar - Rename \"New from template\" to \"New Document\"\n[After deployment]\nDataFixes/20210701_UpdateResourceStringKeysForDocumentButton.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-783b71dfe451",
+          "version": "2.15.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "UPDATE CoreTaskApprovalSettings SET TaskFolderSetting = REPLACE(TaskFolderSetting, N'}​​​', N', extraText: \"####\"}​​​​​​​​​​') WHERE TaskFolderSetting LIKE '%}​​​​​​​​​​​​​​​​​​​​​",
+          "instructionsAndNotes": "Approval file name without having number formating (copy two below lines into a manual script file in your client project)\nUPDATE CoreTaskApprovalSettings SET TaskFolderSetting = REPLACE(TaskFolderSetting, N'}​​​', N', extraText: \"####\"}​​​​​​​​​​') WHERE TaskFolderSetting LIKE '%}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​' AND TaskFolderSetting NOT LIKE '%extraText%' ￼ UPDATE CoreTaskApprovalSettings SET PdfFileNameFormat = REPLACE(PdfFileNameFormat, N'}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​', N', extraText: \"####\"}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​') WHERE PdfFileNameFormat LIKE '%}​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​' AND PdfFileNameFormat NOT LIKE '%extraText%' ￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9e1f9b54492a",
+          "version": "2.15.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Logframe EOY",
+          "instructionsAndNotes": "Logframe EOY\nBefore upgrade/deployment: Run this file DataFixes\\20210610_[Before]_Logframe_Add_EOY.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1080c826aabe",
+          "version": "2.15.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "CoreFieldInstances: Update Chacracteristics with ExportDispalyedName property for project name",
+          "instructionsAndNotes": "CoreFieldInstances: Update Chacracteristics with ExportDispalyedName property for project name\n[After deployment]\nDataFixes\\20210608_UpdateCharacteristicWithExportDisplayNameForProject.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a7891d7e20ed",
+          "version": "2.15.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Admin Options : set special lists as system, and read-only in UI",
+          "instructionsAndNotes": "Admin Options : set special lists as system, and read-only in UI\nDataFixes\\20210812_UpdatePermissionsOfMetadataList.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-7a1bc09543b3",
+          "version": "2.15.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Admin UI - Adjust \"Administrator\" role permission",
+          "instructionsAndNotes": "Admin UI - Adjust \"Administrator\" role permission\nDataFixes: 20210617_UpdateAdminPermissionOnAdminUI",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-845cbdc58a87",
+          "version": "2.15.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Funding Entity Page: Update Resource String with key = \"untrack_funding\" for funding entity toolbox",
+          "instructionsAndNotes": "Funding Entity Page: Update Resource String with key = \"untrack_funding\" for funding entity toolbox\nBefore upgrade/deployment: Run this file DataFixes\\20210628_UpdateResourceStringValuesForUntrackingFunding",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-7bf86da7c7d9",
+          "version": "2.15.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "CoreResourceStrings: Document button bar - Rename \"New from template\" to \"New Document\"",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. CoreResourceStrings: Document button bar - Rename \"New from template\" to \"New Document\""
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.15.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

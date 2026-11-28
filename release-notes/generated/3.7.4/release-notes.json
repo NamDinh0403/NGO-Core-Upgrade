@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "version": "3.7.4",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-5e222f64de10",
+          "version": "3.7.4",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "<",
+          "instructionsAndNotes": "<\nLost Beneficiary ReportingName in db after it's approved\nWe can re-use existing tool NGO.Core.Tools.PeriodNamesPopulation to update reporting's name for Beneficiary\nFor Live only - Manually fix existing data for beneficiary reporting periods\n[After deployment]: DataFixes/20221201_QueryAndManuallyCorrectBeneficiaryReportings.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/wHtaamEW/2896-beneficiaries-should-display-the-next-period-not-report-yet-when-open-the-actual-form"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.7.4"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

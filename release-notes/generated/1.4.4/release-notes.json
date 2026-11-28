@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "version": "1.4.4",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-a490f4f3449a",
+          "version": "1.4.4",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add MonitoringFinanceModule",
+          "instructionsAndNotes": "1. app.module.ts\nAdd MonitoringFinanceModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-7e501fcabb76",
+          "version": "1.4.4",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add",
+          "instructionsAndNotes": "2. environments\nAdd\nmonitoring: 'api/core/entity',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6163dd3a0926",
+          "version": "1.4.4",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Config",
+          "instructionsAndNotes": "4. Config\nNew appsettings needed in web config:\n<add key=\"sp:FinancialActualEntityUpdateQueue\" value=\"financialactualentityupdatequeue-dev\" />",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-d916f58b464b",
+          "version": "1.4.4",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Deployment",
+          "instructionsAndNotes": "3. Deployment\nNew parameters for Deploy.ps1. Release pipelines and Azure AppServices needs to be updated:\n-FinancialActualEntityUpdateQueue \"financialactualentityupdatequeue-dev\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-4530b8968479",
+          "version": "1.4.4",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "New permission added for finance monitoring. Needs to be added to client specific permission script in various roles:",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "1.4.4"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

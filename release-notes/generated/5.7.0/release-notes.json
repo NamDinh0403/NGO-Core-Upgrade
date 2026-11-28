@@ -1,0 +1,607 @@
+{
+  "schemaVersion": 1,
+  "version": "5.7.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.7.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 14,
+    "conditionalActions": 2,
+    "needsReviewActions": 10,
+    "newFeatures": 6,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-e66a4c145db9",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update nuget packages",
+          "instructionsAndNotes": "Update nuget packages\n[For upgrade person]\nUpdate build-pipleine-api.yml:\nChange the li ne: arguments : 'install --global dotnet-ef --version 8.0.3'\nTo : arguments : 'install --global dotnet-ef --version 8.0.7'",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mr3DMhKn/4455-update-nuget-packages"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-8d09f26ad123",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Delete the User Permissions in the list (tick the User Permissions and select 'Remove User Permission'), except for the Permission SharePoint App.",
+          "instructionsAndNotes": "- Delete the User Permissions in the list (tick the User Permissions and select 'Remove User Permission'), except for the Permission SharePoint App.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-8d58c3908905",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check and add characteristic: \" IsFilteredByName\": true if current phase filter fields and field instance fields don't have this characteristic (fieldDefinitionId: 63)",
+          "instructionsAndNotes": "[Admin/ Entities filter] Current Phase should get the CurrentPhaseName of each entity on Current sprint - Core | Trello\nCheck and add characteristic: \" IsFilteredByName\": true if current phase filter fields and field instance fields don't have this characteristic (fieldDefinitionId: 63)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/xObuv7fv/4028-admin-entities-filter-current-phase-should-get-the-currentphasename-of-each-entity"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-f4416b981c7d",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update env.config.json File:",
+          "instructionsAndNotes": "- Update env.config.json File:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/assets/config/env.config.json`"
+        },
+        {
+          "id": "action-1887a49ce82f",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the 'logout-success' string as a postfix to the postLogoutRedirectUri . For example:",
+          "instructionsAndNotes": "- Add the 'logout-success' string as a postfix to the postLogoutRedirectUri . For example:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-8242cd0f5733",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update src/app/app-route.service.ts File:",
+          "instructionsAndNotes": "- Update src/app/app-route.service.ts File:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app-route.service.ts`"
+        },
+        {
+          "id": "action-4db85442f42d",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following after the path 'unauthorized':",
+          "instructionsAndNotes": "- Add the following after the path 'unauthorized':",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-4e3c67c676d1",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the 'logout-success' string as a postfix to the postLogoutRedirectUri in the Release variable. For example, change:",
+          "instructionsAndNotes": "- Add the 'logout-success' string as a postfix to the postLogoutRedirectUri in the Release variable. For example, change:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-ebad19aa29f4",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update appsettings.json Files:",
+          "instructionsAndNotes": "- Update appsettings.json Files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Repositories.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, A `ngo-api-core/NGO/NGO.Tests/NGO.Core.Services.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-2327315900fb",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Job appsettings.json Files:",
+          "instructionsAndNotes": "- Update Job appsettings.json Files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Repositories.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, A `ngo-api-core/NGO/NGO.Tests/NGO.Core.Services.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-8a47f14d8376",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Azure AppService:",
+          "instructionsAndNotes": "- Update Azure AppService:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-3b517b6f9037",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following keys:",
+          "instructionsAndNotes": "- Add the following keys:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-2bd18f5bf6d7",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Azure Portal:",
+          "instructionsAndNotes": "- Update Azure Portal:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-679e7857ce8d",
+          "version": "5.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add a variable with the key Core:MaximumUsers and the value can be obtained from the appsettings.json in the API.",
+          "instructionsAndNotes": "- Add a variable with the key Core:MaximumUsers and the value can be obtained from the appsettings.json in the API.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Repositories.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, A `ngo-api-core/NGO/NGO.Tests/NGO.Core.Services.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-84285a8f8f2f",
+          "version": "5.7.0",
+          "applicability": "conditional",
+          "condition": "If client custom CoreAnalyseLogframeReporting",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add \"Is latest reported period\" to Logframe ITT analyse on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[S] Add \"Is latest reported period\" to Logframe ITT analyse on Current sprint - Core | Trello\nIf client custom CoreAnalyseLogframeReporting, pls add rpt.IsLatestPeriod (refer to this PR  )",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/evTZgp64/4356-s-add-is-latest-reported-period-to-logframe-itt-analyse"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/24063"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Logframe/LogframeReporting.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeReporting.cs`"
+        },
+        {
+          "id": "action-e49808894714",
+          "version": "5.7.0",
+          "applicability": "conditional",
+          "condition": "- Add a configuration with the key MaximumUsers. This config defines the maximum number of active user licenses that can be in the system. Depending on the customer's requirements (if any), if there are no requirements, the default value will be 0 (i.e., no li",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add a configuration with the key MaximumUsers. This config defines the maximum number of active user licenses that can be in the system. Depending on the customer's requirements (i",
+          "instructionsAndNotes": "- Add a configuration with the key MaximumUsers. This config defines the maximum number of active user licenses that can be in the system. Depending on the customer's requirements (if any), if there are no requirements, the default value will be 0 (i.e., no limit, as it currently is).",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-4e1b84bab452",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deployment Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-0eb635aba06e",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Correct Permission Groups for Funding Ideas:",
+          "instructionsAndNotes": "- Correct Permission Groups for Funding Ideas:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs`"
+        },
+        {
+          "id": "action-efee6deb3912",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Go to the link:",
+          "instructionsAndNotes": "- Go to the link:",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://ngodev.sharepoint.com/sites/xxxxx/fundingIdeas/_layouts/15/user.aspx"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs`"
+        },
+        {
+          "id": "action-8e52c98bdd75",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "IMPORTANT: Replace 'xxxxx' with the corresponding site collection for the environment.",
+          "instructionsAndNotes": "- IMPORTANT: Replace 'xxxxx' with the corresponding site collection for the environment.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-98269897a15f",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Create a page about Signing out of NGO Online on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[S] Create a page about Signing out of NGO Online on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ZzwEJax0/4431-s-create-a-page-about-signing-out-of-ngo-online"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-51c8067dcefe",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Before Deployment:",
+          "instructionsAndNotes": "- Before Deployment:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-e1bb52a15c0e",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"CalculatedFinancialValuesQueue\": \"calculatedfinancialvaluesqueue\" ￼",
+          "instructionsAndNotes": "- \"CalculatedFinancialValuesQueue\": \"calculatedfinancialvaluesqueue\" ￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-6a6dda113551",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"CalculatedFinancialValuesCurrentYearTotalSchedule\": \"0 0 1 * *\" ￼",
+          "instructionsAndNotes": "- \"CalculatedFinancialValuesCurrentYearTotalSchedule\": \"0 0 1 * *\" ￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-8ef8dd9f9354",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:Queue:CalculatedFinancialValuesQueue\": \"calculatedfinancialvaluesqueue\",",
+          "instructionsAndNotes": "- \"Core:Queue:CalculatedFinancialValuesQueue\": \"calculatedfinancialvaluesqueue\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        },
+        {
+          "id": "action-2fadb2dff6cd",
+          "version": "5.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:CalculatedFinancialValuesCurrentYearTotalSchedule\": \"0 0 1 * *\"",
+          "instructionsAndNotes": "- \"Core:CalculatedFinancialValuesCurrentYearTotalSchedule\": \"0 0 1 * *\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-a4d8707d4429",
+          "version": "5.7.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/evTZgp64/4356-s-add-is-latest-reported-period-to-logframe-itt-analyse"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/24063"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Add \"Is latest reported period\" to Logframe ITT analyse on Current sprint - Core | Trello",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Logframe/LogframeReporting.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeReporting.cs`",
+          "clientImpact": "If client custom CoreAnalyseLogframeReporting Add \"Is latest reported period\" to Logframe ITT analyse on Current sprint - Core | Trello"
+        },
+        {
+          "id": "feature-e66a4c145db9",
+          "version": "5.7.0",
+          "moduleScope": "For upgrade person",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mr3DMhKn/4455-update-nuget-packages"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Update nuget packages",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`.",
+          "clientImpact": "Action applies during the upgrade. Update nuget packages"
+        },
+        {
+          "id": "feature-65e8e546affc",
+          "version": "5.7.0",
+          "moduleScope": "FND17 / PRJ11",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/pnZfoAiN/4350-mfnd17prj11-add-calculated-browse-list-columns"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[M][FND17][PRJ11] Add calculated browse list columns",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-45a0a556540e",
+          "version": "5.7.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Inside the Queue section, add:",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-18420280e41a",
+          "version": "5.7.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Inside the Core section, add:",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-cfdc7f22834d",
+          "version": "5.7.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/SkTffOfP/4417-m-users-roles-have-a-limit-on-number-of-users-that-can-be-added-to-the-system"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[M] Users & Roles - have a limit on number of users that can be added to the system on Current sprint - Core | Trello",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-a6aa0b14c039",
+          "version": "5.7.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/xrXyz763/4377-s-fundingidea-permission-for-sp-is-incorrect-with-that-show-in-admin-ui"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Fundingidea permission for SP is incorrect with that show in Admin UI on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs`",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.7.0"
+    ],
+    "rawCardCount": 31,
+    "gitDiffFileCount": 362,
+    "unresolvedItems": []
+  }
+}

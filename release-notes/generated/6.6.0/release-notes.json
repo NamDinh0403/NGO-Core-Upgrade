@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "6.6.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.6.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-679d91fa89e6",
+          "version": "6.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Review release 6.6.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 6.6.0 git-diff evidence\nThe candidate contains 123 changed files (backend: 59, frontend: 51, shared: 13) but no matching release-note cards. Review the complete diff before classifying client actions: azure-pipeline-prerelease-pack.yml, ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityMembersController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/TaskController.cs, ngo-api-core/NGO/NGO.Core.API/Controllers/BudgetController.cs, ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs, ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs, ngo-api-core/NGO/NGO.Core.Common/Utilities/SPUtilities.cs, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240126_RemoveDuplicateTextFieldInstances.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250624_FixExistingTaskApprovalSettings.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250721_ChangeTaskStatusFromEndedToReviewEnded.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250721_SetupDefaultSPWebNameFormat.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/InitTaskTemplate.sql, ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `azure-pipeline-prerelease-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityMembersController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/TaskController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Utilities/SPUtilities.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240126_RemoveDuplicateTextFieldInstances.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250624_FixExistingTaskApprovalSettings.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250721_ChangeTaskStatusFromEndedToReviewEnded.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250721_SetupDefaultSPWebNameFormat.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/InitTaskTemplate.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 123,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "1.13.1",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-09add25c8f13",
+          "version": "1.13.1",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run \"MigrationForRelatedAgreement.sql\" in folder Deployment/DataFixes",
+          "instructionsAndNotes": "Deployment\nRun \"MigrationForRelatedAgreement.sql\" in folder Deployment/DataFixes",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "1.13.1"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

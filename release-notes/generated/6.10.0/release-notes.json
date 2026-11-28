@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "6.10.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.10.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-10c4d31d5a87",
+          "version": "6.10.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Review release 6.10.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 6.10.0 git-diff evidence\nThe candidate contains 102 changed files (backend: 48, frontend: 17, shared: 37) but no matching release-note cards. Review the complete diff before classifying client actions: .gitignore, azure-pipeline-master.yml, azure-pipeline-pack.yml, azure-pipelines.yml, ngo-api-core/NGO/NGO.Core.API/BaseControllers/SPDocumentController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/SPResourceDocumentController.cs, ngo-api-core/NGO/NGO.Core.API/packages.lock.json, ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs, ngo-api-core/NGO/NGO.Core.Common/Constants/SharePointFields.cs, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20260113_ReactiveLF1.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20260113_ReactiveLF2.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/01_01 InitFieldOptions_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/packages.lock.json, ngo-api-core/NGO/NGO.Core.HelpDocumentationDeployment/packages.lock.json, ngo-api-core/NGO/NGO.Core.Infrastructure/packages.lock.json, ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs, ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs, ngo-api-core/NGO/NGO.Core.Model/Dto/SharePoint/SPListItem.cs, ngo-api-core/NGO/NGO.Core.Model/Mapping/BaseEntityDtoMapper.cs, ngo-api-core/NGO/NGO.Core.Model/Mapping/BaseSubEntityDtoMapper.cs",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `.gitignore`, M `azure-pipeline-master.yml`, M `azure-pipeline-pack.yml`, M `azure-pipelines.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/SPDocumentController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/SPResourceDocumentController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePointFields.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20260113_ReactiveLF1.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20260113_ReactiveLF2.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/01_01 InitFieldOptions_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.HelpDocumentationDeployment/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Infrastructure/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/SharePoint/SPListItem.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Mapping/BaseEntityDtoMapper.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Mapping/BaseSubEntityDtoMapper.cs`, M `ngo-api-core/NGO/NGO.Core.Model/NGO.Core.Model.csproj`, M `ngo-api-core/NGO/NGO.Core.Model/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Repositories/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Services/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.AppSettingsJsonFileMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.AzureAppSettingsMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.DependencyMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FinanceFiscalYearValueMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixAnalyseQuery/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixBudgetCalculation/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixPhaseNumberForTasksAddedToWorkflowByEntity/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.MetadataImport/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.MonitoringValueCorrection/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.PeriodNamesPopulation/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.PopulateLogframeDraftVersions/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetReadOnlyForSignOffDocumentsFolder/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetTaskTemplatesResourceStrings/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetWFForEntitiesCreatedWithoutWF/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.TaskTemplateApprovalStepsMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingPartnerExpenditureReportings/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingWorkflowInstance/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateLogframeGlobalResourceStrings/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateTotalBudgetRow/packages.lock.json`, M `ngo-api-core/NGO/NGO.Deployment/packages.lock.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.Core.WebJobs.Common/packages.lock.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/packages.lock.json`, M `ngo-api-core/NGO/NGO/packages.lock.json`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 102,
+    "unresolvedItems": []
+  }
+}

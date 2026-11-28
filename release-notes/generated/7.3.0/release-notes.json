@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "version": "7.3.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/7.3.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-2b938c4b6891",
+          "version": "7.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Logframe2 - Separate objective and structure tab functions and fields",
+          "instructionsAndNotes": "Logframe2 - Separate objective and structure tab functions and fields\nIf logframe1 is used: override entity-route.service.ts and replace 'logframe' path with logframeRouteService, also add always-run core override script '20250930_DisableLogframe2.sql'\nIf logframe2 is used: manual run after script '20250917_DisableLogframe1.sql'",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/eEdN0vxG/5080-logframe2-separate-objective-and-structure-tab-functions-and-fields"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250917_DisableLogframe1.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, M `ngo-client-core/projects/ngo-core/src/lib/common-entity/entity-route.service.ts`"
+        },
+        {
+          "id": "action-8653676512d6",
+          "version": "7.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Display correct period labels in UI based on each indicator's frequency on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[M][Logframe 2] Display correct period labels in UI based on each indicator's frequency on Current sprint - Core | Trello\n[For deployment person]\n[After deployment] In 20251003_EnsureFrequencyIndicator.sql Update (4) to list id of Objective level that is input (not have target or reporting period), and manual run script. To ensure every indicator have frequency. Then run the tool below\n[After deployment] Only run tool after ensure indicator frequency . Update appsettings.json and manual run the tool: NGO.Core.Tools.RebindPeriodNameForIndicatorTargetReport",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Rr0Rrrxh/5028-mlogframe-2-display-correct-period-labels-in-ui-based-on-each-indicators-frequency"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20251003_EnsureFrequencyIndicator.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, A `ngo-api-core/NGO/NGO.Core.Tools.RebindPeriodNameForIndicatorTargetReport/NGO.Core.Tools.RebindPeriodNameForIndicatorTargetReport.csproj`, A `ngo-api-core/NGO/NGO.Core.Tools.RebindPeriodNameForIndicatorTargetReport/appsettings.json`"
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "7.3.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 292,
+    "unresolvedItems": []
+  }
+}

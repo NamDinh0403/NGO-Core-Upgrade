@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "version": "7.5.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/7.5.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 1,
+    "needsReviewActions": 2,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-e90615bbbd8e",
+          "version": "7.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update app.module.ts :",
+          "instructionsAndNotes": "- Update app.module.ts :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-3f831d2bb5a9",
+          "version": "7.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add EmergencyFinanceModule, NonProjectFinanceModule to @NgModule",
+          "instructionsAndNotes": "- Add EmergencyFinanceModule, NonProjectFinanceModule to @NgModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/NonProject.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/NonProject.cs`"
+        },
+        {
+          "id": "action-13806385d034",
+          "version": "7.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API URL to environment files:",
+          "instructionsAndNotes": "- Add API URL to environment files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.ts`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-7b0527447115",
+          "version": "7.5.0",
+          "applicability": "conditional",
+          "condition": "If client extended BudgetFormComponent",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If client extended BudgetFormComponent, should follow Core code to fix the problem in card.",
+          "instructionsAndNotes": "If client extended BudgetFormComponent, should follow Core code to fix the problem in card.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mysZCJvG/3719-finance-budget-edit-form-reffield-options-in-2nd-3rd-levels-cannot-be-saved"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 64, frontend: 101, shared: 31); representative changes: M `.gitignore`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-d7e33f2d859b",
+          "version": "7.5.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "nonProjectFinance: 'api/core/entity'",
+          "instructionsAndNotes": "- nonProjectFinance: 'api/core/entity'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/NonProject.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/NonProject.cs`"
+        },
+        {
+          "id": "action-33ed3e9e8728",
+          "version": "7.5.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "emergencyFinance: 'api/core/entity'",
+          "instructionsAndNotes": "- emergencyFinance: 'api/core/entity'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Emergency.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-0574df1927cc",
+          "version": "7.5.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/rWZ324Al/5257-s-enable-finance-tabs-functionality-on-emergency-non-project-entities"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Enable finance tabs + functionality on Emergency & Non-Project entities",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Emergency.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-7b0527447115",
+          "version": "7.5.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mysZCJvG/3719-finance-budget-edit-form-reffield-options-in-2nd-3rd-levels-cannot-be-saved"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "If client extended BudgetFormComponent, should follow Core code to fix the problem in card.",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 196 files (backend: 64, frontend: 101, shared: 31); representative changes: M `.gitignore`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PaymentController.cs`.",
+          "extraClientAction": "If client extended BudgetFormComponent. If client extended BudgetFormComponent, should follow Core code to fix the problem in card."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "7.5.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 196,
+    "unresolvedItems": []
+  }
+}

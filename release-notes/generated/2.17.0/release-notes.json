@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "version": "2.17.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 7,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-8dd9e8b3ee36",
+          "version": "2.17.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run DataFixes/ 20210909_RemoveTaskEntityId.sql",
+          "instructionsAndNotes": "- Run DataFixes/ 20210909_RemoveTaskEntityId.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9aa8c854b2da",
+          "version": "2.17.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run DataFixes/20210831_UpdateLogframePeriod.sql",
+          "instructionsAndNotes": "- Run DataFixes/20210831_UpdateLogframePeriod.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2856652d3ac6",
+          "version": "2.17.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update target period / reporting name: Run Tools/NGO.Core.Tools.LogframePeriodNamesPopulation",
+          "instructionsAndNotes": "- Update target period / reporting name: Run Tools/NGO.Core.Tools.LogframePeriodNamesPopulation",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1d013a66e724",
+          "version": "2.17.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add code plugin: in angular.json file, add \"node_modules/tinymce/plugins/code/plugin.min.js\" next to \"node_modules/tinymce/plugins/link/plugin.min.js\"",
+          "instructionsAndNotes": "- Add code plugin: in angular.json file, add \"node_modules/tinymce/plugins/code/plugin.min.js\" next to \"node_modules/tinymce/plugins/link/plugin.min.js\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5d4a38b8ca3d",
+          "version": "2.17.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to Environment files: emailTemplates: 'api/core/emailTemplates'",
+          "instructionsAndNotes": "- Add to Environment files: emailTemplates: 'api/core/emailTemplates'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-004ea6e5124b",
+          "version": "2.17.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "20210830_UpdateDataForSortingMySitesBox.sql",
+          "instructionsAndNotes": "- 20210830_UpdateDataForSortingMySitesBox.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-37bb72f78cd6",
+          "version": "2.17.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run DataFixes/20210910_UpdateCheckPermissionIdForWorkflowTabFunctions",
+          "instructionsAndNotes": "- Run DataFixes/20210910_UpdateCheckPermissionIdForWorkflowTabFunctions",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-88940dc5411d",
+          "version": "2.17.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Bug in sorting tasks list:",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.17.0"
+    ],
+    "rawCardCount": 8,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

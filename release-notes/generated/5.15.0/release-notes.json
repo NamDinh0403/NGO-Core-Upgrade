@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "5.15.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.15.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-25fe1c8e4fff",
+          "version": "5.15.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release 5.15.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 5.15.0 git-diff evidence\nThe candidate contains 6 changed files (backend: 5, shared: 1) but no matching release-note cards. Review the complete diff before classifying client actions: ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs, ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs, ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs, ngo-api-core/NGO/NGO.Core.Services/CacheService.cs, ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs, ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs`, M `ngo-api-core/NGO/NGO.Core.Services/AnalyseService.cs`, M `ngo-api-core/NGO/NGO.Core.Services/CacheService.cs`, M `ngo-api-core/NGO/NGO.Core.Services/TaskBatchService.cs`, D `ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 6,
+    "unresolvedItems": []
+  }
+}

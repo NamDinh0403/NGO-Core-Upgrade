@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "version": "3.9.5",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-5878973821a0",
+          "version": "3.9.5",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Card: Refactor PDF generation and Task extension points <",
+          "instructionsAndNotes": "Card: Refactor PDF generation and Task extension points <\nWe change the way to implement BaseTaskActionService and BaseExportPdfActionService to use Injection Services instead of looping in dll as before. Example for implementation in Client Project could be find here:",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/AFzEihhF"
+            },
+            {
+              "label": "Ref",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-dtglobal/commit/d591320e4600fbf74d108ef0562fa328b0022d9c?refName=refs/heads/main&path=/ngo-api/NGO/NGO.Services/ExportPdfServices/BudgetExportPdfService.cs&_a=compare"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.9.5"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "version": "1.6.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 9,
+    "conditionalActions": 0,
+    "needsReviewActions": 4,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-3bc25807122b",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add ChangeModule",
+          "instructionsAndNotes": "1. app.module.ts\nAdd ChangeModule\nAdd to providers:\n{\nprovide: ROUTER_CONFIGURATION,\nuseFactory: (config) => config.routerConfig,\ndeps: [APP_CONFIG]\n}",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-7d02da1bd52a",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add line: changes: 'api/core/entity',",
+          "instructionsAndNotes": "2. environments\nAdd line: changes: 'api/core/entity',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3a2ff054ad56",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace contents of main.ts with the file from ngo-online-core",
+          "instructionsAndNotes": "3. main.ts\nReplace contents of main.ts with the file from ngo-online-core",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d3d4c049b36b",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add this to file above the line 'import zone.js/dist/zone':",
+          "instructionsAndNotes": "4. polyfills.js\nAdd this to file above the line 'import zone.js/dist/zone':\nimport 'es6-promise';\nimport 'isomorphic-fetch';\nimport 'url-polyfill';",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2ba05f8d4b07",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove scripts reference to file 'n ode_modules/simplemde/dist/simplemde.min.js '",
+          "instructionsAndNotes": "5. angular.json\nRemove scripts reference to file 'n ode_modules/simplemde/dist/simplemde.min.js '",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bb99a985746b",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add lines:",
+          "instructionsAndNotes": "Add lines:\n\"es6-promise\": \"^4.2.8\",\n\"isomorphic-fetch\": \"^2.2.1\",\n\"marked\": \"^0.7.0\",\n\"url-polyfill\": \"^1.1.8\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-64669a1b6d7a",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove line: \"simplemde\": \"^1.11.2\"",
+          "instructionsAndNotes": "Remove line: \"simplemde\": \"^1.11.2\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-4705e16c81bb",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update and redeploy Outlook addin manifest so URLs match this pattern with the #-sign:",
+          "instructionsAndNotes": "(This one is not related to developer, it's regarding the manifest xml file for Outllook Add-In that sent to clients)\nUpdate and redeploy Outlook addin manifest so URLs match this pattern with the #-sign:\n<bt:Urls>\n<bt:Url id=\"functionFile\" DefaultValue=\"\n<bt:Url id=\"messageReadTaskPaneUrl\" DefaultValue=\"\n</bt:Urls>",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://localhost:4200/#/outlook-addin"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bb8ba8c89945",
+          "version": "1.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add routing for Analyse in child",
+          "instructionsAndNotes": "9. app-route.service.ts\nAdd routing for Analyse in child\n{\npath: 'analyse',\ncanActivate: [MsalGuard, ConfigurationGuard],\nchildren: this.analyseRouteService.getRoutes()\n},",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-f1944ff367d1",
+          "version": "1.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "package.json",
+          "instructionsAndNotes": "6. package.json\nElement 'dependencies':",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-4a711403bad9",
+          "version": "1.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "After Add_migration check the code to make sure having this defaultValue for IsFilter",
+          "instructionsAndNotes": "- After Add_migration check the code to make sure having this defaultValue for IsFilter",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f9d99d5f8a4b",
+          "version": "1.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "PdfTemplates format",
+          "instructionsAndNotes": "8. PdfTemplates format\nthis is the order\n1. HeaderTemplate.docx (logo ...) with ExtraText = HEADER\n2. DefaultTemplate.docx, an empty file (ExtraText = DEFAULT) - or BankAccountTaskTemplate.docx, TaskTemplate.docx, FundingIdeaTaskTemplate.docx, ... (data columns) with ExtraText = MAIN\n3. TaskChecklistTemplate.docx with ExtraText = CHECKLIST\n4. CommentTemplate.docx with ExtraText = COMMENT\n5. ReviewTemplate.docx with ExtraText = REVIEW\n6. ApprovalTemplate.docx with ExtraText = APPROVAL",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0ce996ae6ded",
+          "version": "1.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Deployment",
+          "instructionsAndNotes": "7. Deployment",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-308b7fdd1eee",
+          "version": "1.6.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://localhost:4200/#/outlook-addin"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "(This one is not related to developer, it's regarding the manifest xml file for Outllook Add-In that sent to clients)",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Update and redeploy Outlook addin manifest so URLs match this pattern with the #-sign:"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "1.6.0"
+    ],
+    "rawCardCount": 13,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "version": "9.4.1",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/9.4.1/manifest.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

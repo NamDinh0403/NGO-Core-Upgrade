@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "6.5.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.5.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-57d91bcaef0a",
+          "version": "6.5.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Review release 6.5.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 6.5.0 git-diff evidence\nThe candidate contains 91 changed files (backend: 46, frontend: 37, shared: 8) but no matching release-note cards. Review the complete diff before classifying client actions: azure-pipeline-prerelease-pack.yml, ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeGlobalController.cs, ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs, ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs, ngo-api-core/NGO/NGO.Core.Common/Utilities/HttpUtilities.cs, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250224_FixProblemWithAmountFieldIncomeSchedule.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250612_FixExistingDataTaskFlows.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_13 Configurations.sql, ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs, ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/BasicConfiguration.cs, ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/ExportLogframeObjective.cs, ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeSetting.cs, ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs, ngo-api-core/NGO/NGO.Core.Model/Mapping/OverviewBoxDefinitionDtoMapper.cs, ngo-api-core/NGO/NGO.Core.Model/Mapping/SPDocumentMapper.cs, ngo-api-core/NGO/NGO.Core.Model/Mapping/TaskFlowDtoMapper.cs, ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `azure-pipeline-prerelease-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeGlobalController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Utilities/HttpUtilities.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250224_FixProblemWithAmountFieldIncomeSchedule.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250612_FixExistingDataTaskFlows.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_13 Configurations.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/BasicConfiguration.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/ExportLogframeObjective.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeSetting.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Mapping/OverviewBoxDefinitionDtoMapper.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Mapping/SPDocumentMapper.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Mapping/TaskFlowDtoMapper.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 91,
+    "unresolvedItems": []
+  }
+}

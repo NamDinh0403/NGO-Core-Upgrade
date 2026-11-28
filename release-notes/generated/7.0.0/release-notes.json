@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 1,
+  "version": "7.0.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/7.0.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 12,
+    "conditionalActions": 2,
+    "needsReviewActions": 12,
+    "newFeatures": 3,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-d99f3312c0dc",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Upgrade to .NET 9",
+          "instructionsAndNotes": "- Upgrade to .NET 9",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1070 files (backend: 488, frontend: 486, shared: 96); representative changes: M `.gitignore`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/Attributes/NGOCheckPermissionAttribute.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`."
+        },
+        {
+          "id": "action-01d9175cc1c4",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update netVersion parameter in build-pipeline-api.yml from 8.0 to 9.0 .",
+          "instructionsAndNotes": "- Update netVersion parameter in build-pipeline-api.yml from 8.0 to 9.0 .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `build-pipeline-api.yml`"
+        },
+        {
+          "id": "action-94e27b6e1410",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update EF tool version in build-pipeline-api.yml :",
+          "instructionsAndNotes": "- Update EF tool version in build-pipeline-api.yml :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `build-pipeline-api.yml`"
+        },
+        {
+          "id": "action-b8abfdc7086b",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to all appsettings.json files and Azure App Settings:",
+          "instructionsAndNotes": "- Add to all appsettings.json files and Azure App Settings:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-3f58b624e770",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update environment.ts & environment.prod.ts :",
+          "instructionsAndNotes": "- Update environment.ts & environment.prod.ts :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.prod.ts`, M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-3f9a65d70465",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update App.module.ts",
+          "instructionsAndNotes": "- Update App.module.ts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-1260e29d2f8c",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "DELETE FROM CoreFieldInstances WHERE Id IN (21355, 21356)",
+          "instructionsAndNotes": "DELETE FROM CoreFieldInstances WHERE Id IN (21355, 21356)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1070 files (backend: 488, frontend: 486, shared: 96); representative changes: M `.gitignore`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/Attributes/NGOCheckPermissionAttribute.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`."
+        },
+        {
+          "id": "action-86f370b55e88",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add 'faCommentLines' to library.addIcons",
+          "instructionsAndNotes": "Import ' faCommentLines' from '@fortawesome/pro-light-svg-icons'\nAdd 'faCommentLines' to library.addIcons",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/BOBvztKJ/4767-l-logframe-new-reporting-form"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`"
+        },
+        {
+          "id": "action-3e070f5eb932",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "set => _fieldDependencies = value ?? new Dictionary<string, string>",
+          "instructionsAndNotes": "Override LogframeExcelService -> can Override SetupReadonlyFieldByDependencies() to update property FieldDependencies ) to disable an actual fields based on Indicator Type\nExp: In MCC, Numfields is only show if Indicator is Text and Ref, so\npublic virtual Dictionary<string, string> FieldDependencies\n{\nget => _fieldDependencies;\nset => _fieldDependencies = value ?? new Dictionary<string, string>\n{ { \"numField1\", \"3;5\" }}\n}",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, A `ngo-api-core/NGO/NGO.Core.Services/ExportExcelService/LogframeExcelService.cs`"
+        },
+        {
+          "id": "action-7ec65982c035",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API url to environment files:",
+          "instructionsAndNotes": "[L] Logframe - Updated layout logframe structure\nAdd API url to environment files:\nlogframes2: 'api/core/entity'",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/FyjrMfP7/4645-l-logframe-updated-layout-logframe-structure"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-2e187b9c32d4",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following to dependencies to frontend package.json_",
+          "instructionsAndNotes": "[M] Can we drag and drop folders on Current sprint - Core | Trello\nAdd the following to dependencies to frontend package.json_\n\"ng2-file-upload\" : \"^1.3.0\"\n\"ngx-file-drop\" : \"^10.0.0\"\nRemove the dependency \"ngx-uploader\".",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/CLajr9Or/4495-m-can-we-drag-and-drop-folders"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/package.json`"
+        },
+        {
+          "id": "action-310af9f7b567",
+          "version": "7.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add key \"Core:Queue: ReminderTaskDeadlineQueue \", value \" remindertaskdeadlinequeue \" in appsettings and azure",
+          "instructionsAndNotes": "Add key \"Core:Queue: ReminderTaskDeadlineQueue \", value \" remindertaskdeadlinequeue \" in appsettings and azure",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: R052 `ngo-api-core/NGO/NGO.Core.Common/Queue/ReminderTaskDeadlineQueue.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-6d3a68f8a3bb",
+          "version": "7.0.0",
+          "applicability": "conditional",
+          "condition": "check if release pipeline / deployment appsettings.json having Core",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "check if release pipeline / deployment appsettings.json having Core: Deployment:DeploySPFieldsAndCTypesEnabled false -> if so please add Core: Deployment:DeploySPFieldsAndCTypesEna",
+          "instructionsAndNotes": "[For deployment person] check if release pipeline / deployment appsettings.json having Core: Deployment:DeploySPFieldsAndCTypesEnabled false -> if so please add Core: Deployment:DeploySPFieldsAndCTypesEnabled true to the release pipeline, and turn the setting back when the deployment done.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-8156d0661d15",
+          "version": "7.0.0",
+          "applicability": "conditional",
+          "condition": "check if release pipeline / deployment appsettings.json having Core",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "check if release pipeline / deployment appsettings.json having Core: Deployment:DeploySPFieldsAndCTypesEnabled false -> if so please add Core: Deployment:DeploySPFieldsAndCTypesEna",
+          "instructionsAndNotes": "[M] Import / export logframe reporting\n[For deployment person] check if release pipeline / deployment appsettings.json having Core: Deployment:DeploySPFieldsAndCTypesEnabled false -> if so please add Core: Deployment:DeploySPFieldsAndCTypesEnabled true to the release pipeline, and turn the setting back when the deployment done.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/kgHs7HMX/4768-m-import-export-logframe-reporting"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-f950e8969687",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Find and replace net8.0 with net9.0 in all .csproj files before installing NuGet packages .",
+          "instructionsAndNotes": "- Find and replace net8.0 with net9.0 in all .csproj files before installing NuGet packages .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/package.json`"
+        },
+        {
+          "id": "action-815e767e9918",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Task: Install dotnet-ef",
+          "instructionsAndNotes": "- Task: Install dotnet-ef",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        },
+        {
+          "id": "action-5ed922af4353",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Change version from 8.0.7 → 9.0.1 .",
+          "instructionsAndNotes": "- Change version from 8.0.7 → 9.0.1 .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`"
+        },
+        {
+          "id": "action-4551d72ae902",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Configuration",
+          "instructionsAndNotes": "Configuration",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1070 files (backend: 488, frontend: 486, shared: 96); representative changes: M `.gitignore`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/Attributes/NGOCheckPermissionAttribute.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`."
+        },
+        {
+          "id": "action-d964f3ece57f",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Manual SQL Script (Run Before Deployment)",
+          "instructionsAndNotes": "Manual SQL Script (Run Before Deployment)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1070 files (backend: 488, frontend: 486, shared: 96); representative changes: M `.gitignore`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/Attributes/NGOCheckPermissionAttribute.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`."
+        },
+        {
+          "id": "action-d9b4ee0779f6",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Finance, Expenditure, ability to Import expenditure",
+          "instructionsAndNotes": "[M][PRJ18] Finance, Expenditure, ability to Import expenditure\nRemember to copy environment.prod.ts\npartnerExpenditureImport: 'api/core/entity',",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/c3mWmh4b/4349-mprj18-finance-expenditure-ability-to-import-expenditure"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/PartnerExpenditure.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`, M `ngo-client-core/src/environments/environment.prod.ts`, M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-b241b11f5c39",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import PartnerExpenditureReportingImportModule in app.module.ts.",
+          "instructionsAndNotes": "- Import PartnerExpenditureReportingImportModule in app.module.ts.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/PartnerExpenditure.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/PartnerExpenditureReporting.cs`, M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-3d42463584dd",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remember to copy environment.prod.ts",
+          "instructionsAndNotes": "Remember to copy environment.prod.ts\nlogframeImported: 'api/core/entity',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, M `ngo-client-core/src/environments/environment.prod.ts`, M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-26875099a913",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Finance, Summary, Total funding by status box",
+          "instructionsAndNotes": "[M][SUM07] Finance, Summary, Total funding by status box",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Z2MCSGrO/4235-msum07-finance-summary-total-funding-by-status-box"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`"
+        },
+        {
+          "id": "action-a6d412ca4577",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "summary: 'api/core/summary'",
+          "instructionsAndNotes": "- summary: 'api/core/summary'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1070 files (backend: 488, frontend: 486, shared: 96); representative changes: M `.gitignore`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/Attributes/NGOCheckPermissionAttribute.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`."
+        },
+        {
+          "id": "action-38b7e787ea9d",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import Logframe2Module in app.module.ts.",
+          "instructionsAndNotes": "- Import Logframe2Module in app.module.ts.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-d99e4aecc38d",
+          "version": "7.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Manage Site Collection improvement",
+          "instructionsAndNotes": "[M] Manage Site Collection improvement",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/b85jr09i/4729-m16-manage-site-collection-improvement"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1070 files (backend: 488, frontend: 486, shared: 96); representative changes: M `.gitignore`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/Attributes/NGOCheckPermissionAttribute.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-dcc8b94172c0",
+          "version": "7.0.0",
+          "moduleScope": "New Step – 29/09/2025",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[New Step – 29/09/2025] : Update the .NET Version of the web service in Azure to .NET 9 .",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1070 files (backend: 488, frontend: 486, shared: 96); representative changes: M `.gitignore`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/Attributes/NGOCheckPermissionAttribute.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-f50381e35008",
+          "version": "7.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/BOBvztKJ/4767-l-logframe-new-reporting-form"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "IATI modular (  )",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-4826bcdc6aa5",
+          "version": "7.0.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/FyjrMfP7/4645-l-logframe-updated-layout-logframe-structure"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[L] Logframe - Updated layout logframe structure",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, M `ngo-client-core/src/environments/environment.ts`",
+          "clientImpact": "Action applies during the upgrade. Add API url to environment files:"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "7.0.0"
+    ],
+    "rawCardCount": 28,
+    "gitDiffFileCount": 1070,
+    "unresolvedItems": []
+  }
+}

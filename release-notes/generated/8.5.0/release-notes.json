@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "8.5.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.5.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-b41a25b15682",
+          "version": "8.5.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Review release 8.5.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 8.5.0 git-diff evidence\nThe candidate contains 325 changed files (backend: 53, frontend: 39, shared: 233) but no matching release-note cards. Review the complete diff before classifying client actions: .github/copilot-instructions.md, .github/instructions/backend.instructions.md, .github/instructions/dw.instructions.md, .github/instructions/frontend.instructions.md, .gitignore, ngo-api-core/NGO/.github/copilot-instructions.md, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Current/StoreProcedure/Insert_CurrentTables_Master.sql, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Current/StoreProcedure/Insert_Current_entitySummary.sql, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Current/StoreProcedure/Logframe/Insert_Logframe_Master.sql, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Execution/Build_ExecuteScriptManual.sql, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/Beneficiary/Insert_Landing_Beneficiary_Detail.sql, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/EntityStatus/Insert_Overall_Entity_Status_RelatedTables_Master.sql, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/Logframe/Insert_Landing_LogFrameGlobal_Detail.sql, ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/Logframe/Insert_Landing_LogFrame_Master.sql, ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/ADFDeployment.ps1, ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/ARMTemplateForFactory.json, ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/Compare-ArmTemplates.ps1, ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/Merge-ArmTemplate.ps1, ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/README.md, ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/Readme.txt",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: A `.github/copilot-instructions.md`, A `.github/instructions/backend.instructions.md`, A `.github/instructions/dw.instructions.md`, A `.github/instructions/frontend.instructions.md`, M `.gitignore`, D `ngo-api-core/NGO/.github/copilot-instructions.md`, M `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Current/StoreProcedure/Insert_CurrentTables_Master.sql`, M `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Current/StoreProcedure/Insert_Current_entitySummary.sql`, M `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Current/StoreProcedure/Logframe/Insert_Logframe_Master.sql`, M `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Execution/Build_ExecuteScriptManual.sql`, M `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/Beneficiary/Insert_Landing_Beneficiary_Detail.sql`, A `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/EntityStatus/Insert_Overall_Entity_Status_RelatedTables_Master.sql`, D `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/Logframe/Insert_Landing_LogFrameGlobal_Detail.sql`, R060 `ngo-api-core/NGO/DW/NGO.Core.DW/DataCrawl/Landing/StoreProcedure/Logframe/Insert_Landing_LogFrame_Master.sql`, A `ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/ADFDeployment.ps1`, M `ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/ARMTemplateForFactory.json`, A `ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/Compare-ArmTemplates.ps1`, A `ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/Merge-ArmTemplate.ps1`, A `ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/README.md`, D `ngo-api-core/NGO/DW/NGO.Core.DW/Deployment/Readme.txt`, M `ngo-api-core/NGO/DW/NGO.Core.DW/FullCrawl/Current/StoreProcedure/Insert_CurrentTables.sql`, M `ngo-api-core/NGO/DW/NGO.Core.DW/FullCrawl/Execution/Build_ExecuteScriptManual.sql`, M `ngo-api-core/NGO/DW/NGO.Core.DW/NGO.Core.DW.sqlproj`, A `ngo-api-core/NGO/DW/NGO.Core.DW/Tests/README.md`, D `ngo-client-core/.github/copilot-instructions.md`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 325,
+    "unresolvedItems": []
+  }
+}

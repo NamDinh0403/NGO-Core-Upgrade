@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "version": "7.7.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/7.7.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [
+        {
+          "id": "action-6114d97703b1",
+          "version": "7.7.0",
+          "applicability": "conditional",
+          "condition": "if client overrides it",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Adjusted DB FUNCTION GetTaskThatUserHasViewPermission , so if client overrides it, please inner join Tasks table with CoreEntities to make sure only view accessable entities //Uyen",
+          "instructionsAndNotes": "Adjusted DB FUNCTION GetTaskThatUserHasViewPermission , so if client overrides it, please inner join Tasks table with CoreEntities to make sure only view accessable entities //Uyen",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/AKettC6e/5344-analyse-task-as-primary-table-user-should-not-see-the-tasks-belong-to-the-entity-they-have-not-access-permission"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 153 files (backend: 80, frontend: 28, shared: 45); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeBreakdownTemplatesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-ee2306593a31",
+          "version": "7.7.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Hc0tfMNW/5326-s-default-page-is-not-loaded-when-user-inputs-incorrect-url"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Default page is not loaded when user inputs incorrect URL",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-client-core/src/app/app-route.service.ts`",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "7.7.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 153,
+    "unresolvedItems": []
+  }
+}

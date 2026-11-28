@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "version": "3.13.9",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [
+        {
+          "id": "action-6fbe899ba247",
+          "version": "3.13.9",
+          "applicability": "conditional",
+          "condition": "If client project uses Core Monitoring functions",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Finance actuals job: actuals rows' values of sub header, header and total are empty",
+          "instructionsAndNotes": "Finance actuals job: actuals rows' values of sub header, header and total are empty\nIf client project uses Core Monitoring functions, run the tool NGO.Core.Tools.MonitoringValueCorrection",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/bteFBLac"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.13.9"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

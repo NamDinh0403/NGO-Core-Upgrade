@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "version": "4.6.9",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-bd0147c8f073",
+          "version": "4.6.9",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Run the script in this card when do the upgrade: 20231006_1200_MigrateFundingEntityToFundingAllocationTransaction.sql",
+          "instructionsAndNotes": "[Allocation] Funding Source should not be added to/gotten from the CoreFunctionalItemEntityRelations (\n[Before deployment] Run the script in this card when do the upgrade: 20231006_1200_MigrateFundingEntityToFundingAllocationTransaction.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/KXErJ2Jc"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-912185068c08",
+          "version": "4.6.9",
+          "moduleScope": "Allocation",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/KXErJ2Jc"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Allocation] Funding Source should not be added to/gotten from the CoreFunctionalItemEntityRelations (",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Run the script in this card when do the upgrade: 20231006_1200_MigrateFundingEntityToFundingAllocationTransaction.sql"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "4.6.9"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

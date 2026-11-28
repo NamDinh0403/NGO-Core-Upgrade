@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "version": "5.1.1",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-b876b7459003",
+          "version": "5.1.1",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VtJiphKu/4010-deployment-improvements-when-setting-up-new-environments"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Deployment improvements when setting up new environments",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.1.1"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

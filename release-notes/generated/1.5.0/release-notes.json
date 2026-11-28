@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "version": "1.5.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-e860d74f5ee9",
+          "version": "1.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Deployment",
+          "instructionsAndNotes": "1. Deployment\nNew parameters for Deploy.ps1. Release pipelines and Azure AppServices needs to be updated:\n-ScreenshotQueue \"screenshotqueue-dev\"\n2. Config\nNew appsettings needed in web config:\n<add key=\"sp:ScreenshotQueue\" value=\"screenshotqueue-dev\" />",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-518cd653a169",
+          "version": "1.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "add WebJobs.ScreenshotAsyncManagement to client project with services references from itself and core. This also needs to be added to release pipeline.",
+          "instructionsAndNotes": "3. WebJob\nadd WebJobs.ScreenshotAsyncManagement to client project with services references from itself and core. This also needs to be added to release pipeline.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "1.5.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

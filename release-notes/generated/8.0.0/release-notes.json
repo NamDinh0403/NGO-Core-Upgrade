@@ -1,0 +1,557 @@
+{
+  "schemaVersion": 1,
+  "version": "8.0.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.0.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 13,
+    "conditionalActions": 3,
+    "needsReviewActions": 8,
+    "newFeatures": 4,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-dc3750c2bef8",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "remove import of bootstrap: ￼@import url(\"",
+          "instructionsAndNotes": "remove import of bootstrap: ￼@import url(\"",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1270 files (backend: 369, frontend: 791, shared: 110); representative changes: M `.gitignore`, M `build-pipeline-angular.yml`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminMinimumRequirementsController.cs`."
+        },
+        {
+          "id": "action-7094b51e7dfd",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add at the end of the file:",
+          "instructionsAndNotes": "Add at the end of the file:\n/* Override to adapt for Bootstrap 5 */\n.modal-backdrop {\nz-index:1050 !important;\n}",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: D `ngo-client-core/projects/ngo-core/src/lib/emergency-finance/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/logframe2/index.ts`, A `ngo-client-core/projects/ngo-core/src/lib/minimum-requirement/index.ts`, D `ngo-client-core/projects/ngo-core/src/lib/non-project-finance/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/shared/index.ts`, M `ngo-client-core/src/index.html`"
+        },
+        {
+          "id": "action-bc0317335bcf",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run SharePoint Deployment",
+          "instructionsAndNotes": "- Run SharePoint Deployment",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`"
+        },
+        {
+          "id": "action-9a233e301f1b",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Azure setting: Core:Queue:IATITransactionImportQueue",
+          "instructionsAndNotes": "- Update Azure setting: Core:Queue:IATITransactionImportQueue",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/IATITransactionImportQueue.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/IATI/IATITransaction.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/IATI/IATITransactionImport.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/IATI/IATITransaction.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/IATI/IATITransactionImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Enums/IATITransactionImport.cs`"
+        },
+        {
+          "id": "action-7147d15a2bc2",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update appsetting files: \"IATITransactionImportQueue\": \"iatitransactionimportqueue-dev-nidy\"",
+          "instructionsAndNotes": "- Update appsetting files: \"IATITransactionImportQueue\": \"iatitransactionimportqueue-dev-nidy\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/IATITransactionImportQueue.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/IATI/IATITransaction.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/IATI/IATITransactionImport.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/IATI/IATITransaction.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/IATI/IATITransactionImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Enums/IATITransactionImport.cs`"
+        },
+        {
+          "id": "action-29b8b08a1794",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Update all settings in appsettings.json the same as your environment and run NGO.Core.Tools.UpdateIdeaMembers",
+          "instructionsAndNotes": "[L] Idea and FundingIdea document permissions should be specific for each entity\n[After deployment] Update all settings in appsettings.json the same as your environment and run NGO.Core.Tools.UpdateIdeaMembers\nNote: skip this deployment note if you are updating to 8.3 or above (if true, let follow the new deployment note of 8.3)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yU7W4yZ2/4893-l-idea-and-fundingidea-document-permissions-should-be-specific-for-each-entity"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/Permission.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/FundingIdea.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Idea.cs`, D `ngo-api-core/NGO/NGO.Core.Tools.SetAzureAdIdForUser/appsettings.json`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/NGO.Core.Tools.UpdateIdeaMembers.csproj`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`, M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-8859401f8e4e",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update app.module.ts :",
+          "instructionsAndNotes": "- Update app.module.ts :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-dc172215a627",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add farExclamationCircle after faMoneyBill inside the constructor.",
+          "instructionsAndNotes": "- Add farExclamationCircle after faMoneyBill inside the constructor.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1270 files (backend: 369, frontend: 791, shared: 110); representative changes: M `.gitignore`, M `build-pipeline-angular.yml`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminMinimumRequirementsController.cs`."
+        },
+        {
+          "id": "action-ebbc891e8d56",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add MinimumRequirementModule to @NgModule",
+          "instructionsAndNotes": "- Add MinimumRequirementModule to @NgModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/MinimumRequirement/MinimumRequirement.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/MinimumRequirement/MinimumRequirement.cs`"
+        },
+        {
+          "id": "action-888a6d1da96b",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API URL to environment files:",
+          "instructionsAndNotes": "- Add API URL to environment files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-e3fc792e094c",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Create CoreLogframeIATIProvider on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[M] Create CoreLogframeIATIProvider on Current sprint - Core | Trello\n[For deployment person]\n[After deployment] In 20251015_AddCodeToLogframeLevelInput.sql Update (4) to list id of Objective level that is input (not have target or reporting period), and manual run script.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ar5AjGkl/4895-m-create-corelogframeiatiprovider"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20251015_AddCodeToLogframeLevelInput.sql`, A `ngo-api-core/NGO/NGO.Core.Services/ExportIATIServices/CoreLogframeIATIProvider.cs`"
+        },
+        {
+          "id": "action-1fa6f33d815b",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add faLock inside the constructor.",
+          "instructionsAndNotes": "- Add faLock inside the constructor.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1270 files (backend: 369, frontend: 791, shared: 110); representative changes: M `.gitignore`, M `build-pipeline-angular.yml`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminMinimumRequirementsController.cs`."
+        },
+        {
+          "id": "action-f39c1801f551",
+          "version": "8.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Extend the \"Core API Versions\" function to include more info and add security on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[8][S] Extend the \"Core API Versions\" function to include more info and add security on Current sprint - Core | Trello\n[Before deployment]",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WvuRXkYJ/5059-8s-extend-the-core-api-versions-function-to-include-more-info-and-add-security"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: D `ngo-api-core/NGO/NGO.Core.Model/Dto/Versions.cs`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-60d7c474f832",
+          "version": "8.0.0",
+          "applicability": "conditional",
+          "condition": "Check if any custom or reuse AddIdea or AddFundingIdea that cannot generate entity number for these entities",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check if any custom or reuse AddIdea or AddFundingIdea that cannot generate entity number for these entities, and use sequenceNumberService to handle that",
+          "instructionsAndNotes": "Check if any custom or reuse AddIdea or AddFundingIdea that cannot generate entity number for these entities, and use sequenceNumberService to handle that",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yRWF604C/5145-page-import-ideas-ideas-entity-always-auto-generates-entity-number"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/FundingIdea.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Idea.cs`"
+        },
+        {
+          "id": "action-4de61cea8a57",
+          "version": "8.0.0",
+          "applicability": "conditional",
+          "condition": "If client want to change the number of characters in quick view of checklist’s comment",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Task - Check list: improve comment text box to support multi-line",
+          "instructionsAndNotes": "[S] Task - Check list: improve comment text box to support multi-line\nIf client want to change the number of characters in quick view of checklist’s comment, they need to change maxCharacters of 2 field location: ID 21121(edit form) and 21122(View form). Default is 250 characters.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/OiqTNcWl/4899-s-task-check-list-improve-comment-text-box-to-support-multi-line"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        },
+        {
+          "id": "action-6d9358126771",
+          "version": "8.0.0",
+          "applicability": "conditional",
+          "condition": "Check if your custom code using 'getCurrentConfiguration', if yes -> make sure having 'filter(config => config != null),'",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check if your custom code using 'getCurrentConfiguration', if yes -> make sure having 'filter(config => config != null),'",
+          "instructionsAndNotes": "Check if your custom code using 'getCurrentConfiguration', if yes -> make sure having 'filter(config => config != null),'",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/wxn79EfV/4981-loading-tabs-tabs-should-not-display-when-entity-page-is-loading"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-7db714d4924c",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Frontend upgrade",
+          "instructionsAndNotes": "[XL] Frontend upgrade\nPlease see Upgrade Angular 10-15.docx  for detailed upgrade instructions",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/JztEuIaT/4892-xl-frontend-upgrade"
+            },
+            {
+              "label": "Ref",
+              "value": "https://precio.sharepoint.com/:w:/r/sites/ngo-oonline/Shared%20Documents/03%20Core%20development/Technical/Upgrade%20Angular%2010-15.docx?d=wd0609985354946cd89c94f86f1f55831&csf=1&web=1&e=t7oIrs"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`, M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-447df3a5ab3f",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Src/styles.css",
+          "instructionsAndNotes": "Src/styles.css",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/styles.scss`"
+        },
+        {
+          "id": "action-a685429628df",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Minimum requirements function (aka Audit Tool/Compliance tab)",
+          "instructionsAndNotes": "[L] Minimum requirements function (aka Audit Tool/Compliance tab)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/zaQdRlnz/5024-l-minimum-requirements-function-aka-audit-tool-compliance-tab"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1270 files (backend: 369, frontend: 791, shared: 110); representative changes: M `.gitignore`, M `build-pipeline-angular.yml`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminMinimumRequirementsController.cs`."
+        },
+        {
+          "id": "action-2f16b056c465",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import faExclamationCircle as farExclamationCircle at the line ...from '@fortawesome/pro-regular-svg-icons'.",
+          "instructionsAndNotes": "- Import faExclamationCircle as farExclamationCircle at the line ...from '@fortawesome/pro-regular-svg-icons'.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1270 files (backend: 369, frontend: 791, shared: 110); representative changes: M `.gitignore`, M `build-pipeline-angular.yml`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminMinimumRequirementsController.cs`."
+        },
+        {
+          "id": "action-d596593f7e8a",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "adminMinimumRequirements: 'api/core/adminMinimumRequirements'",
+          "instructionsAndNotes": "- adminMinimumRequirements: 'api/core/adminMinimumRequirements'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/MinimumRequirement/MinimumRequirement.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/MinimumRequirement/MinimumRequirement.cs`"
+        },
+        {
+          "id": "action-3f34ed5b37f7",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "minimumRequirements: 'api/core/minimumRequirements'",
+          "instructionsAndNotes": "- minimumRequirements: 'api/core/minimumRequirements'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/MinimumRequirement/MinimumRequirement.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/MinimumRequirement/MinimumRequirement.cs`"
+        },
+        {
+          "id": "action-f8720b57e39a",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import faLock at the line ...from '@fortawesome/pro-light-svg-icons'",
+          "instructionsAndNotes": "- Import faLock at the line ...from '@fortawesome/pro-light-svg-icons'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1270 files (backend: 369, frontend: 791, shared: 110); representative changes: M `.gitignore`, M `build-pipeline-angular.yml`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminMinimumRequirementsController.cs`."
+        },
+        {
+          "id": "action-871fd74b4eed",
+          "version": "8.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "This permission requires Admin consent which might have to be requested from a client admin.",
+          "instructionsAndNotes": "- This permission requires Admin consent which might have to be requested from a client admin.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/Permission.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-a7fe7b423fb2",
+          "version": "8.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/OiqTNcWl/4899-s-task-check-list-improve-comment-text-box-to-support-multi-line"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Task - Check list: improve comment text box to support multi-line",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`",
+          "clientImpact": "If client want to change the number of characters in quick view of checklist’s comment Task - Check list: improve comment text box to support multi-line"
+        },
+        {
+          "id": "feature-0a7e5de058bf",
+          "version": "8.0.0",
+          "moduleScope": "8",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WvuRXkYJ/5059-8s-extend-the-core-api-versions-function-to-include-more-info-and-add-security"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[8][S] Extend the \"Core API Versions\" function to include more info and add security on Current sprint - Core | Trello",
+          "technicalSummary": "Matched key changes: D `ngo-api-core/NGO/NGO.Core.Model/Dto/Versions.cs`",
+          "clientImpact": "Action applies during the upgrade. Extend the \"Core API Versions\" function to include more info and add security on Current sprint - Core | Trello"
+        },
+        {
+          "id": "feature-8ab07ac14491",
+          "version": "8.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "In App roles, add a role with both DisplayName and Value = \"AppOnly\". Allowed member types = Applications.",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1270 files (backend: 369, frontend: 791, shared: 110); representative changes: M `.gitignore`, M `build-pipeline-angular.yml`, M `build-pipeline-api-pack.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminMinimumRequirementsController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-cad544fb1660",
+          "version": "8.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "In API permissions, Add permission. Select My APIs, then NGO, Application permissions and then AppOnly.",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/Permission.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-60d7c474f832",
+          "version": "8.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yRWF604C/5145-page-import-ideas-ideas-entity-always-auto-generates-entity-number"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Check if any custom or reuse AddIdea or AddFundingIdea that cannot generate entity number for these entities, and use sequenceNumberService to handle that",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/FundingIdea.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Idea.cs`",
+          "extraClientAction": "Check if any custom or reuse AddIdea or AddFundingIdea that cannot generate entity number for these entities. Check if any custom or reuse AddIdea or AddFundingIdea that cannot generate entity number for these entities, and use sequenceNumberService to handle that"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "8.0.0"
+    ],
+    "rawCardCount": 26,
+    "gitDiffFileCount": 1270,
+    "unresolvedItems": []
+  }
+}

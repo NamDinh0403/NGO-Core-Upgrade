@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "version": "2.12.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 4,
+    "conditionalActions": 1,
+    "needsReviewActions": 1,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-c0804fde6196",
+          "version": "2.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Update SQLMapping for Strategies and Strategies2 in CoreFieldInstances table for Risk tab - It should use Type = 14 instead:",
+          "instructionsAndNotes": "Update SQLMapping for Strategies and Strategies2 in CoreFieldInstances table for Risk tab - It should use Type = 14 instead:\nRun 20210318_CoreFieldInstances_Update_Strategies_SQLMapping.sql in DataFixes folder",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1d7b6e9baaeb",
+          "version": "2.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run Datafixes/20210330_TabDefinitionUpdates.sql",
+          "instructionsAndNotes": "Updates to manage Tabs\nRun Datafixes/20210330_TabDefinitionUpdates.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-fb29838886da",
+          "version": "2.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run 20210331_Sprint7_LogframeGlobalUpdates and 20210309_Sprint7_EntityTabUpdates.sql in Datafixes",
+          "instructionsAndNotes": "Logframe rollup\nRun 20210331_Sprint7_LogframeGlobalUpdates and 20210309_Sprint7_EntityTabUpdates.sql in Datafixes",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3b14c42dd801",
+          "version": "2.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run DataFixes/20210331_CorrectFields_ForLogBoxes.sql",
+          "instructionsAndNotes": "Correct the right 'entity' field instance for summary 'recent logs' boxes\nRun DataFixes/20210331_CorrectFields_ForLogBoxes.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-9c1556a69cdd",
+          "version": "2.12.0",
+          "applicability": "conditional",
+          "condition": "Optional) Fix sort order of my tasks box like",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "(Optional) Fix sort order of my tasks box like: name | entity | workflow status | responsible | duedate Run DataFixes/20210331_UpdateMyTasksBox_FieldOrders",
+          "instructionsAndNotes": "(Optional) Fix sort order of my tasks box like: name | entity | workflow status | responsible | duedate Run DataFixes/20210331_UpdateMyTasksBox_FieldOrders",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-00fea8052de4",
+          "version": "2.12.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "All web jobs",
+          "instructionsAndNotes": "All web jobs\nDefine Unity container as a variable inside the function , NO LONGER static variable",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-14ea6ea1cd3a",
+          "version": "2.12.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-wwf/pullrequest/5140"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-cbm/pullrequest/5974"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Unity update",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-9c1556a69cdd",
+          "version": "2.12.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "(Optional) Fix sort order of my tasks box like: name | entity | workflow status | responsible | duedate Run DataFixes/20210331_UpdateMyTasksBox_FieldOrders",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Optional) Fix sort order of my tasks box like. (Optional) Fix sort order of my tasks box like: name | entity | workflow status | responsible | duedate Run DataFixes/20210331_UpdateMyTasksBox_FieldOrders"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.12.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

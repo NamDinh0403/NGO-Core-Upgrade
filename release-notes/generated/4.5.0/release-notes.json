@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "version": "4.5.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-fa15ad3b9ce0",
+          "version": "4.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "update appsettings.json in deployment project related to deployment section, see sample image below",
+          "instructionsAndNotes": "[For upgrading person] update appsettings.json in deployment project related to deployment section, see sample image below",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/PvNYbKbp/3684-m-new-structure-of-db-deployment"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9ac26989841d",
+          "version": "4.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Update release pipeline > Variable:",
+          "instructionsAndNotes": "[Before Deployment] Update release pipeline > Variable:\nRename Core:Deployment:DataFixesAfterFolders:0 to Core:Deployment:DataFixesAfterFolders:Core (if it is core script)\nRename Core:Deployment:DataFixesAfterFolders:1 to Core:Deployment:DataFixesAfterFolders:Custom (if it is client script)\nRename Core:Deployment:DataFixesBeforeFolders:0 to Core:Deployment:DataFixesBeforeFolders:Core (if it is core script)\nRename Core:Deployment:DataFixesBeforeFolders:1 to Core:Deployment:DataFixesBeforeFolders:Custom (if it is client script)\nNote: the folder path configured in release pipeline should have single '\\'.\nPlease verify the deployment logs if those above steps running properly.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-18153c76c5d1",
+          "version": "4.5.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Client Dev",
+          "action": "Task in the log entry to open the task view form. Same for agreements",
+          "instructionsAndNotes": "[M] Task in the log entry to open the task view form. Same for agreements\n[Upgrade] When upgrading, create a custom AfterDeployment script to update FieldInstance Characteristic to match setup of tabs that have related tasks, see card for details.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/fCGMjudX"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-fba3b19729a1",
+          "version": "4.5.0",
+          "applicability": "conditional",
+          "condition": "if the client has other condition",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run script (read the below Note before manual run): Datafixes/ 20231020_MigrationConditionToConfigurationForRollupRelatedTab",
+          "instructionsAndNotes": "[S][Finance/ Monitoring] Disappear when config rollup data from\n[After Deployment] Run script (read the below Note before manual run): Datafixes/ 20231020_MigrationConditionToConfigurationForRollupRelatedTab\nNote: Please re-check the script and update @CONFIGURATION according to the client customization if have, I.e: [{\"name\": \"typeId\", \"value\": [1]}] is the roll up conditions for entity type with id = 1, if the client has other condition, you should run command: SELECT * FROM CoreEntityTabs WHERE Conditions LIKE '%typeId%' to check and update the according script",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VKC4QRPq/3686-sfinance-monitoring-disappear-when-config-rollup-data-from"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-bc9be6e347e6",
+          "version": "4.5.0",
+          "moduleScope": "For upgrading person",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/PvNYbKbp/3684-m-new-structure-of-db-deployment"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[For upgrading person] update appsettings.json in deployment project related to deployment section, see sample image below",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. update appsettings.json in deployment project related to deployment section, see sample image below"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "4.5.0"
+    ],
+    "rawCardCount": 4,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

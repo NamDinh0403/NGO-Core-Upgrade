@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "version": "2.4.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 2,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-a3dcc1e477ad",
+          "version": "2.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Please run file \" 20200928_MigrationForRelatedEntityInLog.sql \" before deployment",
+          "instructionsAndNotes": "- Please run file \" 20200928_MigrationForRelatedEntityInLog.sql \" before deployment",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0d9eaa494069",
+          "version": "2.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update log configuration in scripts to remove any references to FieldInsstances 2006, 2029, 2106, 2129",
+          "instructionsAndNotes": "- Update log configuration in scripts to remove any references to FieldInsstances 2006, 2029, 2106, 2129",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-476a70f9b1bd",
+          "version": "2.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run this script \" 20200928_RefactorDependencyFIeldInLog.sql \" after change the FieldInstanceId",
+          "instructionsAndNotes": "- Run this script \" 20200928_RefactorDependencyFIeldInLog.sql \" after change the FieldInstanceId",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-6d91186c0e2d",
+          "version": "2.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If project use FieldInstanceId 2006, 2010, 2029, 2031, 2106, 2129, 2131, 2130, please replace it to FieldInstanceId: 2006 => 2007, 2029 => 2002, 2010 => 2008, 2130 => 2108, 2031 =>",
+          "instructionsAndNotes": "- If project use FieldInstanceId 2006, 2010, 2029, 2031, 2106, 2129, 2131, 2130, please replace it to FieldInstanceId: 2006 => 2007, 2029 => 2002, 2010 => 2008, 2130 => 2108, 2031 => 2007, 2131 => 2107, 2129 => 2102, 2106 => 2107",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bf20e4cc42ed",
+          "version": "2.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Refactoring dependency field in log tab",
+          "instructionsAndNotes": "Refactoring dependency field in log tab",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.4.0"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

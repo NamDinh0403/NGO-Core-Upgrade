@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "version": "5.3.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.3.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 13,
+    "conditionalActions": 1,
+    "needsReviewActions": 12,
+    "newFeatures": 7,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-5fa6343f94fd",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Install .NET 8 on development computer",
+          "instructionsAndNotes": "- Install .NET 8 on development computer",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-84150789b3bc",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Make the following updates to build-pipeline-api.yml",
+          "instructionsAndNotes": "- Make the following updates to build-pipeline-api.yml",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `build-pipeline-api.yml`"
+        },
+        {
+          "id": "action-2574ce19c443",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Remove step \"Use .NET Core sdk 7.0.x\" in two agents \"Deploy Database\" and \"Deploy Sharepoint\" (if have)",
+          "instructionsAndNotes": "- [Before deployment] Remove step \"Use .NET Core sdk 7.0.x\" in two agents \"Deploy Database\" and \"Deploy Sharepoint\" (if have)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-77e25e4f378f",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check in the always sql scripts, if we have config \"showGanttTask\" of the key \"GanttTaskConfiguration\" in \"CoreConfigurations\", please remove it",
+          "instructionsAndNotes": "[S][Task tab/ Gantt View] Visibility should also base on config of current entity :\n[For upgrade person] Check in the always sql scripts, if we have config \"showGanttTask\" of the key \"GanttTaskConfiguration\" in \"CoreConfigurations\", please remove it\nEx: { \"showGanttTask\": true , \"defaultDisplayRange\": 3 } change to -> { \"defaultDisplayRange\": 3 }",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Y8qEOLNQ"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        },
+        {
+          "id": "action-6425707e281f",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Announcement | External link URL is encoded two times ( Announcement | External link URL is encoded two times on Current sprint - Core | Trello )",
+          "instructionsAndNotes": "[S] Announcement | External link URL is encoded two times ( [S] Announcement | External link URL is encoded two times on Current sprint - Core | Trello  )\n[For upgrade person] In DatabaseSeed, recheck fields with ControlType = Multilink (23) or Link (6) on list/view Form(FieldLocation in 1, 4), their characteristic should have \"showAsOriginal\": true. If missing, plz add.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/AcU8nez4/4137-s-announcement-external-link-url-is-encoded-two-times"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-f48834b54c9d",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add faMoneyBill after faMinus inside the constructor",
+          "instructionsAndNotes": "- Add faMoneyBill after faMinus inside the constructor",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-b2a9b10398f2",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Client Dev",
+          "action": "(For upgrade person) Run query SELECT * FROM CoreConfigurations WHERE = 'BudgetSetting' to check and make sure that property \"Frequency\" in key's value has a comma behind it. Other",
+          "instructionsAndNotes": "- (For upgrade person) Run query SELECT * FROM CoreConfigurations WHERE [Key] = 'BudgetSetting' to check and make sure that property \"Frequency\" in key's value has a comma behind it. Otherwise, please add deployment script to move that property to the beginning or add a comma behind it (also check custom DatabaseSeed). Unless, the script \" DataFixes / 20240327_AddDefaultBudgetTemplate.sql\" below won't work. See example fixes.",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-wvuk/pullrequest/26553?path=/ngo-api/NGO/NGO.Deployment/CustomDataFixes/AfterDeployment/20241114_AfterCoreUpgrade_5.x.sql&version=GBthp1/Core-upgrade-3.15-5.9&line=83&lineEnd=84&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain&_a=files&iteration=4&base=0"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240327_AddDefaultBudgetTemplate.sql`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/BudgetTemplate.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Finance/BudgetTemplate.cs`, M `ngo-api-core/NGO/NGO.Deployment/NGO.Deployment.csproj`, A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        },
+        {
+          "id": "action-ac27eee5ff14",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Core's default OptionsListId for FundingType is 20 . If any client's using another Id for FundingType list, please update that value in the script \" DataFixes / 20240327_AddDefault",
+          "instructionsAndNotes": "- Core's default OptionsListId for FundingType is 20 . If any client's using another Id for FundingType list, please update that value in the script \" DataFixes / 20240327_AddDefaultBudgetTemplate.sql \" to make sure data is added correctly for Restricted Fundings",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240327_AddDefaultBudgetTemplate.sql`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/BudgetTemplate.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Finance/BudgetTemplate.cs`"
+        },
+        {
+          "id": "action-c7f1e858e2f6",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update front end packages",
+          "instructionsAndNotes": "Update front end packages\nUpdate front end packages on Current sprint - Core | Trello\nPlease see Upgrade Angular 8-9.docx  for detailed upgrade instructions.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/EczdTtrN/3687-update-front-end-packages"
+            },
+            {
+              "label": "Ref",
+              "value": "https://precio.sharepoint.com/:w:/r/sites/ngo-oonline/Shared%20Documents/03%20Core%20development/Technical/Upgrade%20Angular%208-9.docx?d=w37a01bd52d8c49b99f342e97aa040953&csf=1&web=1&e=QLWhto"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`, M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`"
+        },
+        {
+          "id": "action-d0137520b6c6",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update value to use scope (also Core:AzureAd:Audience to use NGO2 instead of NGO in azure config )",
+          "instructionsAndNotes": "- Update value to use scope  (also Core:AzureAd:Audience to use NGO2 instead of NGO in azure config )",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://ngodev.onmicrosoft.com/NGO2/user_impersonation"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        },
+        {
+          "id": "action-5ad621fd168e",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update all ClientId variables to \"462468ff-5ae6-4e55-8cb8-9312a0100dc2\" (also update in Azure config)",
+          "instructionsAndNotes": "- Update all ClientId variables to \"462468ff-5ae6-4e55-8cb8-9312a0100dc2\" (also update in Azure config)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        },
+        {
+          "id": "action-bed8920ff13f",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add Release variable \"msalGuardConfig.authRequest.scopes\" with value \" \" where tenant is the client tenant name.",
+          "instructionsAndNotes": "- Add Release variable \"msalGuardConfig.authRequest.scopes\" with value \"[ \"user.read\", \"openid\", \"profile\", \"  ]\" where tenant is the client tenant name.",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://tenant/NGO/user_impersonation"
+            },
+            {
+              "label": "Ref",
+              "value": "https://tenant/NGO/user_impersonation%22"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        },
+        {
+          "id": "action-2fccd4196a72",
+          "version": "5.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Entra ID App Registration:￼- In Authentication, delete relevant redirect URI from section \"Web\".￼- Add platform \"Single-page application\" with the relevant redirect URI.",
+          "instructionsAndNotes": "- Update Entra ID App Registration:￼- In Authentication, delete relevant redirect URI from section \"Web\".￼- Add platform \"Single-page application\" with the relevant redirect URI.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-d182cd7b4650",
+          "version": "5.3.0",
+          "applicability": "conditional",
+          "condition": "Adding new key name \"ExecUpdatestatSchedule\" to configuration of appsetting,json of webjobs, the value default is \"0 0 1 * *\" (each month). Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add Scheduled web job function that runs EXEC sp_updatestats; according to a schedule in configuration on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[S] Add Scheduled web job function that runs EXEC sp_updatestats; according to a schedule in configuration on Current sprint - Core | Trello\nAdding key \"ExecUpdatestatSchedule\" to Webjob to run EXEC sp_updatestats at regular intervals\n[For upgrade person] Adding new key name \"ExecUpdatestatSchedule\" to configuration of appsetting,json of webjobs, the value default is \"0 0 1 * *\" (each month). Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.\n[For deploy person] Adding new key name \"Core:ExecUpdatestatSchedule\" to configuration of Azure, the value default is \"0 0 1 * *\" (each month). Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/camG0k2z/4121-s-add-scheduled-web-job-function-that-runs-exec-spupdatestats-according-to-a-schedule-in-configuration?filter=member:phongphamthanh3"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-cbcc0baf95de",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "NET 8",
+          "instructionsAndNotes": ".NET 8",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-2f5526fb3d7d",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Do a find and replace in the whole solution, find: net7.0 replace: net8.0",
+          "instructionsAndNotes": "- Do a find and replace in the whole solution, find: net7.0 replace: net8.0",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-b2660ebb2bf9",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Make sure to clean the solution, possibly manually delete bin and obj folders.",
+          "instructionsAndNotes": "- Make sure to clean the solution, possibly manually delete bin and obj folders.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-03351ea5c4eb",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Change web app to run .net 8 instead of .net 7",
+          "instructionsAndNotes": "- [ Before deployment] Change web app to run .net 8 instead of .net 7",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-6e17af5dc300",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/rfypcnXW/4115-l-admin-ui-budget-template"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-78ac5fb29a64",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import \"faMoneyBill\" at the line \"... from '@fortawesome/pro-regular-svg-icons'\"",
+          "instructionsAndNotes": "- Import \"faMoneyBill\" at the line \"... from '@fortawesome/pro-regular-svg-icons'\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-4bf3106a421c",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "budgetTemplates: 'api/core/budgetTemplates'",
+          "instructionsAndNotes": "- budgetTemplates: 'api/core/budgetTemplates'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/BudgetTemplate.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Finance/BudgetTemplate.cs`"
+        },
+        {
+          "id": "action-5aafb4f29453",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deploy Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-6668c84f1165",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Rename \"msalConfig.framework.protectedResourceMap\" to \"msalInterceptorConfig.protectedResourceMap\"",
+          "instructionsAndNotes": "- Rename \"msalConfig.framework.protectedResourceMap\" to \"msalInterceptorConfig.protectedResourceMap\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        },
+        {
+          "id": "action-561e5c56eeba",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Rename Release variable \"msalConfig.framework.protectedResourceMap\" to \"msalInterceptorConfig.protectedResourceMap\"",
+          "instructionsAndNotes": "- Rename Release variable \"msalConfig.framework.protectedResourceMap\" to \"msalInterceptorConfig.protectedResourceMap\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`"
+        },
+        {
+          "id": "action-cbca475c3c4b",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Steps to clear browser cache:",
+          "instructionsAndNotes": "- Steps to clear browser cache:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 561 files (backend: 184, frontend: 309, shared: 68); representative changes: M `azure-pipeline-master.yml`, M `azure-pipelines.yml`, M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetTemplateController.cs`."
+        },
+        {
+          "id": "action-c86dca94b312",
+          "version": "5.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Modify main.ts file according to the change in this PR: Pull request 26664: Testing caching of env.config.json - Repos",
+          "instructionsAndNotes": "- Modify main.ts file according to the change in this PR: Pull request 26664: Testing caching of env.config.json - Repos",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/26664?_a=files"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`, M `ngo-client-core/src/assets/config/env.config.json`, M `ngo-client-core/src/main.ts`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-2183ec80f544",
+          "version": "5.3.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/z1bjVWOk/4058-s-finance-income-schedule-add-income-schedule-tab-to-stakeholder-entity"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Yykcms2I/4059-m-finance-payments-add-payments-tab-to-stakeholder-entity"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Open app.module.ts and add 'StakeholderFinanceModule' to @NgModule",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`, M `ngo-client-core/src/app/app.module.ts`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-fb6ed3a1624f",
+          "version": "5.3.0",
+          "moduleScope": "For upgrade person / For deploy person",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/camG0k2z/4121-s-add-scheduled-web-job-function-that-runs-exec-spupdatestats-according-to-a-schedule-in-configuration?filter=member:phongphamthanh3"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Add Scheduled web job function that runs EXEC sp_updatestats; according to a schedule in configuration on Current sprint - Core | Trello",
+          "technicalSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`",
+          "clientImpact": "Adding new key name \"ExecUpdatestatSchedule\" to configuration of appsetting,json of webjobs, the value default is \"0 0 1 * *\" (each month). Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval. Add Scheduled web job function that runs EXEC sp_updatestats; according to a schedule in configuration on Current sprint - Core | Trello"
+        },
+        {
+          "id": "feature-799d517201f7",
+          "version": "5.3.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Core's default OptionsListId for FundingType is 20 . If any client's using another Id for FundingType list, please update that value in the script \" DataFixes / 20240327_AddDefaultBudgetTemplate.sql \" to make sure data is added correctly for Restricted Fundings",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240327_AddDefaultBudgetTemplate.sql`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/BudgetTemplate.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Finance/BudgetTemplate.cs`",
+          "clientImpact": "Action applies during the upgrade. Core's default OptionsListId for FundingType is 20 . If any client's using another Id for FundingType list, please update that value in the script \" DataFixes / 20240327_AddDefault"
+        },
+        {
+          "id": "feature-c7f1e858e2f6",
+          "version": "5.3.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/EczdTtrN/3687-update-front-end-packages"
+            },
+            {
+              "label": "Ref",
+              "value": "https://precio.sharepoint.com/:w:/r/sites/ngo-oonline/Shared%20Documents/03%20Core%20development/Technical/Upgrade%20Angular%208-9.docx?d=w37a01bd52d8c49b99f342e97aa040953&csf=1&web=1&e=QLWhto"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Update front end packages",
+          "technicalSummary": "Matched key changes: M `ngo-client-core/angular.json`, M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`",
+          "clientImpact": "Action applies during the upgrade. Update front end packages"
+        },
+        {
+          "id": "feature-4bddc19b4736",
+          "version": "5.3.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://ngodev.onmicrosoft.com/NGO2/user_impersonation"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Update value to use scope  (also Core:AzureAd:Audience to use NGO2 instead of NGO in azure config )",
+          "technicalSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`",
+          "clientImpact": "Action applies during the upgrade. Update value to use scope (also Core:AzureAd:Audience to use NGO2 instead of NGO in azure config )"
+        },
+        {
+          "id": "feature-bbb71fe878a6",
+          "version": "5.3.0",
+          "moduleScope": "\"user.read\", \"openid\", \"profile\", \"https://tenant/NGO/user_impersonation\" https://tenant/NGO/user_impersonation%22",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://tenant/NGO/user_impersonation"
+            },
+            {
+              "label": "Ref",
+              "value": "https://tenant/NGO/user_impersonation%22"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Add Release variable \"msalGuardConfig.authRequest.scopes\" with value \"[ \"user.read\", \"openid\", \"profile\", \"  ]\" where tenant is the client tenant name.",
+          "technicalSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`",
+          "clientImpact": "Action applies during the upgrade. Add Release variable \"msalGuardConfig.authRequest.scopes\" with value \" \" where tenant is the client tenant name."
+        },
+        {
+          "id": "feature-abb8fc6a8d2a",
+          "version": "5.3.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/CCM7wUUw/4632-improved-caching-of-envconfigjson"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Improved caching of env.config.json",
+          "technicalSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`, M `ngo-client-core/src/assets/config/env.config.json`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-7a33349418d6",
+          "version": "5.3.0",
+          "moduleScope": "Key",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-wvuk/pullrequest/26553?path=/ngo-api/NGO/NGO.Deployment/CustomDataFixes/AfterDeployment/20241114_AfterCoreUpgrade_5.x.sql&version=GBthp1/Core-upgrade-3.15-5.9&line=83&lineEnd=84&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain&_a=files&iteration=4&base=0"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "(For upgrade person) Run query SELECT * FROM CoreConfigurations WHERE [Key] = 'BudgetSetting' to check and make sure that property \"Frequency\" in key's value has a comma behind it. Otherwise, please add deployment script to move that property to the beginning or add a comma behind it (also check custom DatabaseSeed). Unless, the script \" DataFixes / 20240327_AddDefaultBudgetTemplate.sql\" below won't work. See example fixes.",
+          "rootCauseOrKeyFiles": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240327_AddDefaultBudgetTemplate.sql`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/BudgetTemplate.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Finance/BudgetTemplate.cs`, M `ngo-api-core/NGO/NGO.Deployment/NGO.Deployment.csproj`, A `ngo-client-core/projects/ngo-core/src/lib/ngo-simplemde/simplemde/config.ts`",
+          "extraClientAction": "(For upgrade person) Run query SELECT * FROM CoreConfigurations WHERE = 'BudgetSetting' to check and make sure that property \"Frequency\" in key's value has a comma behind it. Other"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.3.0"
+    ],
+    "rawCardCount": 28,
+    "gitDiffFileCount": 561,
+    "unresolvedItems": []
+  }
+}

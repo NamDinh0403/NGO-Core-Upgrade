@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "version": "5.6.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.6.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 2,
+    "needsReviewActions": 1,
+    "newFeatures": 2,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-ffc6d2af3ddd",
+          "version": "5.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add 'GenerateLogframeReportQueue' with value 'generatelogframereportqueue-dev' inside 'Queue' section of WebJob's, API and Deployment appsettings.json",
+          "instructionsAndNotes": "- Add 'GenerateLogframeReportQueue' with value 'generatelogframereportqueue-dev' inside 'Queue' section of WebJob's, API and Deployment appsettings.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/GenerateLogframeReportQueue.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-39267f9f62f0",
+          "version": "5.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API url to environment files: adminWebJobMonitoring: 'api/core/adminWebJobMonitoring'",
+          "instructionsAndNotes": "- Add API url to environment files: adminWebJobMonitoring: 'api/core/adminWebJobMonitoring'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, M `ngo-client-core/src/environments/environment.ts`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-baac36b4eccb",
+          "version": "5.6.0",
+          "applicability": "conditional",
+          "condition": "check and make sure your client customization 'Other Income 'tab still working as before and don't use core function (you might do something with routes so it will load your client customization components).",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "check and make sure your client customization 'Other Income 'tab still working as before and don't use core function (you might do something with routes so it will load your client",
+          "instructionsAndNotes": "[AAI client only] [L] [PRG12] [PRJ07] Finance, Other income tab\n[For upgrade person] check and make sure your client customization 'Other Income 'tab still working as before and don't use core function (you might do something with routes so it will load your client customization components).",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/NYxwImkQ/4114-l-prg12-prj07-finance-other-income-tab?search_id=0be97134-a6bc-4aa6-979f-bd77b5495a5d"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`"
+        },
+        {
+          "id": "action-a8af3e40e188",
+          "version": "5.6.0",
+          "applicability": "conditional",
+          "condition": "If client use custom webjob and upgrade directly to version 5",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "If client use custom webjob and upgrade directly to version 5.6 or above, please add a script to insert the information of the custom webjobs to table CoreWebJobs. Example in this ",
+          "instructionsAndNotes": "- If client use custom webjob and upgrade directly to version 5.6 or above, please add a script to insert the information of the custom webjobs to table CoreWebJobs. Example in this PR:",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-dtglobal/pullrequest/24510?_a=files&path=/ngo-api/NGO/NGO.Deployment/CustomDataFixes/AfterDeployment/20240722_AddCustomWebJobs.sql"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, R051 `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CoreWebJob.cs`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-74838a7e30d5",
+          "version": "5.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[WebJobs Monitoring Admin UI]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-caeed615ddda",
+          "version": "5.6.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Azure app service configuration: add 'Core:Queue:GenerateLogframeReportQueue' with value 'generatelogframereportqueue'",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/GenerateLogframeReportQueue.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-450d3b965742",
+          "version": "5.6.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-dtglobal/pullrequest/24510?_a=files&path=/ngo-api/NGO/NGO.Deployment/CustomDataFixes/AfterDeployment/20240722_AddCustomWebJobs.sql"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "If client use custom webjob and upgrade directly to version 5.6 or above, please add a script to insert the information of the custom webjobs to table CoreWebJobs. Example in this PR:",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, R051 `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CoreWebJob.cs`",
+          "clientImpact": "If client use custom webjob and upgrade directly to version 5 If client use custom webjob and upgrade directly to version 5.6 or above, please add a script to insert the information of the custom webjobs to table CoreWebJobs. Example in this "
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-4cd7ea08ae55",
+          "version": "5.6.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/xBMhYGdj/3996-logframe-actual-form-missing-period-reporting-on-dropdown-period-when-adjust-start-end-for-project"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Release note",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 231 files (backend: 111, frontend: 97, shared: 23); representative changes: A `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityMembersController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingFinancialController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/OverallEntityStatusController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerAndDonorComplianceController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/StakeholderComplianceController.cs`.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.6.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 231,
+    "unresolvedItems": []
+  }
+}

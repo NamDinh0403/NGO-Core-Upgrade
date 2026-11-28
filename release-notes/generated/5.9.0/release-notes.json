@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "version": "5.9.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.9.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 1,
+    "needsReviewActions": 5,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-3bebf1fdb1b0",
+          "version": "5.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check CoreOverviewBoxFieldInstances Fields:",
+          "instructionsAndNotes": "- Check CoreOverviewBoxFieldInstances Fields:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`."
+        },
+        {
+          "id": "action-8c887ec80e1e",
+          "version": "5.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "UPDATE CoreOverviewBoxFieldInstances SET Characteristic = '{\"isHideLabel\": true}' WHERE Characteristic IS NULL AND OverviewBoxInstanceId IN ( SELECT Id FROM CoreOverviewBoxInstance",
+          "instructionsAndNotes": "- If they do not display correctly, use the following script to correct them:\nUPDATE CoreOverviewBoxFieldInstances SET Characteristic = '{\"isHideLabel\": true}' WHERE Characteristic IS NULL AND OverviewBoxInstanceId IN ( SELECT Id FROM CoreOverviewBoxInstances WHERE OverviewBoxDefinitionId IN (7, 10, 60) )",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/OverviewBoxDefinition.cs`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-92ee9624ea06",
+          "version": "5.9.0",
+          "applicability": "conditional",
+          "condition": "Check if task overview boxes display correctly after deployment",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Check if task overview boxes display correctly after deployment.",
+          "instructionsAndNotes": "- Check if task overview boxes display correctly after deployment.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-a53e0bf7ba3f",
+          "version": "5.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Before Deployment:",
+          "instructionsAndNotes": "- Before Deployment:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`."
+        },
+        {
+          "id": "action-ee24f5c619e4",
+          "version": "5.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Use the following query to identify fields that are not in the correct JSON format:",
+          "instructionsAndNotes": "- Use the following query to identify fields that are not in the correct JSON format:\nSELECT * FROM CoreOverviewBoxFieldInstances ￼ WHERE ISJSON(Characteristic) = 0 ￼ AND OverviewBoxInstanceId IN ( ￼ SELECT Id ￼ FROM CoreOverviewBoxInstances ￼ WHERE OverviewBoxDefinitionId IN (7, 10, 60) ￼ ) ￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/OverviewBoxDefinition.cs`"
+        },
+        {
+          "id": "action-d2193f3d5309",
+          "version": "5.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Correct the identified fields to match the JSON format.",
+          "instructionsAndNotes": "- Correct the identified fields to match the JSON format.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`."
+        },
+        {
+          "id": "action-ebda4d3199f8",
+          "version": "5.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "After Deployment:",
+          "instructionsAndNotes": "- After Deployment:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`."
+        },
+        {
+          "id": "action-b5c64c3f863d",
+          "version": "5.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Verify Task Overview Boxes:",
+          "instructionsAndNotes": "- Verify Task Overview Boxes:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-75c6d1005f2f",
+          "version": "5.9.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/c6nTXpWO/4447-s-add-acolumn-headers-to-the-columns-in-the-my-tasks-and-milestones-box"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Add acolumn headers to the columns in the My Tasks and Milestones box",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-d20f8c6e81ac",
+          "version": "5.9.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "This approach is recommended because the bug was discovered after the card had already been released, so running this script manually is the preferred solution if version 5.9.2 has been deployed.",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 287 files (backend: 134, frontend: 81, shared: 72); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AgreementsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BankAccountsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ChangesController.cs`.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.9.0"
+    ],
+    "rawCardCount": 10,
+    "gitDiffFileCount": 287,
+    "unresolvedItems": []
+  }
+}

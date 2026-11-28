@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "version": "5.12.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.12.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 2,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-48ddb7f8df30",
+          "version": "5.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add import of faExternalLink from '@fortawesome/pro-light-svg-icons' + add to constructor in app.module.ts",
+          "instructionsAndNotes": "[Search] If we allow to preview document, we should let user do something on preview dialog\nAdd import of faExternalLink from '@fortawesome/pro-light-svg-icons' + add to constructor in app.module.ts",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/uHUFPYZY"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-55e04f75c3e2",
+          "version": "5.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Implement for Income Schedules on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[Tasks/Created from] Implement for Income Schedules on Current sprint - Core | Trello\n[For upgrade person] Characteristic for fieldInstanceId 22538 add highlight text: {\"readOnly\": \"true\", \"isHideIfNoValue\": true, maxCharacters:50, \"taskLinkFormat\":[{tabDefinitionId: 2, fieldName: \"description\"}, {tabDefinitionId: 8, fieldName: \"description\"}, {tabDefinitionId: 15, fieldName: \"description\"}, {tabDefinitionId: 24, fieldName: \"description\"}, {tabDefinitionId: 10, fieldName: \"name\"}, {tabFunctionId: 44, fieldName: \"name\"} ]}",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/S27nsFJY"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Enums/TabFunctionId.cs`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-963614d4c3bc",
+          "version": "5.12.0",
+          "applicability": "conditional",
+          "condition": "check if we have any data need to be correct on this script as well) Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script (we have the query to check if we have any data need to be correct on this script as well) Dat",
+          "instructionsAndNotes": "if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script (we have the query to check if we have any data need to be correct on this script as well) Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VNp6VTqS/4683-budget-incoming-funding-confirmed-incoming-funding-displays-into-version-that-allocation-is-created-havent-approved"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        },
+        {
+          "id": "action-2600fdd1306b",
+          "version": "5.12.0",
+          "applicability": "conditional",
+          "condition": "We move the code Lock documents to webjob so please check customization in client, if using FolderPathWithoutRoot, move that code to OnAfterSaveScreenshot instead of OnTaskApproved . Because not sure screenshot webjob has finished before using FolderPathWithou",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Can we move the LockRelatedDocuments function to ScreenshotQueue upon task completion?",
+          "instructionsAndNotes": "[M] Can we move the LockRelatedDocuments function to ScreenshotQueue upon task completion?\nWe move the code Lock documents to webjob so please check customization in client, if using FolderPathWithoutRoot, move that code to OnAfterSaveScreenshot instead of OnTaskApproved . Because not sure screenshot webjob has finished before using FolderPathWithoutRoot for the custom purpose",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/8LmfSkcD/4682-m-can-we-move-the-lockrelateddocuments-function-to-screenshotqueue-upon-task-completion"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-fc5be1cd7439",
+          "version": "5.12.0",
+          "moduleScope": "Search",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/uHUFPYZY"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[Search] If we allow to preview document, we should let user do something on preview dialog",
+          "technicalSummary": "Matched key changes: M `ngo-client-core/src/app/app.module.ts`",
+          "clientImpact": "Action applies during the upgrade. Add import of faExternalLink from '@fortawesome/pro-light-svg-icons' + add to constructor in app.module.ts"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-0f63bb9283d6",
+          "version": "5.12.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VNp6VTqS/4683-budget-incoming-funding-confirmed-incoming-funding-displays-into-version-that-allocation-is-created-havent-approved"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script (we have the query to check if we have any data need to be correct on this script as well) Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql",
+          "rootCauseOrKeyFiles": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`",
+          "extraClientAction": "check if we have any data need to be correct on this script as well) Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql. if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script (we have the query to check if we have any data need to be correct on this script as well) Dat"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.12.0"
+    ],
+    "rawCardCount": 4,
+    "gitDiffFileCount": 321,
+    "unresolvedItems": []
+  }
+}

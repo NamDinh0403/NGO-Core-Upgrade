@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "version": "3.10.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 5,
+    "conditionalActions": 0,
+    "needsReviewActions": 3,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-7432b7a8dc0f",
+          "version": "3.10.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Project - Particpants & People Reached (beneficiaries) - server error <",
+          "instructionsAndNotes": "Card: [M] Project - Particpants & People Reached (beneficiaries) - server error <\n[After deployment]: 20221230_UpdateMonthYearForEOPTargetPeriod.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ZKHJfGGx"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b1cebe2562d8",
+          "version": "3.10.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Review/Approval, Comment are not displayed when selected Tasks in Primary table <",
+          "instructionsAndNotes": "Card: [Permission/Analyze/Tasks] Review/Approval, Comment are not displayed when selected Tasks in Primary table <\n[After deployment]: 20221209_RemoveUnusedPermissions.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/sV9nzgVF"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-446f12d4ab4b",
+          "version": "3.10.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Admin UI / OverviewBox: Announcement has empty list of default fields in dropdown <",
+          "instructionsAndNotes": "Card: Admin UI / OverviewBox: Announcement has empty list of default fields in dropdown <\n[After deployment]: 20221212_UpdateFieldInstanceForAnnouncementBox.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ph8LltYo"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-c7ebf8d79f70",
+          "version": "3.10.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update environement.ts and environment.prod.ts:",
+          "instructionsAndNotes": "[S] Project/OverviewBox : Partner assessment (tabfunctionId = 34), Due dilligence(tabfunctionId = 33) get the same permission to check validate\nUpdate environement.ts and environment.prod.ts:\npartnerCompliance: 'api/core/entity'",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yZQ60E7I"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-247d465b2823",
+          "version": "3.10.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run datafixes/20221206_RemoveSubPhaseFields.sql",
+          "instructionsAndNotes": "[S] Adding a new task to a workflow that is using the 'Repeating phase' function:\nRun datafixes/20221206_RemoveSubPhaseFields.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/z76cL0Xz"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-a3a0bbf9f5ab",
+          "version": "3.10.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Card: Support ÅÄÖ in files sent through e-mail <",
+          "instructionsAndNotes": "Card: [S] Support ÅÄÖ in files sent through e-mail <",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mL0ceLUJ"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0b26e04180df",
+          "version": "3.10.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Sendgrid to 9.28.1",
+          "instructionsAndNotes": "- Sendgrid to 9.28.1",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6aa1a9d32a3c",
+          "version": "3.10.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Find all client projects and update",
+          "instructionsAndNotes": "Find all client projects and update",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-6821954746cc",
+          "version": "3.10.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/z76cL0Xz"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Adding a new task to a workflow that is using the 'Repeating phase' function:",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Run datafixes/20221206_RemoveSubPhaseFields.sql"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-46aadd843aa2",
+          "version": "3.10.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ZKHJfGGx"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Card: [M] Project - Particpants & People Reached (beneficiaries) - server error <",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Card: Project - Particpants & People Reached (beneficiaries) - server error <"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.10.0"
+    ],
+    "rawCardCount": 8,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "version": "2.23.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-e9927148862b",
+          "version": "2.23.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Tasks: 'Display in workflow tab' checkbox disappears after task created",
+          "instructionsAndNotes": "Tasks: 'Display in workflow tab' checkbox disappears after task created\nDataFixes/20220217_Task_DisplayTaskFlowOptionEditMode.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-84a649d7b21c",
+          "version": "2.23.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Logframe - Associated global indicator is required - can't be deleted but can be update to another global indicator",
+          "instructionsAndNotes": "Logframe - Associated global indicator is required - can't be deleted but can be update to another global indicator\nAfter deployment: DataFixes/ 20220210_LogframeMandatoryGlobalIndicatorLocked.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-501102671715",
+          "version": "2.23.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "BUG: The resource string for the button to create new tasks is wrong",
+          "instructionsAndNotes": "[T] BUG: The resource string for the button to create new tasks is wrong\nDataFixes/20220124_UpdateResourceStrings.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-84a649d7b21c",
+          "version": "2.23.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Logframe - Associated global indicator is required - can't be deleted but can be update to another global indicator",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Logframe - Associated global indicator is required - can't be deleted but can be update to another global indicator"
+        },
+        {
+          "id": "bugfix-2726122611ae",
+          "version": "2.23.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[T] BUG: The resource string for the button to create new tasks is wrong",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "BUG: The resource string for the button to create new tasks is wrong"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.23.0"
+    ],
+    "rawCardCount": 3,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

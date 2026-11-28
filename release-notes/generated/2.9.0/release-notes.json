@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "version": "2.9.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 6,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-525c0bedea31",
+          "version": "2.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts: systemBanner: 'api/core/systemBanner'",
+          "instructionsAndNotes": "- Add the following line to environment.ts and environment.prod.ts: systemBanner: 'api/core/systemBanner'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d36803a261cb",
+          "version": "2.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add key for SQL command timeout",
+          "instructionsAndNotes": "Web.config\nAdd key for SQL command timeout\n<add key=\"sp:QueryTimeout\" value=\"180\"/>",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b8ae18eed1d8",
+          "version": "2.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add this library: \"ngx-color-picker\": \"^11.0.0\",",
+          "instructionsAndNotes": "Packkage.json\nAdd this library: \"ngx-color-picker\": \"^11.0.0\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-0c889c15ad61",
+          "version": "2.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import list of Awesome Font icon to client project",
+          "instructionsAndNotes": "- Import list of Awesome Font icon to client project",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-eb45595bae8d",
+          "version": "2.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "faWrench, faExclamationCircle, faNewspaper, faUmbrellaBeach, faMinus from '@fortawesome/free-solid-svg-icons'",
+          "instructionsAndNotes": "- faWrench, faExclamationCircle, faNewspaper, faUmbrellaBeach, faMinus from '@fortawesome/free-solid-svg-icons'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ec741f53c919",
+          "version": "2.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "faCommentAltExclamation from '@fortawesome/pro-light-svg-icons'",
+          "instructionsAndNotes": "- faCommentAltExclamation from '@fortawesome/pro-light-svg-icons'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-945373c4ac39",
+          "version": "2.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import SystemBannerModule to app.module.ts",
+          "instructionsAndNotes": "- Import SystemBannerModule to app.module.ts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-013536e72ec1",
+          "version": "2.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "System configuration",
+          "instructionsAndNotes": "System configuration\nImport list of Awesome Font icon to client project\nfaCog from '@fortawesome/pro-light-svg-icons'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-eed90e75099b",
+          "version": "2.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "System banner",
+          "instructionsAndNotes": "System banner",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.9.0"
+    ],
+    "rawCardCount": 9,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

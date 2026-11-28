@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "version": "9.3.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/9.3.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 5,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-58d30d11ea4b",
+          "version": "9.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add =\"true\" to ngo-list-filter .",
+          "instructionsAndNotes": "- Add [flattenIntoParentFlow]=\"true\" to ngo-list-filter .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        },
+        {
+          "id": "action-aa4835e0b3a3",
+          "version": "9.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove all \"pull-right\" or \" pull-left\" classes in other fields",
+          "instructionsAndNotes": "- Remove all \"pull-right\" or \" pull-left\" classes in other fields",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        },
+        {
+          "id": "action-313d5d23cf45",
+          "version": "9.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add class = \" filter-align-left\" to new div above",
+          "instructionsAndNotes": "- Add class = \" filter-align-left\" to new div above",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-2a1759adff35",
+          "version": "9.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" Browse list : when zoomed in, the first filters are shown in the second row, not the last filters, why? on Current sprint - Core | Trello Browse list : when zoomed in,",
+          "instructionsAndNotes": "﷟HYPERLINK \" Browse list : when zoomed in, the first filters are shown in the second row, not the last filters, why? on Current sprint - Core | Trello  Browse list : when zoomed in, the first filters are shown in the second row, not the last filters, why? on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/bd3CO8en/5558-s-browse-list-when-zoomed-in-the-first-filters-are-shown-in-the-second-row-not-the-last-filters-why"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        },
+        {
+          "id": "action-fa02e17e1eed",
+          "version": "9.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Wrap all fields in <div class=\"browse-filter-layout\">",
+          "instructionsAndNotes": "- Wrap all fields in <div class=\"browse-filter-layout\">",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        },
+        {
+          "id": "action-089bdc714a3d",
+          "version": "9.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "pull-right:",
+          "instructionsAndNotes": "- pull-right:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        },
+        {
+          "id": "action-f751a149a38e",
+          "version": "9.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Reorder other fields",
+          "instructionsAndNotes": "- Reorder other fields",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        },
+        {
+          "id": "action-76554e120448",
+          "version": "9.3.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "pull-left",
+          "instructionsAndNotes": "- pull-left",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 196 files (backend: 69, frontend: 85, shared: 42); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/NGO.Core.API.csproj`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/NGO.Core.Common.Tests.csproj`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "9.3.0"
+    ],
+    "rawCardCount": 8,
+    "gitDiffFileCount": 196,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "version": "3.3.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-fe10b5d0e6c5",
+          "version": "3.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Income schedule: update Donor fields displayed in Admin UI",
+          "instructionsAndNotes": "Income schedule: update Donor fields displayed in Admin UI\nDataFixes/20220718_IncomeSchedules_DonorFields.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f70bb20e2abc",
+          "version": "3.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Finance/Funding Plan/Form - Should link to a separate approval task template in standard setup scripts",
+          "instructionsAndNotes": "Finance/Funding Plan/Form - Should link to a separate approval task template in standard setup scripts\nDataFixes/ 20220623_UpdateTaskApprovalSetting.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f37d7a25ab44",
+          "version": "3.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove FinanceRouteGuard from the override service of FundingFinanceRouteService",
+          "instructionsAndNotes": "Display wrong tabfunction when using condition\nRemove FinanceRouteGuard from the override service of FundingFinanceRouteService\nPull request 10446: [S] Finance/Sub tabs with conditions - Wrong view is shown when switch from Agreements tab (refresh in Agreements tab + first access in Finance tab - Repos (azure.com)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Zk3n3vKH"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/10446?_a=files&path=/ngo-client-core/projects/ngo-core/src/lib/funding-finance/funding-finance-route.service.ts"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-e04dd02587e9",
+          "version": "3.3.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Zk3n3vKH"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/10446?_a=files&path=/ngo-client-core/projects/ngo-core/src/lib/funding-finance/funding-finance-route.service.ts"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Display wrong tabfunction when using condition",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Remove FinanceRouteGuard from the override service of FundingFinanceRouteService"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.3.0"
+    ],
+    "rawCardCount": 3,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

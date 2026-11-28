@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "version": "6.2.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.2.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-57f7f8586a90",
+          "version": "6.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql",
+          "instructionsAndNotes": "if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VNp6VTqS/4683-budget-incoming-funding-confirmed-incoming-funding-displays-into-version-that-allocation-is-created-havent-approved"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        },
+        {
+          "id": "action-549ce9366703",
+          "version": "6.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Implement for Income Schedules on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[Tasks/Created from] Implement for Income Schedules on Current sprint - Core | Trello\n[For upgrade person] Characteristic for fieldInstanceId 22538 add highlight text: {\"readOnly\": \"true\", \"isHideIfNoValue\": true, maxCharacters:50, \"taskLinkFormat\":[{tabDefinitionId: 2, fieldName: \"description\"}, {tabDefinitionId: 8, fieldName: \"description\"}, {tabDefinitionId: 15, fieldName: \"description\"}, {tabDefinitionId: 24, fieldName: \"description\"}, {tabDefinitionId: 10, fieldName: \"name\"}, {tabFunctionId: 44, fieldName: \"name\"} ]}",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/S27nsFJY"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Enums/TabFunctionId.cs`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-cc2ada2ff2b6",
+          "version": "6.2.0",
+          "applicability": "conditional",
+          "condition": "We move the code Lock documents to webjob so please check customization in client, if using FolderPathWithoutRoot, move that code to OnAfterSaveScreenshot instead of OnTaskApproved . Because not sure screenshot webjob has finished before using FolderPathWithou",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add import of faExternalLink from '@fortawesome/pro-light-svg-icons' + add to constructor in app.module.ts",
+          "instructionsAndNotes": "[Search] If we allow to preview document, we should let user do something on preview dialog\nAdd import of faExternalLink from '@fortawesome/pro-light-svg-icons' + add to constructor in app.module.ts\n[M] Can we move the LockRelatedDocuments function to ScreenshotQueue upon task completion?\nWe move the code Lock documents to webjob so please check customization in client, if using FolderPathWithoutRoot, move that code to OnAfterSaveScreenshot instead of OnTaskApproved . Because not sure screenshot webjob has finished before using FolderPathWithoutRoot for the custom purpose",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/uHUFPYZY"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/8LmfSkcD/4682-m-can-we-move-the-lockrelateddocuments-function-to-screenshotqueue-upon-task-completion"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-client-core/src/app/app.module.ts`"
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-e31083877490",
+          "version": "6.2.0",
+          "moduleScope": "Search",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/uHUFPYZY"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/8LmfSkcD/4682-m-can-we-move-the-lockrelateddocuments-function-to-screenshotqueue-upon-task-completion"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[Search] If we allow to preview document, we should let user do something on preview dialog",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-client-core/src/app/app.module.ts`",
+          "clientImpact": "We move the code Lock documents to webjob so please check customization in client, if using FolderPathWithoutRoot, move that code to OnAfterSaveScreenshot instead of OnTaskApproved . Because not sure screenshot webjob has finished before using FolderPathWithou Add import of faExternalLink from '@fortawesome/pro-light-svg-icons' + add to constructor in app.module.ts"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-57f7f8586a90",
+          "version": "6.2.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VNp6VTqS/4683-budget-incoming-funding-confirmed-incoming-funding-displays-into-version-that-allocation-is-created-havent-approved"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql",
+          "rootCauseOrKeyFiles": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`",
+          "extraClientAction": "if you want to fix AllocationDate wasn't updated in confirmed Allocations, run script Datafixes/20250122_FixAllocationDateNotBeUpdatedWhenTaskApproved.sql"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "6.2.0"
+    ],
+    "rawCardCount": 3,
+    "gitDiffFileCount": 306,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "version": "2.18.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-234239c417da",
+          "version": "2.18.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "NG TEST ENV - Admin Portal, metadata list, duplicates and spelling error",
+          "instructionsAndNotes": "NG TEST ENV - Admin Portal, metadata list, duplicates and spelling error\n20210928_UpdateNamesForOptionsLists.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ed734b769524",
+          "version": "2.18.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Remove preview field in manage Email",
+          "instructionsAndNotes": "[Amin portal] Remove preview field in manage Email\n20211008_RemovePreviewFieldInAdminManageEmail.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b4994485087c",
+          "version": "2.18.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "UPDATE CoreTaskApprovalSettings SET PdfTemplates = ' ' WHERE EntityDefinitionId = 6 AND TabDefinitionId = 16 AND TabFunctionId = 18",
+          "instructionsAndNotes": "Funding plan Approval PDF - Add more info\nUPDATE CoreTaskApprovalSettings SET PdfTemplates = '[{ extraValue: \"/Documents/PdfTemplates/FundingPlanApprovalTemplate.docx\", sortOrder: 2, extraText: \"MAIN\"} ]' WHERE EntityDefinitionId = 6 AND TabDefinitionId = 16 AND TabFunctionId = 18",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-b94a1b953978",
+          "version": "2.18.0",
+          "moduleScope": "{ extraValue: \"/Documents/PdfTemplates/FundingPlanApprovalTemplate.docx\", sortOrder: 2, extraText: \"MAIN\"}",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Funding plan Approval PDF - Add more info",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. UPDATE CoreTaskApprovalSettings SET PdfTemplates = ' ' WHERE EntityDefinitionId = 6 AND TabDefinitionId = 16 AND TabFunctionId = 18"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-234239c417da",
+          "version": "2.18.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "NG TEST ENV - Admin Portal, metadata list, duplicates and spelling error",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "NG TEST ENV - Admin Portal, metadata list, duplicates and spelling error"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.18.0"
+    ],
+    "rawCardCount": 3,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "version": "8.10.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.10.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-0119099fe98f",
+          "version": "8.10.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Check in client code scripts and remove resource string keys with '_in_email' suffix",
+          "instructionsAndNotes": "[Resource String/ Email] Failed to get resource string value for email title when title has configured [[TabDefinitionName]] on Current sprint - Core | Trello\n[Before Deployment] Check in client code scripts and remove resource string keys with '_in_email' suffix",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/xBxUjtSz/4394-resource-string-email-failed-to-get-resource-string-value-for-email-title-when-title-has-configured-tabdefinitionname"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 89 files (backend: 63, frontend: 15, shared: 11); representative changes: M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, A `ngo-api-core/NGO/NGO.Core.Common/Utilities/PopulateValueConverter.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240808_RemoveInEmailResourceString.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261006_UpdateNameForFundingMultiYearBoxes.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261007_UpdateSqlDtoMappings.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261022_UpdateResourceStringMembership.sql`."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-320143cd7f91",
+          "version": "8.10.0",
+          "moduleScope": "Resource String/ Email",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/xBxUjtSz/4394-resource-string-email-failed-to-get-resource-string-value-for-email-title-when-title-has-configured-tabdefinitionname"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Resource String/ Email] Failed to get resource string value for email title when title has configured [[TabDefinitionName]] on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 89 files (backend: 63, frontend: 15, shared: 11); representative changes: M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, A `ngo-api-core/NGO/NGO.Core.Common/Utilities/PopulateValueConverter.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240808_RemoveInEmailResourceString.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261006_UpdateNameForFundingMultiYearBoxes.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261007_UpdateSqlDtoMappings.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20261022_UpdateResourceStringMembership.sql`.",
+          "extraClientAction": "Check in client code scripts and remove resource string keys with '_in_email' suffix"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "8.10.0"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 89,
+    "unresolvedItems": []
+  }
+}

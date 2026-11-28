@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "version": "3.9.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 10,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 3
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-dbbe6a99c4a7",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Performance: Browse pages < >",
+          "instructionsAndNotes": "Card: [M] Performance: Browse pages <  >\n[After deployment]: DataFixes/ 20221103_AddSqlDtoMapping.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/O27JvryB"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-aee0a175741b",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Program/Org Unit - Monitoring: correct TabFunctionId = 30 in CoreEntityTabs",
+          "instructionsAndNotes": "Program/Org Unit - Monitoring: correct TabFunctionId = 30 in CoreEntityTabs\n<  >\n[After deployment]: DataFixes/20221103_UpdateMonitoringTabFunctionId.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/jFYfSV2b"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-99d15d2ee27f",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace WindowsAzure.Storage with Azure.Storage.Queues and Azure.Storage.Blobs",
+          "instructionsAndNotes": "- Replace WindowsAzure.Storage with Azure.Storage.Queues and Azure.Storage.Blobs",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/yHrxeLz6"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b025e771e970",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add Azure.Storage.Queues to NGO.Repository to fix error when run update-database",
+          "instructionsAndNotes": "- Add Azure.Storage.Queues to NGO.Repository to fix error when run update-database",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e9d132f7998f",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Upgrade EF 6.4.4 :",
+          "instructionsAndNotes": "Could not load file or assembly 'Azure.Storage.Queues, Version=12.12.0.0, Culture=neutral, PublicKeyToken=<FROM_SECRET_PROVIDER>' or one of its dependencies. The system cannot find the file specified.\nUpgrade EF 6.4.4 [Before Deployment] :\na. Update the pipeline file: build-pipeline-api.yml, in **task: CopyFiles@2** (for packages), change the values of \"SourceFolders\" and \"Contents\" as below:\nSourceFolder: '$(Build.SourcesDirectory)\\\\ngo-api\\\\NGO\\\\packages\\\\EntityFramework.6.4.4\\\\tools\\\\net45\\\\any\\\\'\nContents: 'ef6.exe'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-de5dce7ea0f8",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "b. DevOps: update command in the task of Migrate database to",
+          "instructionsAndNotes": "b. DevOps: update command in the task of Migrate database to\nef6.exe database update --assembly $(CoreContextDLL) --connection-provider System.Data.SqlClient --connection-string \"$(ConnectionString)\" --verbose",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-37861bd72307",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "< >",
+          "instructionsAndNotes": "<  >\n[After deployment]: after run Tools/NGO.Core.Tools.FixBudgetCalculation (update App.config (db,storage, queue name) and run the tool), verify the webjob FinancialActualAsyncFunctions run Success",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Uq9hSRue/2901-financebox-budget-actuals-box-budget-actual-dont-show-up"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2ad569fbbbc2",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "< >",
+          "instructionsAndNotes": "<  >\nLost Beneficiary ReportingName in db after it's approved\nWe can re-use existing tool NGO.Core.Tools.PeriodNamesPopulation to update reporting's name for Beneficiary\nFor Live only - Manually fix existing data for beneficiary reporting periods\n[After deployment]: DataFixes/20221201_QueryAndManuallyCorrectBeneficiaryReportings.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/wHtaamEW/2896-beneficiaries-should-display-the-next-period-not-report-yet-when-open-the-actual-form"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-90185091047a",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove ModidiedDate/ModifiedBy/CreatedDate/CreatedBy in Allocation function",
+          "instructionsAndNotes": "Vien notes: no card associated\n-- Remove ModidiedDate/ModifiedBy/CreatedDate/CreatedBy in Allocation function\n-- This is redundant fields since 12/2021 when we remove Org Allocation function\n-- Script to ensure redundant fields to be removed from form/listview in Allocation function\ndelete from CoreFieldInstanceLocations where FieldInstanceId in (3001,3002,3003,3004) and Id in (901,902,921,922,923,940,943,947,952,953)\ndelete from CoreCacheItems",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2e92b21d1991",
+          "version": "3.9.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Nuget packages:",
+          "instructionsAndNotes": "Nuget packages:\nSharePoint Deployment - PowerShell update auditlog\n[Before Deployment] :\nEdit Release > Deploy Sharepoint > select the powershell task that will run the Deploy.ps1 > Arguments: at the end of line, add a space and\n-AuditLogQueue \"auditlogqueue\" -AuditLogBlob \"auditlogblob\" -AuditLogBlobQueue \"auditlogblobqueue\"\nSave the Release and run the deploy.\nNote: Should update that same thing for the Live Release when updating this for the Test Site Release",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-e3026277881a",
+          "version": "3.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Make sure System.Runtime.CompilerServices.Unsafe nuget has the same version in the Solution.",
+          "instructionsAndNotes": "- Make sure System.Runtime.CompilerServices.Unsafe nuget has the same version in the Solution.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-b025e771e970",
+          "version": "3.9.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Add Azure.Storage.Queues to NGO.Repository to fix error when run update-database",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Add Azure.Storage.Queues to NGO.Repository to fix error when run update-database"
+        },
+        {
+          "id": "bugfix-352758dc331e",
+          "version": "3.9.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Could not load file or assembly 'Azure.Storage.Queues, Version=12.12.0.0, Culture=neutral, PublicKeyToken=<FROM_SECRET_PROVIDER>' or one of its dependencies. The system cannot find the file specified.",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Upgrade EF 6.4.4 :"
+        },
+        {
+          "id": "bugfix-1da1dc48a540",
+          "version": "3.9.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/U2slptPo"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Card: Logframe reporting: the completed report is missing 'ReportingName' in database in case the approval has been recalled/rejected before <  >",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.9.0"
+    ],
+    "rawCardCount": 12,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

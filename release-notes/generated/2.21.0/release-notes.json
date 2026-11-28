@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "version": "2.21.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 9,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 2,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-570db9bb2f1f",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Logframe: Add export to excel to rollup",
+          "instructionsAndNotes": "Logframe: Add export to excel to rollup\nDataFixes/20211217_Program_IndicatorTracker_RemoveRollupConfig.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bcbda6883915",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Finance allocation - Remove modified by dropdown",
+          "instructionsAndNotes": "Finance allocation - Remove modified by dropdown\nDataFixes\\20211215_FundingAllocation_Remove_ModifiedBy.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f08a976926d3",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Tasks tab: Rename free-text search filter",
+          "instructionsAndNotes": "[T] Tasks tab: Rename free-text search filter\n20211208_UpdateResoureString_TaskTab.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-368586443b24",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add configuration key in Azure settings for web job",
+          "instructionsAndNotes": "Analyse: Generate report and email\nAdd configuration key in Azure settings for web job\nsp:AnalyseExportQueue\nsp:AnalyseBlob\nsp:AnalyseBlobQueue\nsp:AnalyseBlobReference",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a24a8afd0d8c",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add AnalyseExport webjob to api pipeline yaml file",
+          "instructionsAndNotes": "Add AnalyseExport webjob to api pipeline yaml file",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1faa2f3fe43a",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run DataFixes\\20211213_CoreRolePermissions_AddListPermissions.sql",
+          "instructionsAndNotes": "Partner Portal - to be able to Hide entities in the Top bar that users don't have access to\nNeed to add List permission for roles that already had View permission to make sure users won't be redirected to 403 page\nRun DataFixes\\20211213_CoreRolePermissions_AddListPermissions.sql\n* Note: for client projects, please make sure to add the necessary List permissions into CorePermissions (since Core script doesn't cover all custom functions) before running the above script",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-7f47defa0994",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run DataFixes\\20211215_FundingAllocation_Remove_ModifiedBy",
+          "instructionsAndNotes": "[Finance-Allocation] Lost data in Modified By dropdown > Can't create an allocation\nRun DataFixes\\20211215_FundingAllocation_Remove_ModifiedBy",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-9b9dda0249fb",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run DataFixes\\20211217_Program_IndicatorTracker_RemoveRollupConfig.sql",
+          "instructionsAndNotes": "Logframe: Add export to excel to rollup\nRun DataFixes\\20211217_Program_IndicatorTracker_RemoveRollupConfig.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-768469c4706a",
+          "version": "2.21.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Remove duplicate status column in tasks list",
+          "instructionsAndNotes": "Remove duplicate status column in tasks list\nDataFixes/20220107_TaskList_FixDuplicateStatusColumn.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-570db9bb2f1f",
+          "version": "2.21.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Logframe: Add export to excel to rollup",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Logframe: Add export to excel to rollup"
+        },
+        {
+          "id": "feature-e83e08d84eca",
+          "version": "2.21.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Logframe: Add export to excel to rollup",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Run DataFixes\\20211217_Program_IndicatorTracker_RemoveRollupConfig.sql"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-b9b9caa45bc9",
+          "version": "2.21.0",
+          "moduleScope": "Finance-Allocation",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Finance-Allocation] Lost data in Modified By dropdown > Can't create an allocation",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Run DataFixes\\20211215_FundingAllocation_Remove_ModifiedBy"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.21.0"
+    ],
+    "rawCardCount": 9,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

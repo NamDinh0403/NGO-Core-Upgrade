@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 1,
+  "version": "1.8.2",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 1,
+    "needsReviewActions": 10,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-611789d05213",
+          "version": "1.8.2",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add line beneficiaries: 'api/core/entity',",
+          "instructionsAndNotes": "- Add line beneficiaries: 'api/core/entity',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ebee23869f6e",
+          "version": "1.8.2",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add line budget: 'api/core/entity',",
+          "instructionsAndNotes": "- Add line budget: 'api/core/entity',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-cca5ae423f6e",
+          "version": "1.8.2",
+          "applicability": "conditional",
+          "condition": "Refactoring code: Please check all customized mapper in client projects",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "PR 2013 (if merged): Delete the files in Deplyment\\DatabaseSeed\\01 Core before updating the Deployment Nuget package",
+          "instructionsAndNotes": "PR 2013 (if merged): Delete the files in Deplyment\\DatabaseSeed\\01 Core before updating the Deployment Nuget package\nRefactoring code: Please check all customized mapper in client projects",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-4f51f6f31de1",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "When copying the primitive properties from object A to object B",
+          "instructionsAndNotes": "- When copying the primitive properties from object A to object B",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3ecb97960cc3",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Dto to Model: Dto.ToOptionalFields(Model)",
+          "instructionsAndNotes": "- Dto to Model: Dto.ToOptionalFields(Model)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-72761dbaab93",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Model to Dto: Model.ToOptionalFields(Dto)",
+          "instructionsAndNotes": "- Model to Dto: Model.ToOptionalFields(Dto)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d39b838a9b83",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Model to DataModel: Model.ToOptionalFields(DataModel)",
+          "instructionsAndNotes": "- Model to DataModel: Model.ToOptionalFields(DataModel)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a3e16cfeb605",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "DataModel to Model: DataModel.ToOptionalFields(Model, extractedSourceType : false) because in DataModel, normally, there is no attribute PrimitiveProperty is set for property, ther",
+          "instructionsAndNotes": "- DataModel to Model: DataModel.ToOptionalFields(Model, extractedSourceType : false) because in DataModel, normally, there is no attribute PrimitiveProperty is set for property, therefore it will use the Model class to extract properties",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-113ec46e083d",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "app.module.ts",
+          "instructionsAndNotes": "- app.module.ts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3a7751a2ee0a",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "import BeneficiaryModule",
+          "instructionsAndNotes": "- import BeneficiaryModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a22d9f727c2e",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "environments.ts & environments.prod.ts",
+          "instructionsAndNotes": "- environments.ts & environments.prod.ts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-09b862784bb2",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "import BudgetModule",
+          "instructionsAndNotes": "- import BudgetModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2cbfc9355faa",
+          "version": "1.8.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "ToOptionalFields",
+          "instructionsAndNotes": "ToOptionalFields",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-0ddb21f3c5c5",
+          "version": "1.8.2",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "To add timezone for DATETIME field, in DtoMapper , it should add parameter to this function includeTimeZone = true",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "1.8.2"
+    ],
+    "rawCardCount": 14,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

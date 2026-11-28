@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "version": "2.16.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 4,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-32c5f0e57dcf",
+          "version": "2.16.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Update email template for send document",
+          "instructionsAndNotes": "Update email template for send document\nDataFixes/20210821_UpdateEmailTemplateForDocument.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a25f6b8f7404",
+          "version": "2.16.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "My Recent documents pop up - File paths spill out (should be wrapped)",
+          "instructionsAndNotes": "My Recent documents pop up - File paths spill out (should be wrapped)\n[After deployment]\nDataFixes/ 20210803_UpdateFieldCharacteristicsForDocumentsBox.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3eeedc41acde",
+          "version": "2.16.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "CoreNews: Update value of old columns to new columns",
+          "instructionsAndNotes": "CoreNews: Update value of old columns to new columns\n[After deployment]\nDataFixes\\20210705_UpdateColumnDataOfNews.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f8a786f48a73",
+          "version": "2.16.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Logframe :",
+          "instructionsAndNotes": "Logframe :\nChange name of breakdown option: DataFixes\\20210726_UpdateResourceStrings.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-0122b7408cdf",
+          "version": "2.16.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "IdeaMemberFields in CoreConfigurations Update JSON format from } ] to } ]} ]",
+          "instructionsAndNotes": "IdeaMemberFields in CoreConfigurations Update JSON format from [{ \"entityId\": number, \"fields\":string[]} ] to [{ \"entityId\": number, \"roles\":[{ \"id\": number, \"fields\":string[]} ]} ]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-3eeedc41acde",
+          "version": "2.16.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "CoreNews: Update value of old columns to new columns",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. CoreNews: Update value of old columns to new columns"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-02ec6e88d534",
+          "version": "2.16.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Admin UI - Metadata - Update error message confirm dialog when deleting any options.",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.16.0"
+    ],
+    "rawCardCount": 6,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

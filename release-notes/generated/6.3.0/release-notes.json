@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "version": "6.3.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.3.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [
+        {
+          "id": "action-32c43cfd1dff",
+          "version": "6.3.0",
+          "applicability": "conditional",
+          "condition": "if client requests to remove reporting periods that are outside of current published budget periods (e",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Update appsettings.json (Queue names, CoreContext, AzureWebJobsStorage, keep 'RemoveRedundantPeriods': false) and run the Tool: UpdateExistingPartnerExpenditureReportings",
+          "instructionsAndNotes": "[Required] Update appsettings.json (Queue names, CoreContext, AzureWebJobsStorage, keep 'RemoveRedundantPeriods': false) and run the Tool: UpdateExistingPartnerExpenditureReportings\n[Optional] Turn on the setting RemoveRedundantPeriods in appsettings.json if client requests to remove reporting periods that are outside of current published budget periods (e.g. user extends Entity EndDate and haven't published new budget version before this card's release, reporting periods are longer/outside than budget period will be removed)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/hFFsC2Vh/3876-partner-expenditure-some-issues-related-to-shortening-end-date-adjust-the-start-date"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingPartnerExpenditureReportings/appsettings.json`"
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-6479966e3b3a",
+          "version": "6.3.0",
+          "moduleScope": "Required / Optional",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/hFFsC2Vh/3876-partner-expenditure-some-issues-related-to-shortening-end-date-adjust-the-start-date"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[Required] Update appsettings.json (Queue names, CoreContext, AzureWebJobsStorage, keep 'RemoveRedundantPeriods': false) and run the Tool: UpdateExistingPartnerExpenditureReportings",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingPartnerExpenditureReportings/appsettings.json`",
+          "clientImpact": "if client requests to remove reporting periods that are outside of current published budget periods (e Update appsettings.json (Queue names, CoreContext, AzureWebJobsStorage, keep 'RemoveRedundantPeriods': false) and run the Tool: UpdateExistingPartnerExpenditureReportings"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "6.3.0"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 110,
+    "unresolvedItems": []
+  }
+}

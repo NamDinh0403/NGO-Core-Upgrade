@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "version": "2.22.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 9,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 3,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-80a4ba5a39ff",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run migration tool to update permissions in task template: NGO.Core.Tools.TaskTemplateApprovalStepsMigration",
+          "instructionsAndNotes": "Task Template: support permission as multi-choice\nRun migration tool to update permissions in task template: NGO.Core.Tools.TaskTemplateApprovalStepsMigration",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ccfa49bf37af",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Analyse/Logframe: update name of target and reporting period name",
+          "instructionsAndNotes": "Analyse/Logframe: update name of target and reporting period name\n(Improve performance of SQL statement)\nDataFixes/20220103_Logframe_UpdateTargetReportPeriodName.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-8e93a3f1d664",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Show checkbox\" Display on workflow\"",
+          "instructionsAndNotes": "Show checkbox\" Display on workflow\"\nDataFixes/ 20220105_UpdateFieldDisplayOnWorkflowTab.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ae08f693d5cf",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run SQL \"UPDATE CoreEmailTemplates SET ReceiversTokenKey = ' ]' WHERE Id = 113\"",
+          "instructionsAndNotes": "Approval recall email sent to wrong person\nRun SQL \"UPDATE CoreEmailTemplates SET ReceiversTokenKey = '[[Task.ResponsiblePerson]]' WHERE Id = 113\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1ed539bae1bc",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "\"Is latest published version\" field for Logframe",
+          "instructionsAndNotes": "\"Is latest published version\" field for Logframe\nDataFixes/ 20220105_UpdateLogframe_IsCurrentPublishedVersion.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-26e415cb5208",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check New agreement/ amendment structure configuration and migration in Agreements in Config Wiki",
+          "instructionsAndNotes": "- Check New agreement/ amendment structure configuration and migration in Agreements in Config Wiki",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5ec0b3b6ff6a",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Add these field locations as an After Deployment oneTimeFix sql file.",
+          "instructionsAndNotes": "- Add these field locations as an After Deployment oneTimeFix sql file.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/UQjEPmJW/1422-agreement-browse-view-mandatory-fields-need-to-be-moved-to-corect-script-file"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5395cd8c737a",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check ReviewMode column on CoreTaskTemplates in custom scripts of project clients, if null, change value to 0 on that script.",
+          "instructionsAndNotes": "- Check ReviewMode column on CoreTaskTemplates in custom scripts of project clients, if null, change value to 0 on that script.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-857c55bd92f9",
+          "version": "2.22.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "DataFixes/20211231_UpdateReviewMode_CoreTaskTemplates.sql",
+          "instructionsAndNotes": "- DataFixes/20211231_UpdateReviewMode_CoreTaskTemplates.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-438ed8be5e40",
+          "version": "2.22.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "= 2.22 + any task template configured in custom scripts",
+          "instructionsAndNotes": "= 2.22 + any task template configured in custom scripts\nPlease find if any task template configured in custom scripts, and update ApprovalPermissionGroups, ReviewPermissionGroups in\nCoreTaskTemplates to new format.\n[{id: 7, name custom: \"Person responsible \" n\nresponsible'\nThe green box is a correct format from Core 2.22.\nThe format is a array of array (the old format is array of object)\n\" />",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-0ea15ed68ff3",
+          "version": "2.22.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "For developer: Please find if any task template configured in custom scripts in your client project, and update ApprovalPermissionGroups , ReviewPermissionGroups in CoreTaskTemplates to new format (see image for your reference)",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-5ec0b3b6ff6a",
+          "version": "2.22.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/UQjEPmJW/1422-agreement-browse-view-mandatory-fields-need-to-be-moved-to-corect-script-file"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Add these field locations as an After Deployment oneTimeFix sql file.",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Add these field locations as an After Deployment oneTimeFix sql file."
+        },
+        {
+          "id": "feature-a1661415aef6",
+          "version": "2.22.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "New Agreements tab - Amendment function :",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-5f6fc0b49c7d",
+          "version": "2.22.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Approval recall email sent to wrong person",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Run SQL \"UPDATE CoreEmailTemplates SET ReceiversTokenKey = ' ]' WHERE Id = 113\""
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.22.0"
+    ],
+    "rawCardCount": 12,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

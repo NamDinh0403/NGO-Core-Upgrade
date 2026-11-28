@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "version": "5.14.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.14.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-325318815ff0",
+          "version": "5.14.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "ID of global objective is displayed unexpectedly on at number objective field when number objective is blank on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[Logframe/Indicator Tracker] ID of global objective is displayed unexpectedly on at number objective field when number objective is blank on Current sprint - Core | Trello\nIf in client project customs GetLogframeIndicatorTrackers procedure, update isnull(obj.ObjectiveNo, glObj.ObjectiveNo) to obj.[ObjectiveNo] (changes in PR: Pull request 23454: [Logframe/Indicator Tracker] ID of global objective is displayed unexpectedly on at number objective field when number objective is blank - Repos (azure.com)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Y08Mqgwi/4207-logframe-indicator-tracker-id-of-global-objective-is-displayed-unexpectedly-on-at-number-objective-field-when-number-objective-i"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/23454"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframeIndicatorTrackers.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.14.0"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 204,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,454 @@
+{
+  "schemaVersion": 1,
+  "version": "3.12.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 12,
+    "conditionalActions": 0,
+    "needsReviewActions": 4,
+    "newFeatures": 1,
+    "bugFixes": 5
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-140f0c7d3411",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Field/dropdown Country don't show all countries",
+          "instructionsAndNotes": "Field/dropdown Country don't show all countries\n[After deployment] DataFixes/20230213_UpdateLimitlevelCharacteristics.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/emgFA9x5"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3df1cbc54386",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Update Logframe calculations for YTD or PTD:",
+          "instructionsAndNotes": "[Logframe] Update Logframe calculations for YTD or PTD:\n[After Deployment] DataFixes/ 20230127_UpdateLogframeYTDColumnSortOrder.sql (Read the description in the script for more detail)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/0lhQZKyE"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-153bc14e09cf",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Partner tasks - Partners should not be able to edit deadline/end date?:",
+          "instructionsAndNotes": "[S] Partner tasks - Partners should not be able to edit deadline/end date?:\n[After Deployment] DataFixes/20230213_UpdateFieldCharacteristicForPartnerUsers",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/SLfTvOr4"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/1fnUFfBR"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5c2bd6416d6a",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Analyse, default setup: Secondary tables appear when they shouldn't (such as Primary table Risks, and all entities appear as Secondary tables, even though the Risks tab only appear",
+          "instructionsAndNotes": "Analyse, default setup: Secondary tables appear when they shouldn't (such as Primary table Risks, and all entities appear as Secondary tables, even though the Risks tab only appears on two entities; Or Budget is only on Project, but in Analyse the \"Budget\" list is appearing for both Projects and Fundings, it shoudln't appear for Fundings)\n[After deployment] DataFixes/ 20221230_RemoveUnusedPermissions.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/5yliDfRz"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a528da4bc166",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Browse view: Filter by current phase not support, and not work",
+          "instructionsAndNotes": "[S] Browse view: Filter by current phase not support, and not work\n[After deployment] DataFixes/20230208_UpdateCurrentWorkflowField.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/4dnlzWVi"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-52cb4368ec03",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "When a task that has mandatory review and approval, and the user click on \"End review\" the task is marked as \"completed\" and \"stopped\" the correct would be that the task status is ",
+          "instructionsAndNotes": "[S] When a task that has mandatory review and approval, and the user click on \"End review\" the task is marked as \"completed\" and \"stopped\" the correct would be that the task status is \"In progress\" and \"Stopped\"?:\n[After Deployment] DataFixes/ 20230217_UpdateTaskStatusResourceStrings.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/MYNPC68G"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-61b2caa93a3a",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Server error when config browse view with RatingField",
+          "instructionsAndNotes": "[S] Server error when config browse view with RatingField\n[After deployment] DataFixes/20230223_UpdateFieldInstances_sqlDtoMapping.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Q1HWk918"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-10542bae7075",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run NGO.Tools/NGO.Core.Tools.SetTaskTemplatesResourceStrings",
+          "instructionsAndNotes": "[S] Task/Task template - Assigned to, not translated\nRun NGO.Tools/NGO.Core.Tools.SetTaskTemplatesResourceStrings",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/48fHZEUp"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1e80ebef7344",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run Datafixes/20230224_UpdateMissingLastPeriodMessageResourceString.sql",
+          "instructionsAndNotes": "[S] Finance/Partner expenditure/Form - Can't report next period if leave option 'Open Last Period' empty\n[After deployment] Run Datafixes/20230224_UpdateMissingLastPeriodMessageResourceString.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/HyIBWb0f"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d194c21aedc1",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check client config of rating and comment at objective level or indicator level",
+          "instructionsAndNotes": "- Check client config of rating and comment at objective level or indicator level",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2d7a2f9b9574",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update LogframeIndicatorTemplate pdf template to match with client config",
+          "instructionsAndNotes": "- Update LogframeIndicatorTemplate pdf template to match with client config",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-06c02cefb564",
+          "version": "3.12.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Compression settings:",
+          "instructionsAndNotes": "Compression settings:\nPlease update web.config to enable zip compression for all static files + data sent to/from the API. Inside the <system.webServer> element, add:\n<urlCompression doStaticCompression=\"true\" doDynamicCompression=\"true\" />",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-35640ebbb206",
+          "version": "3.12.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Indicator Level:",
+          "instructionsAndNotes": "- Indicator Level:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2566b8baf1d0",
+          "version": "3.12.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Rating: ExportLogframeObjective.LogframeReportingIndicatorActual.RatingField1",
+          "instructionsAndNotes": "- Rating: ExportLogframeObjective.LogframeReportingIndicatorActual.RatingField1",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-818ab8a1f9d5",
+          "version": "3.12.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Comments: ExportLogframeObjective.LogframeReportingIndicatorActual.Comment",
+          "instructionsAndNotes": "- Comments: ExportLogframeObjective.LogframeReportingIndicatorActual.Comment",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5193608d6571",
+          "version": "3.12.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Objective Level: using core template",
+          "instructionsAndNotes": "- Objective Level: using core template",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-a897d36d9f61",
+          "version": "3.12.0",
+          "moduleScope": "Logframe",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/0lhQZKyE"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[Logframe] Update Logframe calculations for YTD or PTD:",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Update Logframe calculations for YTD or PTD:"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-8831104205ee",
+          "version": "3.12.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/SLfTvOr4"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/1fnUFfBR"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Partner tasks - Partners should not be able to edit deadline/end date?:",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Partner tasks - Partners should not be able to edit deadline/end date?:"
+        },
+        {
+          "id": "bugfix-a315df1f4d7c",
+          "version": "3.12.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/5yliDfRz"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Analyse, default setup: Secondary tables appear when they shouldn't (such as Primary table Risks, and all entities appear as Secondary tables, even though the Risks tab only appears on two entities; Or Budget is only on Project, but in Analyse the \"Budget\" list is appearing for both Projects and Fundings, it shoudln't appear for Fundings)",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Analyse, default setup: Secondary tables appear when they shouldn't (such as Primary table Risks, and all entities appear as Secondary tables, even though the Risks tab only appear"
+        },
+        {
+          "id": "bugfix-8613428cf588",
+          "version": "3.12.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Q1HWk918"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Server error when config browse view with RatingField",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Server error when config browse view with RatingField"
+        },
+        {
+          "id": "bugfix-b20992657645",
+          "version": "3.12.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/HyIBWb0f"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Finance/Partner expenditure/Form - Can't report next period if leave option 'Open Last Period' empty",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Run Datafixes/20230224_UpdateMissingLastPeriodMessageResourceString.sql"
+        },
+        {
+          "id": "bugfix-39c07b4c215d",
+          "version": "3.12.0",
+          "moduleScope": "Logframe/Indicator tracker",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/V3aMbvVj"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] [Logframe/Indicator tracker] Missing Rating and comment value on approval PDF file:",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.12.0"
+    ],
+    "rawCardCount": 17,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

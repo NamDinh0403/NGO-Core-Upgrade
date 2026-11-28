@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "version": "8.9.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.9.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 1,
+    "needsReviewActions": 3,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [
+        {
+          "id": "action-7cb8a36a74b2",
+          "version": "8.9.0",
+          "applicability": "conditional",
+          "condition": "check if they should be updated to ] instead",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Idea Task - Reassign: sent emails should be more precise on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[4][S] Idea Task - Reassign: sent emails should be more precise on Current sprint - Core | Trello\nIf client projects use custom email templates with tokens like [[TaskFlow.Submitter.Name]] , [[FundingIdea.CreatedBy.Name]] , or [[Idea.CreatedBy.Name]] , please check if they should be updated to [[TaskActorName]] instead.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/9s2Srmf1/5508-4s-idea-task-reassign-sent-emails-should-be-more-precise"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 88 files (backend: 40, frontend: 26, shared: 22); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260521_UpdateEmailTemplates.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260706_UpdateRollupForProgramFinanceMonitoringBoxes.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260915_UpdateSqlMappingForIATIAnalyse.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260916_SetupIATIAnalysePermissions.sql`."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-ccc789fcbb62",
+          "version": "8.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If you want to show Inactive user from UserOptions, put this flag to CoreAnalyzeColumns' FieldCharacteristic",
+          "instructionsAndNotes": "If you want to show Inactive user from UserOptions, put this flag to CoreAnalyzeColumns' FieldCharacteristic\nFieldCharacteristic . isAlwaysShowInactive = true",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WP3RDffZ/5605-analyse-and-inactive-users"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 88 files (backend: 40, frontend: 26, shared: 22); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260521_UpdateEmailTemplates.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260706_UpdateRollupForProgramFinanceMonitoringBoxes.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260915_UpdateSqlMappingForIATIAnalyse.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260916_SetupIATIAnalysePermissions.sql`."
+        },
+        {
+          "id": "action-7d2920d7451d",
+          "version": "8.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/dYcw3tZP/5652-s-analyse-support-more-field-characteristic-for-configoptions"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 88 files (backend: 40, frontend: 26, shared: 22); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260521_UpdateEmailTemplates.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260706_UpdateRollupForProgramFinanceMonitoringBoxes.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260915_UpdateSqlMappingForIATIAnalyse.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20260916_SetupIATIAnalysePermissions.sql`."
+        },
+        {
+          "id": "action-29ebeec6df91",
+          "version": "8.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If you want to show Inactive user from ConfigOptionsMapper, put this flag to CoreAnalyzeColumns' FieldCharacteristic",
+          "instructionsAndNotes": "- If you want to show Inactive user from ConfigOptionsMapper, put this flag to CoreAnalyzeColumns' FieldCharacteristic\nFieldCharacteristic . isAlwaysShowInactive = true",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories/Mapping/OptionsMapper/ConfigOptionsMapper.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-8580614d61c1",
+          "version": "8.9.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "If you want to enable Readonly options of ConfigOptionsMapper, put this flag to CoreAnalyzeColumns' FieldCharacteristic",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories/Mapping/OptionsMapper/ConfigOptionsMapper.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "8.9.0"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 88,
+    "unresolvedItems": []
+  }
+}

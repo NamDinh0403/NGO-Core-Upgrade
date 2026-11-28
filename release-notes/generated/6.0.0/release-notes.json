@@ -1,0 +1,1022 @@
+{
+  "schemaVersion": 1,
+  "version": "6.0.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.0.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 16,
+    "conditionalActions": 4,
+    "needsReviewActions": 27,
+    "newFeatures": 11,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-bf8695adabf0",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update app.module.ts :",
+          "instructionsAndNotes": "- Update app.module.ts :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-97d4cc6d2654",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add faCloudUploadAlt after faTh inside the constructor.",
+          "instructionsAndNotes": "- Add faCloudUploadAlt after faTh inside the constructor.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-d1a58cd24cee",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API URL to environment files:",
+          "instructionsAndNotes": "- Add API URL to environment files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-ddab510c282b",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add new queue for web job:",
+          "instructionsAndNotes": "- Add new queue for web job:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-00e6771f17f3",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Inside the Queue section in all appsettings.json files, add the key PageImportAddDataQueue with the value pageimportadddataqueue.",
+          "instructionsAndNotes": "- Inside the Queue section in all appsettings.json files, add the key PageImportAddDataQueue with the value pageimportadddataqueue.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Enums/PageImport.cs`, D `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingPartnerExpenditureReportings/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-a9c28d03c7e5",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the key Core:Queue:PageImportAddDataQueue with the value pageimportadddataqueue in Azure AppService.",
+          "instructionsAndNotes": "- Add the key Core:Queue:PageImportAddDataQueue with the value pageimportadddataqueue in Azure AppService.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Enums/PageImport.cs`"
+        },
+        {
+          "id": "action-3e5d591b94c0",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Activate Cancel Option:",
+          "instructionsAndNotes": "- Activate Cancel Option:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-4afb730b29c0",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run the following SQL command:",
+          "instructionsAndNotes": "- Run the following SQL command:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-4b05f4500a67",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Activate Tab on Project:",
+          "instructionsAndNotes": "- Activate Tab on Project:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-26cf7c006538",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Reformat all characteristics that are not in JSON format. You can run the script \" SELECT * FROM CoreFieldInstanceLocations WHERE ISJSON(Characteristic) = 0 \" to identify the rows ",
+          "instructionsAndNotes": "- Reformat all characteristics that are not in JSON format. You can run the script \" SELECT * FROM CoreFieldInstanceLocations WHERE ISJSON(Characteristic) = 0 \" to identify the rows that need to be corrected. If there are too many rows to modify, you can limit your corrections to misformatted characteristics that include tooltipHover (add condition to check). The script 20241031_MoveTooltipHoverFromCharacteristicToProp.sql will run correctly when the rows with characteristics including tooltipHover are in the correct format.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20241031_MoveTooltipHoverFromCharacteristicToProp.sql`, M `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/Configuration/CoreFieldInstanceLocation.cs`"
+        },
+        {
+          "id": "action-8e2c78561a1f",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Upgrade New Angular Version",
+          "instructionsAndNotes": "Upgrade New Angular Version",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/nGDBHSAB/4415-l-update-angular-version-to-102"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-90f839661e86",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API URL to environment files: deputyAdministration: 'api/core/deputyAdministration',",
+          "instructionsAndNotes": "- Add API URL to environment files: deputyAdministration: 'api/core/deputyAdministration',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-56398af31a9c",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update app.module.ts : i mport SummaryFinanceModule in app.module",
+          "instructionsAndNotes": "- Update app.module.ts : i mport SummaryFinanceModule in app.module",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`, M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-865387fb62f7",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update appsettings.json Files:",
+          "instructionsAndNotes": "- Update appsettings.json Files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: D `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingPartnerExpenditureReportings/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-f89fd1be43d9",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Azure AppService:",
+          "instructionsAndNotes": "- Update Azure AppService:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-db8ffcb049ca",
+          "version": "6.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following keys value:",
+          "instructionsAndNotes": "- Add the following keys value:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-dc283e2efd1a",
+          "version": "6.0.0",
+          "applicability": "conditional",
+          "condition": "If the client already has the Cancelled option",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If the client already has the Cancelled option, remove the Custom Cancelled option and use the Core Cancelled option (Id = 2401). Migrate the Custom Id to Core Id.",
+          "instructionsAndNotes": "- If the client already has the Cancelled option, remove the Custom Cancelled option and use the Core Cancelled option (Id = 2401). Migrate the Custom Id to Core Id.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-29aa6f880182",
+          "version": "6.0.0",
+          "applicability": "conditional",
+          "condition": "If the client does not use the Payment status option list (Id = 62)",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If the client does not use the Payment status option list (Id = 62), update the Core Cancelled option to the correct option list.",
+          "instructionsAndNotes": "- If the client does not use the Payment status option list (Id = 62), update the Core Cancelled option to the correct option list.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`"
+        },
+        {
+          "id": "action-fb4711ff49c8",
+          "version": "6.0.0",
+          "applicability": "conditional",
+          "condition": "- Adding new key name \"ReminderTaskDeadlineSchedule to configuration of appsetting.json of webjobs, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Adding new key name \"ReminderTaskDeadlineSchedule to configuration of appsetting.json of webjobs, the value default is \"0 2 * * *\". Depending on the client's specific requirements,",
+          "instructionsAndNotes": "- Adding new key name \"ReminderTaskDeadlineSchedule to configuration of appsetting.json of webjobs, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        },
+        {
+          "id": "action-9d8a7a44e8b1",
+          "version": "6.0.0",
+          "applicability": "conditional",
+          "condition": "- Adding new key name \"Core:ReminderTaskDeadlineSchedule\" to configuration of Azure, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Adding new key name \"Core:ReminderTaskDeadlineSchedule\" to configuration of Azure, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a",
+          "instructionsAndNotes": "- Adding new key name \"Core:ReminderTaskDeadlineSchedule\" to configuration of Azure, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-abf31133ae0a",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Generated migration templates + Entity import Admin UI page",
+          "instructionsAndNotes": "[L] Generated migration templates + Entity import Admin UI page",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ASsnivvK/4414-l-generated-migration-templates-entity-import-admin-ui-page"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-fb0ca5fca826",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import faCloudUploadAlt at the line ...from '@fortawesome/free-solid-svg-icons'.",
+          "instructionsAndNotes": "- Import faCloudUploadAlt at the line ...from '@fortawesome/free-solid-svg-icons'.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-7061324f3417",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "pageImport: 'api/core/pageImport'",
+          "instructionsAndNotes": "- pageImport: 'api/core/pageImport'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Enums/PageImport.cs`"
+        },
+        {
+          "id": "action-0eadc20447d0",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Extract current monitoring boxes to be overview boxes",
+          "instructionsAndNotes": "[M] Extract current monitoring boxes to be overview boxes",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ueMy1fsk/4234-m-extract-current-monitoring-boxes-to-be-overview-boxes"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-47f5aab2eacd",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import FinanceMonitoringModule in app.module.ts.",
+          "instructionsAndNotes": "- Import FinanceMonitoringModule in app.module.ts.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`, M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-c9f74835d975",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "financeMonitoring: 'api/core/entity'",
+          "instructionsAndNotes": "- financeMonitoring: 'api/core/entity'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`"
+        },
+        {
+          "id": "action-56e84e559119",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Find and correct the Location column of CoreOverviewBoxDefinitions in your custom deployment script (if any):",
+          "instructionsAndNotes": "- Find and correct the Location column of CoreOverviewBoxDefinitions in your custom deployment script (if any):",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/OverviewBoxDefinition.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/OverviewBoxDefinition.cs`"
+        },
+        {
+          "id": "action-88e6a11cab3c",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Upgrade Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-edb86c585ef2",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Cancel Payment:",
+          "instructionsAndNotes": "- Cancel Payment:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`"
+        },
+        {
+          "id": "action-f5c452b05844",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "This function needs to be activated manually by enabling permission (permission tab on admin) and the tab in the entity.",
+          "instructionsAndNotes": "- This function needs to be activated manually by enabling permission (permission tab on admin) and the tab in the entity.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-0126e4196d53",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Change the EntityId value if you want to activate it on other entities:",
+          "instructionsAndNotes": "- Change the EntityId value if you want to activate it on other entities:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-b7f85e83faca",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Mark as Paid Payment:",
+          "instructionsAndNotes": "- Mark as Paid Payment:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`"
+        },
+        {
+          "id": "action-453ab3e6fca4",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Follow the same steps as for Cancel Payment, but use Paid option Id = 2402 and tab function Id = 136.",
+          "instructionsAndNotes": "- Follow the same steps as for Cancel Payment, but use Paid option Id = 2402 and tab function Id = 136.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`"
+        },
+        {
+          "id": "action-9c9795948894",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Email notification when a deadline is approaching",
+          "instructionsAndNotes": "[L][16] Email notification when a deadline is approaching",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/qjCWUrPj/4574-l16-email-notification-when-a-deadline-is-approaching"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-7ddb28d1a797",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Multi-language tool tip",
+          "instructionsAndNotes": "[M] Multi-language tool tip",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/RMQDDdpv/4496-m-multi-language-tool-tip"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-950b544b29e2",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "See Upgrade Angular 9-10",
+          "instructionsAndNotes": "- See Upgrade Angular 9-10",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://precio.sharepoint.com/:w:/r/sites/ngo-oonline/_layouts/15/Doc.aspx?sourcedoc=%7B3A8DD14E-2C32-4F08-989A-77F852621E0C%7D&file=Upgrade%20Angular%209-10.docx&action=default&mobileredirect=true"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`"
+        },
+        {
+          "id": "action-fb95a34eef4f",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Finance, Summary, Payments master list",
+          "instructionsAndNotes": "[L][16] [PAY01] Finance, Summary, Payments master list",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/wwXYGXZ2/4564-l-pay01-finance-summary-payments-master-list"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`"
+        },
+        {
+          "id": "action-b15dd0f0020c",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Modify main.ts file according to the change in this PR: Pull request 26664: Testing caching of env.config.json - Repos",
+          "instructionsAndNotes": "- Modify main.ts file according to the change in this PR: Pull request 26664: Testing caching of env.config.json - Repos",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/26664?_a=files"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/main.ts`"
+        },
+        {
+          "id": "action-2c992ad0eba5",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "AD Sync / Connecting AzureAD-groups to global groups in NGO Online",
+          "instructionsAndNotes": "[L] AD Sync / Connecting AzureAD-groups to global groups in NGO Online",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/SBpeiTap"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-f0073c6eb48f",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"ADSyncGroupsQueue\": \"adsyncgroupqueue\",",
+          "instructionsAndNotes": "- \"ADSyncGroupsQueue\": \"adsyncgroupqueue\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-861855b9864b",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"ADSyncUsersQueue\": \"adsyncuserqueue\"",
+          "instructionsAndNotes": "- \"ADSyncUsersQueue\": \"adsyncuserqueue\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/User.cs`"
+        },
+        {
+          "id": "action-aa6ed101685c",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"ADSyncGroupsSchedule\": \"0 */4 * * *\",",
+          "instructionsAndNotes": "- \"ADSyncGroupsSchedule\": \"0 */4 * * *\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-ef6ce9593307",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"ADSyncUsersSchedule\": \"0 * * * *\"",
+          "instructionsAndNotes": "- \"ADSyncUsersSchedule\": \"0 * * * *\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/User.cs`"
+        },
+        {
+          "id": "action-b4c83f46c8e9",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:Queue:ADSyncGroupsQueue\": \"adsyncgroupqueue\",",
+          "instructionsAndNotes": "- \"Core:Queue:ADSyncGroupsQueue\": \"adsyncgroupqueue\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-4eaa87f329bc",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:Queue:ADSyncUsersQueue\": \"adsyncuserqueue\",",
+          "instructionsAndNotes": "- \"Core:Queue:ADSyncUsersQueue\": \"adsyncuserqueue\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/User.cs`"
+        },
+        {
+          "id": "action-cafe12ef0d9b",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:ADSyncGroupsSchedule\": \"0 */4 * * *\",",
+          "instructionsAndNotes": "- \"Core:ADSyncGroupsSchedule\": \"0 */4 * * *\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`."
+        },
+        {
+          "id": "action-265cc46a360e",
+          "version": "6.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:ADSyncUsersSchedule\": \"0 * * * *\"",
+          "instructionsAndNotes": "- \"Core:ADSyncUsersSchedule\": \"0 * * * *\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/User.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-00e6771f17f3",
+          "version": "6.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Inside the Queue section in all appsettings.json files, add the key PageImportAddDataQueue with the value pageimportadddataqueue.",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Domain/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/PageImport.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Enums/PageImport.cs`, D `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingPartnerExpenditureReportings/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`",
+          "clientImpact": "Action applies during the upgrade. Inside the Queue section in all appsettings.json files, add the key PageImportAddDataQueue with the value pageimportadddataqueue."
+        },
+        {
+          "id": "feature-f063239f4edc",
+          "version": "6.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "startpage (old value = 3) -> 1 (new value)",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-e656a12c5575",
+          "version": "6.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "both (old value = 1) -> 3 (new value)",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-6602f6c74f39",
+          "version": "6.0.0",
+          "moduleScope": "PAY06",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/0yPjPHbL/4532-l-pay06-finance-payments-add-option-to-cancel-an-approved-payment"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[L] [PAY06] Finance, Payments, Add option to cancel an approved payment",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Enums/Finance.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-383c0e8db492",
+          "version": "6.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Adding new key name \"ReminderTaskDeadlineSchedule to configuration of appsetting.json of webjobs, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`",
+          "clientImpact": "- Adding new key name \"ReminderTaskDeadlineSchedule to configuration of appsetting.json of webjobs, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval. Adding new key name \"ReminderTaskDeadlineSchedule to configuration of appsetting.json of webjobs, the value default is \"0 2 * * *\". Depending on the client's specific requirements,"
+        },
+        {
+          "id": "feature-be6490c99401",
+          "version": "6.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Adding new key name \"Core:ReminderTaskDeadlineSchedule\" to configuration of Azure, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval.",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`",
+          "clientImpact": "- Adding new key name \"Core:ReminderTaskDeadlineSchedule\" to configuration of Azure, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a configuration adjustment for this scheduled interval. Adding new key name \"Core:ReminderTaskDeadlineSchedule\" to configuration of Azure, the value default is \"0 2 * * *\". Depending on the client's specific requirements, there may be a"
+        },
+        {
+          "id": "feature-8e2c78561a1f",
+          "version": "6.0.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/nGDBHSAB/4415-l-update-angular-version-to-102"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Upgrade New Angular Version",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`.",
+          "clientImpact": "Action applies during the upgrade. Upgrade New Angular Version"
+        },
+        {
+          "id": "feature-c0a4342e81a0",
+          "version": "6.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/s2akaQFR/4416-m-deputies-add-way-for-admins-to-see-who-has-been-assigned-as-a-deputy-and-assign-on-behalf-of-someone-else"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[M] Deputies: Add way for Admins to see who has been assigned as a deputy, and assign on behalf of someone else",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-53cd6a432185",
+          "version": "6.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/CCM7wUUw/4632-improved-caching-of-envconfigjson"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Improved caching of env.config.json",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-8f9bf4719479",
+          "version": "6.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Inside the Queue section, add:",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-6fcaf5be24d8",
+          "version": "6.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Inside the Core section, add:",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1061 files (backend: 400, frontend: 555, shared: 106); representative changes: M `.gitignore`, D `.vs/slnx.sqlite`, M `azure-pipeline-prerelease-pack.yml`, A `azure-pipeline-release.yml`, M `build-pipeline-angular-pack.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-29aa6f880182",
+          "version": "6.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "If the client does not use the Payment status option list (Id = 62), update the Core Cancelled option to the correct option list.",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Payment.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Payment.cs`",
+          "extraClientAction": "If the client does not use the Payment status option list (Id = 62). If the client does not use the Payment status option list (Id = 62), update the Core Cancelled option to the correct option list."
+        },
+        {
+          "id": "bugfix-d6045788e350",
+          "version": "6.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Reformat all characteristics that are not in JSON format. You can run the script \" SELECT * FROM CoreFieldInstanceLocations WHERE ISJSON(Characteristic) = 0 \" to identify the rows that need to be corrected. If there are too many rows to modify, you can limit your corrections to misformatted characteristics that include tooltipHover (add condition to check). The script 20241031_MoveTooltipHoverFromCharacteristicToProp.sql will run correctly when the rows with characteristics including tooltipHover are in the correct format.",
+          "rootCauseOrKeyFiles": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20241031_MoveTooltipHoverFromCharacteristicToProp.sql`, M `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/Configuration/CoreFieldInstanceLocation.cs`",
+          "extraClientAction": "Reformat all characteristics that are not in JSON format. You can run the script \" SELECT * FROM CoreFieldInstanceLocations WHERE ISJSON(Characteristic) = 0 \" to identify the rows "
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "6.0.0"
+    ],
+    "rawCardCount": 54,
+    "gitDiffFileCount": 1061,
+    "unresolvedItems": []
+  }
+}

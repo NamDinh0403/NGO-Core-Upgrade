@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "version": "7.1.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/7.1.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 2,
+    "needsReviewActions": 1,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-8a9140f11740",
+          "version": "7.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update appsettings.json Files:",
+          "instructionsAndNotes": "- Update appsettings.json Files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-2994505e50d0",
+          "version": "7.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Azure Portal:",
+          "instructionsAndNotes": "- Update Azure Portal:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 255 files (backend: 120, frontend: 82, shared: 53); representative changes: M `.gitignore`, M `azure-pipeline-master.yml`, M `azure-pipeline-pack.yml`, M `azure-pipelines.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`."
+        },
+        {
+          "id": "action-a3f6777ee7f8",
+          "version": "7.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add a variable with the key Core: MaxEmailAttachmentFileSizeMb and the value can be obtained from the appsettings.json .",
+          "instructionsAndNotes": "- Add a variable with the key Core: MaxEmailAttachmentFileSizeMb and the value can be obtained from the appsettings.json .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-90ea9a80fe61",
+          "version": "7.1.0",
+          "applicability": "conditional",
+          "condition": "- Add a configuration with the key MaxEmailAttachmentFileSizeMb for appsetting.json of webjob and api . This config defines the maximum size of file will be sent in email of IATI export. Depending on the customer's requirements (if any), if there are no requir",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add a configuration with the key MaxEmailAttachmentFileSizeMb for appsetting.json of webjob and api . This config defines the maximum size of file will be sent in email of IATI exp",
+          "instructionsAndNotes": "- Add a configuration with the key MaxEmailAttachmentFileSizeMb for appsetting.json of webjob and api . This config defines the maximum size of file will be sent in email of IATI export. Depending on the customer's requirements (if any), if there are no requirements, the default value will be 20.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 255 files (backend: 120, frontend: 82, shared: 53); representative changes: M `.gitignore`, M `azure-pipeline-master.yml`, M `azure-pipeline-pack.yml`, M `azure-pipelines.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`."
+        },
+        {
+          "id": "action-d347f6c820f8",
+          "version": "7.1.0",
+          "applicability": "conditional",
+          "condition": "if client using Custom global objective field",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Run DataFix/ 20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql if client using Custom global objective field",
+          "instructionsAndNotes": "[S] Breakdown template populates incorrectly for new custom indicator\n[Before Deployment] Run DataFix/ 20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql if client using Custom global objective field",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/G3oJ247Y"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-102360288a6c",
+          "version": "7.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "IATI Feedback 5 on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[M] IATI Feedback 5 on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Iaf6xZRx/4900-m-iati-feedback-5"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 255 files (backend: 120, frontend: 82, shared: 53); representative changes: M `.gitignore`, M `azure-pipeline-master.yml`, M `azure-pipeline-pack.yml`, M `azure-pipelines.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminIATIPageController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-e14c1ac54e64",
+          "version": "7.1.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/G3oJ247Y"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Breakdown template populates incorrectly for new custom indicator",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql`",
+          "clientImpact": "if client using Custom global objective field Run DataFix/ 20250319_InactiveGlobalIndicatorOfCustomGlobalObjectiveField.sql if client using Custom global objective field"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "7.1.0"
+    ],
+    "rawCardCount": 6,
+    "gitDiffFileCount": 255,
+    "unresolvedItems": []
+  }
+}

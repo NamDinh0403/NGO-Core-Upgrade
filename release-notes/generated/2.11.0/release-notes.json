@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "version": "2.11.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-a1530046458b",
+          "version": "2.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Update Monitoring tab for Program",
+          "instructionsAndNotes": "Update Monitoring tab for Program\nRun 20210309_Sprint7_EntityTabUpdates.sql in DataFixes folder\nUpdate AddReviewMandatory\nRun 20210310_UpdateAddReviewMandatory.sql in DataFixes folder\nMigrate logframe links between global objective & global indicators to new table\nRun 20210303_Logframe_Global_objective_indicator_link_migration.sql\nPlease note that table CoreLogframeGlobalObjectiveIndicators is now obsolete and any code referencing this needs to change.\nAnalyse > Beneficiaries - Include \"Is latest published version\" in the Beneficiaries list\n[AfterDeployment] RUN DataFixes/20210318_UpdateBeneficiaryIsCurrentPublishedVersion.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e17ee1619f3d",
+          "version": "2.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts:",
+          "instructionsAndNotes": "OverallEntityStatus\nAdd the following line to environment.ts and environment.prod.ts:\noverallEntityStatus: 'api/core/entity'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-af9c27513c76",
+          "version": "2.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts:sni",
+          "instructionsAndNotes": "Logframe template:\nAdd the following line to environment.ts and environment.prod.ts:sni\nlogframeTemplates: 'api/core/logframeTemplates'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-87db7dde9918",
+          "version": "2.11.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import OverallEntityStatusModule to app.module.ts",
+          "instructionsAndNotes": "Import OverallEntityStatusModule to app.module.ts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.11.0"
+    ],
+    "rawCardCount": 4,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

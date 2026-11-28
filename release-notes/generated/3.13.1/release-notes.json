@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "version": "3.13.1",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-57396c0e7193",
+          "version": "3.13.1",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Upgrade notes:",
+          "instructionsAndNotes": "[L] Deployment improvement: Automate scripts (that are currently manual)\nAll future DataFix scripts should be but into the DataFixes/BeforeDeployment or DataFixes/AfterDeployment folders. These scripts will be executed automatically with the deployment so it's very important that all scripts are correct. For scripts where manual steps are still required, scripts can still be put into the root DataFixes folder but this should be avoided as much as possible. Only steps that need manual handling needs to be noted in the wiki or as deployment notes.\nUpgrade notes:\nAdded nugets to Deployment: Microsoft.SqlServer.SqlManagementObjects 170.13.0\nUpdate Release pipelines to match attached screenshots in card. The last step replaces SeedDb.ps1 + runs \"after\" scripts.\nExisting Powershell step for deploy.ps1 needs to be updates, file now called Deploy_SharePoint.ps1\n[Before deployment]: Run sql DataFixes/20230315_AddDeployScriptHistory.sql\nNotes for client specific scripts:\nAny client specific onetime scripts can be run in the same way. Place scripts in a CustomDataFixes/BeforeDeployment or CustomDataFixes/AfterDeployment and add those paths to the parameters in the corresponding steps of the Release pipeline. Any existing already run scripts should be kept in a separate folder or the root CustomDataFixes.\nAdd icon for PowerBI in LHS menu on Current sprint - Core | Trello\nOpen app.module.ts, add 'faChartArea' next to ' faUserTag ' (two places)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mkF651YM"
+            },
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/eKFOyAcO/3243-add-icon-for-powerbi-in-lhs-menu"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.13.1"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

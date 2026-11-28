@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "version": "9.5.1",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/9.5.1.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-2bbab8022db1",
+          "version": "9.5.1",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Resolve ingestion uncertainty for 9.5.1",
+          "instructionsAndNotes": "Resolve ingestion uncertainty for 9.5.1\n1 unresolved candidate item(s) require review. The complete list is retained in the structured report metadata and source candidate. Examples: 9.5.1: no release-notes.md provided — findings are git-diff-only for this version",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "candidate-unresolved-items",
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": [
+      "9.5.1: no release-notes.md provided — findings are git-diff-only for this version"
+    ]
+  }
+}

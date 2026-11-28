@@ -1,0 +1,1436 @@
+{
+  "schemaVersion": 1,
+  "version": "9.0.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/9.0.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 40,
+    "conditionalActions": 5,
+    "needsReviewActions": 28,
+    "newFeatures": 6,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-04b5220c8499",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Deployment Person]\nAfter deployment, the ConvertWorkflowInstanceJsonConfigToTables tool must be executed to migrate existing workflow instance JSON configurations into the new database tables ( CorePhaseInstances and CorePhaseTemplateInstances ).\nIf this migration is not performed, workflow cycle data will not be displayed correctly in the Workflow Cycle tab.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Phase.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/PhaseInstance.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/PhaseTemplate.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/PhaseTemplateInstance.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/WorkflowInstance.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Phase.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/PhaseTemplate.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CorePhase.cs`, A `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CorePhaseInstance.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CorePhaseTemplate.cs`, A `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CorePhaseTemplateInstance.cs`, A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/MIGRATION.md`"
+        },
+        {
+          "id": "action-a53099d455a7",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Delete Files",
+          "instructionsAndNotes": "Delete Files",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-d4e9ee502afc",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add File",
+          "instructionsAndNotes": "Add File",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-ef8a06b9a9f4",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update angular.json",
+          "instructionsAndNotes": "Update angular.json\nUnder projects.ngo-nxt.architect , add the following lint configuration after the test property:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Project.cs`, M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-ef9b0027eb63",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update package.json",
+          "instructionsAndNotes": "Update package.json\nCopy the entire devDependencies section from Core to ensure all required ESLint packages and dependencies are included.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`"
+        },
+        {
+          "id": "action-bf996072eb2c",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Package Updates",
+          "instructionsAndNotes": "Package Updates",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`"
+        },
+        {
+          "id": "action-1e90c7f7d394",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Upgrade @angular/cdk to v15.2.0",
+          "instructionsAndNotes": "- Upgrade @angular/cdk to v15.2.0",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-1902a6332e60",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Upgrade @angular/animations to v15.2.10",
+          "instructionsAndNotes": "- Upgrade @angular/animations to v15.2.10",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-11eed3e02ce0",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace <context-menu> with <ngo-context-menu>",
+          "instructionsAndNotes": "- Replace <context-menu> with <ngo-context-menu>",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-a1bf15c7a1dc",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace contextMenuItem with ngoContextMenuItem",
+          "instructionsAndNotes": "- Replace contextMenuItem with ngoContextMenuItem",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-091080e6b77b",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update spinner, remove and update some libraries on Current sprint - Core | Trello",
+          "instructionsAndNotes": "Update spinner, remove and update some libraries on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/0bPuztpq/5370-update-spinner-remove-and-update-some-libraries"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-0de08868dc48",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace the entire dependencies section with the version from Core.",
+          "instructionsAndNotes": "- Replace the entire dependencies section with the version from Core.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-94d58046f91f",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace the entire devDependencies section with the version from Core.",
+          "instructionsAndNotes": "- Replace the entire devDependencies section with the version from Core.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-cba9af64da1d",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace the contents of polyfills.js with the version from Core.",
+          "instructionsAndNotes": "- Replace the contents of polyfills.js with the version from Core.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/polyfills.ts`"
+        },
+        {
+          "id": "action-3b404eb11fc3",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update angular.json",
+          "instructionsAndNotes": "Update angular.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-14eb817ac424",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update compilerOptions.lib :",
+          "instructionsAndNotes": "- Update compilerOptions.lib :\nOld: \"lib\": [\"es2018\", \"dom\"]\nNew: \"lib\": [\"ES2022\", \"dom\"]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-722714438b37",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Add the following Azure App Setting:",
+          "instructionsAndNotes": "[For Deployment Person]\nAdd the following Azure App Setting:\nKey Value\nCore:Queue:SyncPublishedWorkflowQueue syncpublishedworkflowqueue",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/SyncPublishedWorkflowQueue.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`"
+        },
+        {
+          "id": "action-7ffcb94eb9f0",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update build-pipeline-api.yml :",
+          "instructionsAndNotes": "Build Pipeline Changes\nUpdate build-pipeline-api.yml :\nOld\nnetVersion: '8.0' ￼\nNew\nnetVersion: '10.0' ￼\nThis change must be completed before proceeding with the Core package upgrade to ensure compatibility with the latest platform requirements.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `build-pipeline-api.yml`, M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`"
+        },
+        {
+          "id": "action-35e4494283eb",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update the Azure App Service / Web App runtime to .NET 10 .",
+          "instructionsAndNotes": "- Update the Azure App Service / Web App runtime to .NET 10 .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-9ba462a76f0c",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Ensure build agents and deployment pipelines are compatible with .NET 10. (check build-pipeline-api.yml)",
+          "instructionsAndNotes": "- Ensure build agents and deployment pipelines are compatible with .NET 10. (check build-pipeline-api.yml)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `build-pipeline-api.yml`"
+        },
+        {
+          "id": "action-0411eb986a1d",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update build-pipeline-angular.yml:",
+          "instructionsAndNotes": "Use node 18 on Current sprint - Core | Trello\nUpdate build-pipeline-angular.yml:\nChange nodeTool task to:\n- task: NodeTool@0\ninputs:\nversionSpec: '18.20.0'\ndisplayName: 'Install Node.js'",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/TPqvvxaD/5338-use-node-18"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `build-pipeline-angular.yml`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-3f3c2be099bf",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove npm@1 task \"npm version\"",
+          "instructionsAndNotes": "Remove npm@1 task \"npm version\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`"
+        },
+        {
+          "id": "action-f88714cef7e0",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update package.json:",
+          "instructionsAndNotes": "Update package.json:\nRemove \"@types/applicationinsights-js\" : \"^1.0.9\" f ro m dependencies and devDependencies\nRemove \"applicationinsights-js\" : \"^1.0.20\"\nAdd \"@microsoft/applicationinsights-web\" : \"^3.0.4\"",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/2V8JXW45/5373-user-tracking-in-application-insights"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/User.cs`, M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`"
+        },
+        {
+          "id": "action-3b5184f87219",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "This feature may incur subscription costs. Please make sure to confirm that the customer wants to use it before upgrading.",
+          "instructionsAndNotes": "This feature may incur subscription costs. Please make sure to confirm that the customer wants to use it before upgrading.\n[For Upgrade Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-000be06ac117",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update the system configuration “AIConfiguration” and set UsingWriteWithAI to true .",
+          "instructionsAndNotes": "- Update the system configuration “AIConfiguration” and set UsingWriteWithAI to true .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-adb4e872d004",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Create a Microsoft Foundry resource. (or using existing resource) (",
+          "instructionsAndNotes": "- Create a Microsoft Foundry resource. (or using existing resource) (",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://ai.azure.com/nextgen/r/,-,,-/allresources"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-8a2379086cb4",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Grant the “Cognitive Services OpenAI Contributor” role to the Entra App client being used.",
+          "instructionsAndNotes": "- Grant the “Cognitive Services OpenAI Contributor” role to the Entra App client being used.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-8e1039f2e973",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Edit appsettings and add the following settings to the Core section :",
+          "instructionsAndNotes": "- Edit appsettings and add the following settings to the Core section :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories.Tests/appsettings.json`, A `ngo-api-core/NGO/NGO.Core.Tools.ConvertWorkflowInstanceJsonConfigToTables/appsettings.json`, D `ngo-api-core/NGO/NGO.Core.Tools.Logframe2SavedQueryMigration/appsettings.json`, D `ngo-api-core/NGO/NGO.Core.Tools.UpdatePaymentDocumentLinks/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Tests/NGO.Core.Services.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-195fa216c4db",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add a variable with the key Core: AzureOpenAISettings: Endpoint the value will be endpoint of foundry",
+          "instructionsAndNotes": "- Add a variable with the key Core: AzureOpenAISettings: Endpoint the value will be endpoint of foundry",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-428ef77fc45e",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add a variable with the key Core: AzureOpenAISettings: DeploymentName the value will be deployment name of foundry",
+          "instructionsAndNotes": "- Add a variable with the key Core: AzureOpenAISettings: DeploymentName the value will be deployment name of foundry",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-d6c52dbf8940",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add removeServerHeader=\"true\" to <system.webServer><security><requestFiltering> element.",
+          "instructionsAndNotes": "Use security headers on Current sprint - Core | Trello\n[Upgrade]\nNGO.API web.config:\nAdd removeServerHeader=\"true\" to <system.webServer><security><requestFiltering> element.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/6f8iAPDE/5396-use-security-headers"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO/NGO.API.csproj`"
+        },
+        {
+          "id": "action-1abfda2d5378",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add after <system.webServer><security>…</security>:",
+          "instructionsAndNotes": "Add after <system.webServer><security>…</security>:\n<httpProtocol>\n<customHeaders>\n<remove name=\"X-Powered-By\" />\n</customHeaders>\n</httpProtocol>",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-cd7b146f3f1c",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update link tag for bootstrap css to:",
+          "instructionsAndNotes": "Index.html:\nUpdate link tag for bootstrap css to:\n< link rel = \"stylesheet\" href = \" integrity = \"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin = \"anonymous\" >",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/projects/ngo-core/src/lib/entity-member/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/funding-finance/index.ts`, A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/shared/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/workflow-cycle/index.ts`, M `ngo-client-core/src/index.html`"
+        },
+        {
+          "id": "action-743d98e2cea5",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add Content Security Policy on Current sprint - Core | Trello",
+          "instructionsAndNotes": "Add Content Security Policy on Current sprint - Core | Trello\n[Upgrade]\nIndex.html:\nRemove script block\n< script type = \"text/javascript\" >\n// Notice how this gets configured before we load Font Awesome\n//window.FontAwesomeConfig = { autoReplaceSvg: false }\n</ script >",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/gbxUhjrV/5398-add-content-security-policy"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/projects/ngo-core/src/lib/entity-member/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/funding-finance/index.ts`, A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/shared/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/workflow-cycle/index.ts`, M `ngo-client-core/src/index.html`"
+        },
+        {
+          "id": "action-a0b9500834e4",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add below \"script.src = ' :",
+          "instructionsAndNotes": "Main.ts:\nChange \"addinLoadingElement.innerHtml = msg;\" to \"addinLoadingElement.textContent = msg;\"\nAdd below \"script.src = ' :\nconst cspNonce = document.querySelector( 'meta[name=\"csp-nonce\"]' )?.getAttribute( 'content' );\nif (cspNonce) {\nscript.setAttribute( 'nonce' , cspNonce);\n}",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://appsforoffice.microsoft.com/lib/1/hosted/office.js"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/main.ts`"
+        },
+        {
+          "id": "action-23c47b1966f5",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update architect.build.configurations.optimization from \"optimization\" : true ,",
+          "instructionsAndNotes": "Angular.json:\nUpdate architect.build.configurations.optimization from \"optimization\" : true ,\nto\n\"optimization\" : {\n\"scripts\" : true ,\n\"styles\" : {\n\"minify\" : true ,\n\"inlineCritical\" : false\n},\n\"fonts\" : true\n},",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-d8cc5e0b13b9",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Replace the entire file contents from the same file in ngo-online-core repository.",
+          "instructionsAndNotes": "Assets/skins/content/default/custom.css:\nReplace the entire file contents from the same file in ngo-online-core repository.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-587ab3030313",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[Upgrade]\nImport the icon \" faExternalLink\" in app.module ( from '@fortawesome/pro-light-svg-icons)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/smEcBFh4/5352-8s-connecting-the-workflow-and-task-templates-in-the-admin-ui"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`, M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-30bb4575ba11",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add this link below the existing bootstrap css link:",
+          "instructionsAndNotes": "[Admin/Help documentation] Lost icons in context box on Current sprint - Core | Trello\n[Upgrade]\nIndex.html:\nAdd this link below the existing bootstrap css link:\n<link rel=\"stylesheet\" href=\" integrity=\"sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN\" crossorigin=\"anonymous\">",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/2ypPJZpN/5443-admin-help-documentation-lost-icons-in-context-box"
+            },
+            {
+              "label": "Ref",
+              "value": "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/projects/ngo-core/src/lib/entity-member/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/funding-finance/index.ts`, A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/shared/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/workflow-cycle/index.ts`, M `ngo-client-core/src/index.html`"
+        },
+        {
+          "id": "action-de1551a3372f",
+          "version": "9.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run Sharepoint to update Word templates",
+          "instructionsAndNotes": "[Deployment]\nRun Sharepoint to update Word templates",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/nJN3ds0U/5296-m-transaction-made-from-funding-plan-should-have-source-entity-currency"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-9d14bcf97171",
+          "version": "9.0.0",
+          "applicability": "conditional",
+          "condition": "If the client contains custom context menu implementations",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Context Menu Migration",
+          "instructionsAndNotes": "Context Menu Migration\nIf the client contains custom context menu implementations, they must be updated.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/MIGRATION.md`"
+        },
+        {
+          "id": "action-a1f1216febab",
+          "version": "9.0.0",
+          "applicability": "conditional",
+          "condition": "If Client don’t use AI function",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If Client don’t use AI function, ignore these steps bellow",
+          "instructionsAndNotes": "If Client don’t use AI function, ignore these steps bellow",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-77b74b19b24c",
+          "version": "9.0.0",
+          "applicability": "conditional",
+          "condition": "if the client has a model that needs fine-tuning)",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Go to Deployment → Deploy model → Deploy base model (fine-tune it if the client has a model that needs fine-tuning).",
+          "instructionsAndNotes": "- Go to Deployment → Deploy model → Deploy base model (fine-tune it if the client has a model that needs fine-tuning).",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/projects/ngo-core/src/lib/finance-base/model.ts`"
+        },
+        {
+          "id": "action-e20ebbf0f8e2",
+          "version": "9.0.0",
+          "applicability": "conditional",
+          "condition": "if there are any customizations with html containing tags like this",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check if there are any customizations with html containing tags like this: <a href=\"javascript:void(0);\">",
+          "instructionsAndNotes": "Customizations:\nCheck if there are any customizations with html containing tags like this: <a href=\"javascript:void(0);\">\nIt should be replaced with <button class=\"inline-btn\">",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-819c07bdc758",
+          "version": "9.0.0",
+          "applicability": "conditional",
+          "condition": "check if workflow cycle tab enabled in Admin UI / Entities)",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Activate Workhistory tab in Workflow cycle Entity (Manual check if workflow cycle tab enabled in Admin UI / Entities)",
+          "instructionsAndNotes": "- Activate Workhistory tab in Workflow cycle Entity (Manual check if workflow cycle tab enabled in Admin UI / Entities)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-f3f0c081dc62",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Create tables for workflow instances",
+          "instructionsAndNotes": "[L] Create tables for workflow instances",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/8ysaSC9M/5247-l-create-tables-for-workflow-instances"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`"
+        },
+        {
+          "id": "action-c7208bbf974b",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/KEiWbbxf/5340-remove-deprecated-componentfactoryresolver-and-entrycomponents"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-e1480a71ccc5",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "BREAKING CHANGE",
+          "instructionsAndNotes": "BREAKING CHANGE\nInfoFieldFactory.getComponentFactory() has been renamed to getComponentType() .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-f8758c8e75d4",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Previous: ComponentFactory<any>",
+          "instructionsAndNotes": "- Previous: ComponentFactory<any>",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-c27f5c55b6fd",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Angular ESLint Migration",
+          "instructionsAndNotes": "Angular ESLint Migration",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`, A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/MIGRATION.md`"
+        },
+        {
+          "id": "action-7b04492fbba3",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "ngo-client/src/tslint.json",
+          "instructionsAndNotes": "- ngo-client/src/tslint.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: D `ngo-client-core/projects/ngo-core/tslint.json`, D `ngo-client-core/src/tslint.json`, D `ngo-client-core/tslint.json`"
+        },
+        {
+          "id": "action-e2fced165f34",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "ngo-client/tslint.json",
+          "instructionsAndNotes": "- ngo-client/tslint.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: D `ngo-client-core/projects/ngo-core/tslint.json`, D `ngo-client-core/src/tslint.json`, D `ngo-client-core/tslint.json`"
+        },
+        {
+          "id": "action-6d7edb457a6c",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "ngo-client/.eslintrc.json",
+          "instructionsAndNotes": "- ngo-client/.eslintrc.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-client-core/.eslintrc.json`, A `ngo-client-core/projects/ngo-core/.eslintrc.json`"
+        },
+        {
+          "id": "action-94ccb0783026",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "@angular/flex-layout",
+          "instructionsAndNotes": "- @angular/flex-layout",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-df333b6fd818",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "ngx-contextmenu",
+          "instructionsAndNotes": "- ngx-contextmenu",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-6fc98068db10",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "BREAKING CHANGE",
+          "instructionsAndNotes": "BREAKING CHANGE\nContext menu usage has changed:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-c686b9f6bdb2",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "All custom context menu implementations should be reviewed and updated accordingly.",
+          "instructionsAndNotes": "All custom context menu implementations should be reviewed and updated accordingly.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-813c99596428",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"node_modules/ngx-spinner/animations/ball-clip-rotate-multiple.css\"￼",
+          "instructionsAndNotes": "- \"node_modules/ngx-spinner/animations/ball-clip-rotate-multiple.css\"￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-236715cc65c5",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Draft and Published workflow on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[40][XL] Draft and Published workflow on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/PMVHjHDi/5294-40xl-draft-and-published-workflow"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`"
+        },
+        {
+          "id": "action-2cf7c6139a4f",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Queue Configuration Changes",
+          "instructionsAndNotes": "Queue Configuration Changes",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-db33b6403b41",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[For Upgrade Person]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-0979615970b0",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"SyncPublishedWorkflowQueue\": \"syncpublishedworkflowqueue\" ￼",
+          "instructionsAndNotes": "- \"SyncPublishedWorkflowQueue\": \"syncpublishedworkflowqueue\" ￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/SyncPublishedWorkflowQueue.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`"
+        },
+        {
+          "id": "action-8aae67878962",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "This setting must be configured in the Azure environment to ensure the queue is available after deployment.",
+          "instructionsAndNotes": "This setting must be configured in the Azure environment to ensure the queue is available after deployment.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-b83090dd936c",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Dotnet 10 on Current sprint - Core | Trello",
+          "instructionsAndNotes": "Dotnet 10 on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/bbLvYOTe/5395-dotnet-10"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-fc7f2a041455",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "For Upgrade Person",
+          "instructionsAndNotes": "For Upgrade Person\nBefore upgrading any Core packages, update all projects to target .NET 10.0 .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Project.cs`, M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`"
+        },
+        {
+          "id": "action-07282b0830d5",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "For Deployment Person",
+          "instructionsAndNotes": "For Deployment Person",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-6649ea2ce207",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Write with AI on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[L] Write with AI on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/4hW1CK8s/5348-l-write-with-ai"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-5b8223d4fb58",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "aiwriter: 'api/core/aiwriter'",
+          "instructionsAndNotes": "- aiwriter: 'api/core/aiwriter'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-6f52a34ac3b9",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Select the LLM model you want to use (the core system currently uses GPT-5 ) → confirm the deployment.",
+          "instructionsAndNotes": "- Select the LLM model you want to use (the core system currently uses GPT-5 ) → confirm the deployment.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/projects/ngo-core/src/lib/finance-base/model.ts`"
+        },
+        {
+          "id": "action-c380c9731638",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Save the endpoint and deployment name of the model. (need to use later), Important : Use the Azure OpenAI v1 endpoint instead of the Foundry project endpoint.",
+          "instructionsAndNotes": "- Save the endpoint and deployment name of the model. (need to use later), Important : Use the Azure OpenAI v1 endpoint instead of the Foundry project endpoint.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Project.cs`, M `ngo-client-core/projects/ngo-core/src/lib/finance-base/model.ts`"
+        },
+        {
+          "id": "action-7248ae61b834",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Go to the Azure Portal → Foundry . Search for the Foundry resource you created → Access Control → Role assignments .",
+          "instructionsAndNotes": "- Go to the Azure Portal → Foundry . Search for the Foundry resource you created → Access Control → Role assignments .",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-1bca10c55c0e",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"AzureOpenAISettings\" :{",
+          "instructionsAndNotes": "\"AzureOpenAISettings\" :{\n\"Endpoint\" : \"your-end-point \" ,\n\"DeploymentName\" : \"your-delployment-name\"\n},",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`."
+        },
+        {
+          "id": "action-ae5aa739e824",
+          "version": "9.0.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Review tagged release instruction",
+          "instructionsAndNotes": "[Deployment]",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/kSSati11/5376-8m-expanded-workflow-history"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Workflow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Workflow.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-c3237fa2560d",
+          "version": "9.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "New: Type<any>",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-5123be8d3368",
+          "version": "9.0.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/lQlJG97e/5346-modernize-angular-dependencies-and-replace-ngx-contextmenu"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Modernize Angular Dependencies and Migrate from ngx-contextmenu",
+          "technicalSummary": "Matched key changes: M `ngo-client-core/angular.json`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-091080e6b77b",
+          "version": "9.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/0bPuztpq/5370-update-spinner-remove-and-update-some-libraries"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Update spinner, remove and update some libraries on Current sprint - Core | Trello",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`.",
+          "clientImpact": "Action applies during the upgrade. Update spinner, remove and update some libraries on Current sprint - Core | Trello"
+        },
+        {
+          "id": "feature-f88714cef7e0",
+          "version": "9.0.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/2V8JXW45/5373-user-tracking-in-application-insights"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Update package.json:",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/User.cs`, M `ngo-client-core/package.json`, M `ngo-client-core/projects/ngo-core/package.json`",
+          "clientImpact": "Action applies during the upgrade. Update package.json:"
+        },
+        {
+          "id": "feature-8e1039f2e973",
+          "version": "9.0.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Edit appsettings and add the following settings to the Core section :",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories.Tests/appsettings.json`, A `ngo-api-core/NGO/NGO.Core.Tools.ConvertWorkflowInstanceJsonConfigToTables/appsettings.json`, D `ngo-api-core/NGO/NGO.Core.Tools.Logframe2SavedQueryMigration/appsettings.json`, D `ngo-api-core/NGO/NGO.Core.Tools.UpdatePaymentDocumentLinks/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Tests/NGO.Core.Services.Tests/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`",
+          "clientImpact": "Action applies during the upgrade. Edit appsettings and add the following settings to the Core section :"
+        },
+        {
+          "id": "feature-743d98e2cea5",
+          "version": "9.0.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/gbxUhjrV/5398-add-content-security-policy"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Add Content Security Policy on Current sprint - Core | Trello",
+          "technicalSummary": "Matched key changes: M `ngo-client-core/projects/ngo-core/src/lib/entity-member/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/funding-finance/index.ts`, A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/shared/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/workflow-cycle/index.ts`, M `ngo-client-core/src/index.html`",
+          "clientImpact": "Action applies during the upgrade. Add Content Security Policy on Current sprint - Core | Trello"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-9bd15ae00bff",
+          "version": "9.0.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/BTuoUrxo/5339-fix-deprecated-linting"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Fix deprecated linting on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 2068 files (backend: 1076, frontend: 526, shared: 466); representative changes: D `.github/copilot-instructions.md`, D `.github/instructions/backend.instructions.md`, D `.github/instructions/dw.instructions.md`, D `.github/instructions/frontend.instructions.md`, M `build-pipeline-angular-pack.yml`, M `build-pipeline-angular.yml`.",
+          "extraClientAction": "None stated in the release source."
+        },
+        {
+          "id": "bugfix-26f1e6ed8607",
+          "version": "9.0.0",
+          "moduleScope": "Admin/Help documentation",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/2ypPJZpN/5443-admin-help-documentation-lost-icons-in-context-box"
+            },
+            {
+              "label": "Ref",
+              "value": "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Admin/Help documentation] Lost icons in context box on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-client-core/projects/ngo-core/src/lib/entity-member/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/funding-finance/index.ts`, A `ngo-client-core/projects/ngo-core/src/lib/shared/components/ngo-context-menu/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/shared/index.ts`, M `ngo-client-core/projects/ngo-core/src/lib/workflow-cycle/index.ts`, M `ngo-client-core/src/index.html`",
+          "extraClientAction": "Add this link below the existing bootstrap css link:"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "9.0.0"
+    ],
+    "rawCardCount": 76,
+    "gitDiffFileCount": 2068,
+    "unresolvedItems": []
+  }
+}

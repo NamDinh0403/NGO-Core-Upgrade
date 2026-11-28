@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "version": "7.6.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/7.6.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-0a64a046bb87",
+          "version": "7.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "update appsetting.json then run tool NGO.Core.Tools.SetAzureAdIdForUser to set AzureAdId for CoreUsers. After run tool, make sure all row in AzureAdId in CoreUsers have value (we w",
+          "instructionsAndNotes": "[S]ADSync webjob: Exception when deleted user has no UserPrincipleName on Current sprint - Core | Trello\n[For deployment person] update appsetting.json then run tool NGO.Core.Tools.SetAzureAdIdForUser to set AzureAdId for CoreUsers. After run tool, make sure all row in AzureAdId in CoreUsers have value (we will missing deleted User in Azure  If such user exists, manually update AzureAdId for that user",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/TxcBtgjh/5263-sadsync-webjob-exception-when-deleted-user-has-no-userprinciplename"
+            },
+            {
+              "label": "Ref",
+              "value": "https://portal.azure.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/DeletedUsers"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/User.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Permission/User.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CoreUser.cs`, A `ngo-api-core/NGO/NGO.Core.Tools.SetAzureAdIdForUser/NGO.Core.Tools.SetAzureAdIdForUser.csproj`"
+        },
+        {
+          "id": "action-5444eb03263e",
+          "version": "7.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Read and manual run 20250917_DisableLogframe1.sql",
+          "instructionsAndNotes": "[If using Logframe2] Read and manual run 20250917_DisableLogframe1.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/HC8irSiM/5111-logframe-upgrade-migration-scripts-when-move-to-logframe-2"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20250917_DisableLogframe1.sql`"
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "7.6.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 88,
+    "unresolvedItems": []
+  }
+}

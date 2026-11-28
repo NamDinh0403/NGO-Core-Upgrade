@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "version": "4.4.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 1,
+    "needsReviewActions": 4,
+    "newFeatures": 1,
+    "bugFixes": 3
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-d16ee4c21d19",
+          "version": "4.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Set new/old values of URL config",
+          "instructionsAndNotes": "- Set new/old values of URL config",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-e5befa63de0b",
+          "version": "4.4.0",
+          "applicability": "conditional",
+          "condition": "Note: Please run the script noted in the tool to check the invalid data, please make sure that there are no invalid budget report row (I.e: row has Month = 0, or invalid date time – null is ok)",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Update version of npm package @ng-bootstrap/ng-bootstrap to 5.1.2",
+          "instructionsAndNotes": "Fields: Auto-populated dates not working as expected\nUpdate version of npm package @ng-bootstrap/ng-bootstrap to 5.1.2\n[After Deployment] Run tool: NGO.Core.Tools.ValidateAndRemoveAllInvalidBudgetRows\nNote: Please run the script noted in the tool to check the invalid data, please make sure that there are no invalid budget report row (I.e: row has Month = 0, or invalid date time – null is ok)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/s2sPg2v2"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-50058c6987cd",
+          "version": "4.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Move Task Template Tool",
+          "instructionsAndNotes": "Move Task Template Tool\nIt is the update to the existing tool NGO.Core.Tools.SiteConfigurationPopulation so that the default document links can be replaced with the URL of destination site",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/mkT85zLU"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3ec81b946ce9",
+          "version": "4.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "RootUrl: SharePoint root URL",
+          "instructionsAndNotes": "- RootUrl: SharePoint root URL",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-cac2bebdc62d",
+          "version": "4.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "TenantUrl: SharePoint tenant URL",
+          "instructionsAndNotes": "- TenantUrl: SharePoint tenant URL",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-16cab45d501e",
+          "version": "4.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Web URL: Website URL",
+          "instructionsAndNotes": "- Web URL: Website URL",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-27f0e685a93f",
+          "version": "4.4.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Define document link column in the table by property DocumentColumns in SmarterMerges (default document resource links already added to CoreTaskTemplates table)",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-e761a8f848ba",
+          "version": "4.4.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Note : step 2 must have values for all settings. If some of them is missing, nothing is replaced",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        },
+        {
+          "id": "bugfix-beb18b28efaf",
+          "version": "4.4.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/zKFfoTtO"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[M] Be able to configure format with fixed two decimal digits even though it's an integer value",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        },
+        {
+          "id": "bugfix-f4ad99f1fc2d",
+          "version": "4.4.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/s2sPg2v2"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Fields: Auto-populated dates not working as expected",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Note: Please run the script noted in the tool to check the invalid data, please make sure that there are no invalid budget report row (I.e: row has Month = 0, or invalid date time – null is ok). Update version of npm package @ng-bootstrap/ng-bootstrap to 5.1.2"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "4.4.0"
+    ],
+    "rawCardCount": 9,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

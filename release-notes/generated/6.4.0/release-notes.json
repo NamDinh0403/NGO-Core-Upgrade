@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "version": "6.4.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.4.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-96f130bcd14e",
+          "version": "6.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "update appsettings.json and manual run the tool: NGO.Core.Tools.GenerateMissingReports",
+          "instructionsAndNotes": "Logframe periods missing\n[For deployment person]\n[After deployment] update appsettings.json and manual run the tool: NGO.Core.Tools.GenerateMissingReports\nReason: To add missing reporting in head for current logframe version",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Qb4gdJRj/4750-logframe-periods-missing"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-f05edaa70077",
+          "version": "6.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "ID of global objective is displayed unexpectedly on at number objective field when number objective is blank on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[Logframe/Indicator Tracker] ID of global objective is displayed unexpectedly on at number objective field when number objective is blank on Current sprint - Core | Trello\nIf in client project customs GetLogframeIndicatorTrackers procedure, update isnull(obj.ObjectiveNo, glObj.ObjectiveNo) to obj.[ObjectiveNo] (changes in PR: Pull request 23454: [Logframe/Indicator Tracker] ID of global objective is displayed unexpectedly on at number objective field when number objective is blank - Repos (azure.com)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Y08Mqgwi/4207-logframe-indicator-tracker-id-of-global-objective-is-displayed-unexpectedly-on-at-number-objective-field-when-number-objective-i"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/23454"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframeIndicatorTrackers.sql`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-2337ebfe3da0",
+          "version": "6.4.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Qb4gdJRj/4750-logframe-periods-missing"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Logframe periods missing",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`",
+          "extraClientAction": "update appsettings.json and manual run the tool: NGO.Core.Tools.GenerateMissingReports"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "6.4.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 154,
+    "unresolvedItems": []
+  }
+}

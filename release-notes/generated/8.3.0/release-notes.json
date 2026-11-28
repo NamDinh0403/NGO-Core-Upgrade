@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "version": "8.3.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.3.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 2,
+    "needsReviewActions": 0,
+    "newFeatures": 2,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-93c063422bab",
+          "version": "8.3.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Before creating deployment in Release, please edit and update variable first as follow: Core:Deployment:DeploySPFieldsAndCTypesEnabled with value of true. Remember to revert it bac",
+          "instructionsAndNotes": "[For deployment person] [BeforeDeployment] Before creating deployment in Release, please edit and update variable first as follow: Core:Deployment:DeploySPFieldsAndCTypesEnabled with value of true. Remember to revert it back to original when the deployment process was done.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WW0cQyqK/5315-potential-bug-sp-groups-in-the-main-site-collection-may-hit-limits-if-too-many-ideas-or-funding-ideas-are-added"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 101 files (backend: 58, frontend: 27, shared: 16); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeBreakdownTemplatesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-4f0a4f7db2c8",
+          "version": "8.3.0",
+          "applicability": "conditional",
+          "condition": "if client overrides it",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Adjusted DB FUNCTION GetTaskThatUserHasViewPermission , so if client overrides it, please inner join Tasks table with CoreEntities to make sure only view accessable entities //Uyen",
+          "instructionsAndNotes": "Adjusted DB FUNCTION GetTaskThatUserHasViewPermission , so if client overrides it, please inner join Tasks table with CoreEntities to make sure only view accessable entities //Uyen",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/AKettC6e/5344-analyse-task-as-primary-table-user-should-not-see-the-tasks-belong-to-the-entity-they-have-not-access-permission"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 101 files (backend: 58, frontend: 27, shared: 16); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeBreakdownTemplatesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`."
+        },
+        {
+          "id": "action-0921236f7e84",
+          "version": "8.3.0",
+          "applicability": "conditional",
+          "condition": "if your client doesn't have issue of running out of SP groups",
+          "timing": "Before Deploy",
+          "owner": "Client Dev",
+          "action": "App console with action \"BeforeDeployment\": could be skipped if your client doesn't have issue of running out of SP groups. This action to move idea's folders to other site collect",
+          "instructionsAndNotes": "- App console with action \"BeforeDeployment\": could be skipped if your client doesn't have issue of running out of SP groups. This action to move idea's folders to other site collections. If skipped, let ignore DisableInfraSetup and MigratedIdeas settings.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 101 files (backend: 58, frontend: 27, shared: 16); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeBreakdownTemplatesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-b712012671d8",
+          "version": "8.3.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WW0cQyqK/5315-potential-bug-sp-groups-in-the-main-site-collection-may-hit-limits-if-too-many-ideas-or-funding-ideas-are-added"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[For deployment person] [BeforeDeployment] Before creating deployment in Release, please edit and update variable first as follow: Core:Deployment:DeploySPFieldsAndCTypesEnabled with value of true. Remember to revert it back to original when the deployment process was done.",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 101 files (backend: 58, frontend: 27, shared: 16); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeBreakdownTemplatesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`.",
+          "clientImpact": "Action applies during the upgrade. Before creating deployment in Release, please edit and update variable first as follow: Core:Deployment:DeploySPFieldsAndCTypesEnabled with value of true. Remember to revert it bac"
+        },
+        {
+          "id": "feature-654f462fb9e4",
+          "version": "8.3.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "App Console with action \"AfterDeployment\": The same tool but this is another action. This action to migrate idea members system config to new place.",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 101 files (backend: 58, frontend: 27, shared: 16); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeBreakdownTemplatesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-f5554d551814",
+          "version": "8.3.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Hc0tfMNW/5326-s-default-page-is-not-loaded-when-user-inputs-incorrect-url"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Default page is not loaded when user inputs incorrect URL",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-client-core/src/app/app-route.service.ts`",
+          "extraClientAction": "None stated in the release source."
+        },
+        {
+          "id": "bugfix-47236b1b3f46",
+          "version": "8.3.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "App console with action \"BeforeDeployment\": could be skipped if your client doesn't have issue of running out of SP groups. This action to move idea's folders to other site collections. If skipped, let ignore DisableInfraSetup and MigratedIdeas settings.",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 101 files (backend: 58, frontend: 27, shared: 16); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeBreakdownTemplatesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/PartnerExpenditureReportingImportController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/MiscExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`.",
+          "extraClientAction": "if your client doesn't have issue of running out of SP groups. App console with action \"BeforeDeployment\": could be skipped if your client doesn't have issue of running out of SP groups. This action to move idea's folders to other site collect"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "8.3.0"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 101,
+    "unresolvedItems": []
+  }
+}

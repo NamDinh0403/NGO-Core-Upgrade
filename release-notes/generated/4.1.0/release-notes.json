@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "version": "4.1.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 3,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-3c9ab1887729",
+          "version": "4.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Upgrade pipelines and release to dotnet 7: Upgrade pipelines and release to dotnet 7",
+          "instructionsAndNotes": "NGO Core 4.x (to .net 7):\nUpgrade pipelines and release to dotnet 7: Upgrade pipelines and release to dotnet 7",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://precio.sharepoint.com/:w:/r/sites/ngo-oonline/_layouts/15/Doc.aspx?sourcedoc=%7B562B8C65-796B-46E7-990C-0EA4DA001F5B%7D&file=Upgrade%20pipelines%20and%20release%20to%20dotnet%207.docx&action=default&mobileredirect=true"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-336a29daac1d",
+          "version": "4.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Logframe: Loading breakdown dynamically",
+          "instructionsAndNotes": "Logframe: Loading breakdown dynamically\nThis function is enabled by default, please check with PM, if this function is not necessary in the client, deactivate the field location with\nId = 2868: For indicator tracker\nId = 4925: roll up of indicator tracker",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0173de2aff7e",
+          "version": "4.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Service Injection: IBaseTaskActionService -> Remove name in register service in CommonDIRegistrations.cs",
+          "instructionsAndNotes": "Service Injection: IBaseTaskActionService -> Remove name in register service in CommonDIRegistrations.cs\nEx:\ncontainer.RegisterType<Core.Services.IBaseTaskActionService, WireTransferTaskActionService>( WireTransferTaskActionService.ConfigurationId );\n-> Change to: container.RegisterType<Core.Services.IBaseTaskActionService, WireTransferTaskActionService>();￼or container.AddTransient<Core.Services.IBaseTaskActionService, WireTransferTaskActionService>();\nDo the same for IBaseExportPdfActionService",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5f7af4311189",
+          "version": "4.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "NGO Core 4.x (to .net 7):",
+          "instructionsAndNotes": "NGO Core 4.x (to .net 7):",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-5c89cb3eb71b",
+          "version": "4.1.0",
+          "moduleScope": "select * from CoreFieldInstanceLocations where ReadOnlyDependencyId = 54",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/InbT6yKp"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Logframe: Update Linked Global Indicator property in Indicator from Array to Single",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "4.1"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

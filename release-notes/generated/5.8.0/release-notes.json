@@ -1,0 +1,436 @@
+{
+  "schemaVersion": 1,
+  "version": "5.8.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.8.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 12,
+    "conditionalActions": 0,
+    "needsReviewActions": 6,
+    "newFeatures": 1,
+    "bugFixes": 4
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-28e05e96e397",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update appsettings.json Files:",
+          "instructionsAndNotes": "- Update appsettings.json Files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-9ecd5588d058",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add a queue triggered function with the same body as the scheduled function. Refer to WebJobExecutionCleanFunction.cs in Core for inspiration.",
+          "instructionsAndNotes": "- Add a queue triggered function with the same body as the scheduled function. Refer to WebJobExecutionCleanFunction.cs in Core for inspiration.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.Core.WebJobs.Common/Functions/WebJobExecutionCleanFunction.cs`"
+        },
+        {
+          "id": "action-d97b09e3e9e6",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the queue settings to appsettings.json for both the web app and web job program.",
+          "instructionsAndNotes": "- Add the queue settings to appsettings.json for both the web app and web job program.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/Program.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-68a9e9c2d7fd",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Azure AppService:",
+          "instructionsAndNotes": "- Update Azure AppService:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        },
+        {
+          "id": "action-96b58e590858",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following keys:",
+          "instructionsAndNotes": "- Add the following keys:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        },
+        {
+          "id": "action-27d9bbc2e49a",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add this section to the Web Job appsettings.json (root level)",
+          "instructionsAndNotes": "[S] Webjob throws time out error when the log text is too long\n[For upgrade person]\nAdd this section to the Web Job appsettings.json (root level)\n\"Logging\": {\n\"LogLevel\": {\n\"Default\": \"Information\",\n\"Microsoft.EntityFrameworkCore.Database.Command\": \"Warning\",\n\"Azure.Core\": \"Error\"\n}\n},",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/GHxh9UFJ/4432-s-webjob-throws-time-out-error-when-the-log-text-is-too-long"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-a84fb838dea1",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Missing copy favicon file when build Artifact on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[Azure Pipeline] Missing copy favicon file when build Artifact on Current sprint - Core | Trello",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/4c1bs2mj/4321-azure-pipeline-missing-copy-favicon-file-when-build-artifact"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        },
+        {
+          "id": "action-1ad3b665fe95",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Config angular.json file like the changes on this PR: Pull request 24736: Missing copy favicon file when build Artifact - Repos",
+          "instructionsAndNotes": "- Config angular.json file like the changes on this PR: Pull request 24736: [Azure Pipeline] Missing copy favicon file when build Artifact - Repos",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/24736?_a=files"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/angular.json`"
+        },
+        {
+          "id": "action-2ec05a914e05",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Client wants to always run the custom script before Core script",
+          "instructionsAndNotes": "[S] [Deployment] Client wants to always run the custom script before Core script",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/RmvNDK6d/"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        },
+        {
+          "id": "action-5e23d85c9c5b",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add \"BeforeCoreFolder\": \"BeforeCore\" to deployment's appSettings.json",
+          "instructionsAndNotes": "- Add \"BeforeCoreFolder\": \"BeforeCore\" to deployment's appSettings.json",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-fd93d4a972d7",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add copy always to \"BeforeCore\" folder in NGO.Deployment.csproj",
+          "instructionsAndNotes": "- Add copy always to \"BeforeCore\" folder in NGO.Deployment.csproj",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        },
+        {
+          "id": "action-46fe29e91671",
+          "version": "5.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add \"Core:Deployment:BeforeCoreFolder\" with value BeforeCore to Release > Variables > Pipeline variables",
+          "instructionsAndNotes": "- Add \"Core:Deployment:BeforeCoreFolder\" with value BeforeCore to Release > Variables > Pipeline variables",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-6fa6f65e531b",
+          "version": "5.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Webjob Admin UI: Requeue timer trigger job",
+          "instructionsAndNotes": "[S] Webjob Admin UI: Requeue timer trigger job",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/fPHPi0cx/4413-s-webjob-admin-ui-requeue-timer-trigger-job"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`"
+        },
+        {
+          "id": "action-fd49b50a7a92",
+          "version": "5.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"WebJobExecutionCleanQueue\": \"webjobexecutionqueue\",",
+          "instructionsAndNotes": "- \"WebJobExecutionCleanQueue\": \"webjobexecutionqueue\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`"
+        },
+        {
+          "id": "action-285f1ca8afd0",
+          "version": "5.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"ExecUpdatestatQueue\": \"execupdatestatqueue\" ￼",
+          "instructionsAndNotes": "- \"ExecUpdatestatQueue\": \"execupdatestatqueue\" ￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        },
+        {
+          "id": "action-16ca4ca510fe",
+          "version": "5.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "For Any Custom Scheduled Web Jobs:",
+          "instructionsAndNotes": "- For Any Custom Scheduled Web Jobs:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        },
+        {
+          "id": "action-c6af051ceaaf",
+          "version": "5.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:Queue:WebJobExecutionCleanQueue\": \"webjobexecutionqueue\",",
+          "instructionsAndNotes": "- \"Core:Queue:WebJobExecutionCleanQueue\": \"webjobexecutionqueue\",",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`"
+        },
+        {
+          "id": "action-2925d46d85c7",
+          "version": "5.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "\"Core:Queue:ExecUpdatestatQueue\": \"execupdatestatqueue\"",
+          "instructionsAndNotes": "- \"Core:Queue:ExecUpdatestatQueue\": \"execupdatestatqueue\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-67f057599bc6",
+          "version": "5.8.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Inside the Queue section, add:",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-125d15a86016",
+          "version": "5.8.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Write a script to update all the types of web jobs in CoreWebJobs to the appropriate type, and add queues where they are missing.",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/CoreWebJob.cs`",
+          "extraClientAction": "None stated in the release source."
+        },
+        {
+          "id": "bugfix-09bc4e964514",
+          "version": "5.8.0",
+          "moduleScope": "For upgrade person",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/GHxh9UFJ/4432-s-webjob-throws-time-out-error-when-the-log-text-is-too-long"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Webjob throws time out error when the log text is too long",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/WebJob.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`",
+          "extraClientAction": "Add this section to the Web Job appsettings.json (root level)"
+        },
+        {
+          "id": "bugfix-e05f156aa306",
+          "version": "5.8.0",
+          "moduleScope": "Azure Pipeline",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/4c1bs2mj/4321-azure-pipeline-missing-copy-favicon-file-when-build-artifact"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Azure Pipeline] Missing copy favicon file when build Artifact on Current sprint - Core | Trello",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 157 files (backend: 49, frontend: 93, shared: 15); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/UserController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/CoreAppSettingKeys.cs`.",
+          "extraClientAction": "Missing copy favicon file when build Artifact on Current sprint - Core | Trello"
+        },
+        {
+          "id": "bugfix-54c43d971f34",
+          "version": "5.8.0",
+          "moduleScope": "Azure Pipeline",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/24736?_a=files"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Config angular.json file like the changes on this PR: Pull request 24736: [Azure Pipeline] Missing copy favicon file when build Artifact - Repos",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-client-core/angular.json`",
+          "extraClientAction": "Config angular.json file like the changes on this PR: Pull request 24736: Missing copy favicon file when build Artifact - Repos"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.8.0"
+    ],
+    "rawCardCount": 20,
+    "gitDiffFileCount": 157,
+    "unresolvedItems": []
+  }
+}

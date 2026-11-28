@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "version": "2.14.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 8,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 2,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-e305ce5e8d06",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "CoreFieldInstances: Update the resource key in Log, Log2 CorefieldInstances to separate the resources",
+          "instructionsAndNotes": "CoreFieldInstances: Update the resource key in Log, Log2 CorefieldInstances to separate the resources\n[After deployment]\nDataFixes\\20210506_UpdateResourceStringKeysForLogAndLog2.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e23681bc9c7d",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Update resource string, run this script DataFixes\\20210513_AdminUI_Folder_structure_updates.sql",
+          "instructionsAndNotes": "AdminUI - Folder structure\nUpdate resource string, run this script DataFixes\\20210513_AdminUI_Folder_structure_updates.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b7ac0dfa2475",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Change task assignment : add API url to environment files",
+          "instructionsAndNotes": "Change task assignment : add API url to environment files\ntaskAssignmentChanges: 'api/core/taskAssignmentChanges'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e44fa970725e",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "CoreFieldInstancesLocations: Level, Objective ID and Objective Description should be separate columns",
+          "instructionsAndNotes": "CoreFieldInstancesLocations: Level, Objective ID and Objective Description should be separate columns\n[After deployment]\nDataFixes\\20210514_UpdateLogframeIndicatorTrackerListViewColumns.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0ad2d759e247",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "InitAnalyse: Update SqlMapping in the for Entities having Budget , Budget Row in Analyses ( = 31)",
+          "instructionsAndNotes": "InitAnalyse: Update SqlMapping in the [CoreAnalyseTableRelations] for Entities having Budget , Budget Row in Analyses ([TabFunctionId2] = 31)\nDataFixes\\20210520_UpdateJoinConditionColumnForAnalyseBudgetAndBudgetRows.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-48c1ada4e864",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Change member assignment : add API url to environment files",
+          "instructionsAndNotes": "Change member assignment : add API url to environment files\nmembershipChanges: 'api/core/membershipChanges'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-aac85d6315cc",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "CoreResourceStrings: Logframe Breakdown template: update validation messages",
+          "instructionsAndNotes": "CoreResourceStrings: Logframe Breakdown template: update validation messages\n[After deployment]\nDataFixes\\20210526_UpdateResourceStringValuesForLogFrameValidationMessages.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-975b0c5b3a58",
+          "version": "2.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "add API url to environment files",
+          "instructionsAndNotes": "Power BI\nnpm install powerbi-client\nImport PowerBIModule to app.module.ts\nadd API url to environment files\npowerBI: 'api/core/entity',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-b7ac0dfa2475",
+          "version": "2.14.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Change task assignment : add API url to environment files",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Change task assignment : add API url to environment files"
+        },
+        {
+          "id": "feature-48c1ada4e864",
+          "version": "2.14.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Change member assignment : add API url to environment files",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Change member assignment : add API url to environment files"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.14.0"
+    ],
+    "rawCardCount": 8,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

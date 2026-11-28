@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "version": "2.0.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [
+        {
+          "id": "action-b975ccc6d0c5",
+          "version": "2.0.0",
+          "applicability": "conditional",
+          "condition": "update CoreEntityDefinitions set IsLimitedEntity = 1 where Id in (5, 12)",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "update CoreEntityDefinitions set IsLimitedEntity = 1 where Id in (5, 12)",
+          "instructionsAndNotes": "After deployment please run this sql to ensure idea and funding idea is still set as LimitedEntity\nupdate CoreEntityDefinitions set IsLimitedEntity = 1 where Id in (5, 12)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-b0efd0433289",
+          "version": "2.0.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "IDs for FieldInstanceLocations have been changed in Core, so any client specific scripts that reference those IDs needs to be updated to match the new IDs. Before deployment, please delete all existing rows in CoreFieldInstanceLocations.",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.0.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "version": "5.0.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.0.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 5,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-fe8b933d5598",
+          "version": "5.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "EF Core",
+          "instructionsAndNotes": "EF Core\n[For deployment person]",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/Haz9EfB3/3622-ef-core"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1668 files (backend: 1180, frontend: 97, shared: 391); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`."
+        },
+        {
+          "id": "action-08a752b738c2",
+          "version": "5.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Migrate NGO Context step script to \"efbundle.exe\"",
+          "instructionsAndNotes": "- Update Migrate NGO Context step script to \"efbundle.exe\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1668 files (backend: 1180, frontend: 97, shared: 391); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`."
+        },
+        {
+          "id": "action-7cd154252ced",
+          "version": "5.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add suffix \"/CoreDBMigration/migrations\" to \"Advanced/Working Directory\" of \"Migrate NGO Context\" step",
+          "instructionsAndNotes": "- Add suffix \"/CoreDBMigration/migrations\" to \"Advanced/Working Directory\" of \"Migrate NGO Context\" step",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1668 files (backend: 1180, frontend: 97, shared: 391); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`."
+        },
+        {
+          "id": "action-b4be9ecc1847",
+          "version": "5.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add release variable \"MigrationsAssembly\": \"NGO.Repositories\"",
+          "instructionsAndNotes": "- Add release variable \"MigrationsAssembly\": \"NGO.Repositories\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1668 files (backend: 1180, frontend: 97, shared: 391); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminEntityConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BudgetController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EntityController.cs`."
+        },
+        {
+          "id": "action-242c2afacdb8",
+          "version": "5.0.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "I remember some clients using bulk/batch insert technique in transaction integration web job but I cannot remember if it's referencing to Z.EntityFramework.Extensions.EFCore or not",
+          "instructionsAndNotes": "[For upgrade person] I remember some clients using bulk/batch insert technique in transaction integration web job but I cannot remember if it's referencing to Z.EntityFramework.Extensions.EFCore or not. But anyway please find 'context.BulkInsert' / 'context.BulkUpdate' / 'context.BulkDelete', if existing, try to replace with other way because those extensions (i.e. Z.EntityFramework.Extensions.EFCore) are licensed and only free for several months.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-fa6d6f434485",
+          "version": "5.0.0",
+          "applicability": "conditional",
+          "condition": "Check if client are overwritting any repositories of Task function (TaskRepository, TaskFlowRepository,…)",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Upgrade steps detailed in document - Upgrade to EF Core :",
+          "instructionsAndNotes": "Upgrade steps detailed in document - Upgrade to EF Core :\nBe careful: Check if client are overwritting any repositories of Task function (TaskRepository, TaskFlowRepository,…). If yes, please separate NgoContext and CoreContext to use it separately, DO NOT USE NgoContext to map with CoreContext when inherit contructor of repositories from Core (see image)",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://precio.sharepoint.com/:w:/r/sites/ngo-oonline/Shared%20Documents/03%20Core/Development/Technical/Upgrade%20to%20EF%20Core.docx?d=we3b5c3c3b5be4894aa9cd71d84f8172b&csf=1&web=1&e=LeVF2B"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/TaskFlow.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/TaskFlow.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/CoreContext.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/TaskFlowRepository.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/TaskRepository.cs`"
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-cec0f3bd4fc6",
+          "version": "5.0.0",
+          "moduleScope": "For upgrade person",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[For upgrade person] I remember some clients using bulk/batch insert technique in transaction integration web job but I cannot remember if it's referencing to Z.EntityFramework.Extensions.EFCore or not. But anyway please find 'context.BulkInsert' / 'context.BulkUpdate' / 'context.BulkDelete', if existing, try to replace with other way because those extensions (i.e. Z.EntityFramework.Extensions.EFCore) are licensed and only free for several months.",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`",
+          "extraClientAction": "I remember some clients using bulk/batch insert technique in transaction integration web job but I cannot remember if it's referencing to Z.EntityFramework.Extensions.EFCore or not"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.0.0"
+    ],
+    "rawCardCount": 6,
+    "gitDiffFileCount": 1668,
+    "unresolvedItems": []
+  }
+}

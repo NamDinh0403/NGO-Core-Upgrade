@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "version": "2.18.2",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 0,
+    "needsReviewActions": 2,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-266a62c78508",
+          "version": "2.18.2",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "fixes a small bug in the core.sql script. This can manually be fixed by adding this script to a custom script.",
+          "instructionsAndNotes": "2.18.2 fixes a small bug in the core.sql script. This can manually be fixed by adding this script to a custom script.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-af24ca0fa0d5",
+          "version": "2.18.2",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "UPDATE CoreFieldDefinitions SET SqlMapping = '{ Type: 1, RawColumns: , ColumnNames: , Joins: , Type: 4} ]} ' WHERE Id = 63",
+          "instructionsAndNotes": "UPDATE CoreFieldDefinitions SET SqlMapping = '{ Type: 1, RawColumns: [\"ISNULL(cwfiResx.Value, cwfi.CurrentPhaseName) AS CurrentPhase\"], ColumnNames: [\"cwfi.CurrentPhase as CurrentPhaseId\" ], Joins: [{ TableName: \"CoreWorkflowInstances\", Alias: \"cwfi\", First: \"cwfi.EntityId\", Second: \"e.Id\", Type: 2} ,{ TableName: \"CoreResourceStringsView\", Alias: \"cwfiResx\", TableHints:\"WITH(NOEXPAND)\", Conditions: [{ First: \"cwfiResx.FullKey\", Second: \"cwfi.CurrentPhaseName\"} , { First: \"cwfiResx.localeId\", Second: \"@localeId\"} ], Type: 4} ]} ' WHERE Id = 63",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-f49a5a2acaf7",
+          "version": "2.18.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "(Use 2.18.2 instead)",
+          "instructionsAndNotes": "2.18.1 (Use 2.18.2 instead)\nBudget template: Update template pdf for budget\nDataFixes/20211104_UpdateBudgetPdfTemplate",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f43c98a780d8",
+          "version": "2.18.2",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "(Use 2.18.2 instead)",
+          "instructionsAndNotes": "2.18.1 (Use 2.18.2 instead)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-ecfaf5e288e6",
+          "version": "2.18.2",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "2.18.2 fixes a small bug in the core.sql script. This can manually be fixed by adding this script to a custom script.",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "fixes a small bug in the core.sql script. This can manually be fixed by adding this script to a custom script."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.18.2"
+    ],
+    "rawCardCount": 4,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

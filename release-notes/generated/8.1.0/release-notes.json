@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "version": "8.1.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.1.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 2,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-8f1887a27dca",
+          "version": "8.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update app.module.ts :",
+          "instructionsAndNotes": "- Update app.module.ts :",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app.module.ts`"
+        },
+        {
+          "id": "action-cfea3f48e300",
+          "version": "8.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add EmergencyFinanceModule, NonProjectFinanceModule to @NgModule",
+          "instructionsAndNotes": "- Add EmergencyFinanceModule, NonProjectFinanceModule to @NgModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/NonProject.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/NonProject.cs`"
+        },
+        {
+          "id": "action-3b78be2ce1c7",
+          "version": "8.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add API URL to environment files:",
+          "instructionsAndNotes": "- Add API URL to environment files:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.ts`"
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-f9b2b8888850",
+          "version": "8.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "nonProjectFinance: 'api/core/entity'- Ensure Entra App Registration has permission `Mail.Read` (type: Application, granted admin consent)",
+          "instructionsAndNotes": "- nonProjectFinance: 'api/core/entity'- Ensure Entra App Registration has permission `Mail.Read` (type: Application, granted admin consent)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/NonProject.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Permission/Permission.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/NonProject.cs`"
+        },
+        {
+          "id": "action-68df51bd4884",
+          "version": "8.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "emergencyFinance: 'api/core/entity'",
+          "instructionsAndNotes": "- emergencyFinance: 'api/core/entity'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Emergency.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-d18c57225cd4",
+          "version": "8.1.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/rWZ324Al/5257-s-enable-finance-tabs-functionality-on-emergency-non-project-entities"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[S] Enable finance tabs + functionality on Emergency & Non-Project entities",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Emergency.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Emergency.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "8.1.0"
+    ],
+    "rawCardCount": 6,
+    "gitDiffFileCount": 409,
+    "unresolvedItems": []
+  }
+}

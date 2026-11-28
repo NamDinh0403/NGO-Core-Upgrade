@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "version": "1.4.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 0,
+    "needsReviewActions": 3,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-93f16066efc1",
+          "version": "1.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Sharing settings on SharePoint Site collection: C hange \"External sharing\" of sites (tenant admin -> \"Active sites\" -> select site -> \"Policies\") to \"New and existing guests",
+          "instructionsAndNotes": "Update Sharing settings on SharePoint Site collection: C hange \"External sharing\" of sites (tenant admin -> \"Active sites\" -> select site -> \"Policies\") to \"New and existing guests\" and deactivate feature \"Limited-access user permission lockdown mode\" (Site settings -> Site collection features) when setup site collection to make the share function work.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6c3b635a79a7",
+          "version": "1.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update any client specific scripts for EmailTemplates to match the new structure in core.",
+          "instructionsAndNotes": "4. Config\nUpdate any client specific scripts for EmailTemplates to match the new structure in core.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-f1220f7525cc",
+          "version": "1.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "app.module.ts",
+          "instructionsAndNotes": "1. app.module.ts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-c33461cd9258",
+          "version": "1.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "environments",
+          "instructionsAndNotes": "2. environments",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-574f4c5d1cb1",
+          "version": "1.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Deployment",
+          "instructionsAndNotes": "3. Deployment\nUncomment UpdateContentTypesForExistingSites in Deploy.ps1 to add link document content types to existing sites (if needed).",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "1.4.0"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

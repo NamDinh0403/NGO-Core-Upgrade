@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "version": "5.2.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.2.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 3,
+    "needsReviewActions": 2,
+    "newFeatures": 1,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-a86c5989ef93",
+          "version": "5.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Update ' Site_URL' in file ' 20240111_ManualBeforeDeployment_MultipleSPSites.sql ' and manual run it before deployment",
+          "instructionsAndNotes": "Multiple SP sites -\n[Before deployment] Update ' Site_URL' in file ' 20240111_ManualBeforeDeployment_MultipleSPSites.sql ' and manual run it before deployment\n[For upgrade person] If any compile error, then follow as below:\n2. Replace (if exists) URIUtilities.CleanUrlSegment -> SPUtilities.CleanUrlSegment\n3. Replace (if exists) URIUtilities.GetRelativeUrl -> SPUtilities.GetServerRelativeUrl",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/42nqs50X"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Common/Utilities/SPUtilities.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Utilities/URIUtilities.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/20240111_ManualBeforeDeployment_MultipleSPSites.sql`, A `ngo-api-core/NGO/NGO.Core.Model/Domain/SharePoint/SPSite.cs`, A `ngo-api-core/NGO/NGO.Core.Model/Dto/SharePoint/SPSite.cs`"
+        },
+        {
+          "id": "action-00574cabf0ad",
+          "version": "5.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "add 'IdeaFileCopyingQueue' with value 'ideafilecopyingqueue-dev' inside 'Queue' section of WebJob's appsettings.json",
+          "instructionsAndNotes": "[Before deployment] Azure app service configuration: add 'Core:Queue:IdeaFileCopyingQueue' with value 'ideafilecopyingqueue'\n[For upgrade person] add 'IdeaFileCopyingQueue' with value 'ideafilecopyingqueue-dev' inside 'Queue' section of WebJob's appsettings.json",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/hrimmiVG/3773-s-entityasync-job-possible-loop-forever-and-affect-the-application-if-the-approval-pdf-screenshot-is-failed"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/IdeaFileCopyingQueue.cs`, M `ngo-api-core/NGO/NGO.Core.HelpDocumentationDeployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Idea.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.FinanceFiscalYearValueMigration/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixPhaseNumberForTasksAddedToWorkflowByEntity/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.PopulateLogframeDraftVersions/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetReadOnlyForSignOffDocumentsFolder/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetWFForEntitiesCreatedWithoutWF/appsettings.json`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdateLogframeGlobalResourceStrings/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateTotalBudgetRow/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.ValidateAndRemoveAllInvalidBudgetRows/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-fcf3a0cc8c4f",
+          "version": "5.2.0",
+          "applicability": "conditional",
+          "condition": "if your client has some custom code related to those tables",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "update appsettings.json and manual run the tool: NGO.Core.Tools.UpdateLogframeGlobalResourceStrings",
+          "instructionsAndNotes": "[L] Multiple languages - Global indicators, Global objectives, Breakdowns\n[For deployment person]\n[After deployment] update appsettings.json and manual run the tool: NGO.Core.Tools.UpdateLogframeGlobalResourceStrings\n[For upgrade person]\nIf any custom code in GetLogframeIndicatorTrackers.sql, please add two columns as changes in GetLogframeIndicatorTrackers.sql in PR#22030\nThe 'Name' column in db tables: CoreLogframeGlobalObjectives / CoreLogframeGlobalIndicators / CoreLogframeBreakdownTemplates and db tables: CoreLogframeObjectives (i.e. when it's global objective) / CoreLogframeIndicators (i.e. when it's global indicator) are resource strings. Therefore plz check and update your client code if your client has some custom code related to those tables.",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/22030"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframeIndicatorTrackers.sql`, M `ngo-api-core/NGO/NGO.Core.HelpDocumentationDeployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/Logframe.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeBreakdownTemplate.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeGlobalIndicator.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeGlobalObjective.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.FinanceFiscalYearValueMigration/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixPhaseNumberForTasksAddedToWorkflowByEntity/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.PopulateLogframeDraftVersions/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetReadOnlyForSignOffDocumentsFolder/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetWFForEntitiesCreatedWithoutWF/appsettings.json`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdateLogframeGlobalResourceStrings/NGO.Core.Tools.UpdateLogframeGlobalResourceStrings.csproj`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdateLogframeGlobalResourceStrings/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateTotalBudgetRow/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.ValidateAndRemoveAllInvalidBudgetRows/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-24709f858ab8",
+          "version": "5.2.0",
+          "applicability": "conditional",
+          "condition": "if the client doesn't have any special requirements (like CBMI",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "However, if the client doesn't have any special requirements (like CBMI...), we can keep the old configuration (Partner User role can only be assigned to Partner Member) and Restri",
+          "instructionsAndNotes": "However, if the client doesn't have any special requirements (like CBMI...), we can keep the old configuration (Partner User role can only be assigned to Partner Member) and RestrictedMemberRoles should be [{\"globalRoleIds\": [11], validInEntityRoleIds\": [12]}].",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`"
+        },
+        {
+          "id": "action-8f297ba4c632",
+          "version": "5.2.0",
+          "applicability": "conditional",
+          "condition": "If client project has NgoContext",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "AuditLog show CreatedBy System",
+          "instructionsAndNotes": "[S] AuditLog show CreatedBy System\n(Trello link:  )\nIf client project has NgoContext , please ensure override functions SaveChanges and SaveChangesAsync set value for audit.CreatedBy following changes in PR.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/NyhuxGfA"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-5685c0d85add",
+          "version": "5.2.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Core hard-coded to check \"Partner Member\"",
+          "instructionsAndNotes": "[S] [Validate Entity Member] Core hard-coded to check \"Partner Member\"\n\"Previously, the core hardcoded the feature: Partner User role can only be assigned to Partner Member. This card will upgrade that part by checking the roles in globalRoleIds that are only allowed to be assigned to validInEntityRoleIds. (i.e.: [{\"globalRoleIds\": [1, 2], validInEntityRoleIds\": [15, 16]}] means roles 1, 2 can only be assigned to entity roles 15, 16). Clients can configure this here.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`"
+        },
+        {
+          "id": "action-1a04db4befea",
+          "version": "5.2.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "P lease check this with \" select * from CoreConfigurations where = 'RestrictedMemberRoles '\". Make sure that the value will be , \"validInEntityRoleIds\": }] . If not, run \" update C",
+          "instructionsAndNotes": "P lease check this with \" select * from CoreConfigurations where [key] = 'RestrictedMemberRoles '\". Make sure that the value will be [{\"globalRoleIds\": [11], \"validInEntityRoleIds\": [12]}] . If not, run \" update CoreConfigurations set [Value] = '[{\"globalRoleIds\": [11], \"validInEntityRoleIds\": [12]}]' where [key] = 'RestrictedMemberRoles' .\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-e5badebad87d",
+          "version": "5.2.0",
+          "moduleScope": "For upgrade person",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/hrimmiVG/3773-s-entityasync-job-possible-loop-forever-and-affect-the-application-if-the-approval-pdf-screenshot-is-failed"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[Before deployment] Azure app service configuration: add 'Core:Queue:IdeaFileCopyingQueue' with value 'ideafilecopyingqueue'",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Common/Queue/IdeaFileCopyingQueue.cs`, M `ngo-api-core/NGO/NGO.Core.HelpDocumentationDeployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Idea.cs`, M `ngo-api-core/NGO/NGO.Core.Tools.FinanceFiscalYearValueMigration/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixPhaseNumberForTasksAddedToWorkflowByEntity/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.PopulateLogframeDraftVersions/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetReadOnlyForSignOffDocumentsFolder/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetWFForEntitiesCreatedWithoutWF/appsettings.json`, A `ngo-api-core/NGO/NGO.Core.Tools.UpdateLogframeGlobalResourceStrings/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateTotalBudgetRow/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.ValidateAndRemoveAllInvalidBudgetRows/appsettings.json`, M `ngo-api-core/NGO/NGO.Deployment/appsettings.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`",
+          "clientImpact": "Action applies during the upgrade. add 'IdeaFileCopyingQueue' with value 'ideafilecopyingqueue-dev' inside 'Queue' section of WebJob's appsettings.json"
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-e0b1e4594e7f",
+          "version": "5.2.0",
+          "moduleScope": "{\"globalRoleIds\": [11 / 12",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "However, if the client doesn't have any special requirements (like CBMI...), we can keep the old configuration (Partner User role can only be assigned to Partner Member) and RestrictedMemberRoles should be [{\"globalRoleIds\": [11], validInEntityRoleIds\": [12]}].",
+          "rootCauseOrKeyFiles": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Dto/Entity.cs`",
+          "extraClientAction": "if the client doesn't have any special requirements (like CBMI. However, if the client doesn't have any special requirements (like CBMI...), we can keep the old configuration (Partner User role can only be assigned to Partner Member) and Restri"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.2.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 402,
+    "unresolvedItems": []
+  }
+}

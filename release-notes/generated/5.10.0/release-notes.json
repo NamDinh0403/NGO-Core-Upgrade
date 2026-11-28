@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "version": "5.10.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.10.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-02eca4ec3123",
+          "version": "5.10.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Firstly, double check by running SQL select to verify if delta rows are generated unexpectedly.",
+          "instructionsAndNotes": "- Firstly, double check by running SQL select to verify if delta rows are generated unexpectedly.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 131 files (backend: 57, frontend: 32, shared: 42); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PowerBIController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/Paging.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240411_UpdateRSStringTaskCheckListAndCommentAnalyse.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20241002_UpdateTabFunctionIdAndAddPermissionsForPowerBIOverviewboxes.sql`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-d8e619d14075",
+          "version": "5.10.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Secondly, running SQL command in the description card to remove redundant delta row that should not be generated when the funding source is added as first time.",
+          "rootCauseOrKeyFiles": "No deterministic note-to-file match. Release diff covers 131 files (backend: 57, frontend: 32, shared: 42); representative changes: M `.gitignore`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PowerBIController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/Paging.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20240411_UpdateRSStringTaskCheckListAndCommentAnalyse.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20241002_UpdateTabFunctionIdAndAddPermissionsForPowerBIOverviewboxes.sql`.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.10.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 131,
+    "unresolvedItems": []
+  }
+}

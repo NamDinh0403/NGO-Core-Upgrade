@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "version": "2.24.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 6,
+    "conditionalActions": 0,
+    "needsReviewActions": 2,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-d2d9b37a6c10",
+          "version": "2.24.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run migration tool for Beneficiaries: NGO.Core.Tools.PeriodNamesPopulation",
+          "instructionsAndNotes": "Analyse / Beneficiaries: Name of Target and reporting period not same as form\nAfter deployment:\nRun migration tool for Beneficiaries: NGO.Core.Tools.PeriodNamesPopulation\nRun script: DataFixes/20220218_Beneficiaries_RemoveUnusedView.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-59fbce6ff466",
+          "version": "2.24.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Change project field name to entity page",
+          "instructionsAndNotes": "[Admin portal_Allocations-'Project']Change project field name to entity page\nDataFixes/20220217_UpdateResourceStrings_AdminAllocations.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d0396bc19337",
+          "version": "2.24.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Correct Id of mandatory fields",
+          "instructionsAndNotes": "Correct Id of mandatory fields\nBefore deployment: 20220309_CorrectIndexField.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d2599f02691e",
+          "version": "2.24.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Remove duplicate field in Idea",
+          "instructionsAndNotes": "Remove duplicate field in Idea\nDataFixes/20220311_RemoveDuplicateFieldInIdea.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6c73f0e8481f",
+          "version": "2.24.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Admin / Metadata: Ensure resource string key has no space or dot",
+          "instructionsAndNotes": "Admin / Metadata: Ensure resource string key has no space or dot\n[After deployment]: 20220323_MigrateOptionsHavingSpaces.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-fc239caa1724",
+          "version": "2.24.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "FOR DEV who upgrade to this version Read and follow the instruction in 20220324_FixCharacteristic.sql",
+          "instructionsAndNotes": "- FOR DEV who upgrade to this version Read and follow the instruction in 20220324_FixCharacteristic.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-40874170835c",
+          "version": "2.24.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Make sure No more Characteristic > isResourceLibrary in the sql script / code, replace it with Characteristic > isResourceLib",
+          "instructionsAndNotes": "- Make sure No more Characteristic > isResourceLibrary in the sql script / code, replace it with Characteristic > isResourceLib",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-74ae042c9bda",
+          "version": "2.24.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Admin Portal, Entity/Tab Fields problem with ticked Characteristics in table view",
+          "instructionsAndNotes": "Admin Portal, Entity/Tab Fields problem with ticked Characteristics in table view",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.24.0"
+    ],
+    "rawCardCount": 8,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

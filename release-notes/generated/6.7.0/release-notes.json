@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "6.7.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.7.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-8f7c3299834b",
+          "version": "6.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Review release 6.7.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 6.7.0 git-diff evidence\nThe candidate contains 133 changed files (backend: 56, frontend: 62, shared: 15) but no matching release-note cards. Review the complete diff before classifying client actions: ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs, ngo-api-core/NGO/NGO.Core.Common/Auth/HttpClientSPWebRequestExecutor.cs, ngo-api-core/NGO/NGO.Core.Common/Constants/ErrorException.cs, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20231024_UpdateUniqueHeadingsForSomeFields.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250725_Agreement_UpdateSqlMapping.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250813_UpdateValidatePropertyNameForLink.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250826_FunctionDefinitionCleanup.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20250805_MigratePlannedReceivedIncomeBox.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_03 FunctionDefinitions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_04 TabFunctions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Security/06_11 UpdateCacheWhenEntityRestrictionChange.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/SetUserRestrictedEntities.sql, ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj, ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/FieldCharacteristic.cs",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminWebJobMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/HttpClientSPWebRequestExecutor.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/ErrorException.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20231024_UpdateUniqueHeadingsForSomeFields.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250725_Agreement_UpdateSqlMapping.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250813_UpdateValidatePropertyNameForLink.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250826_FunctionDefinitionCleanup.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20250805_MigratePlannedReceivedIncomeBox.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_03 FunctionDefinitions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_04 TabFunctions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Security/06_11 UpdateCacheWhenEntityRestrictionChange.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/SetUserRestrictedEntities.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Configuration/FieldCharacteristic.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 133,
+    "unresolvedItems": []
+  }
+}

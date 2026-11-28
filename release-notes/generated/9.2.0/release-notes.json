@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "version": "9.2.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/9.2.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 6,
+    "conditionalActions": 5,
+    "needsReviewActions": 2,
+    "newFeatures": 3,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-60c8f5096ec1",
+          "version": "9.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Compare and copy the changes of",
+          "instructionsAndNotes": "- Compare and copy the changes of",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/36783?_a=files&path=/ngo-client-core/src/app/app-routing.module.ts"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/app/app-routing.module.ts`"
+        },
+        {
+          "id": "action-813a9db0c213",
+          "version": "9.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Copy the changes of",
+          "instructionsAndNotes": "- Copy the changes of",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/36783?_a=files&path=/ngo-client-core/src/main.ts"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/main.ts`"
+        },
+        {
+          "id": "action-35f1ce23171b",
+          "version": "9.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove Azure App permission: Microsoft Graph Mail.Read (Application)",
+          "instructionsAndNotes": "- Remove Azure App permission: Microsoft Graph Mail.Read (Application)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`."
+        },
+        {
+          "id": "action-abbd016edea5",
+          "version": "9.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to all appsettings.json files and Azure App Settings:",
+          "instructionsAndNotes": "- Add to all appsettings.json files and Azure App Settings:\n\"Core: CspAdditionalFrameSrc \" : \"\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Tools.Logframe2SavedQueryMigration/appsettings.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdatePaymentDocumentLinks/appsettings.json`, M `ngo-api-core/NGO/NGO/appsettings.json`"
+        },
+        {
+          "id": "action-cde692e7edd0",
+          "version": "9.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "remove logframes2 from environment files",
+          "instructionsAndNotes": "﷟HYPERLINK \" Base url confusion on Current sprint - Core | Trello  Base url confusion on Current sprint - Core | Trello\n[For upgraded person] remove logframes2 from environment files",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/zGX0IkPt/5554-tlogframe2-base-url-confusion"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/environments/environment.ts`"
+        },
+        {
+          "id": "action-9b9f0f8e70db",
+          "version": "9.2.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run script ExportCspAdditionalFrameSrc.sql in the PR attached card, then copy the value of CspAdditionalFrameSrc into \"Core:CspAdditionalFrameSrc\" on Azure/App Service (Check the v",
+          "instructionsAndNotes": "Write a script/tool to collect existing embedded URLs for CSP configuration\n[For deployment person][AfterDeployment] Run script ExportCspAdditionalFrameSrc.sql in the PR attached card, then copy the value of CspAdditionalFrameSrc into \"Core:CspAdditionalFrameSrc\" on Azure/App Service (Check the verification results before copying):",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/QlrpCYr1/5777-write-a-script-tool-to-collect-existing-embedded-urls-for-csp-configuration"
+            },
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/38994"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-319cbb115267",
+          "version": "9.2.0",
+          "applicability": "conditional",
+          "condition": "Optional – used for Outlook add-in] Add Azure App permission",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add Azure App permission: Microsoft Graph Mail.Read (Delegated)",
+          "instructionsAndNotes": "- [Optional – used for Outlook add-in] Add Azure App permission: Microsoft Graph Mail.Read (Delegated)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`."
+        },
+        {
+          "id": "action-5551c0d43557",
+          "version": "9.2.0",
+          "applicability": "conditional",
+          "condition": "If there are any customizations related to BaseConfigurationRepository's entityViewDefinitions (e",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" Update config of Core Analyse tables on Current sprint - Core | Trello Update config of Core Analyse tables on Current sprint - Core | Trello",
+          "instructionsAndNotes": "﷟HYPERLINK \" Update config of Core Analyse tables on Current sprint - Core | Trello  Update config of Core Analyse tables on Current sprint - Core | Trello\nIf there are any customizations related to BaseConfigurationRepository's entityViewDefinitions (e.g., custom entity definitions such as SvK ), please update them according to the changes in this card, following the same approach used for the custom tabs and tab functions",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/lkMwkFgl"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories/BaseConfigurationRepository.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/ConfigurationRepository.cs`"
+        },
+        {
+          "id": "action-d94af7ed425b",
+          "version": "9.2.0",
+          "applicability": "conditional",
+          "condition": "If GetLogframe2IndicatorTrackers is customized in the client project",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" Indicator tracker, Export to Excel, Include fields configured in the popup on Current sprint - Core | Trello Indicator tracker, Export to Excel, Include fields configu",
+          "instructionsAndNotes": "﷟HYPERLINK \" Indicator tracker, Export to Excel, Include fields configured in the popup on Current sprint - Core | Trello  Indicator tracker, Export to Excel, Include fields configured in the popup on Current sprint - Core | Trello\nIf GetLogframe2IndicatorTrackers is customized in the client project, adapt this card's PR changes to it.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/oXjpiYoC/5540-mlogframe2-indicator-tracker-export-to-excel-include-fields-configured-in-the-popup"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframe2IndicatorTrackers.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Project.cs`"
+        },
+        {
+          "id": "action-7567821daeda",
+          "version": "9.2.0",
+          "applicability": "conditional",
+          "condition": "if client not used this Member role in any entity type added",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" Cleanup Role/field mappings in core script on Current sprint - Core | Trello Cleanup Role/field mappings in core script on Current sprint - Core | Trello",
+          "instructionsAndNotes": "﷟HYPERLINK \" Cleanup Role/field mappings in core script on Current sprint - Core | Trello  Cleanup Role/field mappings in core script on Current sprint - Core | Trello\n[For upgraded person] After cleanup role Member connected with Field Definition Id, we will add Role Member with Field Definition Id is\nNull for what we removed, so if client not used this Member role in any entity type added , please create script to remove to override seed data from Core\n(CoreRoleEntityDefinitions Id from 50 -> 58)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/nf6rp5uP/5549-s-cleanup-role-field-mappings-in-core-script"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`."
+        },
+        {
+          "id": "action-f9d4ff5791e8",
+          "version": "9.2.0",
+          "applicability": "conditional",
+          "condition": "If GetLogframe2IndicatorTrackers is customized in the client project",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" Generate fields by SortOrder instead of Label on Current sprint - Core | Trello Generate fields by SortOrder instead of Label on Current sprint - Core | Trello",
+          "instructionsAndNotes": "﷟HYPERLINK \" [Logframe2] Generate fields by SortOrder instead of Label on Current sprint - Core | Trello  [Logframe2] Generate fields by SortOrder instead of Label on Current sprint - Core | Trello\nIf GetLogframe2IndicatorTrackers is customized in the client project, adapt this card's PR changes to it.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ZaYUjvzM/5544-s-logframe2-generate-fields-by-sortorder-instead-of-label"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframe2IndicatorTrackers.sql`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Project.cs`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-b94f5a4bf63d",
+          "version": "9.2.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/IRyw8QbW/5553-s-outlook-addin-permissions-are-too-high"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`."
+        },
+        {
+          "id": "action-dad507416f6e",
+          "version": "9.2.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "< bt : Url -id=\"functionFile\" Defaultvalue=\"https: //localhost:4200/#/outlook-addin\"/>",
+          "instructionsAndNotes": ".< bt : Url -id=\"functionFile\" Defaultvalue=\"https: //localhost:4200/#/outlook-addin\"/>\n.< bt : Url -id=\"messageReadTaskPaneUrl\" Defaultvalue=\"https: //localhost:4200/#/outlook-addin\"/>\n.< bt : Url id=\"functionFile\" Defaultvalue=\"\n.< bt : Url id=\"messageReadTaskPaneUrl\" Defaultvalue=\"https : //localhost :4200/outlook-addin\"/> \" />",
+          "cardOrPr": [
+            {
+              "label": "Ref",
+              "value": "https://localhost:4200/outlook-addin"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-b4fbd5a9eb73",
+          "version": "9.2.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Tell your PM: the manifest file of Outlook add-in should be updated and then reinstall it (see the changes, removing the hash from URLs)",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-bd3059808eb8",
+          "version": "9.2.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "This setting can be updated to allow additional iframe/frame sources as needed. Multiple sources should be separated by a semicolon ( ; )",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 1221 files (backend: 740, frontend: 95, shared: 386); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/WorkflowCycleController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/AzureOpenAIProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Configurations/CoreAppSettings.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-e341f4ce4d34",
+          "version": "9.2.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/lkMwkFgl"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "﷟HYPERLINK \" Update config of Core Analyse tables on Current sprint - Core | Trello  Update config of Core Analyse tables on Current sprint - Core | Trello",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories/BaseConfigurationRepository.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/ConfigurationRepository.cs`",
+          "clientImpact": "If there are any customizations related to BaseConfigurationRepository's entityViewDefinitions (e ﷟HYPERLINK \" Update config of Core Analyse tables on Current sprint - Core | Trello Update config of Core Analyse tables on Current sprint - Core | Trello"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "9.2.0"
+    ],
+    "rawCardCount": 15,
+    "gitDiffFileCount": 1221,
+    "unresolvedItems": []
+  }
+}

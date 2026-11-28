@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "6.8.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.8.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-7b72281a65c6",
+          "version": "6.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release 6.8.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 6.8.0 git-diff evidence\nThe candidate contains 187 changed files (backend: 103, frontend: 45, shared: 39) but no matching release-note cards. Review the complete diff before classifying client actions: .gitignore, azure-pipeline-master.yml, azure-pipeline-pack.yml, azure-pipelines.yml, ngo-api-core/NGO/NGO.Core.API/BaseControllers/EmergenciesController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingIdeaController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingsController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/GeographiesController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/IdeasController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeGlobalController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/NonProjectsController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/OrgUnitsController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/ProgramsController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/ProjectsController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/StakeholderController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/StrategiesController.cs, ngo-api-core/NGO/NGO.Core.API/BaseControllers/TaskTemplateController.cs, ngo-api-core/NGO/NGO.Core.API/packages.lock.json, ngo-api-core/NGO/NGO.Core.Common.Tests/Attributes/BaseAutoMoqDataAttribute.cs, ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `.gitignore`, M `azure-pipeline-master.yml`, M `azure-pipeline-pack.yml`, M `azure-pipelines.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/EmergenciesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingIdeaController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FundingsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/GeographiesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/IdeasController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframeGlobalController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/NonProjectsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/OrgUnitsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ProgramsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ProjectsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/StakeholderController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/StrategiesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/TaskTemplateController.cs`, M `ngo-api-core/NGO/NGO.Core.API/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Common.Tests/Attributes/BaseAutoMoqDataAttribute.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Deployment/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.HelpDocumentationDeployment/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Infrastructure/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Task/Task.cs`, M `ngo-api-core/NGO/NGO.Core.Model/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Repositories/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Services/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.AppSettingsJsonFileMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.AzureAppSettingsMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.DependencyMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FinanceFiscalYearValueMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixAnalyseQuery/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixBudgetCalculation/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.FixPhaseNumberForTasksAddedToWorkflowByEntity/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.MetadataImport/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.MonitoringValueCorrection/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.PeriodNamesPopulation/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.PopulateLogframeDraftVersions/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetReadOnlyForSignOffDocumentsFolder/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetTaskTemplatesResourceStrings/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SetWFForEntitiesCreatedWithoutWF/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.SiteConfigurationPopulation/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.TaskTemplateApprovalStepsMigration/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingPartnerExpenditureReportings/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateExistingWorkflowInstance/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateIdeaMembers/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateLogframeGlobalResourceStrings/packages.lock.json`, M `ngo-api-core/NGO/NGO.Core.Tools.UpdateTotalBudgetRow/packages.lock.json`, M `ngo-api-core/NGO/NGO.Deployment/packages.lock.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.Core.WebJobs.Common/packages.lock.json`, M `ngo-api-core/NGO/NGO.Webjobs/NGO.WebJobs.Job/packages.lock.json`, M `ngo-api-core/NGO/NGO/packages.lock.json`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 187,
+    "unresolvedItems": []
+  }
+}

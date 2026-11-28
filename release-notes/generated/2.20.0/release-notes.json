@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "version": "2.20.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 7,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-ba484ff7b5dd",
+          "version": "2.20.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Remove itemTask.Checklist",
+          "instructionsAndNotes": "[Before Deployment] [Analyse] Remove itemTask.Checklist\n20211122_Analyse_Remove_Column_Task_Checklist.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-486a8af3f1c9",
+          "version": "2.20.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "CoreResourceStrings: Admin portal, Exchange Rates - Rename \"Exchange rate\" to \"Exchange rates\"",
+          "instructionsAndNotes": "CoreResourceStrings: Admin portal, Exchange Rates - Rename \"Exchange rate\" to \"Exchange rates\"\nDataFixes/20211025_UpdateReourceStrings.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-efa02efe8cbc",
+          "version": "2.20.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove OrgUnit/Program Finance",
+          "instructionsAndNotes": "Remove OrgUnit/Program Finance\nRemove OrgUnit/Program Finance allocation list + form + view form + allocations list, controller, service",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-367f5aaf0f02",
+          "version": "2.20.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update ShowFundingSourceInAllocation config from boolean to GenericItems with parentId: entityId, id: tabFunctionId, Active: show/hide funding source. If parentId is not set, the c",
+          "instructionsAndNotes": "Update ShowFundingSourceInAllocation config from boolean to GenericItems with parentId: entityId, id: tabFunctionId, Active: show/hide funding source. If parentId is not set, the configuration will apply to tab function of all entities.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-dc526a95a581",
+          "version": "2.20.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Run DataFixes\\20211116_FundingAllocationUpdates.sql before Deployment",
+          "instructionsAndNotes": "Run DataFixes\\20211116_FundingAllocationUpdates.sql before Deployment",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-090bb2d80935",
+          "version": "2.20.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run DataFixes\\20211124_EntityTab_Remove_Function_Announcement_EntityStatus.sql",
+          "instructionsAndNotes": "Summary page Standard box - Entity Overall Status\nRun DataFixes\\20211124_EntityTab_Remove_Function_Announcement_EntityStatus.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0c001a84b8d8",
+          "version": "2.20.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Remove attachments from any email templates",
+          "instructionsAndNotes": "Remove attachments from any email templates\nRun script \"UPDATE [dbo].[CoreEmailTemplates] SET Attachments = NULL\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-b819504b59c0",
+          "version": "2.20.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "AdminUI / Entity Configuration / Only show Folder Structure tab",
+          "instructionsAndNotes": "AdminUI / Entity Configuration / Only show Folder Structure tab\nIf in client projects, admin can see all tabs (General, Fields, Overview boxes, Browse, and Folder Structure), please add Permission Id (1804, 1805, 1806, 1807, and 1808) to admin role",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.20.0"
+    ],
+    "rawCardCount": 8,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

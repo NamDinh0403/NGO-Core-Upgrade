@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "version": "3.15.19",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 4,
+    "conditionalActions": 4,
+    "needsReviewActions": 3,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-d87e6d346045",
+          "version": "3.15.19",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check note for configuration in this card:",
+          "instructionsAndNotes": "3.15.0 / 4.0\n[S] Rating field in browse view doesn't include color property. As a result, the color can't be showed\nCheck note for configuration in this card:",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ToiK688Y"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-2776aef6f851",
+          "version": "3.15.19",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Restructure email template data model < >",
+          "instructionsAndNotes": "[L] Restructure email template data model <  >\n[After deployment] Clean the email template field: delete from CoreFieldInstanceLocations where Id = 4803",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/TMEVMZOC"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d63c346b1a0d",
+          "version": "3.15.19",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update CoreConfigurations/RestrictedGlobalRolesInViews with additional restricted roles on '99 Approvals' folder, write script like example (i.e. keep the existing config value in ",
+          "instructionsAndNotes": "- Update CoreConfigurations/RestrictedGlobalRolesInViews with additional restricted roles on '99 Approvals' folder, write script like example (i.e. keep the existing config value in your system env and then add new config like the bold text, for example, 100080 is a role ID, 113 is Signed off folder):",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-33777ad9dc36",
+          "version": "3.15.19",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add <add key=\"MessageQueueSize\" value=\"{ number} \" /> in app.settings where 1 <= number <= 32 in order to control number of concurrent message processed by web job",
+          "instructionsAndNotes": "[S] Permission web job: when ensure site permission, many messages used to update permission for each entity are sent, and many items failed: (  )\nAdd <add key=\"MessageQueueSize\" value=\"{ number} \" /> in app.settings where 1 <= number <= 32 in order to control number of concurrent message processed by web job",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/UuJ2FPm4"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-99ef815b3477",
+          "version": "3.15.19",
+          "applicability": "conditional",
+          "condition": "if the client has other condition",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run script: Datafixes/ 20231020_MigrationConditionToConfigurationForRollupRelatedTab",
+          "instructionsAndNotes": "[S][Finance/ Monitoring] Disappear when config rollup data from\n[After Deployment] Run script: Datafixes/ 20231020_MigrationConditionToConfigurationForRollupRelatedTab\nNote: Please re-check the script and update @CONFIGURATION according to the client customization if have, I.e: [{\"name\": \"typeId\", \"value\": [1]}] is the roll up conditions for entity type with id = 1, if the client has other condition, you should run command: SELECT * FROM CoreEntityTabs WHERE Conditions LIKE '%typeId%' to check and update the according script",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VKC4QRPq/3686-sfinance-monitoring-disappear-when-config-rollup-data-from"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b70a2fc99ad5",
+          "version": "3.15.19",
+          "applicability": "conditional",
+          "condition": "check if the client has a custom table based on table CoreEmailTemplates, in case yes",
+          "timing": "Before Deploy",
+          "owner": "Client Dev",
+          "action": "Noted : Please check if the client has a custom table based on table CoreEmailTemplates, in case yes, please check the script after that correct this script before run the deploy.p",
+          "instructionsAndNotes": "Noted : Please check if the client has a custom table based on table CoreEmailTemplates, in case yes, please check the script [ BeforeDeployment/20230417_SplitCoreEmailTemplateData] after that correct this script before run the deploy.ps1, because in this update, columns Subject, Body, LanguageId of CoreEmailTemplates will be moved to CoreEmailTemplateContents",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-0b9afe3e3159",
+          "version": "3.15.19",
+          "applicability": "conditional",
+          "condition": "Limit document permissions to confidential pages (CoreEntity.IsRestricted = true)",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Limit document permissions to confidential pages (CoreEntity.IsRestricted = true)",
+          "instructionsAndNotes": "Limit document permissions to confidential pages (CoreEntity.IsRestricted = true)\n<  >",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/l5l7Fuu0"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b7b3802309ae",
+          "version": "3.15.19",
+          "applicability": "conditional",
+          "condition": "- If any custom entity roles , e.g. 'Project Partner Member'/'Project Partner Responsible'/'Organization Partner Member'/'Organization Partner Member', etc. If Yes, read step 2.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If any custom entity roles , e.g. 'Project Partner Member'/'Project Partner Responsible'/'Organization Partner Member'/'Organization Partner Member', etc. If Yes, read step 2.",
+          "instructionsAndNotes": "- If any custom entity roles , e.g. 'Project Partner Member'/'Project Partner Responsible'/'Organization Partner Member'/'Organization Partner Member', etc. If Yes, read step 2.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-76582c742191",
+          "version": "3.15.19",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Please check yourself or ask PM if those found roles - which one can see the '99 Approvals' folder. If there are a few custom entity roles that prevent from viewing '99 Approvals' ",
+          "instructionsAndNotes": "- Please check yourself or ask PM if those found roles - which one can see the '99 Approvals' folder. If there are a few custom entity roles that prevent from viewing '99 Approvals' folder, read step 3.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f3d43753491d",
+          "version": "3.15.19",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "} , { \"roles\": , tabFunctionId: 113} ]",
+          "instructionsAndNotes": "[{ \"roles\": [{ \"id\": 11} ]} , { \"roles\":[{ \"id\":100080} ], tabFunctionId: 113} ]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-60ce05dff86b",
+          "version": "3.15.19",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "/ 4.0",
+          "instructionsAndNotes": "3.15.0 / 4.0\nFor core upgrading person: looks at CoreRoles table and does as following steps",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-2d73f4d5fdee",
+          "version": "3.15.19",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/UuJ2FPm4"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] Permission web job: when ensure site permission, many messages used to update permission for each entity are sent, and many items failed: (  )",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Add <add key=\"MessageQueueSize\" value=\"{ number} \" /> in app.settings where 1 <= number <= 32 in order to control number of concurrent message processed by web job"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.15.19"
+    ],
+    "rawCardCount": 11,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

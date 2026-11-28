@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "version": "8.4.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.4.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-f8788fc7ed3f",
+          "version": "8.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update Google Analytics script in Core on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[1][S] Update Google Analytics script in Core on Current sprint - Core | Trello\nRemove this from src/index.html:\n<!-- Global site tag (gtag.js) - Google Analytics -->\n< script >\nwindow.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag( 'js' , new Date ());\n</ script >",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/oRXh5Tui/5364-1s-update-google-analytics-script-in-core"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-client-core/src/index.html`"
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-fe17562da88f",
+          "version": "8.4.0",
+          "moduleScope": "1",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/oRXh5Tui/5364-1s-update-google-analytics-script-in-core"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[1][S] Update Google Analytics script in Core on Current sprint - Core | Trello",
+          "technicalSummary": "Matched key changes: M `ngo-client-core/src/index.html`",
+          "clientImpact": "Action applies during the upgrade. Update Google Analytics script in Core on Current sprint - Core | Trello"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "8.4.0"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 119,
+    "unresolvedItems": []
+  }
+}

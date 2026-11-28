@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "version": "2.19.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 4,
+    "conditionalActions": 1,
+    "needsReviewActions": 2,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-c53fd695b3dd",
+          "version": "2.19.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to Azure configuration with key and value: <add key=\"sp:WorkflowBypassQueue\" value=\"workflowbypass\"/>",
+          "instructionsAndNotes": "- Add to Azure configuration with key and value: <add key=\"sp:WorkflowBypassQueue\" value=\"workflowbypass\"/>",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-34dbc740d6f0",
+          "version": "2.19.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to *.yml config file to deploy web job BypassPhaseManagement",
+          "instructionsAndNotes": "- Add to *.yml config file to deploy web job BypassPhaseManagement",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-a2fa748f6379",
+          "version": "2.19.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run to correct resource string DataFixes/20211004_WorkflowByPassResourceUpdates.sql",
+          "instructionsAndNotes": "- Run to correct resource string DataFixes/20211004_WorkflowByPassResourceUpdates.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-06a2f3dcc8d2",
+          "version": "2.19.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Document: add characteristic to fied FileLeafRef to open with app / online by global configuration",
+          "instructionsAndNotes": "Document: add characteristic to fied FileLeafRef to open with app / online by global configuration\n[After deployment]: DataFixes/20211109_Document_link_Open_Characteristics.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-712237028549",
+          "version": "2.19.0",
+          "applicability": "conditional",
+          "condition": "And also add \"canActivate: ,\" to routes in customize route services",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Access denied page:",
+          "instructionsAndNotes": "Access denied page:\nRecheck all override route services with Core to add \"UserAuthGuard\" as the 1st one to \"canActivate\" of routes\nAnd also add \"canActivate: [UserAuthGuard],\" to routes in customize route services",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-e83fd74e2f00",
+          "version": "2.19.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Gantt Chart in Task",
+          "instructionsAndNotes": "Gantt Chart in Task\n+ Add faStream , faList to @fortawesome/pro-regular-svg-icons in app.module.ts",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-cb094c7aa5d4",
+          "version": "2.19.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Workflow / Bypass to later phase",
+          "instructionsAndNotes": "Workflow / Bypass to later phase",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-06a2f3dcc8d2",
+          "version": "2.19.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Document: add characteristic to fied FileLeafRef to open with app / online by global configuration",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Document: add characteristic to fied FileLeafRef to open with app / online by global configuration"
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.19.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

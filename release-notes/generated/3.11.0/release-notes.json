@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "version": "3.11.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 8,
+    "conditionalActions": 2,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-c315c98c9d8f",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Power BI Overview boxes should load data from the admin ui, not the box instance <",
+          "instructionsAndNotes": "Power BI Overview boxes should load data from the admin ui, not the box instance <\n[ After deployment ]: 20221227_ClearPowerBIOverviewBoxInstances.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/H5tNGqhL"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-85906b67a7ef",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "DataFixes/20230105_RemoveAutoPopulateProjectEndDate.sql",
+          "instructionsAndNotes": "- [ After Deployment ] DataFixes/20230105_RemoveAutoPopulateProjectEndDate.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-186950fbfb6a",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Check with PM if they really want to remove this characteristic : = '{ \"autoFillDateFieldRefId\": \"460\", \"autoFillDateMonthVal\": \"6\" } ' is using for auto populate end date after 6 ",
+          "instructionsAndNotes": "- Check with PM if they really want to remove this characteristic : [Characteristic] = '{ \"autoFillDateFieldRefId\": \"460\", \"autoFillDateMonthVal\": \"6\" } ' is using for auto populate end date after 6 months compared to start date when create a new project",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b749e1fdd4cc",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "DependentIds have been removed when updating item in Manage metadata",
+          "instructionsAndNotes": "[S] DependentIds have been removed when updating item in Manage metadata\n[After deployment]: 20221227_UpdateDependentListId.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/PUGiwFy2"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e87028c45f96",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "The message modal is display wrong",
+          "instructionsAndNotes": "[Bank Account] The message modal is display wrong\n[After deployment]: 20230104_Bank_account_name_in_message.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/RXUm6Nlt"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e40757530054",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Skip Page when Save Query",
+          "instructionsAndNotes": "[T] [Analyses] Skip Page when Save Query\n[After deployment]: 20230105_Analyse_UpdateSaveQuery.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/EqXZ0KHb"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-852d99910efc",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Log/Log2 has an empty list of default fields in the dropdown",
+          "instructionsAndNotes": "[Admin UI / OverviewBox] Log/Log2 has an empty list of default fields in the dropdown\n[After deployment]: 20220116_UpdateLogBoxSettings.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ktwBiLZD"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-4de5a40dd01c",
+          "version": "3.11.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Missing data for contact fields",
+          "instructionsAndNotes": "[Analyse] Missing data for contact fields\n[After deployment]: 20230113_UpdateContactSqlMapping.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/JwVSXz5l"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-0c4da48fd2d5",
+          "version": "3.11.0",
+          "applicability": "conditional",
+          "condition": "Optional ] DataFixes/20230106_RemoveAutoPopulateProjectEndDateFromFieldLocation.sql",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "DataFixes/20230106_RemoveAutoPopulateProjectEndDateFromFieldLocation.sql",
+          "instructionsAndNotes": "- [ After Deployment - Optional ] DataFixes/20230106_RemoveAutoPopulateProjectEndDateFromFieldLocation.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d43f7bd207c6",
+          "version": "3.11.0",
+          "applicability": "conditional",
+          "condition": "Optional] Check before update characteristics",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Check before update characteristics: 20230113_UpdateListFilterSettings_Characteristics.sql",
+          "instructionsAndNotes": "[S] Characteristic of list filter field is not applied, always get from Field instance :\n[After Deployment - Optional] Check before update characteristics: 20230113_UpdateListFilterSettings_Characteristics.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/oHn10pRV"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-1b4ab6c06530",
+          "version": "3.11.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Project End date auto populating with no ask to do this",
+          "instructionsAndNotes": "[T] Project End date auto populating with no ask to do this",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/KxtrpdNm"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-c3ddc483ff16",
+          "version": "3.11.0",
+          "moduleScope": "Bank Account",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/RXUm6Nlt"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Bank Account] The message modal is display wrong",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "The message modal is display wrong"
+        },
+        {
+          "id": "bugfix-9041a0cb529c",
+          "version": "3.11.0",
+          "moduleScope": "Analyse",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/JwVSXz5l"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Analyse] Missing data for contact fields",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Missing data for contact fields"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.11.0"
+    ],
+    "rawCardCount": 11,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

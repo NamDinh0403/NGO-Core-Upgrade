@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "8.7.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/8.7.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-a0e9146d170b",
+          "version": "8.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Review release 8.7.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 8.7.0 git-diff evidence\nThe candidate contains 1161 changed files (backend: 731, frontend: 81, shared: 349) but no matching release-note cards. Review the complete diff before classifying client actions: ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs, ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs, ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs, ngo-api-core/NGO/NGO.Core.Deployment/CoreDeployment.cs, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250701_InitIdeaMembers.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260616_RemoveUnusedLogframe2FieldDependency.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260813_RenameOldCoreChangesIndex.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldDependencyDefinitions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/05 InitUserPermission.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/06 InitListConfiguration.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframe2IndicatorTrackers.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Views/03_14 AnalyseChange.sql, ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj, ngo-api-core/NGO/NGO.Core.Deployment/OutlookAddin/OutlookAddin-Template.xml",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Auth/GraphContextProvider.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Extensions/ObjectExtensions.cs`, M `ngo-api-core/NGO/NGO.Core.Deployment/CoreDeployment.cs`, M `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20250701_InitIdeaMembers.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260616_RemoveUnusedLogframe2FieldDependency.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/BeforeDeployment/20260813_RenameOldCoreChangesIndex.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/02 InitResourceString_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_01 FieldDefinitions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldDependencyDefinitions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/05 InitUserPermission.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/06 InitListConfiguration.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/StoreProcedures/GetLogframe2IndicatorTrackers.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/Views/03_14 AnalyseChange.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj`, M `ngo-api-core/NGO/NGO.Core.Deployment/OutlookAddin/OutlookAddin-Template.xml`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 1161,
+    "unresolvedItems": []
+  }
+}

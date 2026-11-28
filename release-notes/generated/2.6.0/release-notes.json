@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "version": "2.6.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 4,
+    "conditionalActions": 0,
+    "needsReviewActions": 10,
+    "newFeatures": 1,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-cb7fd06e1cae",
+          "version": "2.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add below attribute to ClientContext (C#)",
+          "instructionsAndNotes": "Restricted entities\nAdd below attribute to ClientContext (C#)\n[DbConfigurationType(typeof(SessionContextConfiguration))]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bb6c250b92e9",
+          "version": "2.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Admin task batch",
+          "instructionsAndNotes": "Admin task batch\nNew web job NGO.WebJobs.TaskBatchManagement added. Add step to unzip to build-pipeline-api.yml:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-72071c504adb",
+          "version": "2.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Run the data fix script for core & all client projects: DataFixes\\20201110_Financial_Period_Enddate.sql",
+          "instructionsAndNotes": "Financial periods : update the end date of end period (should be the last date of month)\nRun the data fix script for core & all client projects: DataFixes\\20201110_Financial_Period_Enddate.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-c787620e8da7",
+          "version": "2.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts:",
+          "instructionsAndNotes": "Map\nAdd the following line to environment.ts and environment.prod.ts:\nmap: 'api/core/map',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-e39233a7672e",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "For entity framework raw SQL query, all store procedures should be executed by adding the prefix ' exec ' (see below as example)",
+          "instructionsAndNotes": "For entity framework raw SQL query, all store procedures should be executed by adding the prefix ' exec ' (see below as example)\n_context.Database.SqlQuery<int>(\"exec GetNextPaymentNo\").SingleOrDefault(); ￼",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-8198e72d023a",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "task: ExtractFiles@1",
+          "instructionsAndNotes": "- task: ExtractFiles@1",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d47237c3c62f",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "displayName: 'extract TaskBatchManagement'",
+          "instructionsAndNotes": "displayName: 'extract TaskBatchManagement'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-52d1d480b474",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "inputs:",
+          "instructionsAndNotes": "inputs:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-76ad60c30424",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "archiveFilePatterns: '**\\NGO.Deployment\\**\\TaskBatchManagement.zip'",
+          "instructionsAndNotes": "archiveFilePatterns: '**\\NGO.Deployment\\**\\TaskBatchManagement.zip'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f514975728ce",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "destinationFolder: '$(Build.ArtifactStagingDirectory)/WebJobs/app_data/Jobs/Continuous/TaskBatchManagement'",
+          "instructionsAndNotes": "destinationFolder: '$(Build.ArtifactStagingDirectory)/WebJobs/app_data/Jobs/Continuous/TaskBatchManagement'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-bb6440367fc6",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "faChevronLeft,",
+          "instructionsAndNotes": "- faChevronLeft,",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1d5f1fe0b328",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "faChevronRight",
+          "instructionsAndNotes": "- faChevronRight",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-59a2d1f3a83c",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import the following in app.module.ts:",
+          "instructionsAndNotes": "Import the following in app.module.ts:\nMapModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ce4e188f54e4",
+          "version": "2.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Client project: Import awesome font icons in app module",
+          "instructionsAndNotes": "Client project: Import awesome font icons in app module",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-a571039bf0b4",
+          "version": "2.6.0",
+          "moduleScope": "Frontend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Web configuration: add config setting \"sp:TaskBatchQueue\" to API Azure service when deploying to each environment.",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.6.0"
+    ],
+    "rawCardCount": 15,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

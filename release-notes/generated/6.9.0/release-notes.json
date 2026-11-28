@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "version": "6.9.0",
+  "status": "DRAFT / IN PROGRESS",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/6.9.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-80aed86bf65c",
+          "version": "6.9.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Review release 6.9.0 git-diff evidence",
+          "instructionsAndNotes": "Review release 6.9.0 git-diff evidence\nThe candidate contains 44 changed files (backend: 24, frontend: 8, shared: 12) but no matching release-note cards. Review the complete diff before classifying client actions: ngo-api-core/NGO/NGO.Core.API/BaseControllers/ExchangeRateController.cs, ngo-api-core/NGO/NGO.Core.API/Controllers/ExchangeRateController.cs, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20251007_AllowActivateBypassAndRepeatPhaseForWorkflow.sql, ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20251021_RemoveRedundantFieldInstance.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/01_01 InitFieldOptions_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/01_02 InitFieldOptions.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_07 EntityTabs_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations_insert_only.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/05 InitUserPermission.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/CreateBrowseTVFs.sql, ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeedTestData/05 InitUserPermission_test_data.sql, ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj, ngo-api-core/NGO/NGO.Core.Infrastructure/CommonDIRegistrations.cs, ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/FundingAllocation.cs, ngo-api-core/NGO/NGO.Core.Repositories/AnalyseConfigurationRepository.cs, ngo-api-core/NGO/NGO.Core.Repositories/BaseConfigurationRepository.cs, ngo-api-core/NGO/NGO.Core.Repositories/ExchangeRateRepository.cs",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "structured-metadata",
+          "sourceSection": "git-diff-only",
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ExchangeRateController.cs`, M `ngo-api-core/NGO/NGO.Core.API/Controllers/ExchangeRateController.cs`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20251007_AllowActivateBypassAndRepeatPhaseForWorkflow.sql`, A `ngo-api-core/NGO/NGO.Core.Deployment/DataFixes/AfterDeployment/20251021_RemoveRedundantFieldInstance.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/01_01 InitFieldOptions_insert_only.sql`, D `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/01_02 InitFieldOptions.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_07 EntityTabs_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_09 FieldInstances.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/04_10 FieldInstanceLocations_insert_only.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/05 InitUserPermission.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/08 InitAnalyse.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeed/CreateBrowseTVFs.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/DatabaseSeedTestData/05 InitUserPermission_test_data.sql`, M `ngo-api-core/NGO/NGO.Core.Deployment/NGO.Core.Deployment.csproj`, M `ngo-api-core/NGO/NGO.Core.Infrastructure/CommonDIRegistrations.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Domain/Finance/FundingAllocation.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/AnalyseConfigurationRepository.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/BaseConfigurationRepository.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/ExchangeRateRepository.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "git-diff-only"
+    ],
+    "rawCardCount": 0,
+    "gitDiffFileCount": 44,
+    "unresolvedItems": []
+  }
+}

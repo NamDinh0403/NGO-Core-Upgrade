@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "version": "9.4.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/9.4.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 2,
+    "needsReviewActions": 4,
+    "newFeatures": 3,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-37765a119690",
+          "version": "9.4.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run NGO.Core.Tools.CompareSiteCount. See details in file README.md of PR ﷟HYPERLINK \" request 39207: Update README of tool NGO.Core.Tools.CompareSiteCount - Repos request 39207: Up",
+          "instructionsAndNotes": "- [For deployment person] [After deployment] Run NGO.Core.Tools.CompareSiteCount. See details in file README.md of PR ﷟HYPERLINK \" request 39207: Update README of tool NGO.Core.Tools.CompareSiteCount - Repos  request 39207: Update README of tool NGO.Core.Tools.CompareSiteCount - Repos",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/39207"
+            },
+            {
+              "label": "Ref",
+              "value": "http://Pull"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Tools.CompareSiteCount/NGO.Core.Tools.CompareSiteCount.csproj`, A `ngo-api-core/NGO/NGO.Core.Tools.CompareSiteCount/README.md`"
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-3c8c181bce00",
+          "version": "9.4.0",
+          "applicability": "conditional",
+          "condition": "For clients in the Support & Maintenance phase, this will be handled as regular maintenance under this card",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "For clients in the Support & Maintenance phase, this will be handled as regular maintenance under this card. ﷟HYPERLINK \"",
+          "instructionsAndNotes": "- For clients in the Support & Maintenance phase, this will be handled as regular maintenance under this card. ﷟HYPERLINK \"",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/pyza1qZl/"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 93, frontend: 52, shared: 33); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`."
+        },
+        {
+          "id": "action-9c7719a36feb",
+          "version": "9.4.0",
+          "applicability": "conditional",
+          "condition": "check if they should be updated to ] instead",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Idea Task - Reassign: sent emails should be more precise on Current sprint - Core | Trello",
+          "instructionsAndNotes": "[4][S] Idea Task - Reassign: sent emails should be more precise on Current sprint - Core | Trello\nIf client projects use custom email templates with tokens like [[TaskFlow.Submitter.Name]] , [[FundingIdea.CreatedBy.Name]] , or [[Idea.CreatedBy.Name]] , please check if they should be updated to [[TaskActorName]] instead.\nScrip to check: select * from CoreEmailTemplateContents where Body like '%TaskFlow.Submitter.Name%' or Body like '%FundingIdea.CreatedBy.Name%' or Body like '%Idea.CreatedBy.Name%' and TemplateId > 49999 (Replace TemplateId by custom Id in client, default is 50000 so TemplateId > 49999)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/9s2Srmf1/5508-4s-idea-task-reassign-sent-emails-should-be-more-precise"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Task/Task.cs`"
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-abeddd339ea9",
+          "version": "9.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If you want to show Inactive user from UserOptions, put this flag to CoreAnalyzeColumns' FieldCharacteristic",
+          "instructionsAndNotes": "If you want to show Inactive user from UserOptions, put this flag to CoreAnalyzeColumns' FieldCharacteristic\nFieldCharacteristic . isAlwaysShowInactive = true",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/WP3RDffZ/5605-analyse-and-inactive-users"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 93, frontend: 52, shared: 33); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`."
+        },
+        {
+          "id": "action-c94dff0bb929",
+          "version": "9.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "﷟HYPERLINK \" Import tool and site collections on Current sprint - Core | Trello Import tool and site collections on Current sprint - Core | Trello",
+          "instructionsAndNotes": "﷟HYPERLINK \" Import tool and site collections on Current sprint - Core | Trello  Import tool and site collections on Current sprint - Core | Trello\n[2026-Nov-04]",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/ldhZv7CQ/5659-m-import-tool-and-site-collections"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 93, frontend: 52, shared: 33); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`."
+        },
+        {
+          "id": "action-4f1103b25827",
+          "version": "9.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Review release note",
+          "instructionsAndNotes": "Review release note",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/dYcw3tZP/5652-s-analyse-support-more-field-characteristic-for-configoptions"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "source-label-without-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 93, frontend: 52, shared: 33); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`."
+        },
+        {
+          "id": "action-1d945a220ba8",
+          "version": "9.4.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "If you want to show Inactive user from ConfigOptionsMapper, put this flag to CoreAnalyzeColumns' FieldCharacteristic",
+          "instructionsAndNotes": "- If you want to show Inactive user from ConfigOptionsMapper, put this flag to CoreAnalyzeColumns' FieldCharacteristic\nFieldCharacteristic . isAlwaysShowInactive = true",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories/Mapping/OptionsMapper/ConfigOptionsMapper.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-caca1b62cf33",
+          "version": "9.4.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "For new and implementation clients, please follow the note below:",
+          "technicalSummary": "No deterministic note-to-file match. Release diff covers 178 files (backend: 93, frontend: 52, shared: 33); representative changes: M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/ConfigurationController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinanceMonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/Logframes2Controller.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/MonitoringController.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/DbConfigurationKeys.cs`, M `ngo-api-core/NGO/NGO.Core.Common/Constants/SharePoint.cs`.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        },
+        {
+          "id": "feature-7b108255108c",
+          "version": "9.4.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [
+            {
+              "label": "PR",
+              "value": "https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/39207"
+            },
+            {
+              "label": "Ref",
+              "value": "http://Pull"
+            }
+          ],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "[For deployment person] [After deployment] Run NGO.Core.Tools.CompareSiteCount. See details in file README.md of PR ﷟HYPERLINK \" request 39207: Update README of tool NGO.Core.Tools.CompareSiteCount - Repos  request 39207: Update README of tool NGO.Core.Tools.CompareSiteCount - Repos",
+          "technicalSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Tools.CompareSiteCount/NGO.Core.Tools.CompareSiteCount.csproj`, A `ngo-api-core/NGO/NGO.Core.Tools.CompareSiteCount/README.md`",
+          "clientImpact": "Action applies during the upgrade. Run NGO.Core.Tools.CompareSiteCount. See details in file README.md of PR ﷟HYPERLINK \" request 39207: Update README of tool NGO.Core.Tools.CompareSiteCount - Repos request 39207: Up"
+        },
+        {
+          "id": "feature-c3eb5aba5877",
+          "version": "9.4.0",
+          "moduleScope": "Backend",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "If you want to enable Readonly options of ConfigOptionsMapper, put this flag to CoreAnalyzeColumns' FieldCharacteristic",
+          "technicalSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Repositories/Mapping/OptionsMapper/ConfigOptionsMapper.cs`",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "9.4.0"
+    ],
+    "rawCardCount": 9,
+    "gitDiffFileCount": 178,
+    "unresolvedItems": []
+  }
+}

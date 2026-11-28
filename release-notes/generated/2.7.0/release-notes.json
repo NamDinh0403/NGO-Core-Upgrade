@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "version": "2.7.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 3,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-8d7e74681a16",
+          "version": "2.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Finance Budget rows grouped by fields",
+          "instructionsAndNotes": "Finance Budget rows grouped by fields\nWhen the JSON format for Budget settings and Partner expenditure report settings is changed, Please run this SQL script to correct it\nThis file is located in DataFixes folder 20201120_Financial_Budget_Grouped_By_Fields.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-afd50824fd49",
+          "version": "2.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts:",
+          "instructionsAndNotes": "Announcements\nAdd the following line to environment.ts and environment.prod.ts:\nannouncement: 'api/core/announcement',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-26cc92d933e9",
+          "version": "2.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts:",
+          "instructionsAndNotes": "Generic summary/overview boxes\nAdd the following line to environment.ts and environment.prod.ts:\ngenericOverviewBox: 'api/core',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-d7b4205a4790",
+          "version": "2.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Entity references to sub entity (e.g. funding has contact in form)",
+          "instructionsAndNotes": "Entity references to sub entity (e.g. funding has contact in form)\nTo generate correct browse view, it is necessary to add information of tab definition id / tab function id of sub entity\nFor example: Funding has 2 contacts field in form\nContact 1 mapping SQL: { Type: 18, RelId: 4, Alias: \"Contact\", \"RelTable\": { \"TableName\": \"CoreContacts\", \"NameCol\" : \"FirstName\", \"TabDefinitionId\": 5} }\nContact 2 mapping SQL: { Type: 18, RelId: 5, Alias: \"Contact2\", \"RelTable\": { \"TableName\": \"CoreContacts\", \"NameCol\" : \"FirstName\", \"TabDefinitionId\": 5} }",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f97b2e3329a1",
+          "version": "2.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import the following in app.module.ts:",
+          "instructionsAndNotes": "Import the following in app.module.ts:\nAnnouncementModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-810ca2261a33",
+          "version": "2.7.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "import the following in app.module.ts:",
+          "instructionsAndNotes": "import the following in app.module.ts:\nGenericOverviewBoxModule",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.7.0"
+    ],
+    "rawCardCount": 6,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

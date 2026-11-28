@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "version": "4.4.1",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 0,
+    "conditionalActions": 1,
+    "needsReviewActions": 0,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [],
+      "conditionalActions": [
+        {
+          "id": "action-de25699242ce",
+          "version": "4.4.1",
+          "applicability": "conditional",
+          "condition": "if the client has other condition",
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Run script: Datafixes/ 20231020_MigrationConditionToConfigurationForRollupRelatedTab",
+          "instructionsAndNotes": "[S][Finance/ Monitoring] Disappear when config rollup data from\n[After Deployment] Run script: Datafixes/ 20231020_MigrationConditionToConfigurationForRollupRelatedTab\nNote: Please re-check the script and update @CONFIGURATION according to the client customization if have, I.e: [{\"name\": \"typeId\", \"value\": [1]}] is the roll up conditions for entity type with id = 1, if the client has other condition, you should run command: SELECT * FROM CoreEntityTabs WHERE Conditions LIKE '%typeId%' to check and update the according script",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/VKC4QRPq/3686-sfinance-monitoring-disappear-when-config-rollup-data-from"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "4.4.1"
+    ],
+    "rawCardCount": 1,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "version": "5.1.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    },
+    {
+      "type": "git-diff",
+      "label": "Candidate record",
+      "value": "ingest/knowledge/candidates/releases/5.1.0.json"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 1,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-7814638b7b60",
+          "version": "5.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Update CustomQueue in client project",
+          "instructionsAndNotes": "Updates to Azure storage/queues packages\nPlease check any custom WebJob code that uses the function \" JsonTo64BaseString\" and replace with \"ToJsonBytes\".\nUpdate CustomQueue in client project\nRemove all the code in Queue Class, change the AzureBaseStorage to QueueBase, IQueue ( if normal queue) or QueueBaseWithFallback, IQueueWithFallback if it is a blob queue",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Change.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Change.cs`"
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-8eb8ac0161a4",
+          "version": "5.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Remove resource string module Active flag",
+          "instructionsAndNotes": "[S] Remove resource string module Active flag\n[S] Remove resource string module Active flag on Current sprint - Core | Trello\n[Before deployments] Check scripts if using Active flag in CoreResourceStringModules and remove it.",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/XyjiGV0t/3938-s-remove-resource-string-module-active-flag?filter=resource"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "Matched key changes: A `ngo-api-core/NGO/NGO.Core.Model/Enums/ResourceStringModule.cs`, M `ngo-api-core/NGO/NGO.Core.Repositories/DataModel/Configuration/CoreResourceStringModule.cs`"
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "5.1.0"
+    ],
+    "rawCardCount": 2,
+    "gitDiffFileCount": 391,
+    "unresolvedItems": []
+  }
+}

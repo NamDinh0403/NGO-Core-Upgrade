@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "version": "3.7.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 6,
+    "conditionalActions": 0,
+    "needsReviewActions": 0,
+    "newFeatures": 1,
+    "bugFixes": 2
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-18a8a60c70ce",
+          "version": "3.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "<",
+          "instructionsAndNotes": "<\n[After deployment]: DataFixes/ 20220921_RemoveWrongTabFunctionForProgramMonitoring.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/tNHvm870"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3de3e7d555a9",
+          "version": "3.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Task templates: Typo in default templates",
+          "instructionsAndNotes": "Card: [T] Task templates: Typo in default templates\n[T] Task templates: Typo in default templates on Current sprint - Core | Trello\n[After deployment]: DataFixes/20221923_UpdateResourceStrings_Beneficiary.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/lIsG7uBe/2714-t-task-templates-typo-in-default-templates"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-79e3a2a41fbf",
+          "version": "3.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Replace the last line in SeedDb.ps1 with:",
+          "instructionsAndNotes": "Card: [S] Deployment: Make SQL errors in deployment cause the deployment to fail\nReplace the last line in SeedDb.ps1 with:\nGet-ChildItem -Path $PSScriptRoot -Recurse -Filter \"*.sql\" | sort FullName | foreach { Write-Output 'Running script: ' $_.FullName; Invoke-Sqlcmd -ConnectionString \"$CoreContextConnectionString\" -InputFile $_.FullName -Verbose -ErrorAction Stop }\n==> Must copy from Core ( alot of hidden space after the { and } . If you copy from here remember to remove those spaces)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/GcZeUV9Y"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6b6ea6c97e06",
+          "version": "3.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Incorrect default responsible person when manually creating a task from task template < >",
+          "instructionsAndNotes": "Card: [T][Task] Incorrect default responsible person when manually creating a task from task template <  >\n[After deployment]: DataFixes/20221003_UpdateResourceStringForDefaultResponsiblePerson.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/J3i6pbrb"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-ab66ac9fb839",
+          "version": "3.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Summary, Risks box: Pop-up is empty again when clicking on a number < >",
+          "instructionsAndNotes": "Card: [S] Summary, Risks box: Pop-up is empty again when clicking on a number <  >\n[After deployment]: DataFixes/20221006_UpdateRiskSummaryForm.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/bWadZZc6"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e83f45cabc6c",
+          "version": "3.7.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Card: Documents, Limited permissions, can't select \"Restricted users\" in View or Edit - is this by design? < >",
+          "instructionsAndNotes": "Card: [S] Documents, Limited permissions, can't select \"Restricted users\" in View or Edit - is this by design? <  >\n[After deployment]: 20221012_UpdatePermissionRoleNameInLimitedPermision .sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/4AvOpuum"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": []
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-5943bd6d4a5d",
+          "version": "3.7.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Card: [M] Finance, Monitoring tab: Add export to excel for budget vs expenditure table",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-86a0735d9c2c",
+          "version": "3.7.0",
+          "moduleScope": "Task",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/J3i6pbrb"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Card: [T][Task] Incorrect default responsible person when manually creating a task from task template <  >",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Card: Incorrect default responsible person when manually creating a task from task template < >"
+        },
+        {
+          "id": "bugfix-eaffaf3c67bd",
+          "version": "3.7.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/4AvOpuum"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Card: [S] Documents, Limited permissions, can't select \"Restricted users\" in View or Edit - is this by design? <  >",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Card: Documents, Limited permissions, can't select \"Restricted users\" in View or Edit - is this by design? < >"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.7.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

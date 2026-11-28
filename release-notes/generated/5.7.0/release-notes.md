@@ -1,0 +1,66 @@
+# NGO Core 5.7.0 Release Notes
+
+- **Version:** 5.7.0
+- **Status:** RELEASED
+- **Release Date:** Not specified
+- **Source Refs:** [OneNote export](docs/onenote-core-release-notes.html), [Candidate record](ingest/knowledge/candidates/releases/5.7.0.json)
+- **Quick Summary:** Mandatory Actions **14** | Conditional Actions **2** | New Features **6** | Bug Fixes **1** | Needs Review **10**
+
+## Section A - Upgrade & Deployment Guide (Actionable)
+
+### Table 1: Mandatory Actions (Default - Run for ALL Clients)
+
+| Tool / Action | Timing (Before Deploy / During Upgrade / After Deploy) | Owner (Client Dev / Deployer) | Instructions & Notes | Card / PR |
+| --- | --- | --- | --- | --- |
+| Update nuget packages | During Upgrade | Client Dev | Update nuget packages<br>[For upgrade person]<br>Update build-pipleine-api.yml:<br>Change the li ne: arguments : 'install --global dotnet-ef --version 8.0.3'<br>To : arguments : 'install --global dotnet-ef --version 8.0.7' | [Card](https://trello.com/c/mr3DMhKn/4455-update-nuget-packages) |
+| Delete the User Permissions in the list (tick the User Permissions and select 'Remove User Permission'), except for the Permission SharePoint App. | During Upgrade | Client Dev | - Delete the User Permissions in the list (tick the User Permissions and select 'Remove User Permission'), except for the Permission SharePoint App. | - |
+| Check and add characteristic: " IsFilteredByName": true if current phase filter fields and field instance fields don't have this characteristic (fieldDefinitionId: 63) | During Upgrade | Client Dev | [Admin/ Entities filter] Current Phase should get the CurrentPhaseName of each entity on Current sprint - Core \| Trello<br>Check and add characteristic: " IsFilteredByName": true if current phase filter fields and field instance fields don't have this characteristic (fieldDefinitionId: 63) | [Card](https://trello.com/c/xObuv7fv/4028-admin-entities-filter-current-phase-should-get-the-currentphasename-of-each-entity) |
+| Update env.config.json File: | During Upgrade | Client Dev | - Update env.config.json File: | - |
+| Add the 'logout-success' string as a postfix to the postLogoutRedirectUri . For example: | During Upgrade | Client Dev | - Add the 'logout-success' string as a postfix to the postLogoutRedirectUri . For example: | - |
+| Update src/app/app-route.service.ts File: | During Upgrade | Client Dev | - Update src/app/app-route.service.ts File: | - |
+| Add the following after the path 'unauthorized': | During Upgrade | Client Dev | - Add the following after the path 'unauthorized': | - |
+| Add the 'logout-success' string as a postfix to the postLogoutRedirectUri in the Release variable. For example, change: | During Upgrade | Client Dev | - Add the 'logout-success' string as a postfix to the postLogoutRedirectUri in the Release variable. For example, change: | - |
+| Update appsettings.json Files: | During Upgrade | Client Dev | - Update appsettings.json Files: | - |
+| Update Job appsettings.json Files: | During Upgrade | Client Dev | - Update Job appsettings.json Files: | - |
+| Update Azure AppService: | During Upgrade | Client Dev | - Update Azure AppService: | - |
+| Add the following keys: | During Upgrade | Client Dev | - Add the following keys: | - |
+| Update Azure Portal: | During Upgrade | Client Dev | - Update Azure Portal: | - |
+| Add a variable with the key Core:MaximumUsers and the value can be obtained from the appsettings.json in the API. | During Upgrade | Client Dev | - Add a variable with the key Core:MaximumUsers and the value can be obtained from the appsettings.json in the API. | - |
+
+### Table 2: Conditional Actions (Client-Specific - Run ONLY if Condition Matches)
+
+> Rows marked **Needs Review** are intentionally retained, but must not be treated as mandatory or skippable until an owner confirms applicability.
+
+| Applicability Condition (When to Run) | Tool / Action | Timing | Owner | Instructions & Notes | Card / PR |
+| --- | --- | --- | --- | --- | --- |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | Before Deployment: | Before Deploy | Deployer | - Before Deployment: | - |
+| If client custom CoreAnalyseLogframeReporting | Add "Is latest reported period" to Logframe ITT analyse on Current sprint - Core \| Trello | During Upgrade | Client Dev | [S] Add "Is latest reported period" to Logframe ITT analyse on Current sprint - Core \| Trello<br>If client custom CoreAnalyseLogframeReporting, pls add rpt.IsLatestPeriod (refer to this PR ) | [Card](https://trello.com/c/evTZgp64/4356-s-add-is-latest-reported-period-to-logframe-itt-analyse)<br>[PR](https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/24063) |
+| - Add a configuration with the key MaximumUsers. This config defines the maximum number of active user licenses that can be in the system. Depending on the customer's requirements (if any), if there are no requirements, the default value will be 0 (i.e., no li | Add a configuration with the key MaximumUsers. This config defines the maximum number of active user licenses that can be in the system. Depending on the customer's requirements (i | During Upgrade | Client Dev | - Add a configuration with the key MaximumUsers. This config defines the maximum number of active user licenses that can be in the system. Depending on the customer's requirements (if any), if there are no requirements, the default value will be 0 (i.e., no limit, as it currently is). | - |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | Review tagged release instruction | During Upgrade | Deployer | [For Deployment Person] | - |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | Correct Permission Groups for Funding Ideas: | During Upgrade | Client Dev | - Correct Permission Groups for Funding Ideas: | - |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | Go to the link: | During Upgrade | Client Dev | - Go to the link: | [Ref](https://ngodev.sharepoint.com/sites/xxxxx/fundingIdeas/_layouts/15/user.aspx) |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | IMPORTANT: Replace 'xxxxx' with the corresponding site collection for the environment. | During Upgrade | Client Dev | - IMPORTANT: Replace 'xxxxx' with the corresponding site collection for the environment. | - |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | Create a page about Signing out of NGO Online on Current sprint - Core \| Trello | During Upgrade | Client Dev | [S] Create a page about Signing out of NGO Online on Current sprint - Core \| Trello | [Card](https://trello.com/c/ZzwEJax0/4431-s-create-a-page-about-signing-out-of-ngo-online) |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | "CalculatedFinancialValuesQueue": "calculatedfinancialvaluesqueue" ￼ | During Upgrade | Client Dev | - "CalculatedFinancialValuesQueue": "calculatedfinancialvaluesqueue" ￼ | - |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | "CalculatedFinancialValuesCurrentYearTotalSchedule": "0 0 1 * *" ￼ | During Upgrade | Client Dev | - "CalculatedFinancialValuesCurrentYearTotalSchedule": "0 0 1 * *" ￼ | - |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | "Core:Queue:CalculatedFinancialValuesQueue": "calculatedfinancialvaluesqueue", | During Upgrade | Client Dev | - "Core:Queue:CalculatedFinancialValuesQueue": "calculatedfinancialvaluesqueue", | - |
+| ⚠ Needs Review - Confirm whether every client or only matching clients must run this item. | "Core:CalculatedFinancialValuesCurrentYearTotalSchedule": "0 0 1 * *" | During Upgrade | Client Dev | - "Core:CalculatedFinancialValuesCurrentYearTotalSchedule": "0 0 1 * *" | - |
+
+## Section B - Release Tracking & Lookup (Features & Bug Fixes)
+
+### Table 3: New Features & Enhancements
+
+| Module / Scope | Feature / Change | Technical Summary (from Git Diff) | Client Impact | Card / PR |
+| --- | --- | --- | --- | --- |
+| Backend | [S] Add "Is latest reported period" to Logframe ITT analyse on Current sprint - Core \| Trello | Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Logframe/LogframeReporting.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Logframe/LogframeReporting.cs` | If client custom CoreAnalyseLogframeReporting Add "Is latest reported period" to Logframe ITT analyse on Current sprint - Core \| Trello | [Card](https://trello.com/c/evTZgp64/4356-s-add-is-latest-reported-period-to-logframe-itt-analyse)<br>[PR](https://dev.azure.com/preciofishbone/NGO%20Online/_git/ngo-online-core/pullrequest/24063) |
+| For upgrade person | Update nuget packages | No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`. | Action applies during the upgrade. Update nuget packages | [Card](https://trello.com/c/mr3DMhKn/4455-update-nuget-packages) |
+| FND17 / PRJ11 | [M][FND17][PRJ11] Add calculated browse list columns | No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`. | No explicit client action was stated in the release source. | [Card](https://trello.com/c/pnZfoAiN/4350-mfnd17prj11-add-calculated-browse-list-columns) |
+| Shared / Cross-track | Inside the Queue section, add: | No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`. | No explicit client action was stated in the release source. | - |
+| Shared / Cross-track | Inside the Core section, add: | No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`. | No explicit client action was stated in the release source. | - |
+| Shared / Cross-track | [M] Users & Roles - have a limit on number of users that can be added to the system on Current sprint - Core \| Trello | No deterministic note-to-file match. Release diff covers 362 files (backend: 150, frontend: 143, shared: 69); representative changes: M `build-pipeline-api.yml`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/AdminAllocationsController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/BeneficiariesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/FinancialChartController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/LogframesController.cs`, M `ngo-api-core/NGO/NGO.Core.API/BaseControllers/PartnerExpenditureReportingController.cs`. | No explicit client action was stated in the release source. | [Card](https://trello.com/c/SkTffOfP/4417-m-users-roles-have-a-limit-on-number-of-users-that-can-be-added-to-the-system) |
+
+### Table 4: Bug Fixes
+
+| Module / Scope | Bug Description | Root Cause / Key Files Changed (from Git Diff) | Extra Client Action? | Card / PR |
+| --- | --- | --- | --- | --- |
+| Backend | [S] Fundingidea permission for SP is incorrect with that show in Admin UI on Current sprint - Core \| Trello | Matched key changes: M `ngo-api-core/NGO/NGO.Core.Model/Domain/Funding.cs`, M `ngo-api-core/NGO/NGO.Core.Model/Dto/Funding.cs` | None stated in the release source. | [Card](https://trello.com/c/xrXyz763/4377-s-fundingidea-permission-for-sp-is-incorrect-with-that-show-in-admin-ui) |

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "version": "3.14.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-d758e99dc82a",
+          "version": "3.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "Before Deploy",
+          "owner": "Deployer",
+          "action": "Run below two scripts if it's not auto run by deployment (checking database table)",
+          "instructionsAndNotes": "[M] Partner access: Documents\n[For developer] Checking your client project if any override method of SPFolderService.cs/SetSignedOffFolderPermission, if existed, please read and compare with core code and then update your override method to still keep both your custom logic and core logic (new core updates: PFAdmin role will be added as 'Editor' of '99 Approvals' folder, Core supports to able configure exclude Role from View of 99 Approvals using 'RestrictedGlobalRolesInViews' use default setting or new setting with tabFunctionId: 113)\n[BeforeDeployment, for deployment person] Go to 'SharePointBackend/ClientDocumentationImages/LibrarySettings/Permissions for this document library' and press 'Delete unique permissions' button, it will be re-setup by webjob.\n[AfterDeployment] Run below two scripts if it's not auto run by deployment (checking [__DeployScriptHistory] database table)\n20220602_CoreRolePermissions_ReplaceViewByListPermissionForRecycleBin.sql\n20230413_AddListPermissionOnDocumentsTab.sql",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/fbRqlu14/3264-m-partner-access-documents"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-b329b16e604d",
+          "version": "3.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add to environment (2 files):",
+          "instructionsAndNotes": "Add to environment (2 files):\nadminStartPageConfiguration: 'api/core/adminStartPageConfiguration'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-aa3fa648e67a",
+          "version": "3.14.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Set limited permissions, performance",
+          "instructionsAndNotes": "[S] Set limited permissions, performance\n[S] Set limited permissions, performance on Current sprint - Core | Trello\nAdd Azure configuration key sp:SubFolderLimitedPermissionCheckTimeoutInSec to set timeout to 30",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/TLwSwStH/3274-s-set-limited-permissions-performance"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-4b8d137116ba",
+          "version": "3.14.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Start page configuration to be possible in Administration Portal",
+          "instructionsAndNotes": "[L] Start page configuration to be possible in Administration Portal\nOpen app.module.ts, add 'faTh' next to 'faChartArea' (two places)",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/FmexDXK3"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-b7fa331f335d",
+          "version": "3.14.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/F2iwHNks"
+            }
+          ],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[S] BrowseList - Region Field: ControlType.parentDropDownText not working anymore (  )",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.14.0"
+    ],
+    "rawCardCount": 5,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

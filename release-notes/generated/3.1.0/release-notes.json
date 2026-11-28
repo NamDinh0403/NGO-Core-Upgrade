@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "version": "3.1.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 7,
+    "conditionalActions": 0,
+    "needsReviewActions": 1,
+    "newFeatures": 2,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-5a51d2ce09ed",
+          "version": "3.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Remove recent box on start page (only run if customer don't want to use it)",
+          "instructionsAndNotes": "Remove recent box on start page (only run if customer don't want to use it)\n[After deployment]: DataFixes/20220330_DeleteRecentBoxInStartPage",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-3af474e6100b",
+          "version": "3.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Step2: Run : DataFixes/20220331_RemoveUnusedRecycleBinPermissions.sql",
+          "instructionsAndNotes": "- Step2: Run [After deployment]: DataFixes/20220331_RemoveUnusedRecycleBinPermissions.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-25e15cfa13a1",
+          "version": "3.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Update FieldDefinitionId for \"Heading\" fields",
+          "instructionsAndNotes": "Update FieldDefinitionId for \"Heading\" fields\nDataFixes/20220405_UpdateFieldDefinitionIdForHeadingFields.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e72dae5951c3",
+          "version": "3.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Fix data for overviewbox",
+          "instructionsAndNotes": "Fix data for overviewbox\nDataFixes/ 20220225_UpdateDataForOverviewBoxes.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-6b086c81310c",
+          "version": "3.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Task-Gantt chart: update coreconfiguration for ShowGanttTask to new GanttTaskConfiguration",
+          "instructionsAndNotes": "Task-Gantt chart: update coreconfiguration for ShowGanttTask to new GanttTaskConfiguration\n[After deployment]: DataFixes/20220414_FixTaskListSetting.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-325119da2c84",
+          "version": "3.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Deployer",
+          "action": "Admin UI / Task template / Edit template of All entity type: Default responsible field has no option",
+          "instructionsAndNotes": "Admin UI / Task template / Edit template of All entity type: Default responsible field has no option\nDataFixes/20220414_Update_EntityIsLimitedEntity.sql",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f897f85fe97e",
+          "version": "3.1.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add route to app-route.service below the access-denied :",
+          "instructionsAndNotes": "Add route to app-route.service below the access-denied :\n{ path: 'unauthorized', component: UnauthorizedComponent } ,",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [],
+      "needsReviewActions": [
+        {
+          "id": "action-dc1bbf6dbf59",
+          "version": "3.1.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Step1: Review custom script in your client project related to CoreRolePermission and remove PermissionId 1352,1354,1402,1404 in your project custom script (if any)",
+          "instructionsAndNotes": "- Step1: Review custom script in your client project related to CoreRolePermission and remove PermissionId 1352,1354,1402,1404 in your project custom script (if any)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [
+        {
+          "id": "feature-6b086c81310c",
+          "version": "3.1.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Task-Gantt chart: update coreconfiguration for ShowGanttTask to new GanttTaskConfiguration",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "Action applies during the upgrade. Task-Gantt chart: update coreconfiguration for ShowGanttTask to new GanttTaskConfiguration"
+        },
+        {
+          "id": "feature-933adf287673",
+          "version": "3.1.0",
+          "moduleScope": "Shared / Cross-track",
+          "cardOrPr": [],
+          "category": "feature",
+          "needsReview": false,
+          "sourceSection": null,
+          "featureOrChange": "Recycle bin: no need permission: Add,Delete (Only List,View,Edit)",
+          "technicalSummary": "No deterministic git-diff evidence was supplied for this note.",
+          "clientImpact": "No explicit client action was stated in the release source."
+        }
+      ],
+      "bugFixes": [
+        {
+          "id": "bugfix-e72dae5951c3",
+          "version": "3.1.0",
+          "moduleScope": "Database / Deployment",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "Fix data for overviewbox",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "Fix data for overviewbox"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "3.1.0"
+    ],
+    "rawCardCount": 9,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

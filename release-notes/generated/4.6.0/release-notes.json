@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "version": "4.6.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 2,
+    "conditionalActions": 1,
+    "needsReviewActions": 3,
+    "newFeatures": 0,
+    "bugFixes": 1
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-aa926ad53678",
+          "version": "4.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "After Deploy",
+          "owner": "Deployer",
+          "action": "Generate restrictions for existing data run sql:",
+          "instructionsAndNotes": "- [After deployment] Generate restrictions for existing data run sql:",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-f031416f93fa",
+          "version": "4.6.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "EXECUTE .",
+          "instructionsAndNotes": "EXECUTE [dbo].[GenerateCachedRestrictedUserEntities]",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-d080dfc9558a",
+          "version": "4.6.0",
+          "applicability": "conditional",
+          "condition": "- Key of enabling to insert data to restricted table: Core:Queue:RestrictedEntityJobEnabled = true",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Key of enabling to insert data to restricted table: Core:Queue:RestrictedEntityJobEnabled = true",
+          "instructionsAndNotes": "- Key of enabling to insert data to restricted table: Core:Queue:RestrictedEntityJobEnabled = true",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-c844ac595f14",
+          "version": "4.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Restricted entities optimisation",
+          "instructionsAndNotes": "Restricted entities optimisation",
+          "cardOrPr": [
+            {
+              "label": "Card",
+              "value": "https://trello.com/c/O9ryyPU1"
+            }
+          ],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-d437224f7e3a",
+          "version": "4.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Key of queue message: Core:Queue:RestrictedUserEntitiesQueue = \"restricteduserentities\"",
+          "instructionsAndNotes": "- Key of queue message: Core:Queue:RestrictedUserEntitiesQueue = \"restricteduserentities\"",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-1a1b9645dd6d",
+          "version": "4.6.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Service Injection: IBaseTaskActionService -> Remove name in register service in CommonDIRegistrations.cs",
+          "instructionsAndNotes": "Service Injection: IBaseTaskActionService -> Remove name in register service in CommonDIRegistrations.cs\nEx:\ncontainer.RegisterType<Core.Services.IBaseTaskActionService, WireTransferTaskActionService>( WireTransferTaskActionService.ConfigurationId );\n-> Change to: container.RegisterType<Core.Services.IBaseTaskActionService, WireTransferTaskActionService>();￼or container.AddTransient<Core.Services.IBaseTaskActionService, WireTransferTaskActionService>();\nDo the same for IBaseExportPdfActionService",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": [
+        {
+          "id": "bugfix-5dc8fa794bbf",
+          "version": "4.6.0",
+          "moduleScope": "Compile error",
+          "cardOrPr": [],
+          "category": "bugfix",
+          "needsReview": false,
+          "sourceSection": null,
+          "bugDescription": "[Compile error] if any compile error related to IsGeneratingProgressDone == true, please replace it with 'ProgressStatus != Model.Enums.LogframeVersionProgressStatus.IsCloningStructure'",
+          "rootCauseOrKeyFiles": "No deterministic git-diff evidence was supplied for this note.",
+          "extraClientAction": "None stated in the release source."
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "4.6.0"
+    ],
+    "rawCardCount": 7,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}

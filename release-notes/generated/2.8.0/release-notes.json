@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "version": "2.8.0",
+  "status": "RELEASED",
+  "releaseDate": null,
+  "sourceRefs": [
+    {
+      "type": "onenote",
+      "label": "OneNote export",
+      "value": "docs/onenote-core-release-notes.html"
+    }
+  ],
+  "summary": {
+    "mandatoryActions": 3,
+    "conditionalActions": 1,
+    "needsReviewActions": 2,
+    "newFeatures": 0,
+    "bugFixes": 0
+  },
+  "sections": {
+    "upgradeAndDeployment": {
+      "mandatoryActions": [
+        {
+          "id": "action-cfeb89153f2b",
+          "version": "2.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts:",
+          "instructionsAndNotes": "Iframe\nAdd the following line to environment.ts and environment.prod.ts:\nentityIframe: 'api/core/iframe',",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-e33d767fa210",
+          "version": "2.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following line to environment.ts and environment.prod.ts:",
+          "instructionsAndNotes": "Exchange rates\nAdd the following line to environment.ts and environment.prod.ts:\nexchangeRate: 'api/core/exchangeRates'",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-54e08d2eb69f",
+          "version": "2.8.0",
+          "applicability": "mandatory",
+          "condition": null,
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Add the following FieldInstanceLocations to enable fields on global indicators, custom indicators and YTD tracking:",
+          "instructionsAndNotes": "Add the following FieldInstanceLocations to enable fields on global indicators, custom indicators and YTD tracking:\n-- global indicator form\n(16011, 7650, 3, 2, NULL, NULL,NULL, 1, 2, 1, NULL, N'{ \"defaultValue\": false, \"setDefaultValueOnNewFormOnly\": true, \"booleanTrueDisplayText\": \"logframe.is_cumulative_true\", \"booleanFalseDisplayText\": \"logframe.is_cumulative_false\" } ', NULL, NULL, NULL, NULL, NULL),\n-- entity indicator form\n(16021,6629,10,1, NULL, NULL,NULL,1,2,1, 120, N'{ \"customGroupedBy\": \"2072\", \"hideLabel\": true, \"defaultValue\": false, \"setDefaultValueOnNewFormOnly\": true, \"booleanTrueDisplayText\": \"logframe.is_cumulative_true\", \"booleanFalseDisplayText\": \"logframe.is_cumulative_false\" } ', NULL, 5, 'px', NULL, NULL),\n(16022,6629,10,1, NULL, NULL,NULL,1,2,1, 120, N'{ \"customGroupedBy\": \"2071\", \"hideLabel\": true, \"readOnly\": true, \"autoCopyValueFromDependentProp\": true, \"autoCopyValueFromDependentFieldName\": \"globalIndicator\", \"booleanTrueDisplayText\": \"logframe.is_cumulative_true\", \"booleanFalseDisplayText\": \"logframe.is_cumulative_false\" } ', NULL, 5, 'px', NULL, NULL),\n--table tracker\n(16031,6729,15,6, NULL, NULL,NULL,1,1,1, 100, N'{ \"customGroupedBy\": \"2071;2072\", \"hideLabel\": true } ', NULL, 1, 'px', NULL, NULL), --actual YTD indicator\n(16032,6783,15,8, NULL, NULL,NULL,1,1,1, 100, N'{ \"hideLabel\": true, \"customCssClass\": \"text-italic text-gray-out\" } ', NULL, 1, 'px', NULL, NULL) --actual YTD breakdown",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "unconditional-action",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "conditionalActions": [
+        {
+          "id": "action-8e3b99886e80",
+          "version": "2.8.0",
+          "applicability": "conditional",
+          "condition": "UPDATE CoreLogframeIndicators SET IsCumulativeInput = 1",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Run the following script to set existing indicators to cumulative if desired:",
+          "instructionsAndNotes": "Run the following script to set existing indicators to cumulative if desired:\nUPDATE CoreLogframeIndicators SET IsCumulativeInput = 1\nUPDATE CoreLogframeGlobalIndicators SET IsCumulativeInput = 1",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": false,
+          "classificationReason": "conditional-signal",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ],
+      "needsReviewActions": [
+        {
+          "id": "action-8a191ed4befd",
+          "version": "2.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Import awesome font icons in app module:",
+          "instructionsAndNotes": "Import awesome font icons in app module:\nfaPercent (free-solid-svg-icons)",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        },
+        {
+          "id": "action-5d970e83ffa4",
+          "version": "2.8.0",
+          "applicability": "needs_review",
+          "condition": "Confirm whether every client or only matching clients must run this item.",
+          "timing": "During Upgrade",
+          "owner": "Client Dev",
+          "action": "Logframe indicator cumulative/non-cumulative",
+          "instructionsAndNotes": "Logframe indicator cumulative/non-cumulative\nThe setting for cumulative/non-cumulative values is now per indicator. If no config is added, it defaults to non-cumulative for existing and new indicators.",
+          "cardOrPr": [],
+          "category": "upgrade_action",
+          "needsReview": true,
+          "classificationReason": "ambiguous-applicability",
+          "sourceSection": null,
+          "gitDiffSummary": "No deterministic git-diff evidence was supplied for this note."
+        }
+      ]
+    },
+    "releaseTracking": {
+      "newFeatures": [],
+      "bugFixes": []
+    }
+  },
+  "metadata": {
+    "sourceSections": [
+      "2.8.0"
+    ],
+    "rawCardCount": 6,
+    "gitDiffFileCount": 0,
+    "unresolvedItems": []
+  }
+}
